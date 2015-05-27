@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.EndUserApi;
+
 
 public class MainActivity extends ActionBarActivity {
 
@@ -12,6 +14,9 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //create EndUserApi
+        EndUserApi api = new EndUserApi();
     }
 
     @Override
