@@ -70,11 +70,11 @@ public class XamoomEndUserApi {
         params.put("include_menu", menu ? "True" : "False");
         params.put("language", language);
 
-        api.getContentByLocationIdentifier(params, new Callback<ContentByLocationIdentifier>() {
+        api.getContentByLocationIdentifier(params, new Callback<Object>() {
             @Override
-            public void success(ContentByLocationIdentifier content, Response response) {
-                //Log.v(TAG, "Debug Hellyeah: " + content);
-                listener.gotContentByLocationIdentifier(content);
+            public void success(Object content, Response response) {
+                Log.v(TAG, "Debug Hellyeah: " + content);
+                //listener.gotContentByLocationIdentifier(content);
             }
 
             @Override
@@ -102,7 +102,7 @@ public class XamoomEndUserApi {
         })
 
         @POST("/xamoomEndUserApi/v1/get_content_by_location_identifier")
-        void getContentByLocationIdentifier(@QueryMap Map<String, String> params, Callback<ContentByLocationIdentifier> cb);
+        void getContentByLocationIdentifier(@QueryMap Map<String, String> params, Callback<Object> cb);
 
         /*
         @POST("/xamoomEndUserApi/v1/get_content_by_id")

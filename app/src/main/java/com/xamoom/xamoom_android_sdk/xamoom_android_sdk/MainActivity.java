@@ -23,7 +23,7 @@ public class MainActivity extends ActionBarActivity implements XamoomApiListener
         api.setListener(this);
 
         //test every api call
-        api.getContentByLocationIdentifier("0ana0", true, true, "de");
+        api.getContentByLocationIdentifier("0ana0", false, false, "de");
     }
 
     @Override

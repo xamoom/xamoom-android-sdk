@@ -9,6 +9,7 @@ public class ResponseMenu {
 
     public List<ResponseMenuItem> items;
 
+    @Override
     public String toString() {
         return (String.format("{items: %s}", items));
     }
@@ -19,6 +20,7 @@ class ResponseMenuItem {
     private String itemLabel;
     private String contentId;
 
+    @Override
     public String toString() {
         return (String.format("{itemLabel: %s, contentId: %s}", itemLabel, contentId));
     }

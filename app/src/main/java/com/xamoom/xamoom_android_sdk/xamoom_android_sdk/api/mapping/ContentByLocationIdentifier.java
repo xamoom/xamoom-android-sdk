@@ -17,6 +17,7 @@ public class ContentByLocationIdentifier {
     public ResponseStyle style;
     public ResponseMenu menu;
 
+    @Override
     public String toString () {
        return (String.format("{systemName: %s, systemUrl: %s, systemId: %s, hasContent: %s, hasSpot: %s, content: %s, style: %s, menu: %s}", systemName, systemUrl, systemId, hasContent, hasSpot, content, style, menu));
     }
