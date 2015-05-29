@@ -4,7 +4,7 @@ import java.lang.reflect.Array;
 import java.util.List;
 
 /**
- * Created by raphaelseher on 28.05.15.
+ *
  */
 public class ContentByLocationIdentifier {
 

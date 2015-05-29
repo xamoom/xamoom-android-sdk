@@ -8,6 +8,7 @@ import android.view.MenuItem;
 
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.XamoomApiListener;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.XamoomEndUserApi;
+import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentBlocks.ResponseContentBlock;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentByLocationIdentifier;
 
 

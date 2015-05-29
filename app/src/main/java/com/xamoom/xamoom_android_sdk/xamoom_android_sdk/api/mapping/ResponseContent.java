@@ -3,10 +3,11 @@ package com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentBlocks.ResponseContentBlock;
 
 import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by raphaelseher on 28.05.15.
+ *
  */
 public class ResponseContent {
 
