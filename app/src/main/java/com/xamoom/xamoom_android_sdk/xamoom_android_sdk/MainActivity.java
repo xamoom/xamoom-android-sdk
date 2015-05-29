@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.XamoomApiListener;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.XamoomEndUserApi;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentBlocks.ResponseContentBlock;
+import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentById;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentByLocationIdentifier;
 
 
@@ -25,6 +26,8 @@ public class MainActivity extends ActionBarActivity implements XamoomApiListener
 
         //test every api call
         api.getContentByLocationIdentifier("0ana0", false, false, "de");
+
+        api.getContentById("a3911e54085c427d95e1243844bd6aa3", false, false, "de");
     }
 
     @Override
@@ -53,6 +56,11 @@ public class MainActivity extends ActionBarActivity implements XamoomApiListener
 
     @Override
     public void gotContentByLocationIdentifier(ContentByLocationIdentifier result) {
-        Log.v("XamoomEndUserApi","Got something: " + result);
+        Log.v("XamoomEndUserApi","Got ContentByLocationIdentifier: " + result);
+    }
+
+    @Override
+    public void gotContentById(ContentById result) {
+        Log.v("XamoomEndUserApi","Got ContentById: " + result);
     }
 }
