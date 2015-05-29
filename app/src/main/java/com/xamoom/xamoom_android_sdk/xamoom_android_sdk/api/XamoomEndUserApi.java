@@ -5,18 +5,16 @@ import android.util.Log;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentBlocks.ResponseContentBlock;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentByLocationIdentifier;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
+import retrofit.android.AndroidLog;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 import retrofit.http.GET;
@@ -49,10 +47,21 @@ public class XamoomEndUserApi {
 
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(apiUrlDev)
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setLog(new AndroidLog(TAG))
                 .setConverter(new GsonConverter(gson))
                 .build();
 
         api = restAdapter.create(XamoomApiInterface.class);
+    }
+
+    //getter & setter
+    public XamoomApiInterface getApi() {
+        return api;
+    }
+
+    public void setListener(XamoomApiListener listener) {
+        this.listener = listener;
     }
 
     /**
@@ -70,11 +79,12 @@ public class XamoomEndUserApi {
         params.put("include_menu", menu ? "True" : "False");
         params.put("language", language);
 
-        api.getContentByLocationIdentifier(params, new Callback<Object>() {
+        api.getContentByLocationIdentifier(params, new Callback<ContentByLocationIdentifier>() {
             @Override
-            public void success(Object content, Response response) {
-                Log.v(TAG, "Debug Hellyeah: " + content);
-                //listener.gotContentByLocationIdentifier(content);
+            public void success(ContentByLocationIdentifier content, Response response) {
+                //Log.v(TAG, "Debug Hellyeah: " + content);
+                Log.v(TAG, "Hellyeah!");
+                listener.gotContentByLocationIdentifier(content);
             }
 
             @Override
@@ -84,30 +94,25 @@ public class XamoomEndUserApi {
         });
     }
 
-    //getter & setter
-
-    public XamoomApiInterface getApi() {
-        return api;
-    }
-
-    public void setListener(XamoomApiListener listener) {
-        this.listener = listener;
-    }
-
     private interface XamoomApiInterface {
         @Headers({
                 "Accept: application/json",
                 "User-Agent: xamoom-android-sdk",
-                "Authorization: " + apiToken,
+                "Authorization: " + apiToken
         })
 
+        /**
+         *
+         */
         @POST("/xamoomEndUserApi/v1/get_content_by_location_identifier")
-        void getContentByLocationIdentifier(@QueryMap Map<String, String> params, Callback<Object> cb);
+        void getContentByLocationIdentifier(@QueryMap Map<String, String> params, Callback<ContentByLocationIdentifier> cb);
 
-        /*
-        @POST("/xamoomEndUserApi/v1/get_content_by_id")
+        /**
+         *
+         */
+        @POST("/xamoomEndUserApi/v1/get_content_by_location")
         void getContentById(@QueryMap Map<String, String> params, Callback<Object> cb);
-        */
+
     }
 }
 

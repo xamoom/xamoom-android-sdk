@@ -1,7 +1,15 @@
 package com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentBlocks;
 
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+
+import java.lang.reflect.Type;
+
 /**
- * Created by raphaelseher on 28.05.15.
+ *
  */
 public class ResponseContentBlock {
 
@@ -9,8 +17,4 @@ public class ResponseContentBlock {
     public String publicStatus;
     public int contentBlockType;
 
-    @Override
-    public String toString() {
-        return (String.format("title: %s, publicStatus: %s, contentBlockType: %i", title, publicStatus, contentBlockType));
-    }
 }
