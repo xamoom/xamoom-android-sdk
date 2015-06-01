@@ -5,20 +5,20 @@ package com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentBloc
  */
 public class ResponseContentBlock {
 
-    public String title;
-    public String publicStatus;
-    public int contentBlockType;
+    private String title;
+    private String publicStatus;
+    private int contentBlockType;
 
-    public String text;
-    public String artists;
-    public String fileId;
-    public String youtubeUrl;
-    public String soundcloudUrl;
-    public String linkType;
-    public String linkUrl;
-    public String contentId;
-    public String downloadType;
-    public String spotMapTag;
+    private String text;
+    private String artists;
+    private String fileId;
+    private String youtubeUrl;
+    private String soundcloudUrl;
+    private String linkType;
+    private String linkUrl;
+    private String contentId;
+    private String downloadType;
+    private String spotMapTag;
 
     @Override
     public String toString() {

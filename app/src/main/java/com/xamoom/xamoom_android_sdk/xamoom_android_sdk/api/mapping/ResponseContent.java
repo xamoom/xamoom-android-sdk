@@ -11,12 +11,12 @@ import java.util.List;
  */
 public class ResponseContent {
 
-    public String contentId;
-    public String imagePublicUrl;
-    public String descriptionOfContent;
-    public String language;
-    public String title;
-    public List<ResponseContentBlock> contentBlocks;
+    private String contentId;
+    private String imagePublicUrl;
+    private String descriptionOfContent;
+    private String language;
+    private String title;
+    private List<ResponseContentBlock> contentBlocks;
 
     @Override
     public String toString() {

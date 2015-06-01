@@ -8,14 +8,14 @@ import java.util.List;
  */
 public class ContentByLocationIdentifier {
 
-    public String systemName;
-    public String systemUrl;
-    public String systemId;
-    public boolean hasContent;
-    public boolean hasSpot;
-    public ResponseContent content;
-    public ResponseStyle style;
-    public ResponseMenu menu;
+    private String systemName;
+    private String systemUrl;
+    private String systemId;
+    private boolean hasContent;
+    private boolean hasSpot;
+    private ResponseContent content;
+    private ResponseStyle style;
+    private ResponseMenu menu;
 
     @Override
     public String toString () {

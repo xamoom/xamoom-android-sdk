@@ -7,7 +7,7 @@ import java.util.List;
  */
 public class ResponseMenu {
 
-    public List<ResponseMenuItem> items;
+    private List<ResponseMenuItem> items;
 
     @Override
     public String toString() {
