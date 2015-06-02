@@ -9,6 +9,7 @@ import com.google.gson.GsonBuilder;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentById;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentByLocation;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentByLocationIdentifier;
+import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentList;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ResponseSpotMap;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.request.APILocation;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.request.APIRequestByLocation;
@@ -254,6 +255,58 @@ public class XamoomEndUserApi {
         });
     }
 
+    /**
+     * Returns a list of spots near a location with a radius
+     *
+     * @param lat
+     * @param lon
+     * @param language
+     * @param radius
+     * @param limit
+     */
+    public void getClosestSpots(double lat, double lon, String language, int radius, int limit) {
+        APILocation location = new APILocation(lat, lon);
+        APIRequestByLocation params = new APIRequestByLocation(location, language);
+        params.setRadius(radius);
+        params.setLimit(limit);
+
+        apiInterface.getClosestSpots(params, new Callback<ResponseSpotMap>() {
+            @Override
+            public void success(ResponseSpotMap result, Response response) {
+                //Log.v(TAG, "Debug Hellyeah: " + result);
+                listener.gotClosestSpots(result);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.v(TAG, "Error Hellyeah: " + error);
+            }
+        });
+    }
+
+    /**
+     *
+     *
+     */
+    public void getContentList(String language, int pageSize, String cursor, String[] tags) {
+        if (cursor == null) {
+            cursor = "null";
+        }
+
+        apiInterface.getContentList(language, pageSize, cursor, TextUtils.join(",", tags), new Callback<ContentList>() {
+            @Override
+            public void success(ContentList result, Response response) {
+                //Log.v(TAG, "Debug Hellyeah: " + result);
+                listener.gotContentList(result);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.v(TAG, "Error Hellyeah: " + error);
+            }
+        });
+    }
+
     private interface XamoomApiInterface {
 
         /**
@@ -322,5 +375,27 @@ public class XamoomEndUserApi {
         })
         @GET("/xamoomEndUserApi/v1/spotmap/{system_id}/{map_tag}/{language}")
         void getSpotMap(@Path("system_id") String systemId, @Path("map_tag") String mapTags, @Path("language") String language, Callback<ResponseSpotMap> cb);
+
+        /**
+         *
+         */
+        @Headers({
+                "Accept: application/json",
+                "User-Agent: xamoom-android-sdk",
+                "Authorization: " + apiToken
+        })
+        @POST("/xamoomEndUserApi/v1/get_closest_spots")
+        void getClosestSpots(@Body APIRequestByLocation params, Callback<ResponseSpotMap> cb);
+
+        /**
+         *
+         */
+        @Headers({
+                "Accept: application/json",
+                "User-Agent: xamoom-android-sdk",
+                "Authorization: " + apiToken
+        })
+        @GET("/xamoomEndUserApi/v1/content_list/{language}/{page_size}/{cursor}/{tags}")
+        void getContentList(@Path("language") String language, @Path("page_size") int pageSize, @Path("cursor") String cursor, @Path("tags") String tags, Callback<ContentList> cb);
     }
 }

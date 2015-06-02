@@ -13,7 +13,12 @@ import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentById;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentByLocation;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentByLocationIdentifier;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentByLocationItem;
+import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentList;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ResponseSpotMap;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 
 public class MainActivity extends ActionBarActivity implements XamoomApiListener {
@@ -27,15 +32,19 @@ public class MainActivity extends ActionBarActivity implements XamoomApiListener
         XamoomEndUserApi.getInstance().setListener(this);
 
         //test every api call
-        //XamoomEndUserApi.getInstance().getContentById("a3911e54085c427d95e1243844bd6aa3", false, false, "de");
+        XamoomEndUserApi.getInstance().getContentById("a3911e54085c427d95e1243844bd6aa3", false, false, "de");
 
-        //XamoomEndUserApi.getInstance().getContentbyIdFull("a3911e54085c427d95e1243844bd6aa3", false, false, "de", true);
+        XamoomEndUserApi.getInstance().getContentbyIdFull("a3911e54085c427d95e1243844bd6aa3", false, false, "de", true);
 
-        //XamoomEndUserApi.getInstance().getContentByLocationIdentifier("0ana0", false, false, "de");
+        XamoomEndUserApi.getInstance().getContentByLocationIdentifier("0ana0", false, false, "de");
 
-        //XamoomEndUserApi.getInstance().getContentByLocation(46.615119, 14.262106, "de");
+        XamoomEndUserApi.getInstance().getContentByLocation(46.615119, 14.262106, "de");
 
-        XamoomEndUserApi.getInstance().getSpotMap("0", new String[] {"stw"}, "de");
+        XamoomEndUserApi.getInstance().getSpotMap("0", new String[]{"stw"}, "de");
+
+        XamoomEndUserApi.getInstance().getClosestSpots(46.615119, 14.262106, "de", 100, 10);
+
+        XamoomEndUserApi.getInstance().getContentList("de", 7, null, new String[]{"artists"});
     }
 
     @Override
@@ -83,5 +92,15 @@ public class MainActivity extends ActionBarActivity implements XamoomApiListener
     @Override
     public void gotSpotMap(ResponseSpotMap result) {
         Log.v("XamoomEndUserApi","Got ResponseSpotMap: " + result);
+    }
+
+    @Override
+    public void gotClosestSpots(ResponseSpotMap result) {
+        Log.v("XamoomEndUserApi","Got ResponseSpotMap: " + result);
+    }
+
+    @Override
+    public void gotContentList(ContentList result) {
+        Log.v("XamoomEndUserApi","Got ContentList: " + result);
     }
 }
