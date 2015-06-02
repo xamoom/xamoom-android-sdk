@@ -3,6 +3,7 @@ package com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentById;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentByLocation;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentByLocationIdentifier;
+import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ResponseSpotMap;
 
 /**
  *
@@ -16,4 +17,7 @@ public interface XamoomApiListener {
 
     //
     void gotContentByLocation(ContentByLocation result);
+
+    //
+    void gotSpotMap(ResponseSpotMap result);
 }

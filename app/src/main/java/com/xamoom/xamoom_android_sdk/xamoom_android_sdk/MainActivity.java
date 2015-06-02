@@ -13,6 +13,7 @@ import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentById;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentByLocation;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentByLocationIdentifier;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentByLocationItem;
+import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ResponseSpotMap;
 
 
 public class MainActivity extends ActionBarActivity implements XamoomApiListener {
@@ -32,7 +33,9 @@ public class MainActivity extends ActionBarActivity implements XamoomApiListener
 
         //XamoomEndUserApi.getInstance().getContentByLocationIdentifier("0ana0", false, false, "de");
 
-        XamoomEndUserApi.getInstance().getContentByLocation(46.615119, 14.262106, "de");
+        //XamoomEndUserApi.getInstance().getContentByLocation(46.615119, 14.262106, "de");
+
+        XamoomEndUserApi.getInstance().getSpotMap("0", new String[] {"stw"}, "de");
     }
 
     @Override
@@ -75,5 +78,10 @@ public class MainActivity extends ActionBarActivity implements XamoomApiListener
 
         ContentByLocationItem item = result.getItems().get(0);
         XamoomEndUserApi.getInstance().queueGeofenceAnalytics("de", item.getLanguage(), item.getSystemId(), item.getSystemName(), item.getContentId(), item.getContentName(), item.getSpotId(), item.getSpotName());
+    }
+
+    @Override
+    public void gotSpotMap(ResponseSpotMap result) {
+        Log.v("XamoomEndUserApi","Got ResponseSpotMap: " + result);
     }
 }

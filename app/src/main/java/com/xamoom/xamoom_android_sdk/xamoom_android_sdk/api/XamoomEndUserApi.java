@@ -1,5 +1,6 @@
 package com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.FieldNamingPolicy;
@@ -8,12 +9,13 @@ import com.google.gson.GsonBuilder;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentById;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentByLocation;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentByLocationIdentifier;
+import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ResponseSpotMap;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.request.APILocation;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.request.APIRequestByLocation;
 
+import java.lang.reflect.Array;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -21,8 +23,10 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 import retrofit.http.Body;
+import retrofit.http.GET;
 import retrofit.http.Headers;
 import retrofit.http.POST;
+import retrofit.http.Path;
 import retrofit.http.QueryMap;
 
 /**
@@ -226,6 +230,30 @@ public class XamoomEndUserApi {
         });
     }
 
+    /**
+     * Returns a list of spots.
+     *
+     * @param systemId - when calling with an API Key, can be 0
+     * @param mapTags - StringArray with mapTags you want to display
+     * @param language
+     */
+    public void getSpotMap(String systemId, String[] mapTags, String language) {
+
+
+        apiInterface.getSpotMap(systemId, TextUtils.join(",", mapTags), language, new Callback<ResponseSpotMap>() {
+            @Override
+            public void success(ResponseSpotMap result, Response response) {
+                //Log.v(TAG, "Debug Hellyeah: " + content);
+                listener.gotSpotMap(result);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.v(TAG, "Error Hellyeah: " + error);
+            }
+        });
+    }
+
     private interface XamoomApiInterface {
 
         /**
@@ -283,5 +311,16 @@ public class XamoomEndUserApi {
         })
         @POST("/xamoomEndUserApi/v1/queue_geofence_analytics")
         void queueGeofenceAnalytics(@QueryMap Map<String, String> params, Callback<Object> cb);
+
+        /**
+         *
+         */
+        @Headers({
+                "Accept: application/json",
+                "User-Agent: xamoom-android-sdk",
+                "Authorization: " + apiToken
+        })
+        @GET("/xamoomEndUserApi/v1/spotmap/{system_id}/{map_tag}/{language}")
+        void getSpotMap(@Path("system_id") String systemId, @Path("map_tag") String mapTags, @Path("language") String language, Callback<ResponseSpotMap> cb);
     }
 }
