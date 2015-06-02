@@ -1,22 +1,20 @@
 package com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping;
 
-import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentBlocks.ResponseContentBlock;
+import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentBlocks.ContentBlock;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
 import java.util.List;
 
 /**
  *
  */
-public class ResponseContent {
+public class Content {
 
     private String contentId;
     private String imagePublicUrl;
     private String descriptionOfContent;
     private String language;
     private String title;
-    private List<ResponseContentBlock> contentBlocks;
+    private List<ContentBlock> contentBlocks;
 
     @Override
     public String toString() {

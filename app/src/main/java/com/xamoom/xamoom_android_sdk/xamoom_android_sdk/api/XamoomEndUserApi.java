@@ -10,9 +10,9 @@ import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentById;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentByLocation;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentByLocationIdentifier;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentList;
-import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ResponseSpotMap;
-import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.request.APILocation;
-import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.request.APIRequestByLocation;
+import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.SpotMap;
+import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.request.Location;
+import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.request.RequestByLocation;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -167,8 +167,8 @@ public class XamoomEndUserApi {
      * @param language
      */
     public void getContentByLocation(double lat, double lon, String language, final APICallback<ContentByLocation> callback) {
-        APILocation location = new APILocation(lat, lon);
-        APIRequestByLocation params = new APIRequestByLocation(location, language);
+        Location location = new Location(lat, lon);
+        RequestByLocation params = new RequestByLocation(location, language);
 
         apiInterface.getContentWithLocation(params, new Callback<ContentByLocation>() {
             @Override
@@ -227,12 +227,12 @@ public class XamoomEndUserApi {
      * @param mapTags  - StringArray with mapTags you want to display
      * @param language
      */
-    public void getSpotMap(String systemId, String[] mapTags, String language, final APICallback<ResponseSpotMap> callback) {
+    public void getSpotMap(String systemId, String[] mapTags, String language, final APICallback<SpotMap> callback) {
 
 
-        apiInterface.getSpotMap(systemId, TextUtils.join(",", mapTags), language, new Callback<ResponseSpotMap>() {
+        apiInterface.getSpotMap(systemId, TextUtils.join(",", mapTags), language, new Callback<SpotMap>() {
             @Override
-            public void success(ResponseSpotMap result, Response response) {
+            public void success(SpotMap result, Response response) {
                 //Log.v(TAG, "Debug Hellyeah: " + content);
                 callback.finished(result);
             }
@@ -253,15 +253,15 @@ public class XamoomEndUserApi {
      * @param radius
      * @param limit
      */
-    public void getClosestSpots(double lat, double lon, String language, int radius, int limit, final APICallback<ResponseSpotMap> callback) {
-        APILocation location = new APILocation(lat, lon);
-        APIRequestByLocation params = new APIRequestByLocation(location, language);
+    public void getClosestSpots(double lat, double lon, String language, int radius, int limit, final APICallback<SpotMap> callback) {
+        Location location = new Location(lat, lon);
+        RequestByLocation params = new RequestByLocation(location, language);
         params.setRadius(radius);
         params.setLimit(limit);
 
-        apiInterface.getClosestSpots(params, new Callback<ResponseSpotMap>() {
+        apiInterface.getClosestSpots(params, new Callback<SpotMap>() {
             @Override
-            public void success(ResponseSpotMap result, Response response) {
+            public void success(SpotMap result, Response response) {
                 //Log.v(TAG, "Debug Hellyeah: " + result);
                 callback.finished(result);
             }
@@ -338,7 +338,7 @@ public class XamoomEndUserApi {
                 "Authorization: " + apiToken
         })
         @POST("/xamoomEndUserApi/v1/get_content_by_location")
-        void getContentWithLocation(@Body APIRequestByLocation params, Callback<ContentByLocation> cb);
+        void getContentWithLocation(@Body RequestByLocation params, Callback<ContentByLocation> cb);
 
         /**
          *
@@ -360,7 +360,7 @@ public class XamoomEndUserApi {
                 "Authorization: " + apiToken
         })
         @GET("/xamoomEndUserApi/v1/spotmap/{system_id}/{map_tag}/{language}")
-        void getSpotMap(@Path("system_id") String systemId, @Path("map_tag") String mapTags, @Path("language") String language, Callback<ResponseSpotMap> cb);
+        void getSpotMap(@Path("system_id") String systemId, @Path("map_tag") String mapTags, @Path("language") String language, Callback<SpotMap> cb);
 
         /**
          *
@@ -371,7 +371,7 @@ public class XamoomEndUserApi {
                 "Authorization: " + apiToken
         })
         @POST("/xamoomEndUserApi/v1/get_closest_spots")
-        void getClosestSpots(@Body APIRequestByLocation params, Callback<ResponseSpotMap> cb);
+        void getClosestSpots(@Body RequestByLocation params, Callback<SpotMap> cb);
 
         /**
          *

@@ -3,13 +3,13 @@ package com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.request;
 /**
  *
  */
-public class APIRequestByLocation {
-    private APILocation location;
+public class RequestByLocation {
+    private Location location;
     private String language;
     private int radius;
     private int limit;
 
-    public APIRequestByLocation(APILocation location, String language) {
+    public RequestByLocation(Location location, String language) {
         this.location = location;
         this.language = language;
     }

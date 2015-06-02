@@ -7,9 +7,9 @@ public class ContentById {
     private String systemName;
     private String systemUrl;
     private String systemId;
-    private ResponseContent content;
-    private ResponseStyle style;
-    private ResponseMenu menu;
+    private Content content;
+    private Style style;
+    private Menu menu;
 
     @Override
     public String toString () {

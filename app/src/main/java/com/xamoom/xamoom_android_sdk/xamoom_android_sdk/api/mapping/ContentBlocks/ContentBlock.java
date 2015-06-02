@@ -3,7 +3,7 @@ package com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentBloc
 /**
  *
  */
-public class ResponseContentBlock {
+public class ContentBlock {
 
     private String title;
     private String publicStatus;

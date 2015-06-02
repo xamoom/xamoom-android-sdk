@@ -6,7 +6,7 @@ import java.util.List;
  * Created by raphaelseher on 02.06.15.
  */
 public class ContentList {
-    private List<ResponseContent> items;
+    private List<Content> items;
     private String cursor;
     private boolean more;
 
@@ -14,7 +14,7 @@ public class ContentList {
     @Override
     public String toString() {
         String output = "";
-        for (ResponseContent content : items) {
+        for (Content content : items) {
             output += content + "\n";
         }
 

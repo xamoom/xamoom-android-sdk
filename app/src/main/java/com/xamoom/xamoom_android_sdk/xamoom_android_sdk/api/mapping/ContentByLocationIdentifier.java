@@ -1,8 +1,5 @@
 package com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping;
 
-import java.lang.reflect.Array;
-import java.util.List;
-
 /**
  *
  */
@@ -13,9 +10,9 @@ public class ContentByLocationIdentifier {
     private String systemId;
     private boolean hasContent;
     private boolean hasSpot;
-    private ResponseContent content;
-    private ResponseStyle style;
-    private ResponseMenu menu;
+    private Content content;
+    private Style style;
+    private Menu menu;
 
     @Override
     public String toString () {

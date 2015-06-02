@@ -3,7 +3,7 @@ package com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping;
 /**
  * Created by raphaelseher on 28.05.15.
  */
-public class ResponseStyle {
+public class Style {
 
     private String backgroundColor;
     private String highlightColor;

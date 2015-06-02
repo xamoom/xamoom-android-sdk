@@ -5,9 +5,9 @@ import java.util.List;
 /**
  * Created by raphaelseher on 28.05.15.
  */
-public class ResponseMenu {
+public class Menu {
 
-    private List<ResponseMenuItem> items;
+    private List<MenuItem> items;
 
     @Override
     public String toString() {
@@ -15,7 +15,7 @@ public class ResponseMenu {
     }
 }
 
-class ResponseMenuItem {
+class MenuItem {
 
     private String itemLabel;
     private String contentId;
