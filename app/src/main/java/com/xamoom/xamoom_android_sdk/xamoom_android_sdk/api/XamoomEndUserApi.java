@@ -213,7 +213,7 @@ public class XamoomEndUserApi {
         params.put("spot_id", spotId);
         params.put("spot_name", spotName);
 
-        apiInterface.queueGeofenceAnalytics(params, new Callback() {
+        apiInterface.queueGeofenceAnalytics(params, new Callback<Object>() {
             @Override
             public void success(Object o, Response response) {
                 Log.v(TAG, "Success Hellyeah, Status " + response.getStatus());
