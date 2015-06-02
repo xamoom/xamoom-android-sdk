@@ -14,7 +14,6 @@ import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ResponseSpot
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.request.APILocation;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.request.APIRequestByLocation;
 
-import java.lang.reflect.Array;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -45,7 +44,6 @@ public class XamoomEndUserApi {
     private static XamoomEndUserApi api;
 
     private XamoomApiInterface apiInterface;
-    private XamoomApiListener listener;
     private String systemLanguage;
 
     //constructor
@@ -57,7 +55,7 @@ public class XamoomEndUserApi {
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(apiUrlDev)
                 .setLogLevel(RestAdapter.LogLevel.FULL)
-                //.setLog(new AndroidLog(TAG))
+                        //.setLog(new AndroidLog(TAG))
                 .setConverter(new GsonConverter(gson))
                 .build();
 
@@ -72,15 +70,6 @@ public class XamoomEndUserApi {
         return api;
     }
 
-    //getter & setter
-    public XamoomApiInterface getApi() {
-        return apiInterface;
-    }
-
-    public void setListener(XamoomApiListener listener) {
-        this.listener = listener;
-    }
-
     /**
      * Returns the content with a specific contentId.
      *
@@ -89,7 +78,7 @@ public class XamoomEndUserApi {
      * @param menu
      * @param language
      */
-    public void getContentById(String contentId, boolean style, boolean menu, String language) {
+    public void getContentById(String contentId, boolean style, boolean menu, String language, final APICallback<ContentById> callback) {
         LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
         params.put("content_id", contentId);
         params.put("include_style", style ? "True" : "False");
@@ -100,7 +89,7 @@ public class XamoomEndUserApi {
             @Override
             public void success(ContentById content, Response response) {
                 //Log.v(TAG, "Debug Hellyeah: " + content);
-                listener.gotContentById(content);
+                callback.finished(content);
             }
 
             @Override
@@ -119,7 +108,7 @@ public class XamoomEndUserApi {
      * @param menu
      * @param language
      */
-    public void getContentbyIdFull(String contentId, boolean style, boolean menu, String language, boolean full) {
+    public void getContentbyIdFull(String contentId, boolean style, boolean menu, String language, boolean full, final APICallback<ContentById> callback) {
         LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
         params.put("content_id", contentId);
         params.put("include_style", style ? "True" : "False");
@@ -131,7 +120,7 @@ public class XamoomEndUserApi {
             @Override
             public void success(ContentById content, Response response) {
                 //Log.v(TAG, "Debug Hellyeah: " + content);
-                listener.gotContentById(content);
+                callback.finished(content);
             }
 
             @Override
@@ -149,7 +138,7 @@ public class XamoomEndUserApi {
      * @param menu
      * @param language
      */
-    public void getContentByLocationIdentifier(String locationIdentifier, boolean style, boolean menu, String language) {
+    public void getContentByLocationIdentifier(String locationIdentifier, boolean style, boolean menu, String language, final APICallback<ContentByLocationIdentifier> callback) {
         LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
         params.put("location_identifier", locationIdentifier);
         params.put("include_style", style ? "True" : "False");
@@ -160,7 +149,7 @@ public class XamoomEndUserApi {
             @Override
             public void success(ContentByLocationIdentifier content, Response response) {
                 //Log.v(TAG, "Debug Hellyeah: " + content);
-                listener.gotContentByLocationIdentifier(content);
+                callback.finished(content);
             }
 
             @Override
@@ -177,7 +166,7 @@ public class XamoomEndUserApi {
      * @param lon
      * @param language
      */
-    public void getContentByLocation(double lat, double lon, String language) {
+    public void getContentByLocation(double lat, double lon, String language, final APICallback<ContentByLocation> callback) {
         APILocation location = new APILocation(lat, lon);
         APIRequestByLocation params = new APIRequestByLocation(location, language);
 
@@ -185,7 +174,7 @@ public class XamoomEndUserApi {
             @Override
             public void success(ContentByLocation content, Response response) {
                 //Log.v(TAG, "Debug Hellyeah: " + content);
-                listener.gotContentByLocation(content);
+                callback.finished(content);
             }
 
             @Override
@@ -235,17 +224,17 @@ public class XamoomEndUserApi {
      * Returns a list of spots.
      *
      * @param systemId - when calling with an API Key, can be 0
-     * @param mapTags - StringArray with mapTags you want to display
+     * @param mapTags  - StringArray with mapTags you want to display
      * @param language
      */
-    public void getSpotMap(String systemId, String[] mapTags, String language) {
+    public void getSpotMap(String systemId, String[] mapTags, String language, final APICallback<ResponseSpotMap> callback) {
 
 
         apiInterface.getSpotMap(systemId, TextUtils.join(",", mapTags), language, new Callback<ResponseSpotMap>() {
             @Override
             public void success(ResponseSpotMap result, Response response) {
                 //Log.v(TAG, "Debug Hellyeah: " + content);
-                listener.gotSpotMap(result);
+                callback.finished(result);
             }
 
             @Override
@@ -264,7 +253,7 @@ public class XamoomEndUserApi {
      * @param radius
      * @param limit
      */
-    public void getClosestSpots(double lat, double lon, String language, int radius, int limit) {
+    public void getClosestSpots(double lat, double lon, String language, int radius, int limit, final APICallback<ResponseSpotMap> callback) {
         APILocation location = new APILocation(lat, lon);
         APIRequestByLocation params = new APIRequestByLocation(location, language);
         params.setRadius(radius);
@@ -274,7 +263,7 @@ public class XamoomEndUserApi {
             @Override
             public void success(ResponseSpotMap result, Response response) {
                 //Log.v(TAG, "Debug Hellyeah: " + result);
-                listener.gotClosestSpots(result);
+                callback.finished(result);
             }
 
             @Override
@@ -284,11 +273,8 @@ public class XamoomEndUserApi {
         });
     }
 
-    /**
-     *
-     *
-     */
-    public void getContentList(String language, int pageSize, String cursor, String[] tags) {
+    //testing
+    public void getContentList(String language, int pageSize, String cursor, String[] tags, final APICallback<ContentList> callback) {
         if (cursor == null) {
             cursor = "null";
         }
@@ -297,7 +283,7 @@ public class XamoomEndUserApi {
             @Override
             public void success(ContentList result, Response response) {
                 //Log.v(TAG, "Debug Hellyeah: " + result);
-                listener.gotContentList(result);
+                callback.finished(result);
             }
 
             @Override

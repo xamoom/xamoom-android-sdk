@@ -6,45 +6,79 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.XamoomApiListener;
+import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.APICallback;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.XamoomEndUserApi;
-import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentBlocks.ResponseContentBlock;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentById;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentByLocation;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentByLocationIdentifier;
-import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentByLocationItem;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentList;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ResponseSpotMap;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
-
-public class MainActivity extends ActionBarActivity implements XamoomApiListener {
+public class MainActivity extends ActionBarActivity  {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //create XamoomEndUserApi & set listener
-        XamoomEndUserApi.getInstance().setListener(this);
 
         //test every api call
-        XamoomEndUserApi.getInstance().getContentById("a3911e54085c427d95e1243844bd6aa3", false, false, "de");
+        XamoomEndUserApi.getInstance().getContentById("a3911e54085c427d95e1243844bd6aa3", false, false, "de", new APICallback<ContentById>() {
+            @Override
+            public void finished(ContentById result) {
+                Log.v("XamoomEndUserApi", "Worked! "  );
+            }
+        });
 
-        XamoomEndUserApi.getInstance().getContentbyIdFull("a3911e54085c427d95e1243844bd6aa3", false, false, "de", true);
+        XamoomEndUserApi.getInstance().getContentbyIdFull("a3911e54085c427d95e1243844bd6aa3", false, false, "de", true, new APICallback<ContentById>() {
+            @Override
+            public void finished(ContentById result) {
+                Log.v("XamoomEndUserApi", "Worked! "  );
+            }
+        });
 
-        XamoomEndUserApi.getInstance().getContentByLocationIdentifier("0ana0", false, false, "de");
+        XamoomEndUserApi.getInstance().getContentByLocationIdentifier("0ana0", false, false, "de", new APICallback<ContentByLocationIdentifier>() {
+            @Override
+            public void finished(ContentByLocationIdentifier result) {
+                Log.v("XamoomEndUserApi", "Worked! " );
+            }
+        });
 
-        XamoomEndUserApi.getInstance().getContentByLocation(46.615119, 14.262106, "de");
+        XamoomEndUserApi.getInstance().getContentByLocation(46.615119, 14.262106, "de", new APICallback<ContentByLocation>() {
+            @Override
+            public void finished(ContentByLocation result) {
+                Log.v("XamoomEndUserApi", "Worked! "  );
+            }
+        });
 
-        XamoomEndUserApi.getInstance().getSpotMap("0", new String[]{"stw"}, "de");
+        XamoomEndUserApi.getInstance().getSpotMap("0", new String[]{"stw"}, "de", new APICallback<ResponseSpotMap>() {
+            @Override
+            public void finished(ResponseSpotMap result) {
+                Log.v("XamoomEndUserApi", "Worked! "  );
+            }
+        });
 
-        XamoomEndUserApi.getInstance().getClosestSpots(46.615119, 14.262106, "de", 100, 10);
+        XamoomEndUserApi.getInstance().getClosestSpots(46.615119, 14.262106, "de", 100, 10, new APICallback<ResponseSpotMap>() {
+            @Override
+            public void finished(ResponseSpotMap result) {
+                Log.v("XamoomEndUserApi", "Worked! "  );
+            }
+        });
 
-        XamoomEndUserApi.getInstance().getContentList("de", 7, null, new String[]{"artists"});
+        XamoomEndUserApi.getInstance().getContentList("de", 7, null, new String[]{"artists"}, new APICallback<ContentList>() {
+            @Override
+            public void finished(ContentList result) {
+                Log.v("XamoomEndUserApi", "Worked! "  );
+            }
+        });
+
+        XamoomEndUserApi.getInstance().getContentList("de", 7, null, new String[]{"artists"}, new APICallback<ContentList>() {
+            @Override
+            public void finished(ContentList result) {
+                Log.v("XamoomEndUserApi", "Worked! "  );
+            }
+        });
     }
 
     @Override
@@ -67,40 +101,5 @@ public class MainActivity extends ActionBarActivity implements XamoomApiListener
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    //event listeners
-
-    @Override
-    public void gotContentByLocationIdentifier(ContentByLocationIdentifier result) {
-        Log.v("XamoomEndUserApi","Got ContentByLocationIdentifier: " + result);
-    }
-
-    @Override
-    public void gotContentById(ContentById result) {
-        Log.v("XamoomEndUserApi","Got ContentById: " + result);
-    }
-
-    @Override
-    public void gotContentByLocation(ContentByLocation result) {
-        Log.v("XamoomEndUserApi","Got ContentByLocation: " + result);
-
-        ContentByLocationItem item = result.getItems().get(0);
-        XamoomEndUserApi.getInstance().queueGeofenceAnalytics("de", item.getLanguage(), item.getSystemId(), item.getSystemName(), item.getContentId(), item.getContentName(), item.getSpotId(), item.getSpotName());
-    }
-
-    @Override
-    public void gotSpotMap(ResponseSpotMap result) {
-        Log.v("XamoomEndUserApi","Got ResponseSpotMap: " + result);
-    }
-
-    @Override
-    public void gotClosestSpots(ResponseSpotMap result) {
-        Log.v("XamoomEndUserApi","Got ResponseSpotMap: " + result);
-    }
-
-    @Override
-    public void gotContentList(ContentList result) {
-        Log.v("XamoomEndUserApi","Got ContentList: " + result);
     }
 }
