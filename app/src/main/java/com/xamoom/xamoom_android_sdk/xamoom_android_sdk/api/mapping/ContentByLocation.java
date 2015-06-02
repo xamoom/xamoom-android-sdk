@@ -11,6 +11,18 @@ public class ContentByLocation {
 
     @Override
     public String toString() {
-        return super.toString();
+        String output = "items: ";
+
+        for (ContentByLocationItem item : items) {
+            output += "{" + item.toString() + "},";
+        }
+
+        return output;
+    }
+
+    //getter & setter
+
+    public List<ContentByLocationItem> getItems() {
+        return items;
     }
 }

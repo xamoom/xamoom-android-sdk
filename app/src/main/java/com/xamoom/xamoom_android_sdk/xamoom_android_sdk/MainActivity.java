@@ -12,6 +12,7 @@ import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentBlock
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentById;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentByLocation;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentByLocationIdentifier;
+import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentByLocationItem;
 
 
 public class MainActivity extends ActionBarActivity implements XamoomApiListener {
@@ -22,17 +23,16 @@ public class MainActivity extends ActionBarActivity implements XamoomApiListener
         setContentView(R.layout.activity_main);
 
         //create XamoomEndUserApi & set listener
-        XamoomEndUserApi api = new XamoomEndUserApi();
-        api.setListener(this);
+        XamoomEndUserApi.getInstance().setListener(this);
 
         //test every api call
-        api.getContentById("a3911e54085c427d95e1243844bd6aa3", false, false, "de");
+        //XamoomEndUserApi.getInstance().getContentById("a3911e54085c427d95e1243844bd6aa3", false, false, "de");
 
-        api.getContentbyIdFull("a3911e54085c427d95e1243844bd6aa3", false, false, "de", true);
+        //XamoomEndUserApi.getInstance().getContentbyIdFull("a3911e54085c427d95e1243844bd6aa3", false, false, "de", true);
 
-        api.getContentByLocationIdentifier("0ana0", false, false, "de");
+        //XamoomEndUserApi.getInstance().getContentByLocationIdentifier("0ana0", false, false, "de");
 
-        api.getContentByLocation(46.615119, 14.262106, "de");
+        XamoomEndUserApi.getInstance().getContentByLocation(46.615119, 14.262106, "de");
     }
 
     @Override
@@ -72,5 +72,8 @@ public class MainActivity extends ActionBarActivity implements XamoomApiListener
     @Override
     public void gotContentByLocation(ContentByLocation result) {
         Log.v("XamoomEndUserApi","Got ContentByLocation: " + result);
+
+        ContentByLocationItem item = result.getItems().get(0);
+        XamoomEndUserApi.getInstance().queueGeofenceAnalytics("de", item.getLanguage(), item.getSystemId(), item.getSystemName(), item.getContentId(), item.getContentName(), item.getSpotId(), item.getSpotName());
     }
 }

@@ -28,4 +28,78 @@ public class ContentByLocationItem {
     public String toString() {
         return (String.format("ContentByLocationItem with contentId: %s",contentId));
     }
+
+    //getter & setter
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getImagePublicUrl() {
+        return imagePublicUrl;
+    }
+
+    public String getContentId() {
+        return contentId;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public double getLon() {
+        return lon;
+    }
+
+    public String getSystemName() {
+        return systemName;
+    }
+
+    public String getSystemUrl() {
+        return systemUrl;
+    }
+
+    public String getStyleFgColor() {
+        return styleFgColor;
+    }
+
+    public String getStyleBgColor() {
+        return styleBgColor;
+    }
+
+    public String getStyleHlColor() {
+        return styleHlColor;
+    }
+
+    public String getStyleIcon() {
+        return styleIcon;
+    }
+
+    public String getSystemIcon() {
+        return systemIcon;
+    }
+
+    public String getSystemId() {
+        return systemId;
+    }
+
+    public String getSpotId() {
+        return spotId;
+    }
+
+    public String getSpotName() {
+        return spotName;
+    }
+
+    public String getContentName() {
+        return contentName;
+    }
 }
