@@ -6,88 +6,88 @@
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity"
     android:clickable="false">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:weightSum="1">
+        android:layout_height="match_parent">
 
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/getById_button_name"
-            android:id="@+id/getById_button"
-            android:onClick="getByIdButtonOnClick" />
-
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/getByIdFull_button_name"
-            android:id="@+id/getByIdFull_button"
-            android:onClick="getByIdFullButtonOnClick" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/getByLocation_button_name"
-            android:id="@+id/getByLocation_button"
-            android:onClick="getByLocationFullButtonOnClick"/>
-
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/getByLocationIdentifier_button_name"
-            android:id="@+id/getByLocationIdentifier_button"
-            android:onClick="getByLocationIdentifierButtonOnClick" />
-
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/getSpotMap_button_name"
-            android:id="@+id/getSpotMap_button"
-            android:onClick="getSpotMapButtonOnClick" />
-
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/getClosestSpots_button_name"
-            android:id="@+id/getClosestSpots_button"
-            android:onClick="getClosestSpotsButtonOnClick" />
-
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/getContentList_button_name"
-            android:id="@+id/getContentList_button"
-            android:onClick="getContentListButtonOnClick" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="@string/outputTextViewLabel_text"
-            android:id="@+id/outputTextViewLabel"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp" />
-
-        <ScrollView
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" >
+            android:layout_height="match_parent"
+            android:weightSum="1">
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/getById_button_name"
+                android:id="@+id/getById_button"
+                android:onClick="getByIdButtonOnClick" />
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/getByIdFull_button_name"
+                android:id="@+id/getByIdFull_button"
+                android:onClick="getByIdFullButtonOnClick" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/getByLocation_button_name"
+                android:id="@+id/getByLocation_button"
+                android:onClick="getByLocationFullButtonOnClick"/>
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/getByLocationIdentifier_button_name"
+                android:id="@+id/getByLocationIdentifier_button"
+                android:onClick="getByLocationIdentifierButtonOnClick" />
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/getSpotMap_button_name"
+                android:id="@+id/getSpotMap_button"
+                android:onClick="getSpotMapButtonOnClick" />
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/getClosestSpots_button_name"
+                android:id="@+id/getClosestSpots_button"
+                android:onClick="getClosestSpotsButtonOnClick" />
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/getContentList_button_name"
+                android:id="@+id/getContentList_button"
+                android:onClick="getContentListButtonOnClick" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/outputTextViewLabel_text"
+                android:id="@+id/outputTextViewLabel"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp" />
+
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+
                 android:id="@+id/outputTextView"
                 android:background="#ffd0d0d0" />
-        </ScrollView>
 
-
-    </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 </RelativeLayout>
