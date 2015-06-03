@@ -23,7 +23,7 @@ import java.lang.reflect.Type;
 /**
  * Created by raphaelseher on 03.06.15.
  */
-public class ContentBlockDeserializer implements JsonDeserializer {
+class ContentBlockDeserializer implements JsonDeserializer {
     public ContentBlock deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 
         ContentBlock cb;

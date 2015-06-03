@@ -104,7 +104,7 @@ public class XamoomEndUserApi {
         if (language == null)
             language = systemLanguage;
 
-        LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
+        LinkedHashMap<String, String> params = new LinkedHashMap<>();
         params.put("content_id", contentId);
         params.put("include_style", style ? "True" : "False");
         params.put("include_menu", menu ? "True" : "False");
@@ -139,7 +139,7 @@ public class XamoomEndUserApi {
         if (language == null)
             language = systemLanguage;
 
-        LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
+        LinkedHashMap<String, String> params = new LinkedHashMap<>();
         params.put("content_id", contentId);
         params.put("include_style", style ? "True" : "False");
         params.put("include_menu", menu ? "True" : "False");
@@ -174,7 +174,7 @@ public class XamoomEndUserApi {
         if (language == null)
             language = systemLanguage;
 
-        LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
+        LinkedHashMap<String, String> params = new LinkedHashMap<>();
         params.put("location_identifier", locationIdentifier);
         params.put("include_style", style ? "True" : "False");
         params.put("include_menu", menu ? "True" : "False");
@@ -239,7 +239,7 @@ public class XamoomEndUserApi {
      * @since 1.0
      */
     public void queueGeofenceAnalytics(String requestedLanguage, String deliveredLanguage, String systemId, String systemName, String contentId, String contentName, String spotId, String spotName) {
-        LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
+        LinkedHashMap<String, String> params = new LinkedHashMap<>();
         params.put("requested_language", requestedLanguage);
         params.put("delivered_language", deliveredLanguage);
         params.put("system_id", systemId);

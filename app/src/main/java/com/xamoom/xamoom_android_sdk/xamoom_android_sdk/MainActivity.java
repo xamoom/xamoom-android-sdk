@@ -3,18 +3,13 @@ package com.xamoom.xamoom_android_sdk.xamoom_android_sdk;
 import android.app.ProgressDialog;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.APICallback;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.XamoomEndUserApi;
-import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.Content;
-import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentBlocks.ContentBlock;
-import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentBlocks.ContentBlockType0;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentById;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentByLocation;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentByLocationIdentifier;

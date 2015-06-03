@@ -10,7 +10,8 @@ import junit.framework.TestCase;
 /**
  * Created by raphaelseher on 03.06.15.
  */
-public class XamoomEndUserApiTest extends TestCase {
+public class
+        XamoomEndUserApiTest extends TestCase {
 
     public void testGetInstance() throws Exception {
         assertNotNull("getInstance() should return an object", XamoomEndUserApi.getInstance());
@@ -41,10 +42,6 @@ public class XamoomEndUserApiTest extends TestCase {
                 assertNotNull("getContentByLocationIdentifier() should return an object", result);
             }
         });
-    }
-
-    public void testGetContentByLocation() throws Exception {
-
     }
 
     public void testGetSpotMap() throws Exception {
