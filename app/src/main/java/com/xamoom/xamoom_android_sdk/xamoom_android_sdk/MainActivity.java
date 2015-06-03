@@ -88,7 +88,7 @@ public class MainActivity extends ActionBarActivity  {
         */
     }
 
-    public void getByLocationButtonOnClick (View v) {
+    public void getByIdButtonOnClick (View v) {
         XamoomEndUserApi.getInstance().getContentById("a3911e54085c427d95e1243844bd6aa3", false, false, "de", new APICallback<ContentById>() {
             @Override
             public void finished(ContentById result) {
@@ -97,7 +97,7 @@ public class MainActivity extends ActionBarActivity  {
         });
     }
 
-    public void getByLocationFullButtonOnClick (View v) {
+    public void getByIdFullButtonOnClick (View v) {
         XamoomEndUserApi.getInstance().getContentbyIdFull("a3911e54085c427d95e1243844bd6aa3", false, false, "de", true, new APICallback<ContentById>() {
             @Override
             public void finished(ContentById result) {
@@ -115,6 +115,15 @@ public class MainActivity extends ActionBarActivity  {
         });
     }
 
+    public void getByLocationFullButtonOnClick (View v) {
+        XamoomEndUserApi.getInstance().getContentByLocation(46.615119, 14.262106, "de", new APICallback<ContentByLocation>() {
+            @Override
+            public void finished(ContentByLocation result) {
+                outputTextView.setText("Output: " + result);
+            }
+        });
+    }
+
     public void getSpotMapButtonOnClick (View v) {
         XamoomEndUserApi.getInstance().getSpotMap("0", new String[]{"stw"}, "de", new APICallback<SpotMap>() {
             @Override
@@ -122,7 +131,6 @@ public class MainActivity extends ActionBarActivity  {
                 outputTextView.setText("Output: " + result);
             }
         });
-
     }
 
     public void getClosestSpotsButtonOnClick (View v) {
