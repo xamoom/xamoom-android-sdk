@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">xamoom-android-sdk</string>
 
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="getByLocation_button_name">get by location</string>
+    <string name="getByLocationFull_button_name">get by location full</string>
+    <string name="getByLocationIdentifier_button_name">get by location identifier</string>
+    <string name="getSpotMap_button_name">get spot map</string>
+    <string name="getClosestSpots_button_name">get closest spots</string>
+    <string name="getContentList_button_name">get content list</string>
+    <string name="outputTextViewLabel_text">Output</string>
 </resources>

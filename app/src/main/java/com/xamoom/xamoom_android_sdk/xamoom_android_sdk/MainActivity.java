@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.APICallback;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.XamoomEndUserApi;
@@ -20,12 +22,16 @@ import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.SpotMap;
 
 public class MainActivity extends ActionBarActivity  {
 
+    private TextView outputTextView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        outputTextView = (TextView) findViewById(R.id.outputTextView);
 
+        /*
         //test every api call
         XamoomEndUserApi.getInstance().getContentById("a3911e54085c427d95e1243844bd6aa3", false, false, "de", new APICallback<ContentById>() {
             @Override
@@ -37,7 +43,7 @@ public class MainActivity extends ActionBarActivity  {
                 }
             }
         });
-        /*
+
         XamoomEndUserApi.getInstance().getContentbyIdFull("a3911e54085c427d95e1243844bd6aa3", false, false, "de", true, new APICallback<ContentById>() {
             @Override
             public void finished(ContentById result) {
@@ -79,14 +85,62 @@ public class MainActivity extends ActionBarActivity  {
                 Log.v("XamoomEndUserApi", "Worked! " + result);
             }
         });
+        */
+    }
 
+    public void getByLocationButtonOnClick (View v) {
+        XamoomEndUserApi.getInstance().getContentById("a3911e54085c427d95e1243844bd6aa3", false, false, "de", new APICallback<ContentById>() {
+            @Override
+            public void finished(ContentById result) {
+                outputTextView.setText("Output: " + result);
+            }
+        });
+    }
+
+    public void getByLocationFullButtonOnClick (View v) {
+        XamoomEndUserApi.getInstance().getContentbyIdFull("a3911e54085c427d95e1243844bd6aa3", false, false, "de", true, new APICallback<ContentById>() {
+            @Override
+            public void finished(ContentById result) {
+                outputTextView.setText("Output: " + result);
+            }
+        });
+    }
+
+    public void getByLocationIdentifierButtonOnClick (View v) {
+        XamoomEndUserApi.getInstance().getContentByLocationIdentifier("0ana0", false, false, "de", new APICallback<ContentByLocationIdentifier>() {
+            @Override
+            public void finished(ContentByLocationIdentifier result) {
+                outputTextView.setText("Output: " + result);
+            }
+        });
+    }
+
+    public void getSpotMapButtonOnClick (View v) {
+        XamoomEndUserApi.getInstance().getSpotMap("0", new String[]{"stw"}, "de", new APICallback<SpotMap>() {
+            @Override
+            public void finished(SpotMap result) {
+                outputTextView.setText("Output: " + result);
+            }
+        });
+
+    }
+
+    public void getClosestSpotsButtonOnClick (View v) {
+        XamoomEndUserApi.getInstance().getClosestSpots(46.615119, 14.262106, "de", 100, 10, new APICallback<SpotMap>() {
+            @Override
+            public void finished(SpotMap result) {
+                outputTextView.setText("Output: " + result);
+            }
+        });
+    }
+
+    public void getContentListButtonOnClick (View v) {
         XamoomEndUserApi.getInstance().getContentList("de", 7, null, new String[]{"artists"}, new APICallback<ContentList>() {
             @Override
             public void finished(ContentList result) {
-                Log.v("XamoomEndUserApi", "Worked! " + result);
+                outputTextView.setText("Output: " + result);
             }
         });
-        */
     }
 
     @Override
