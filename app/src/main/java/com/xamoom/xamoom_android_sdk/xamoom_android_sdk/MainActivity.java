@@ -33,7 +33,7 @@ public class MainActivity extends ActionBarActivity  {
                 Log.v("XamoomEndUserApi", "Worked! " + result);
 
                 for (ContentBlock cb : result.getContent().getContentBlocks()) {
-                    Log.v("XamoomEndUserApi", "Class: + " + cb.getClass().toString());
+                    Log.v("XamoomEndUserApi", "Class: + " + cb);
                 }
             }
         });

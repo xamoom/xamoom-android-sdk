@@ -1,12 +1,15 @@
 package com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentBlocks;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  *
  */
 public class ContentBlock {
 
-    private String title;
+    @SerializedName("public")
     private String publicStatus;
+    private String title;
     private int contentBlockType;
 
     public ContentBlock(String title, String publicStatus, int contentBlockType) {
