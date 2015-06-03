@@ -8,6 +8,9 @@ import android.view.MenuItem;
 
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.APICallback;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.XamoomEndUserApi;
+import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.Content;
+import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentBlocks.ContentBlock;
+import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentBlocks.ContentBlockType0;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentById;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentByLocation;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentByLocationIdentifier;
@@ -28,9 +31,13 @@ public class MainActivity extends ActionBarActivity  {
             @Override
             public void finished(ContentById result) {
                 Log.v("XamoomEndUserApi", "Worked! " + result);
+
+                for (ContentBlock cb : result.getContent().getContentBlocks()) {
+                    Log.v("XamoomEndUserApi", "Class: + " + cb.getClass().toString());
+                }
             }
         });
-
+        /*
         XamoomEndUserApi.getInstance().getContentbyIdFull("a3911e54085c427d95e1243844bd6aa3", false, false, "de", true, new APICallback<ContentById>() {
             @Override
             public void finished(ContentById result) {
@@ -79,6 +86,7 @@ public class MainActivity extends ActionBarActivity  {
                 Log.v("XamoomEndUserApi", "Worked! " + result);
             }
         });
+        */
     }
 
     @Override
