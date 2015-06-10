@@ -1,13 +1,19 @@
 package com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
- * Created by raphaelseher on 28.05.15.
+ * Styles
  */
 public class Style {
 
+    @SerializedName("bg_color")
     private String backgroundColor;
+    @SerializedName("hl_color")
     private String highlightColor;
+    @SerializedName("fg_color")
     private String foregroundColor;
+    @SerializedName("ch_color")
     private String chromeHeaderColor;
     private String customMarker;
     private String icon;

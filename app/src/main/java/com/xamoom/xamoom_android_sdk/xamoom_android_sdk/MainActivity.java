@@ -38,7 +38,7 @@ public class MainActivity extends ActionBarActivity  {
 
     public void getByIdButtonOnClick (View v) {
         mProgressDialog.show();
-        XamoomEndUserApi.getInstance().getContentById(TESTING_CONTENT_ID, false, false, "de", new APICallback<ContentById>() {
+        XamoomEndUserApi.getInstance().getContentById(TESTING_CONTENT_ID, true, true, "de", new APICallback<ContentById>() {
             @Override
             public void finished(ContentById result) {
                 mProgressDialog.dismiss();
