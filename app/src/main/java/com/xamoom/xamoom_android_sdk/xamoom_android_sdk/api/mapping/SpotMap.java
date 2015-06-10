@@ -13,10 +13,6 @@ public class SpotMap {
 
     @Override
     public String toString() {
-        String output = "spots: ";
-        for (Spot spot : items) {
-            output += String.format("%s", spot.toString());
-        }
-        return output + "radius: " + radius + ", limit: " + limit;
+        return String.format("spots: %s, radius: %d, limit: %d", items, radius, limit);
     }
 }

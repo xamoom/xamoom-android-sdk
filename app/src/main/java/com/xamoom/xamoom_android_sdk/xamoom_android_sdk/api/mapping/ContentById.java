@@ -14,7 +14,12 @@ public class ContentById {
 
     @Override
     public String toString () {
-        return (String.format("{systemName: %s, systemUrl: %s, systemId: %s, content: %s, style: %s, menu: %s}", systemName, systemUrl, systemId, content, style, menu));
+        return (String.format("systemName: %s, " +
+                "\nsystemUrl: %s, " +
+                "\nsystemId: %s, " +
+                "\ncontent: %s, " +
+                "\nstyle: %s, " +
+                "\nmenu: %s", systemName, systemUrl, systemId, content, style, menu));
     }
 
     //getter

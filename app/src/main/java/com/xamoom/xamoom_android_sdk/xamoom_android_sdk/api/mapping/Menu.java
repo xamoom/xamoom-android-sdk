@@ -11,7 +11,13 @@ public class Menu {
 
     @Override
     public String toString() {
-        return (String.format("{items: %s}", items));
+        String output = "items: ";
+
+        for (MenuItem item : items) {
+            output += item.toString();
+        }
+
+        return output;
     }
 }
 
@@ -22,6 +28,6 @@ class MenuItem {
 
     @Override
     public String toString() {
-        return (String.format("{itemLabel: %s, contentId: %s}", itemLabel, contentId));
+        return String.format("\nitemLabel: %s, \ncontentId: %s}", itemLabel, contentId);
     }
 }

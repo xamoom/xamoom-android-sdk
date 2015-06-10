@@ -1,19 +1,33 @@
 package com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentBlocks;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
- * Created by raphaelseher on 03.06.15.
+ * Download ContentBlock
  */
 public class ContentBlockType8 extends ContentBlock {
 
+    @SerializedName("file_id")
     private String fileId;
-    private String downloadType;
+    @SerializedName("download_type")
+    private int downloadType;
     private String text;
 
-    public ContentBlockType8(String title, String publicStatus, int contentBlockType, String fileId, String downloadType, String text) {
+    public ContentBlockType8(String title, boolean publicStatus, int contentBlockType, String fileId, int downloadType, String text) {
         super(title, publicStatus, contentBlockType);
         this.fileId = fileId;
         this.downloadType = downloadType;
         this.text = text;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("\ntitle: %s" +
+                "\npublicStatus: %s" +
+                "\ncontentBlockType: %s" +
+                "\nfileId: %s" +
+                "\ndownloadType: %d" +
+                "\ntext: %s", this.getTitle(), this.getPublicStatus(), this.getContentBlockType(), fileId, downloadType, text);
     }
 
     //getter
@@ -21,7 +35,7 @@ public class ContentBlockType8 extends ContentBlock {
         return fileId;
     }
 
-    public String getDownloadType() {
+    public int getDownloadType() {
         return downloadType;
     }
 

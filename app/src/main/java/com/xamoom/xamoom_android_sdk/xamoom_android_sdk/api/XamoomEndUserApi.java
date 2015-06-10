@@ -22,6 +22,7 @@ import java.util.Map;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
+import retrofit.android.AndroidLog;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 import retrofit.http.Body;
@@ -44,7 +45,7 @@ import retrofit.http.QueryMap;
 public class XamoomEndUserApi {
 
     private static final String TAG = "XamoomEndUserApi";
-    private static final String apiToken = "24ba39ae-c7ea-11e4-8731-1681e6b88ec1";
+    private static final String apiToken = "4552f99b-2b34-4f18-81a1-0911e25351d7";
     private static final String apiUrl = "https://xamoom-api-dot-xamoom-cloud.appspot.com/_ah/api/";
     private static final String apiUrlDev = "https://xamoom-api-dot-xamoom-cloud-dev.appspot.com/_ah/api/";
     private static XamoomEndUserApi api;
@@ -64,7 +65,7 @@ public class XamoomEndUserApi {
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(apiUrlDev)
                 .setLogLevel(RestAdapter.LogLevel.FULL)
-                //.setLog(new AndroidLog(TAG))
+                .setLog(new AndroidLog(TAG))
                 .setConverter(new GsonConverter(gson))
                 .build();
         apiInterface = restAdapter.create(XamoomApiInterface.class);
@@ -113,7 +114,7 @@ public class XamoomEndUserApi {
         apiInterface.getContentById(params, new Callback<ContentById>() {
             @Override
             public void success(ContentById content, Response response) {
-                //Log.v(TAG, "Debug Hellyeah: " + content);
+                Log.v(TAG, "Debug Hellyeah: " + content);
                 callback.finished(content);
             }
 

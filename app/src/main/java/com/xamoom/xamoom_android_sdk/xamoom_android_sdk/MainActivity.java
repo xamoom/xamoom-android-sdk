@@ -19,6 +19,8 @@ import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.SpotMap;
 
 public class MainActivity extends ActionBarActivity  {
 
+    private static String TESTING_CONTENT_ID = "bc79d8a22a584604b6c9e8d04e4b0834";
+    private static String TESTING_MARKER_ID = "dkriw";
     private TextView outputTextView;
     private ProgressDialog mProgressDialog;
 
@@ -36,33 +38,33 @@ public class MainActivity extends ActionBarActivity  {
 
     public void getByIdButtonOnClick (View v) {
         mProgressDialog.show();
-        XamoomEndUserApi.getInstance().getContentById("a3911e54085c427d95e1243844bd6aa3", false, false, "de", new APICallback<ContentById>() {
+        XamoomEndUserApi.getInstance().getContentById(TESTING_CONTENT_ID, false, false, "de", new APICallback<ContentById>() {
             @Override
             public void finished(ContentById result) {
                 mProgressDialog.dismiss();
-                outputTextView.setText("Output: " + result);
+                outputTextView.setText(result.toString());
             }
         });
     }
 
     public void getByIdFullButtonOnClick (View v) {
         mProgressDialog.show();
-        XamoomEndUserApi.getInstance().getContentbyIdFull("a3911e54085c427d95e1243844bd6aa3", false, false, "de", true, new APICallback<ContentById>() {
+        XamoomEndUserApi.getInstance().getContentbyIdFull(TESTING_CONTENT_ID, false, false, "de", true, new APICallback<ContentById>() {
             @Override
             public void finished(ContentById result) {
                 mProgressDialog.dismiss();
-                outputTextView.setText("Output: " + result);
+                outputTextView.setText(result.toString());
             }
         });
     }
 
     public void getByLocationIdentifierButtonOnClick (View v) {
         mProgressDialog.show();
-        XamoomEndUserApi.getInstance().getContentByLocationIdentifier("0ana0", false, false, "de", new APICallback<ContentByLocationIdentifier>() {
+        XamoomEndUserApi.getInstance().getContentByLocationIdentifier(TESTING_MARKER_ID, false, false, "de", new APICallback<ContentByLocationIdentifier>() {
             @Override
             public void finished(ContentByLocationIdentifier result) {
                 mProgressDialog.dismiss();
-                outputTextView.setText("Output: " + result);
+                outputTextView.setText(result.toString());
             }
         });
     }
@@ -73,7 +75,7 @@ public class MainActivity extends ActionBarActivity  {
             @Override
             public void finished(ContentByLocation result) {
                 mProgressDialog.dismiss();
-                outputTextView.setText("Output: " + result);
+                outputTextView.setText(result.toString());
             }
         });
     }
@@ -84,7 +86,7 @@ public class MainActivity extends ActionBarActivity  {
             @Override
             public void finished(SpotMap result) {
                 mProgressDialog.dismiss();
-                outputTextView.setText("Output: " + result);
+                outputTextView.setText(result.toString());
             }
         });
     }
@@ -95,7 +97,7 @@ public class MainActivity extends ActionBarActivity  {
             @Override
             public void finished(SpotMap result) {
                 mProgressDialog.dismiss();
-                outputTextView.setText("Output: " + result);
+                outputTextView.setText(result.toString());
             }
         });
     }
@@ -106,7 +108,7 @@ public class MainActivity extends ActionBarActivity  {
             @Override
             public void finished(ContentList result) {
                 mProgressDialog.dismiss();
-                outputTextView.setText("Output: " + result);
+                outputTextView.setText(result.toString());
             }
         });
     }

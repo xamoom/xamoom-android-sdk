@@ -8,11 +8,12 @@ import com.google.gson.annotations.SerializedName;
 public class ContentBlock {
 
     @SerializedName("public")
-    private String publicStatus;
+    private boolean publicStatus;
     private String title;
+    @SerializedName("content_block_type")
     private int contentBlockType;
 
-    public ContentBlock(String title, String publicStatus, int contentBlockType) {
+    public ContentBlock(String title, boolean publicStatus, int contentBlockType) {
         this.title = title;
         this.publicStatus = publicStatus;
         this.contentBlockType = contentBlockType;
@@ -20,7 +21,9 @@ public class ContentBlock {
 
     @Override
     public String toString() {
-        return String.format("{title: %s, publicStatus: %s, contentBlockType: %s}", title, publicStatus, Integer.toString(contentBlockType));
+        return String.format("\ntitle: %s" +
+                "\npublicStatus: %s" +
+                "\ncontentBlockType: %s", title, publicStatus, contentBlockType);
     }
 
     //getter
@@ -28,7 +31,7 @@ public class ContentBlock {
         return title;
     }
 
-    public String getPublicStatus() {
+    public boolean getPublicStatus() {
         return publicStatus;
     }
 

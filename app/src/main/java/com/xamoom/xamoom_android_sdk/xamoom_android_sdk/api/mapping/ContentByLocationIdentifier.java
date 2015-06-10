@@ -16,6 +16,13 @@ public class ContentByLocationIdentifier {
 
     @Override
     public String toString () {
-       return (String.format("{systemName: %s, systemUrl: %s, systemId: %s, hasContent: %s, hasSpot: %s, content: %s, style: %s, menu: %s}", systemName, systemUrl, systemId, hasContent, hasSpot, content, style, menu));
+       return (String.format("systemName: %s, " +
+               "\nsystemUrl: %s, " +
+               "\nsystemId: %s, " +
+               "\nhasContent: %s, " +
+               "\nhasSpot: %s, " +
+               "\ncontent: %s, " +
+               "\nstyle: %s, " +
+               "\nmenu: %s", systemName, systemUrl, systemId, hasContent, hasSpot, content, style, menu));
     }
 }

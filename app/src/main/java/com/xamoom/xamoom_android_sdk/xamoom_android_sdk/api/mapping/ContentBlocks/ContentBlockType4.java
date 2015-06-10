@@ -1,19 +1,33 @@
 package com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentBlocks;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
- * Created by raphaelseher on 03.06.15.
+ * Link ContentBlock
  */
 public class ContentBlockType4 extends ContentBlock {
 
+    @SerializedName("link_url")
     private String linkUrl;
-    private String linkType;
+    @SerializedName("link_type")
+    private int linkType;
     private String text;
 
-    public ContentBlockType4(String title, String publicStatus, int contentBlockType, String linkUrl, String linkType, String text) {
+    public ContentBlockType4(String title, boolean publicStatus, int contentBlockType, String linkUrl, int linkType, String text) {
         super(title, publicStatus, contentBlockType);
         this.linkUrl = linkUrl;
         this.linkType = linkType;
         this.text = text;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("\ntitle: %s" +
+                "\npublicStatus: %s" +
+                "\ncontentBlockType: %s" +
+                "\nlinkUrl: %s" +
+                "\nlinkType: %d" +
+                "\ntext: %s", this.getTitle(), this.getPublicStatus(), this.getContentBlockType(), linkUrl, linkType, text);
     }
 
     //getter
@@ -21,7 +35,7 @@ public class ContentBlockType4 extends ContentBlock {
         return linkUrl;
     }
 
-    public String getLinkType() {
+    public int getLinkType() {
         return linkType;
     }
 

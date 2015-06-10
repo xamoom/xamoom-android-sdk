@@ -1,15 +1,26 @@
 package com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentBlocks;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
- * Created by raphaelseher on 03.06.15.
+ * Youtube ContentBlock
  */
 public class ContentBlockType2 extends ContentBlock {
 
+    @SerializedName("youtube_url")
     private String youtubeUrl;
 
-    public ContentBlockType2(String title, String publicStatus, int contentBlockType, String youtubeUrl) {
+    public ContentBlockType2(String title, boolean publicStatus, int contentBlockType, String youtubeUrl) {
         super(title, publicStatus, contentBlockType);
         this.youtubeUrl = youtubeUrl;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("\ntitle: %s" +
+                "\npublicStatus: %s" +
+                "\ncontentBlockType: %s" +
+                "\nyoutubeUrl: %s", this.getTitle(), this.getPublicStatus(), this.getContentBlockType(), youtubeUrl);
     }
 
     //getter

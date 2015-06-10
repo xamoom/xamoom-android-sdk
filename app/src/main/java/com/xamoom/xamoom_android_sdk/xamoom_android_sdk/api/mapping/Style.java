@@ -13,6 +13,6 @@ public class Style {
     private String icon;
 
     public String toString () {
-        return (String.format("{backgroundColor: %s, highlightColor: %s, foregroundColor: %s, chromeHeaderColor: %s, customMarker: %s, icon: %s}", backgroundColor, highlightColor, foregroundColor, chromeHeaderColor, customMarker, icon));
+        return (String.format("\nbackgroundColor: %s, \nhighlightColor: %s, \nforegroundColor: %s, \nchromeHeaderColor: %s, \ncustomMarker: %s, \nicon: %s}", backgroundColor, highlightColor, foregroundColor, chromeHeaderColor, customMarker, icon));
     }
 }

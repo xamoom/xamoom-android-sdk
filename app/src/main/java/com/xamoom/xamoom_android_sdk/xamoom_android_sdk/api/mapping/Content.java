@@ -18,7 +18,12 @@ public class Content {
 
     @Override
     public String toString() {
-        return (String.format("{contentId: %s, imagePublicUrl: %s, descriptionOfContent: %s, language: %s, title: %s, contentBlocks: %s}", contentId, imagePublicUrl, descriptionOfContent, language, title, contentBlocks));
+        return (String.format("\ncontentId: %s, " +
+                "\nimagePublicUrl: %s, " +
+                "\ndescriptionOfContent: %s, " +
+                "\nlanguage: %s, " +
+                "\ntitle: %s, " +
+                "\ncontentBlocks: %s", contentId, imagePublicUrl, descriptionOfContent, language, title, contentBlocks));
     }
 
     //getter

@@ -13,6 +13,6 @@ public class Spot {
 
     @Override
     public String toString() {
-        return String.format("displayName: %s, description: %s, location: %f, %f image: %s \n", displayName, description, location.getLat(), location.getLon(), image);
+        return String.format("\ndisplayName: %s, \ndescription: %s, \nlocation: %f, %f, \nimage: %s", displayName, description, location.getLat(), location.getLon(), image);
     }
 }

@@ -26,7 +26,24 @@ public class ContentByLocationItem {
 
     @Override
     public String toString() {
-        return (String.format("ContentByLocationItem with contentId: %s",contentId));
+        return String.format("\nlanguage: %s," +
+                "\ntitle: %s, " +
+                "\ndescription: %s, " +
+                "\nimagePublicUrl: %s, " +
+                "\ncontentId: %s, " +
+                "\nlat: %f, " +
+                "\nlon: %f, " +
+                "\nsystemName: %s, " +
+                "\nsystemUrl: %s, " +
+                "\nstyleFgColor: %s, " +
+                "\nstyleBgColor: %s, " +
+                "\nstyleHlColor: %s, " +
+                "\nstyleIcon: %s, " +
+                "\nsystemIcon: %s, " +
+                "\nsystemId: %s, " +
+                "\nspotId: %s, " +
+                "\nspotName: %s, " +
+                "\ncontentName: %s", language, title, description, imagePublicUrl, contentId, lat, lon, systemName, systemUrl, styleFgColor, styleBgColor, styleHlColor, styleIcon, systemIcon, systemId, spotId, spotName, contentName);
     }
 
     //getter & setter
