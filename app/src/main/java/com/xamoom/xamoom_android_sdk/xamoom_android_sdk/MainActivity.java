@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.APICallback;
@@ -23,22 +25,42 @@ public class MainActivity extends ActionBarActivity  {
     private static String TESTING_MARKER_ID = "dkriw";
     private TextView outputTextView;
     private ProgressDialog mProgressDialog;
+    private Switch mMenuSwitch;
+    private Switch mStyleSwitch;
+    private boolean mMenuSwitchStatus;
+    private boolean mStyleSwitchStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        outputTextView = (TextView) findViewById(R.id.outputTextView);
+        outputTextView = (TextView)findViewById(R.id.outputTextView);
 
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setIndeterminate(false);
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
+        mMenuSwitch = (Switch)findViewById(R.id.menuSwitch);
+        mMenuSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mMenuSwitchStatus = isChecked;
+            }
+        });
+
+        mStyleSwitch = (Switch)findViewById(R.id.styleSwitch);
+        mStyleSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mStyleSwitchStatus = isChecked;
+            }
+        });
     }
 
     public void getByIdButtonOnClick (View v) {
         mProgressDialog.show();
-        XamoomEndUserApi.getInstance().getContentById(TESTING_CONTENT_ID, true, true, "de", new APICallback<ContentById>() {
+        XamoomEndUserApi.getInstance().getContentById(TESTING_CONTENT_ID, mStyleSwitchStatus, mMenuSwitchStatus, "de", new APICallback<ContentById>() {
             @Override
             public void finished(ContentById result) {
                 mProgressDialog.dismiss();
@@ -49,7 +71,7 @@ public class MainActivity extends ActionBarActivity  {
 
     public void getByIdFullButtonOnClick (View v) {
         mProgressDialog.show();
-        XamoomEndUserApi.getInstance().getContentbyIdFull(TESTING_CONTENT_ID, false, false, "de", true, new APICallback<ContentById>() {
+        XamoomEndUserApi.getInstance().getContentbyIdFull(TESTING_CONTENT_ID, mStyleSwitchStatus, mMenuSwitchStatus, "de", true, new APICallback<ContentById>() {
             @Override
             public void finished(ContentById result) {
                 mProgressDialog.dismiss();
@@ -60,7 +82,7 @@ public class MainActivity extends ActionBarActivity  {
 
     public void getByLocationIdentifierButtonOnClick (View v) {
         mProgressDialog.show();
-        XamoomEndUserApi.getInstance().getContentByLocationIdentifier(TESTING_MARKER_ID, false, false, "de", new APICallback<ContentByLocationIdentifier>() {
+        XamoomEndUserApi.getInstance().getContentByLocationIdentifier(TESTING_MARKER_ID, mStyleSwitchStatus, mMenuSwitchStatus, "de", new APICallback<ContentByLocationIdentifier>() {
             @Override
             public void finished(ContentByLocationIdentifier result) {
                 mProgressDialog.dismiss();

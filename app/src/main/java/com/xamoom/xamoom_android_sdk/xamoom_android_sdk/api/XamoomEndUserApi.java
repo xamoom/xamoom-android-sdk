@@ -114,7 +114,7 @@ public class XamoomEndUserApi {
         apiInterface.getContentById(params, new Callback<ContentById>() {
             @Override
             public void success(ContentById content, Response response) {
-                Log.v(TAG, "Debug Hellyeah: " + content);
+                //Log.v(TAG, "Debug Hellyeah: " + content);
                 callback.finished(content);
             }
 
