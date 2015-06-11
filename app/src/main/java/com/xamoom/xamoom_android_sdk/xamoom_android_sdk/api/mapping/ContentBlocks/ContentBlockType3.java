@@ -3,7 +3,12 @@ package com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentBloc
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Image ContentBlock
+ * Used for mapping Image contentBlocks received from the xamoom-cloud-api.
+ *
+ * @author Raphael Seher
+ * @version 0.1
+ *
+ * @see ContentBlock
  */
 public class ContentBlockType3 extends ContentBlock {
 

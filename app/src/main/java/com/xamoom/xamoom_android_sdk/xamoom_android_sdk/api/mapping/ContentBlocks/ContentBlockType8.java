@@ -3,7 +3,12 @@ package com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentBloc
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Download ContentBlock
+ * Used for mapping Download contentBlocks received from the xamoom-cloud-api.
+ *
+ * @author Raphael Seher
+ * @version 0.1
+ *
+ * @see ContentBlock
  */
 public class ContentBlockType8 extends ContentBlock {
 

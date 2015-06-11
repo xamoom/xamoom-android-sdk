@@ -3,7 +3,12 @@ package com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentBloc
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Soundcloud ContentBlock
+ * Used for mapping Soundcloud contentBlocks received from the xamoom-cloud-api.
+ *
+ * @author Raphael Seher
+ * @version 0.1
+ *
+ * @see ContentBlock
  */
 public class ContentBlockType7 extends ContentBlock {
 
