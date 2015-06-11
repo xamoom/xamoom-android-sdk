@@ -7,12 +7,22 @@ import java.util.List;
  */
 public class SpotMap {
     private List<Spot> items;
+
+    /**
+     * only on getSpotMap;
+     */
     private Style style;
+    /**
+     * only on getClosestSpot
+     */
     private int radius;
+    /**
+     * only on getClosestSpot
+     */
     private int limit;
 
     @Override
     public String toString() {
-        return String.format("spots: %s, radius: %d, limit: %d", items, radius, limit);
+        return String.format("spots: %s, style: %s, radius: %d, limit: %d", items, style, radius, limit);
     }
 }

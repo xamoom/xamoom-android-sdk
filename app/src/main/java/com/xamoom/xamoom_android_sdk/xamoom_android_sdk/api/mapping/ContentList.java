@@ -10,7 +10,6 @@ public class ContentList {
     private String cursor;
     private boolean more;
 
-
     @Override
     public String toString() {
         String output = "";
