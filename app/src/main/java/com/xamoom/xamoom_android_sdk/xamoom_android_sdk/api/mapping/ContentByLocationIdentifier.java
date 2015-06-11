@@ -25,4 +25,36 @@ public class ContentByLocationIdentifier {
                "\nstyle: %s, " +
                "\nmenu: %s", systemName, systemUrl, systemId, hasContent, hasSpot, content, style, menu));
     }
+
+    public String getSystemName() {
+        return systemName;
+    }
+
+    public String getSystemUrl() {
+        return systemUrl;
+    }
+
+    public String getSystemId() {
+        return systemId;
+    }
+
+    public boolean isHasContent() {
+        return hasContent;
+    }
+
+    public boolean isHasSpot() {
+        return hasSpot;
+    }
+
+    public Content getContent() {
+        return content;
+    }
+
+    public Style getStyle() {
+        return style;
+    }
+
+    public Menu getMenu() {
+        return menu;
+    }
 }

@@ -25,4 +25,21 @@ public class SpotMap {
     public String toString() {
         return String.format("spots: %s, style: %s, radius: %d, limit: %d", items, style, radius, limit);
     }
+
+    //getter
+    public List<Spot> getItems() {
+        return items;
+    }
+
+    public Style getStyle() {
+        return style;
+    }
+
+    public int getRadius() {
+        return radius;
+    }
+
+    public int getLimit() {
+        return limit;
+    }
 }

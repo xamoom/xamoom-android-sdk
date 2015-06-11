@@ -19,4 +19,17 @@ public class ContentList {
 
         return output + "cursor: " + cursor + ", more: " + more;
     }
+
+    //getter
+    public List<Content> getItems() {
+        return items;
+    }
+
+    public String getCursor() {
+        return cursor;
+    }
+
+    public boolean isMore() {
+        return more;
+    }
 }
