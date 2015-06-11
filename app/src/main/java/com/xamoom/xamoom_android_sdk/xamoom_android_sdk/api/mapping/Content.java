@@ -11,7 +11,7 @@ public class Content {
 
     private String contentId;
     private String imagePublicUrl;
-    private String descriptionOfContent;
+    private String description;
     private String language;
     private String title;
     private List<ContentBlock> contentBlocks;
@@ -20,10 +20,10 @@ public class Content {
     public String toString() {
         return (String.format("\ncontentId: %s, " +
                 "\nimagePublicUrl: %s, " +
-                "\ndescriptionOfContent: %s, " +
+                "\ndescription: %s, " +
                 "\nlanguage: %s, " +
                 "\ntitle: %s, " +
-                "\ncontentBlocks: %s", contentId, imagePublicUrl, descriptionOfContent, language, title, contentBlocks));
+                "\ncontentBlocks: %s", contentId, imagePublicUrl, description, language, title, contentBlocks));
     }
 
     //getter
@@ -37,7 +37,7 @@ public class Content {
     }
 
     public String getDescriptionOfContent() {
-        return descriptionOfContent;
+        return description;
     }
 
     public String getLanguage() {
