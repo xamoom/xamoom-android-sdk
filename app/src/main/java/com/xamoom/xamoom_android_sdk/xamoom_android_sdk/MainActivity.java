@@ -10,14 +10,13 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.APICallback;
-import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.XamoomEndUserApi;
-import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentById;
-import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentByLocation;
-import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentByLocationIdentifier;
-import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentList;
-import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.SpotMap;
-
+import com.xamoom.android.APICallback;
+import com.xamoom.android.XamoomEndUserApi;
+import com.xamoom.android.mapping.ContentById;
+import com.xamoom.android.mapping.ContentByLocation;
+import com.xamoom.android.mapping.ContentByLocationIdentifier;
+import com.xamoom.android.mapping.ContentList;
+import com.xamoom.android.mapping.SpotMap;
 
 public class MainActivity extends ActionBarActivity  {
 

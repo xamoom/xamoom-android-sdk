@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">xamoom-android-sdk</string>
+    <string name="app_name">xamoom-android-sdk-app</string>
 
     <string name="action_settings">Settings</string>
     <string name="getById_button_name">get by id</string>
