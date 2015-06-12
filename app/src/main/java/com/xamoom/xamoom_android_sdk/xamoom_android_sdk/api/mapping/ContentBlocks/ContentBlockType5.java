@@ -6,7 +6,6 @@ import com.google.gson.annotations.SerializedName;
  * Used for mapping Ebook contentBlocks received from the xamoom-cloud-api.
  *
  * @author Raphael Seher
- * @version 0.1
  *
  * @see ContentBlock
  */

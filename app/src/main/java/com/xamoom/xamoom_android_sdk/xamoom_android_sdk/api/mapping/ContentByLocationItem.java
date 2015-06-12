@@ -1,7 +1,20 @@
 package com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping;
 
 /**
+ * Used for mapping contentByLocationItem from the xamoom-cloud-api.
+ * contentByLocationItem will have a language, a title, description (excerpt),
+ * a contentId, a lat, a lon, a systemName, a systemUrl, a styleFgColor,
+ * a styleBgColor, a styleHlColor, a styleIcon, a systemIcon, a spotId, a spotName,
+ * a contentName;
  *
+ * The styleIcon is a customMarker for a map.
+ *
+ * After the user opens a contentByLocationItem, you have to call the
+ * <code>queueGeofenceAnalytics</code> method.
+ *
+ * @author Raphael Seher
+ *
+ * @see com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.XamoomEndUserApi#queueGeofenceAnalytics(String, String, String, String, String, String, String, String)
  */
 public class ContentByLocationItem {
 

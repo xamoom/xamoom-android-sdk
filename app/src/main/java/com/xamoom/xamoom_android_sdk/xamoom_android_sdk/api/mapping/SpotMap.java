@@ -1,9 +1,22 @@
 package com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping;
 
+import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.APICallback;
+
 import java.util.List;
 
 /**
+ * Used for mapping spotMap from the xamoom-cloud-api.
+ * SpotMap will have a items (list of spots),
+ * a style (only when calling <code>getSpotMap</code>),
+ * a radius (only when calling <code>getClosestSpot</code>,
+ * a limit (only when calling <code>getClosestSpot</code>.
  *
+ * @author Raphael Seher
+ *
+ * @see Spot
+ * @see Style
+ * @see com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.XamoomEndUserApi#getSpotMap(String, String[], String, APICallback)
+ * @see com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.XamoomEndUserApi#getClosestSpots(double, double, String, int, int, APICallback)
  */
 public class SpotMap {
     private List<Spot> items;

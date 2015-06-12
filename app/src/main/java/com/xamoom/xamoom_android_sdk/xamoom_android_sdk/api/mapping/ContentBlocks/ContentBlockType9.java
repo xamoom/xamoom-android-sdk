@@ -1,14 +1,17 @@
 package com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentBlocks;
 
 import com.google.gson.annotations.SerializedName;
+import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.APICallback;
 
 /**
  * Used for mapping Spotmap contentBlocks received from the xamoom-cloud-api.
  *
+ * To display a spotmap you have to call the <code>getSpotMap()</code> method.
+ *
  * @author Raphael Seher
- * @version 0.1
  *
  * @see ContentBlock
+ * @see com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.XamoomEndUserApi#getSpotMap(String, String[], String, APICallback)
  */
 public class ContentBlockType9 extends ContentBlock {
 

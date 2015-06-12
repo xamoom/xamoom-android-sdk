@@ -5,8 +5,14 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Used for mapping contentBlocks received from the xamoom-cloud-api.
  *
+ * Display the text and set the font-style to the systemfont.
+ * The text is html formatted. So you have to display it right and you
+ * have to take care of different font-sizes and other text-stylings.
+ *
  * @author Raphael Seher
- * @version 0.1
+ *
+ * @see ContentBlock
+ * @see com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.Style
  */
 public class ContentBlock {
 

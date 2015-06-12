@@ -5,8 +5,11 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Used for mapping Download contentBlocks received from the xamoom-cloud-api.
  *
+ * The download contentBlock can have 2 different types.
+ * 0 VCF
+ * 1 ICAL
+ *
  * @author Raphael Seher
- * @version 0.1
  *
  * @see ContentBlock
  */

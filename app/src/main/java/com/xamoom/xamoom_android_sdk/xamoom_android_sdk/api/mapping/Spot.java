@@ -3,7 +3,12 @@ package com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping;
 import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.request.Location;
 
 /**
- * TODO:
+ * Used for mapping spot form the xamoom-cloud-api.
+ * Spot will have a displayName, a description (optional), a location and a image (optional).
+ *
+ * @author Raphael Seher
+ *
+ * @see SpotMap
  */
 public class Spot {
     private String displayName;

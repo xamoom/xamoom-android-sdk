@@ -5,8 +5,9 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Used for mapping Youtube contentBlocks received from the xamoom-cloud-api.
  *
+ * You have to implement your own youtube player.
+ *
  * @author Raphael Seher
- * @version 0.1
  *
  * @see ContentBlock
  */

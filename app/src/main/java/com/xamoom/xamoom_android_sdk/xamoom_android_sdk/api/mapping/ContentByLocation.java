@@ -1,9 +1,17 @@
 package com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping;
 
+import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.APICallback;
+
 import java.util.List;
 
 /**
+ * Used for mapping contentByLocation responses from the xamoom-cloud-api.
+ * ContentByLocation will only store the ContentByLocationItems.
  *
+ * @author Raphael Seher
+ *
+ * @see ContentByLocationItem
+ * @see com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.XamoomEndUserApi#getContentByLocation(double, double, String, APICallback)
  */
 public class ContentByLocation {
 
@@ -15,7 +23,6 @@ public class ContentByLocation {
     }
 
     //getter & setter
-
     public List<ContentByLocationItem> getItems() {
         return items;
     }

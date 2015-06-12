@@ -5,8 +5,10 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Used for mapping Image contentBlocks received from the xamoom-cloud-api.
  *
+ * When displaying images you should use the correct width/height-ratio.
+ * The images can be jpg, png, gifs and SVGs.
+ *
  * @author Raphael Seher
- * @version 0.1
  *
  * @see ContentBlock
  */

@@ -1,14 +1,19 @@
 package com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentBlocks;
 
 import com.google.gson.annotations.SerializedName;
+import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.APICallback;
 
 /**
  * Used for mapping Content contentBlocks received from the xamoom-cloud-api.
  *
+ * A content contentBlock is a "link" to another xamoom content.
+ * To get additional informations of a contentBlock, you have to call the getContentById()
+ * method. So you can for example display title, excerpt and image.
+ *
  * @author Raphael Seher
- * @version 0.1
  *
  * @see ContentBlock
+ * @see com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.XamoomEndUserApi#getContentById(String, boolean, boolean, String, APICallback)
  */
 public class ContentBlockType6 extends ContentBlock {
 

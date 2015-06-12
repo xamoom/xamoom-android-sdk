@@ -5,16 +5,15 @@ import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.ContentBlock
 import java.util.List;
 
 /**
- * Used for mapping Content received from the xamoom-cloud-api.
+ * Used for mapping content responses received from the xamoom-cloud-api.
  * Content will have a title, a description, a imagePublicUrl, a language and a contentId.
  *
  * Always display the image (loaded from the imagePublicUrl), the title and the text first.
  *
- * The content from the system will be stored in the <code>contentBlocks</code>. Every contentBlock
- * should be displayed in the existing order. Look up the documentation to see the different contentBlocks.
+ * The content from the system will be stored in the <code>contentBlocks</code>. You have to display
+ * the contentBlocks in the existing order. Look up the documentation to see the different contentBlocks.
  *
  * @author Raphael Seher
- * @version 0.1
  *
  * @see ContentBlock
  * @see ContentById

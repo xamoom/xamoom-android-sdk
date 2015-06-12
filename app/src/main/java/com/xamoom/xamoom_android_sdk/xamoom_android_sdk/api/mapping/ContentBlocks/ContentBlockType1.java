@@ -5,8 +5,10 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Used for mapping Audio contentBlocks received from the xamoom-cloud-api.
  *
+ * You have to implement your own music player to stream the file.
+ * The fileId is only a URL pointing to the file in our cloud.
+ *
  * @author Raphael Seher
- * @version 0.1
  *
  * @see ContentBlock
  */

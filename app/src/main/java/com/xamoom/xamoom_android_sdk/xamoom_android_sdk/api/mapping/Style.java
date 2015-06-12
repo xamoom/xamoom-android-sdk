@@ -3,7 +3,17 @@ package com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Styles
+ * Used for mapping style from the xamoom-cloud-api.
+ * Style will have a backgroundColor, a hightlightColor, a foregroundColor,
+ * a chromeHeaderColor, a customMarker and a icon.
+ *
+ * Use the hightlightColor for normal links.
+ * Use the foregroundColor as text-color.
+ * Use the backgroundColor as background-color.
+ * Use the customMarker as mapMarker.
+ * Use the icon, as a cooperate icon in you app.
+ *
+ * @author Raphael Seher
  */
 public class Style {
 

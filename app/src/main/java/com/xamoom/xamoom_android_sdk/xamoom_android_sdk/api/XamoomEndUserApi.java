@@ -33,14 +33,17 @@ import retrofit.http.Path;
 import retrofit.http.QueryMap;
 
 /**
- * Use XamoomEndUserApi to communicate with the xamoom cloud.
+ * Use XamoomEndUserApi to communicate with the xamoom-cloud-api.
  *
  * For every call use the XamoomEndUserApi.getInstance() and add a method.
  * Every method has an APICallBack to return the result.
  *
- * For more informations visit us on github: https://github.com/xamoom/
+ * For more information visit us on github: https://github.com/xamoom/xamoom-android-sdk
  *
  * @author Raphael Seher (xamoom GmbH)
+ *
+ * @version 0.1
+ *
  */
 public class XamoomEndUserApi {
 
@@ -64,8 +67,8 @@ public class XamoomEndUserApi {
         //create restAdapter with custom gsonConverter
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(apiUrlDev)
-                .setLogLevel(RestAdapter.LogLevel.FULL)
-                .setLog(new AndroidLog(TAG))
+                //.setLogLevel(RestAdapter.LogLevel.FULL)
+                //.setLog(new AndroidLog(TAG))
                 .setConverter(new GsonConverter(gson))
                 .build();
         apiInterface = restAdapter.create(XamoomApiInterface.class);
@@ -97,8 +100,11 @@ public class XamoomEndUserApi {
      * @param contentId Content id of an xamoom content
      * @param style True for returning xamoom style, else false
      * @param menu True for returning xamoom menu, else false
-     * @param language The language for the response (if available), else systemLanguage
+     * @param language The language for the response (if available on xamoom-cloud), else systemLanguage. For german: "de". If null == systemLanguage.
+     *
      * @see ContentById
+     * @see com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.Style
+     * @see com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.Menu
      * @since 1.0
      */
     public void getContentById(String contentId, boolean style, boolean menu, String language, final APICallback<ContentById> callback) {
@@ -129,11 +135,14 @@ public class XamoomEndUserApi {
      * Returns the content with a specific contentId.
      * With full = true you get every contentBlock. If full = false unsynchronised contents wont be send.
      *
-     * @param contentId Content id of an xamoom content
-     * @param style True for returning xamoom style, else false
-     * @param menu True for returning xamoom menu, else false
-     * @param language The language for the response (if available), else systemLanguage
+     * @param contentId Content id of an xamoom content.
+     * @param style True for returning xamoom style, else false.
+     * @param menu True for returning xamoom menu, else false.
+     * @param language The language for the response (if available on xamoom-cloud), else systemLanguage. For german: "de". If null == systemLanguage.
+     *
      * @see ContentById
+     * @see com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.Style
+     * @see com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.Menu
      * @since 1.0
      */
     public void getContentbyIdFull(String contentId, boolean style, boolean menu, String language, boolean full, final APICallback<ContentById> callback) {
@@ -164,11 +173,14 @@ public class XamoomEndUserApi {
     /**
      * Returns the content connected to a locationIdentifier (QR or NFC).
      *
-     * @param locationIdentifier LocationIdentifier from the scanned QR or NFC
-     * @param style True for returning xamoom style, else false
-     * @param menu True for returning xamoom menu, else false
-     * @param language The language for the response (if available), else systemLanguage
+     * @param locationIdentifier LocationIdentifier from the scanned QR or NFC.
+     * @param style True for returning xamoom style, else false.
+     * @param menu True for returning xamoom menu, else false.
+     * @param language The language for the response (if available on xamoom-cloud), else systemLanguage. For german: "de". If null == systemLanguage.
+     *
      * @see ContentByLocationIdentifier
+     * @see com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.Style
+     * @see com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.Menu
      * @since 1.0
      */
     public void getContentByLocationIdentifier(String locationIdentifier, boolean style, boolean menu, String language, final APICallback<ContentByLocationIdentifier> callback) {
@@ -198,9 +210,10 @@ public class XamoomEndUserApi {
     /**
      * Returns a list of contents in a 40 meter radius.
      *
-     * @param lat The latitude of a location (for example user location)
-     * @param lon The longitude of a location (for example user location)
-     * @param language The language for the response (if available), else systemLanguage
+     * @param lat The latitude of a location (for example user location).
+     * @param lon The longitude of a location (for example user location).
+     * @param language The language for the response (if available on xamoom-cloud), else systemLanguage. For german: "de". If null == systemLanguage.
+     *
      * @see ContentByLocation
      * @since 1.0
      */
@@ -226,16 +239,17 @@ public class XamoomEndUserApi {
     }
 
     /**
-     * Geofence analytics, call when displaying a getContentByLocation().
+     * Geofence analytics, call when displaying a <code>getContentByLocation()</code>.
      *
-     * @param requestedLanguage The language you requested
-     * @param deliveredLanguage The returned language
-     * @param systemId The returned systemId
-     * @param systemName The returned systemName
-     * @param contentId The returned contentId
-     * @param contentName The returned contentName
-     * @param spotId The returned spotId
-     * @param spotName The returned spotName
+     * @param requestedLanguage The language you requested.
+     * @param deliveredLanguage The returned language.
+     * @param systemId The returned systemId.
+     * @param systemName The returned systemName.
+     * @param contentId The returned contentId.
+     * @param contentName The returned contentName.
+     * @param spotId The returned spotId.
+     * @param spotName The returned spotName.
+     *
      * @see #getContentByLocation(double, double, String, APICallback)
      * @since 1.0
      */
@@ -267,9 +281,10 @@ public class XamoomEndUserApi {
      * Returns a list of spots.
      * For example for a map.
      *
-     * @param systemId When calling with an API Key, can be 0
-     * @param mapTags  StringArray with mapTags you want to display
-     * @param language The language for the response (if available), else systemLanguage
+     * @param systemId When calling with an API Key, can be 0.
+     * @param mapTags  StringArray with mapTags you want to display.
+     * @param language The language for the response (if available on xamoom-cloud), else systemLanguage. For german: "de". If null == systemLanguage.
+
      * @see SpotMap
      * @since 1.0
      */
@@ -294,11 +309,12 @@ public class XamoomEndUserApi {
     /**
      * Returns a list of spots near a location with a radius.
      *
-     * @param lat The latitude of a location (for example user location)
-     * @param lon The longitude of a location (for example user location)
-     * @param language The language for the response (if available), else systemLanguage
+     * @param lat The latitude of a location (for example user location).
+     * @param lon The longitude of a location (for example user location).
+     * @param language The language for the response (if available on xamoom-cloud), else systemLanguage. For german: "de". If null == systemLanguage.
      * @param radius A search radius in meter
      * @param limit A limit for results
+     *
      * @see SpotMap
      * @since 1.0
      */
@@ -325,10 +341,11 @@ public class XamoomEndUserApi {
     /**
      * Returns a list of contents ordered desc of specific tags.
      *
-     * @param language The language for the response (if available), else systemLanguage
+     * @param language The language for the response (if available), else systemLanguage.
      * @param pageSize Number of returned items.
-     * @param cursor Send for paging, else null
-     * @param tags Tags to filter
+     * @param cursor Send for paging, else null.
+     * @param tags Tags to filter.
+     *
      * @see ContentList
      * @since 1.0
      */
@@ -360,10 +377,11 @@ public class XamoomEndUserApi {
     private interface XamoomApiInterface {
 
         /**
-         * Post to /xamoomEndUserApi/v1/get_content_by_content_id
+         * Post to /xamoomEndUserApi/v1/get_content_by_content_id.
          *
-         * @param params Map with the parameters for the post
-         * @param cb Callback-Method with the result as ContentById
+         * @param params Map with the parameters for the post.
+         * @param cb Callback-Method with the result as ContentById.
+         *
          * @see ContentById
          */
         @Headers({
@@ -375,9 +393,10 @@ public class XamoomEndUserApi {
         void getContentById(@QueryMap Map<String, String> params, Callback<ContentById> cb);
 
         /**
-         * Post to /xamoomEndUserApi/v1/get_content_by_content_id_full
-         * @param params Map with the parameters for the post
-         * @param cb Callback-Method with the result as ContentById
+         * Post to /xamoomEndUserApi/v1/get_content_by_content_id_full.
+         * @param params Map with the parameters for the post.
+         * @param cb Callback-Method with the result as ContentById.
+         *
          * @see ContentById
          */
         @Headers({
@@ -389,10 +408,11 @@ public class XamoomEndUserApi {
         void getContentByIdFull(@QueryMap Map<String, String> params, Callback<ContentById> cb);
 
         /**
-         * Post to /xamoomEndUserApi/v1/get_content_by_location_identifier
+         * Post to /xamoomEndUserApi/v1/get_content_by_location_identifier.
          *
-         * @param params Map with the parameters for the post
-         * @param cb Callback-Method with the result as ContentByLocationIdentifier
+         * @param params Map with the parameters for the post.
+         * @param cb Callback-Method with the result as ContentByLocationIdentifier.
+         *
          * @see ContentByLocationIdentifier
          */
         @Headers({
@@ -405,10 +425,11 @@ public class XamoomEndUserApi {
 
 
         /**
-         * Post to /xamoomEndUserApi/v1/get_content_by_location
+         * Post to /xamoomEndUserApi/v1/get_content_by_location.
          *
-         * @param params Map with the parameters for the post
-         * @param cb Callback-Method with the result as ContentByLocation
+         * @param params Map with the parameters for the post.
+         * @param cb Callback-Method with the result as ContentByLocation.
+         *
          * @see ContentByLocation
          */
         @Headers({
@@ -420,10 +441,10 @@ public class XamoomEndUserApi {
         void getContentWithLocation(@Body RequestByLocation params, Callback<ContentByLocation> cb);
 
         /**
-         * Post to /xamoomEndUserApi/v1/queue_geofence_analytics
+         * Post to /xamoomEndUserApi/v1/queue_geofence_analytics.
          *
-         * @param params Map with the parameters for the post
-         * @param cb Callback-Method with the result as ContentByLocation
+         * @param params Map with the parameters for the post.
+         * @param cb Callback-Method with the result as ContentByLocation.
          */
         @Headers({
                 "Accept: application/json",
@@ -434,11 +455,12 @@ public class XamoomEndUserApi {
         void queueGeofenceAnalytics(@QueryMap Map<String, String> params, Callback<Object> cb);
 
         /**
-         * Get to /xamoomEndUserApi/v1/spotmap/{system_id}/{map_tag}/{language}
-         * @param systemId The systemId of the system
-         * @param mapTags MapTags seperated with comma
-         * @param language The language for the response
-         * @param cb Callback-Method with the result as ContentByLocation
+         * Get to /xamoomEndUserApi/v1/spotmap/{system_id}/{map_tag}/{language}.
+         * @param systemId The systemId of the system.
+         * @param mapTags MapTags seperated with comma.
+         * @param language The language for the response.
+         * @param cb Callback-Method with the result as ContentByLocation.
+         *
          * @see SpotMap
          */
         @Headers({
@@ -450,10 +472,11 @@ public class XamoomEndUserApi {
         void getSpotMap(@Path("system_id") String systemId, @Path("map_tag") String mapTags, @Path("language") String language, Callback<SpotMap> cb);
 
         /**
-         * Post to /xamoomEndUserApi/v1/get_closest_spots
+         * Post to /xamoomEndUserApi/v1/get_closest_spots.
          *
-         * @param params Map with the parameters for the post
-         * @param cb Callback-Method with the result as ContentByLocation
+         * @param params Map with the parameters for the post.
+         * @param cb Callback-Method with the result as ContentByLocation.
+         *
          * @see SpotMap
          */
         @Headers({
@@ -465,13 +488,14 @@ public class XamoomEndUserApi {
         void getClosestSpots(@Body RequestByLocation params, Callback<SpotMap> cb);
 
         /**
-         * Get to /xamoomEndUserApi/v1/content_list/{language}/{page_size}/{cursor}/{tags}
+         * Get to /xamoomEndUserApi/v1/content_list/{language}/{page_size}/{cursor}/{tags}.
          *
-         * @param language The language for the response
+         * @param language The language for the response.
          * @param pageSize Number of returned items.
-         * @param cursor Send for paging, else null
-         * @param tags Tags to filter
-         * @param cb Callback-Method with the result as ContentByLocation
+         * @param cursor Send for paging, else null.
+         * @param tags Tags to filter.
+         * @param cb Callback-Method with the result as ContentByLocation.
+         *
          * @see ContentList
          */
         @Headers({

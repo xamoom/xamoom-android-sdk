@@ -5,8 +5,9 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Used for mapping Soundcloud contentBlocks received from the xamoom-cloud-api.
  *
+ * For displaying soundcloud contentBlocks you have to implement a soundcloud player.
+ *
  * @author Raphael Seher
- * @version 0.1
  *
  * @see ContentBlock
  */

@@ -1,9 +1,23 @@
 package com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping;
 
+import com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.APICallback;
+
 import java.util.List;
 
 /**
- * Created by raphaelseher on 02.06.15.
+ * Used for mapping contentList reponsens from xamoom-cloud-api.
+ * ContentList will have a List of Content items, a cursor
+ * and a more.
+ *
+ * For paging
+ * - use the same pageSize on every call
+ * - use the returned cursor after the first call
+ * - check the boolean more
+ *
+ * @author Raphael Seher
+ *
+ * @see Content
+ * @see com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.XamoomEndUserApi#getContentList(String, int, String, String[], APICallback)
  */
 public class ContentList {
     private List<Content> items;
