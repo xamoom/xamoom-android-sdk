@@ -1,1 +1,0 @@
-# xamoom-android-sdk
