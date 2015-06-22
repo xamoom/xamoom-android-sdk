@@ -21,4 +21,20 @@ public class Spot {
     public String toString() {
         return String.format("\ndisplayName: %s, \ndescription: %s, \nlocation: %f, %f, \nimage: %s", displayName, description, location.getLat(), location.getLon(), image);
     }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public String getImage() {
+        return image;
+    }
 }
