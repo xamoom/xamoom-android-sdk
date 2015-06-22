@@ -292,7 +292,7 @@ public class XamoomEndUserApi {
             language = systemLanguage;
 
         if(systemId == null) {
-            systemId = "null";
+            systemId = "0";
         }
 
         apiInterface.getSpotMap(systemId, TextUtils.join(",", mapTags), language, new Callback<SpotMap>() {
