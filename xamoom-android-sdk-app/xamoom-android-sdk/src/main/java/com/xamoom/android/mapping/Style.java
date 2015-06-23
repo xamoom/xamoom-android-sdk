@@ -31,4 +31,28 @@ public class Style {
     public String toString () {
         return (String.format("\nbackgroundColor: %s, \nhighlightColor: %s, \nforegroundColor: %s, \nchromeHeaderColor: %s, \ncustomMarker: %s, \nicon: %s}", backgroundColor, highlightColor, foregroundColor, chromeHeaderColor, customMarker, icon));
     }
+
+    public String getBackgroundColor() {
+        return backgroundColor;
+    }
+
+    public String getHighlightColor() {
+        return highlightColor;
+    }
+
+    public String getForegroundColor() {
+        return foregroundColor;
+    }
+
+    public String getChromeHeaderColor() {
+        return chromeHeaderColor;
+    }
+
+    public String getCustomMarker() {
+        return customMarker;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
 }
