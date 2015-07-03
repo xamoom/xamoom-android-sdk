@@ -47,9 +47,10 @@ import retrofit.http.QueryMap;
 public class XamoomEndUserApi {
 
     private static final String TAG = "XamoomEndUserApi";
-    private static final String apiToken = "4552f99b-2b34-4f18-81a1-0911e25351d7";
-    private static final String apiUrl = "https://xamoom-api-dot-xamoom-cloud.appspot.com/_ah/api/";
-    private static final String apiUrlDev = "https://xamoom-api-dot-xamoom-cloud-dev.appspot.com/_ah/api/";
+    private static final String apiToken = "4552f99b-2b34-4f18-81a1-0911e25351d7"; //dev
+    //private static final String apiToken = "3441ff29-7113-418b-a5b5-5de2e50de21b";
+    //private static final String apiUrl = "https://xamoom-api-dot-xamoom-cloud.appspot.com/_ah/api/";
+    private static final String apiUrl = "https://xamoom-api-dot-xamoom-cloud-dev.appspot.com/_ah/api/"; //dev
     private static XamoomEndUserApi api;
 
     private XamoomApiInterface apiInterface;
@@ -65,7 +66,7 @@ public class XamoomEndUserApi {
 
         //create restAdapter with custom gsonConverter
         RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(apiUrlDev)
+                .setEndpoint(apiUrl)
                 //.setLogLevel(RestAdapter.LogLevel.FULL)
                 //.setLog(new AndroidLog(TAG))
                 .setConverter(new GsonConverter(gson))
@@ -326,6 +327,9 @@ public class XamoomEndUserApi {
         RequestByLocation params = new RequestByLocation(location, language);
         params.setRadius(radius);
         params.setLimit(limit);
+
+        if(language == null)
+            language = systemLanguage;
 
         apiInterface.getClosestSpots(params, new Callback<SpotMap>() {
             @Override
