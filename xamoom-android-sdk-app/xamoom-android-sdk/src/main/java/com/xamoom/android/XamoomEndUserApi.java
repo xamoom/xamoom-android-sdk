@@ -329,7 +329,9 @@ public class XamoomEndUserApi {
         params.setLimit(limit);
 
         if(language == null)
-            language = systemLanguage;
+            params.setLanguage(systemLanguage);
+        else
+            params.setLanguage(language);
 
         apiInterface.getClosestSpots(params, new Callback<SpotMap>() {
             @Override

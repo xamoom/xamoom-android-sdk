@@ -23,6 +23,10 @@ public class RequestByLocation {
     public void setLimit(int limit) {
         this.limit = limit;
     }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
 }
 
 
