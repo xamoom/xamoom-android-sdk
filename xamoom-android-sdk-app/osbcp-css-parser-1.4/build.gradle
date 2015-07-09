@@ -1,2 +1,0 @@
-configurations.create("default")
-artifacts.add("default", file('osbcp-css-parser-1.4.jar'))
