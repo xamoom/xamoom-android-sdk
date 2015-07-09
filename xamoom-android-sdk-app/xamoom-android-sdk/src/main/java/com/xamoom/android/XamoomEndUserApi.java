@@ -1,5 +1,6 @@
 package com.xamoom.android;
 
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -47,9 +48,9 @@ import retrofit.http.QueryMap;
 public class XamoomEndUserApi {
 
     private static final String TAG = "XamoomEndUserApi";
-    private static final String apiToken = "4552f99b-2b34-4f18-81a1-0911e25351d7"; //dev
     //private static final String apiToken = "3441ff29-7113-418b-a5b5-5de2e50de21b";
     //private static final String apiUrl = "https://xamoom-api-dot-xamoom-cloud.appspot.com/_ah/api/";
+    private static final String apiToken = "4552f99b-2b34-4f18-81a1-0911e25351d7"; //dev
     private static final String apiUrl = "https://xamoom-api-dot-xamoom-cloud-dev.appspot.com/_ah/api/"; //dev
     private static XamoomEndUserApi api;
 
@@ -121,7 +122,11 @@ public class XamoomEndUserApi {
             @Override
             public void success(ContentById content, Response response) {
                 //Log.v(TAG, "Debug Hellyeah: " + content);
-                callback.finished(content);
+                try {
+                    callback.finished(content);
+                } catch (NullPointerException e) {
+                    Log.e(TAG, "getContentById: Callback is not reachable");
+                }
             }
 
             @Override
@@ -160,7 +165,12 @@ public class XamoomEndUserApi {
             @Override
             public void success(ContentById content, Response response) {
                 //Log.v(TAG, "Debug Hellyeah: " + content);
-                callback.finished(content);
+
+                try {
+                    callback.finished(content);
+                } catch (NullPointerException e) {
+                    Log.e(TAG, "getContentById: Callback is not reachable");
+                }
             }
 
             @Override
@@ -197,7 +207,11 @@ public class XamoomEndUserApi {
             @Override
             public void success(ContentByLocationIdentifier content, Response response) {
                 //Log.v(TAG, "Debug Hellyeah: " + content);
-                callback.finished(content);
+                try {
+                    callback.finished(content);
+                } catch (NullPointerException e) {
+                    Log.e(TAG, "getContentByLocationIdentifier: Callback is not reachable");
+                }
             }
 
             @Override
@@ -228,7 +242,11 @@ public class XamoomEndUserApi {
             @Override
             public void success(ContentByLocation content, Response response) {
                 //Log.v(TAG, "Debug Hellyeah: " + content);
-                callback.finished(content);
+                try {
+                    callback.finished(content);
+                } catch (NullPointerException e) {
+                    Log.e(TAG, "getContentByLocation: Callback is not reachable");
+                }
             }
 
             @Override
@@ -300,7 +318,11 @@ public class XamoomEndUserApi {
             @Override
             public void success(SpotMap result, Response response) {
                 //Log.v(TAG, "Debug Hellyeah: " + content);
-                callback.finished(result);
+                try {
+                    callback.finished(result);
+                } catch (NullPointerException e) {
+                    Log.e(TAG, "getSpotMap: Callback is not reachable");
+                }
             }
 
             @Override
@@ -337,7 +359,11 @@ public class XamoomEndUserApi {
             @Override
             public void success(SpotMap result, Response response) {
                 //Log.v(TAG, "Debug Hellyeah: " + result);
-                callback.finished(result);
+                try {
+                    callback.finished(result);
+                } catch (NullPointerException e) {
+                    Log.e(TAG, "getClosestSpots: Callback is not reachable");
+                }
             }
 
             @Override
@@ -370,7 +396,11 @@ public class XamoomEndUserApi {
             @Override
             public void success(ContentList result, Response response) {
                 //Log.v(TAG, "Debug Hellyeah: " + result);
-                callback.finished(result);
+                try {
+                    callback.finished(result);
+                } catch (NullPointerException e) {
+                    Log.e(TAG, "getContentList: Callback is not reachable");
+                }
             }
 
             @Override
