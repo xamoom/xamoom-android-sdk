@@ -21,7 +21,7 @@ import com.xamoom.android.mapping.ContentBlocks.ContentBlockType9;
 import java.lang.reflect.Type;
 
 /**
- * Created by raphaelseher on 03.06.15.
+ * Used for differ between the contentBlocks when deserializing the JSON.
  */
 class ContentBlockDeserializer implements JsonDeserializer {
     public ContentBlock deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
