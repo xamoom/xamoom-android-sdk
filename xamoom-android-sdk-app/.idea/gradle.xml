@@ -9,8 +9,11 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/HtmlSpanner-master" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/osbcp-css-parser-1.4" />
             <option value="$PROJECT_DIR$/xamoom-android-sdk" />
+            <option value="$PROJECT_DIR$/xamoomcontentblocks" />
           </set>
         </option>
       </GradleProjectSettings>

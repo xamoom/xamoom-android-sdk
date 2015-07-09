@@ -1,1 +1,1 @@
-include ':app', ':xamoom-android-sdk'
+include ':app', ':xamoom-android-sdk', ':xamoomcontentblocks', ':HtmlSpanner-master', ':osbcp-css-parser-1.4'

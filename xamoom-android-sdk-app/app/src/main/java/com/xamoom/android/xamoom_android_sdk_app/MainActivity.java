@@ -18,6 +18,8 @@ import com.xamoom.android.mapping.ContentByLocationIdentifier;
 import com.xamoom.android.mapping.ContentList;
 import com.xamoom.android.mapping.SpotMap;
 
+import retrofit.RetrofitError;
+
 public class MainActivity extends ActionBarActivity  {
 
     private static String TESTING_CONTENT_ID = "bc79d8a22a584604b6c9e8d04e4b0834";
@@ -65,6 +67,11 @@ public class MainActivity extends ActionBarActivity  {
                 mProgressDialog.dismiss();
                 outputTextView.setText(result.toString());
             }
+
+            @Override
+            public void error(RetrofitError error) {
+
+            }
         });
     }
 
@@ -75,6 +82,11 @@ public class MainActivity extends ActionBarActivity  {
             public void finished(ContentById result) {
                 mProgressDialog.dismiss();
                 outputTextView.setText(result.toString());
+            }
+
+            @Override
+            public void error(RetrofitError error) {
+
             }
         });
     }
@@ -87,6 +99,11 @@ public class MainActivity extends ActionBarActivity  {
                 mProgressDialog.dismiss();
                 outputTextView.setText(result.toString());
             }
+
+            @Override
+            public void error(RetrofitError error) {
+
+            }
         });
     }
 
@@ -97,6 +114,11 @@ public class MainActivity extends ActionBarActivity  {
             public void finished(ContentByLocation result) {
                 mProgressDialog.dismiss();
                 outputTextView.setText(result.toString());
+            }
+
+            @Override
+            public void error(RetrofitError error) {
+
             }
         });
     }
@@ -109,6 +131,11 @@ public class MainActivity extends ActionBarActivity  {
                 mProgressDialog.dismiss();
                 outputTextView.setText(result.toString());
             }
+
+            @Override
+            public void error(RetrofitError error) {
+
+            }
         });
     }
 
@@ -120,6 +147,11 @@ public class MainActivity extends ActionBarActivity  {
                 mProgressDialog.dismiss();
                 outputTextView.setText(result.toString());
             }
+
+            @Override
+            public void error(RetrofitError error) {
+
+            }
         });
     }
 
@@ -130,6 +162,11 @@ public class MainActivity extends ActionBarActivity  {
             public void finished(ContentList result) {
                 mProgressDialog.dismiss();
                 outputTextView.setText(result.toString());
+            }
+
+            @Override
+            public void error(RetrofitError error) {
+
             }
         });
     }

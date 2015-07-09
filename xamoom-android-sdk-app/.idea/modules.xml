@@ -2,9 +2,12 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/HtmlSpanner-master/HtmlSpanner-master.iml" filepath="$PROJECT_DIR$/HtmlSpanner-master/HtmlSpanner-master.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/osbcp-css-parser-1.4/osbcp-css-parser-1.4.iml" filepath="$PROJECT_DIR$/osbcp-css-parser-1.4/osbcp-css-parser-1.4.iml" />
       <module fileurl="file://$PROJECT_DIR$/xamoom-android-sdk/xamoom-android-sdk.iml" filepath="$PROJECT_DIR$/xamoom-android-sdk/xamoom-android-sdk.iml" />
       <module fileurl="file://$PROJECT_DIR$/xamoom-android-sdk-app.iml" filepath="$PROJECT_DIR$/xamoom-android-sdk-app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/xamoomcontentblocks/xamoomcontentblocks.iml" filepath="$PROJECT_DIR$/xamoomcontentblocks/xamoomcontentblocks.iml" />
     </modules>
   </component>
 </project>
