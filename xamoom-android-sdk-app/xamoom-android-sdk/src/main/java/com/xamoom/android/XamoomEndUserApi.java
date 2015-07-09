@@ -132,6 +132,7 @@ public class XamoomEndUserApi {
             @Override
             public void failure(RetrofitError error) {
                 Log.v(TAG, "Error Hellyeah: " + error);
+                callback.error(error);
             }
         });
     }
