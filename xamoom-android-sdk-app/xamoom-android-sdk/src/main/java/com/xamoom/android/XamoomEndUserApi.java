@@ -48,10 +48,10 @@ import retrofit.http.QueryMap;
 public class XamoomEndUserApi {
 
     private static final String TAG = "XamoomEndUserApi";
-    //private static final String apiToken = "3441ff29-7113-418b-a5b5-5de2e50de21b";
-    //private static final String apiUrl = "https://xamoom-api-dot-xamoom-cloud.appspot.com/_ah/api/";
-    private static final String apiToken = "4552f99b-2b34-4f18-81a1-0911e25351d7"; //dev
-    private static final String apiUrl = "https://xamoom-api-dot-xamoom-cloud-dev.appspot.com/_ah/api/"; //dev
+    private static final String apiToken = "3441ff29-7113-418b-a5b5-5de2e50de21b";
+    private static final String apiUrl = "https://xamoom-api-dot-xamoom-cloud.appspot.com/_ah/api/";
+    //private static final String apiToken = "4552f99b-2b34-4f18-81a1-0911e25351d7"; //dev
+    //private static final String apiUrl = "https://xamoom-api-dot-xamoom-cloud-dev.appspot.com/_ah/api/"; //dev
     private static XamoomEndUserApi api;
 
     private XamoomApiInterface apiInterface;
@@ -93,48 +93,6 @@ public class XamoomEndUserApi {
     //getter
     public String getSystemLanguage() {
         return systemLanguage;
-    }
-
-    /**
-     * Returns the content with a specific contentId.
-     *
-     * @param contentId Content id of an xamoom content
-     * @param style True for returning xamoom style, else false
-     * @param menu True for returning xamoom menu, else false
-     * @param language The language for the response (if available on xamoom-cloud), else systemLanguage. For german: "de". If null == systemLanguage.
-     *
-     * @see ContentById
-     * @see com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.Style
-     * @see com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.Menu
-     * @since 1.0
-     */
-    public void getContentById(String contentId, boolean style, boolean menu, String language, final APICallback<ContentById> callback) {
-        if (language == null)
-            language = systemLanguage;
-
-        LinkedHashMap<String, String> params = new LinkedHashMap<>();
-        params.put("content_id", contentId);
-        params.put("include_style", style ? "True" : "False");
-        params.put("include_menu", menu ? "True" : "False");
-        params.put("language", language);
-
-        apiInterface.getContentById(params, new Callback<ContentById>() {
-            @Override
-            public void success(ContentById content, Response response) {
-                //Log.v(TAG, "Debug Hellyeah: " + content);
-                try {
-                    callback.finished(content);
-                } catch (NullPointerException e) {
-                    Log.e(TAG, "getContentById: Callback is not reachable");
-                }
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.v(TAG, "Error Hellyeah: " + error);
-                callback.error(error);
-            }
-        });
     }
 
     /**
@@ -415,23 +373,7 @@ public class XamoomEndUserApi {
      * XamoomApiInterface powered by retrofit.
      */
     private interface XamoomApiInterface {
-
-        /**
-         * Post to /xamoomEndUserApi/v1/get_content_by_content_id.
-         *
-         * @param params Map with the parameters for the post.
-         * @param cb Callback-Method with the result as ContentById.
-         *
-         * @see ContentById
-         */
-        @Headers({
-                "Accept: application/json",
-                "User-Agent: xamoom-android-sdk",
-                "Authorization: " + apiToken
-        })
-        @POST("/xamoomEndUserApi/v1/get_content_by_content_id")
-        void getContentById(@QueryMap Map<String, String> params, Callback<ContentById> cb);
-
+        
         /**
          * Post to /xamoomEndUserApi/v1/get_content_by_content_id_full.
          * @param params Map with the parameters for the post.
