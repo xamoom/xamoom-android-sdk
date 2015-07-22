@@ -1,5 +1,6 @@
 package com.xamoom.android;
 
+import android.content.Context;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
@@ -21,6 +22,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import retrofit.Callback;
+import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -48,11 +50,10 @@ import retrofit.http.QueryMap;
 public class XamoomEndUserApi {
 
     private static final String TAG = "XamoomEndUserApi";
-    private static final String apiToken = "3441ff29-7113-418b-a5b5-5de2e50de21b";
-    private static final String apiUrl = "https://xamoom-api-dot-xamoom-cloud.appspot.com/_ah/api/";
-    //private static final String apiToken = "4552f99b-2b34-4f18-81a1-0911e25351d7"; //dev
-    //private static final String apiUrl = "https://xamoom-api-dot-xamoom-cloud-dev.appspot.com/_ah/api/"; //dev
+    private static final String apiUrl = "https://xamoom-api-dot-xamoom-cloud-dev.appspot.com/_ah/api/";
     private static XamoomEndUserApi api;
+
+    private Context mContext;
 
     private XamoomApiInterface apiInterface;
     private String systemLanguage;
@@ -70,8 +71,15 @@ public class XamoomEndUserApi {
                 .setEndpoint(apiUrl)
                 //.setLogLevel(RestAdapter.LogLevel.FULL)
                 //.setLog(new AndroidLog(TAG))
+                .setRequestInterceptor(new RequestInterceptor() {
+                    @Override
+                    public void intercept(RequestFacade request) {
+                        request.addHeader("Authorization", mContext.getResources().getString(R.string.apiKey));
+                    }
+                })
                 .setConverter(new GsonConverter(gson))
                 .build();
+
         apiInterface = restAdapter.create(XamoomApiInterface.class);
 
         //save systemLanguage
@@ -83,10 +91,11 @@ public class XamoomEndUserApi {
      *
      * @return XamoomEndUserApi
      */
-    public static XamoomEndUserApi getInstance() {
+    public static XamoomEndUserApi getInstance(Context context) {
         if (api == null) {
             api = new XamoomEndUserApi();
         }
+        api.mContext = context;
         return api;
     }
 
@@ -373,7 +382,7 @@ public class XamoomEndUserApi {
      * XamoomApiInterface powered by retrofit.
      */
     private interface XamoomApiInterface {
-        
+
         /**
          * Post to /xamoomEndUserApi/v1/get_content_by_content_id_full.
          * @param params Map with the parameters for the post.
@@ -384,7 +393,6 @@ public class XamoomEndUserApi {
         @Headers({
                 "Accept: application/json",
                 "User-Agent: xamoom-android-sdk",
-                "Authorization: " + apiToken
         })
         @POST("/xamoomEndUserApi/v1/get_content_by_content_id_full")
         void getContentByIdFull(@QueryMap Map<String, String> params, Callback<ContentById> cb);
@@ -400,11 +408,9 @@ public class XamoomEndUserApi {
         @Headers({
                 "Accept: application/json",
                 "User-Agent: xamoom-android-sdk",
-                "Authorization: " + apiToken
         })
         @POST("/xamoomEndUserApi/v1/get_content_by_location_identifier")
         void getContentByLocationIdentifier(@QueryMap Map<String, String> params, Callback<ContentByLocationIdentifier> cb);
-
 
         /**
          * Post to /xamoomEndUserApi/v1/get_content_by_location.
@@ -417,7 +423,6 @@ public class XamoomEndUserApi {
         @Headers({
                 "Accept: application/json",
                 "User-Agent: xamoom-android-sdk",
-                "Authorization: " + apiToken
         })
         @POST("/xamoomEndUserApi/v1/get_content_by_location")
         void getContentWithLocation(@Body RequestByLocation params, Callback<ContentByLocation> cb);
@@ -431,7 +436,6 @@ public class XamoomEndUserApi {
         @Headers({
                 "Accept: application/json",
                 "User-Agent: xamoom-android-sdk",
-                "Authorization: " + apiToken
         })
         @POST("/xamoomEndUserApi/v1/queue_geofence_analytics")
         void queueGeofenceAnalytics(@QueryMap Map<String, String> params, Callback<Object> cb);
@@ -448,7 +452,6 @@ public class XamoomEndUserApi {
         @Headers({
                 "Accept: application/json",
                 "User-Agent: xamoom-android-sdk",
-                "Authorization: " + apiToken
         })
         @GET("/xamoomEndUserApi/v1/spotmap/{system_id}/{map_tag}/{language}")
         void getSpotMap(@Path("system_id") String systemId, @Path("map_tag") String mapTags, @Path("language") String language, Callback<SpotMap> cb);
@@ -464,7 +467,6 @@ public class XamoomEndUserApi {
         @Headers({
                 "Accept: application/json",
                 "User-Agent: xamoom-android-sdk",
-                "Authorization: " + apiToken
         })
         @POST("/xamoomEndUserApi/v1/get_closest_spots")
         void getClosestSpots(@Body RequestByLocation params, Callback<SpotMap> cb);
@@ -483,7 +485,6 @@ public class XamoomEndUserApi {
         @Headers({
                 "Accept: application/json",
                 "User-Agent: xamoom-android-sdk",
-                "Authorization: " + apiToken
         })
         @GET("/xamoomEndUserApi/v1/content_list/{language}/{page_size}/{cursor}/{tags}")
         void getContentList(@Path("language") String language, @Path("page_size") int pageSize, @Path("cursor") String cursor, @Path("tags") String tags, Callback<ContentList> cb);
