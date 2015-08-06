@@ -3,7 +3,7 @@ package com.xamoom.android.mapping.ContentBlocks;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Used for mapping Youtube contentBlocks received from the xamoom-cloud-api.
+ * Used for mapping Video contentBlocks received from the xamoom-cloud-api.
  *
  * You have to implement your own youtube player.
  *
