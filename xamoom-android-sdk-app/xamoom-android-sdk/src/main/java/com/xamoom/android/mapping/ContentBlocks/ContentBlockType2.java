@@ -13,12 +13,12 @@ import com.google.gson.annotations.SerializedName;
  */
 public class ContentBlockType2 extends ContentBlock {
 
-    @SerializedName("youtube_url")
-    private String youtubeUrl;
+    @SerializedName("video_url")
+    private String videoUrl;
 
-    public ContentBlockType2(String title, boolean publicStatus, int contentBlockType, String youtubeUrl) {
+    public ContentBlockType2(String title, boolean publicStatus, int contentBlockType, String videoUrl) {
         super(title, publicStatus, contentBlockType);
-        this.youtubeUrl = youtubeUrl;
+        this.videoUrl = videoUrl;
     }
 
     @Override
@@ -26,11 +26,11 @@ public class ContentBlockType2 extends ContentBlock {
         return String.format("\ntitle: %s" +
                 "\npublicStatus: %s" +
                 "\ncontentBlockType: %s" +
-                "\nyoutubeUrl: %s", this.getTitle(), this.getPublicStatus(), this.getContentBlockType(), youtubeUrl);
+                "\nvideoUrl: %s", this.getTitle(), this.getPublicStatus(), this.getContentBlockType(), videoUrl);
     }
 
     //getter
-    public String getYoutubeUrl() {
-        return youtubeUrl;
+    public String getVideoUrl() {
+        return videoUrl;
     }
 }
