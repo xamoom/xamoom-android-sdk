@@ -51,7 +51,7 @@ import retrofit.http.QueryMap;
 public class XamoomEndUserApi {
 
     private static final String TAG = "XamoomEndUserApi";
-    private static final String apiUrl = "https://xamoom-api-dot-xamoom-cloud-dev.appspot.com/_ah/api/";
+    private static final String apiUrl = "https://xamoom-api-dot-xamoom-cloud.appspot.com/_ah/api/";
     private static XamoomEndUserApi api;
 
     private Context mContext;
@@ -145,6 +145,7 @@ public class XamoomEndUserApi {
             @Override
             public void failure(RetrofitError error) {
                 Log.v(TAG, "Error Hellyeah: " + error);
+                callback.error(error);
             }
         });
     }
@@ -186,6 +187,7 @@ public class XamoomEndUserApi {
             @Override
             public void failure(RetrofitError error) {
                 Log.v(TAG, "Error Hellyeah: " + error);
+                callback.error(error);
             }
         });
     }
@@ -221,6 +223,7 @@ public class XamoomEndUserApi {
             @Override
             public void failure(RetrofitError error) {
                 Log.v(TAG, "Error Hellyeah: " + error);
+                callback.error(error);
             }
         });
     }
@@ -297,6 +300,7 @@ public class XamoomEndUserApi {
             @Override
             public void failure(RetrofitError error) {
                 Log.v(TAG, "Error Hellyeah: " + error);
+                callback.error(error);
             }
         });
     }
@@ -338,6 +342,7 @@ public class XamoomEndUserApi {
             @Override
             public void failure(RetrofitError error) {
                 Log.v(TAG, "Error Hellyeah: " + error);
+                callback.error(error);
             }
         });
     }
@@ -375,6 +380,7 @@ public class XamoomEndUserApi {
             @Override
             public void failure(RetrofitError error) {
                 Log.v(TAG, "Error Hellyeah: " + error);
+                callback.error(error);
             }
         });
     }
