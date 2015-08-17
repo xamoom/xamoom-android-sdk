@@ -1,7 +1,6 @@
 package com.xamoom.android.mapping.ContentBlocks;
 
 import com.google.gson.annotations.SerializedName;
-import com.xamoom.android.APICallback;
 
 /**
  * Used for mapping Content contentBlocks received from the xamoom-cloud-api.
@@ -13,7 +12,6 @@ import com.xamoom.android.APICallback;
  * @author Raphael Seher
  *
  * @see ContentBlock
- * @see com.xamoom.android.XamoomEndUserApi#getContentById(String, boolean, boolean, String, APICallback)
  */
 public class ContentBlockType6 extends ContentBlock {
 

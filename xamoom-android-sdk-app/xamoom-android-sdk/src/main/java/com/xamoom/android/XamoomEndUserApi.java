@@ -1,7 +1,6 @@
 package com.xamoom.android;
 
 import android.content.Context;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -25,7 +24,6 @@ import retrofit.Callback;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
-import retrofit.android.AndroidLog;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 import retrofit.http.Body;
@@ -51,7 +49,7 @@ import retrofit.http.QueryMap;
 public class XamoomEndUserApi {
 
     private static final String TAG = "XamoomEndUserApi";
-    private static final String apiUrl = "https://xamoom-api-dot-xamoom-cloud.appspot.com/_ah/api/";
+    private static final String apiUrl = "https://13-dot-xamoom-api-dot-xamoom-cloud.appspot.com/_ah/api/";
     private static XamoomEndUserApi api;
 
     private Context mContext;
@@ -90,6 +88,7 @@ public class XamoomEndUserApi {
     /**
      * Returns a XamoomEndUserApi singleton.
      *
+     * @param context Context
      * @return XamoomEndUserApi
      */
     public static XamoomEndUserApi getInstance(Context context) {
@@ -113,10 +112,11 @@ public class XamoomEndUserApi {
      * @param style True for returning xamoom style, else false.
      * @param menu True for returning xamoom menu, else false.
      * @param language The language for the response (if available on xamoom-cloud), else systemLanguage. For german: "de". If null == systemLanguage.
+     * @param full Boolean determining to get the full content or not
      *
      * @see ContentById
-     * @see com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.Style
-     * @see com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.Menu
+     * @see com.xamoom.android.mapping.Style
+     * @see com.xamoom.android.mapping.Menu
      * @since 1.0
      */
     public void getContentbyIdFull(String contentId, boolean style, boolean menu, String language, boolean full, final APICallback<ContentById> callback) {
@@ -159,8 +159,8 @@ public class XamoomEndUserApi {
      * @param language The language for the response (if available on xamoom-cloud), else systemLanguage. For german: "de". If null == systemLanguage.
      *
      * @see ContentByLocationIdentifier
-     * @see com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.Style
-     * @see com.xamoom.xamoom_android_sdk.xamoom_android_sdk.api.mapping.Menu
+     * @see com.xamoom.android.mapping.Style
+     * @see com.xamoom.android.mapping.Menu
      * @since 1.0
      */
     public void getContentByLocationIdentifier(String locationIdentifier, boolean style, boolean menu, String language, final APICallback<ContentByLocationIdentifier> callback) {

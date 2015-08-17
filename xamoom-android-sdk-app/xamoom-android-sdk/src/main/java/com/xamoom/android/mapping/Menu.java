@@ -11,7 +11,6 @@ import java.util.List;
  * @author Raphael Seher
  *
  * @see MenuItem
- * @see com.xamoom.android.XamoomEndUserApi#getContentById(String, boolean, boolean, String, APICallback)
  * @see com.xamoom.android.XamoomEndUserApi#getContentbyIdFull(String, boolean, boolean, String, boolean, APICallback)
  * @see com.xamoom.android.XamoomEndUserApi#getContentByLocationIdentifier(String, boolean, boolean, String, APICallback)
  */
