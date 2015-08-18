@@ -1,8 +1,8 @@
 package com.xamoom.android.xamoom_android_sdk_app;
 
 import android.app.ProgressDialog;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,7 +10,7 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.xamoom.android.APICallback;
+import com.xamoom.android.*;
 import com.xamoom.android.XamoomEndUserApi;
 import com.xamoom.android.mapping.ContentById;
 import com.xamoom.android.mapping.ContentByLocation;
@@ -20,7 +20,7 @@ import com.xamoom.android.mapping.SpotMap;
 
 import retrofit.RetrofitError;
 
-public class MainActivity extends ActionBarActivity  {
+public class MainActivity extends AppCompatActivity {
 
     private static String TESTING_CONTENT_ID = "bc79d8a22a584604b6c9e8d04e4b0834";
     private static String TESTING_MARKER_ID = "dkriw";
@@ -30,6 +30,7 @@ public class MainActivity extends ActionBarActivity  {
     private Switch mStyleSwitch;
     private boolean mMenuSwitchStatus;
     private boolean mStyleSwitchStatus;
+    private String mApiKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,27 +58,13 @@ public class MainActivity extends ActionBarActivity  {
                 mStyleSwitchStatus = isChecked;
             }
         });
-    }
 
-    public void getByIdButtonOnClick (View v) {
-        mProgressDialog.show();
-        XamoomEndUserApi.getInstance().getContentById(TESTING_CONTENT_ID, mStyleSwitchStatus, mMenuSwitchStatus, "de", new APICallback<ContentById>() {
-            @Override
-            public void finished(ContentById result) {
-                mProgressDialog.dismiss();
-                outputTextView.setText(result.toString());
-            }
-
-            @Override
-            public void error(RetrofitError error) {
-
-            }
-        });
+        mApiKey = getResources().getString(R.string.apiKey);
     }
 
     public void getByIdFullButtonOnClick (View v) {
         mProgressDialog.show();
-        XamoomEndUserApi.getInstance().getContentbyIdFull(TESTING_CONTENT_ID, mStyleSwitchStatus, mMenuSwitchStatus, "de", true, new APICallback<ContentById>() {
+        XamoomEndUserApi.getInstance(this.getApplicationContext(), mApiKey).getContentbyIdFull(TESTING_CONTENT_ID, mStyleSwitchStatus, mMenuSwitchStatus, "de", true, new APICallback<ContentById>() {
             @Override
             public void finished(ContentById result) {
                 mProgressDialog.dismiss();
@@ -93,7 +80,7 @@ public class MainActivity extends ActionBarActivity  {
 
     public void getByLocationIdentifierButtonOnClick (View v) {
         mProgressDialog.show();
-        XamoomEndUserApi.getInstance().getContentByLocationIdentifier(TESTING_MARKER_ID, mStyleSwitchStatus, mMenuSwitchStatus, "de", new APICallback<ContentByLocationIdentifier>() {
+        XamoomEndUserApi.getInstance(this.getApplicationContext(), mApiKey).getContentByLocationIdentifier(TESTING_MARKER_ID, mStyleSwitchStatus, mMenuSwitchStatus, "de", new APICallback<ContentByLocationIdentifier>() {
             @Override
             public void finished(ContentByLocationIdentifier result) {
                 mProgressDialog.dismiss();
@@ -109,7 +96,7 @@ public class MainActivity extends ActionBarActivity  {
 
     public void getByLocationFullButtonOnClick (View v) {
         mProgressDialog.show();
-        XamoomEndUserApi.getInstance().getContentByLocation(46.615119, 14.262106, "de", new APICallback<ContentByLocation>() {
+        XamoomEndUserApi.getInstance(this.getApplicationContext(), mApiKey).getContentByLocation(46.615119, 14.262106, "de", new APICallback<ContentByLocation>() {
             @Override
             public void finished(ContentByLocation result) {
                 mProgressDialog.dismiss();
@@ -125,7 +112,7 @@ public class MainActivity extends ActionBarActivity  {
 
     public void getSpotMapButtonOnClick (View v) {
         mProgressDialog.show();
-        XamoomEndUserApi.getInstance().getSpotMap("0", new String[]{"stw"}, "de", new APICallback<SpotMap>() {
+        XamoomEndUserApi.getInstance(this.getApplicationContext(), mApiKey).getSpotMap("0", new String[]{"stw"}, "de", new APICallback<SpotMap>() {
             @Override
             public void finished(SpotMap result) {
                 mProgressDialog.dismiss();
@@ -141,7 +128,7 @@ public class MainActivity extends ActionBarActivity  {
 
     public void getClosestSpotsButtonOnClick (View v) {
         mProgressDialog.show();
-        XamoomEndUserApi.getInstance().getClosestSpots(46.615119, 14.262106, "de", 100, 10, new APICallback<SpotMap>() {
+        XamoomEndUserApi.getInstance(this.getApplicationContext(), mApiKey).getClosestSpots(46.615119, 14.262106, "de", 100, 10, new APICallback<SpotMap>() {
             @Override
             public void finished(SpotMap result) {
                 mProgressDialog.dismiss();
@@ -157,7 +144,7 @@ public class MainActivity extends ActionBarActivity  {
 
     public void getContentListButtonOnClick (View v) {
         mProgressDialog.show();
-        XamoomEndUserApi.getInstance().getContentList("de", 7, null, new String[]{"artists"}, new APICallback<ContentList>() {
+        XamoomEndUserApi.getInstance(this.getApplicationContext(), mApiKey).getContentList("de", 7, null, new String[]{"artists"}, new APICallback<ContentList>() {
             @Override
             public void finished(ContentList result) {
                 mProgressDialog.dismiss();

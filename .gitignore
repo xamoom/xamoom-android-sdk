@@ -7,3 +7,5 @@ xamoom-android-sdk-app/xamoom-android-sdk/src/main/res/values/apikey.xml
 .DS_Store
 /build
 /captures
+
+xamoom-android-sdk-app/app/src/main/res/values/apiKey.xml
