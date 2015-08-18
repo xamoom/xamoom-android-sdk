@@ -1,0 +1,64 @@
+apply plugin: 'com.android.library'
+
+version = "0.9.1"
+group = "com.xamoom.android"
+
+ext {
+    bintrayRepo = 'maven'
+    bintrayName = 'xamoomcontentblocks'
+    publishedGroupId = 'com.xamoom.android'
+    libraryName = 'xamoomcontentblocks'
+    artifact = 'xamoomcontentblocks'
+
+    libraryDescription = 'XamoomContentBlocks is the easiest way to display the different contentBlocks from xamoom cloud.'
+
+    siteUrl = 'https://github.com/xamoom/xamoom-android-sdk'
+    gitUrl = 'https://github.com/xamoom/xamoom-android-sdk.git'
+
+    libraryVersion = '0.9.1'
+    developerId = 'xamoom-raphael'
+    developerName = 'Raphael Seher'
+    developerEmail = 'raphael@xamoom.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
+
+    defaultConfig {
+        minSdkVersion 18
+        targetSdkVersion 22
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+repositories {
+    maven {
+        url 'https://dl.bintray.com/xamoom/maven'
+    }
+}
+
+dependencies {
+    compile 'com.android.support:appcompat-v7:22.2.1'
+    compile 'com.android.support:recyclerview-v7:22.2.1'
+    compile 'com.github.bumptech.glide:glide:3.6.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.google.android.gms:play-services:7.8.0'
+    compile 'com.xamoom.android:xamoom-android-sdk:0.9.5'
+    compile files('libs/YouTubeAndroidPlayerApi.jar')
+    compile files('libs/androidsvg-1.2.1.jar')
+}
+
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'

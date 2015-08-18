@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
 
-version = "0.9.5"
+version = "0.9.6"
 group = "com.xamoom.android"
 
 ext {
@@ -12,10 +12,10 @@ ext {
 
     libraryDescription = 'xamoom-android-sdk is a framework for the xamoom-cloud api. So you can write your own applications for the xamoom-cloud.'
 
-    siteUrl = 'https://github.com/xamoom/xamoom-pingeborg-android'
-    gitUrl = 'https://github.com/xamoom/xamoom-pingeborg-android.git'
+    siteUrl = 'https://github.com/xamoom/xamoom-android-sdk'
+    gitUrl = 'https://github.com/xamoom/xamoom-android-sdk.git'
 
-    libraryVersion = '0.9.5'
+    libraryVersion = '0.9.6'
     developerId = 'xamoom-raphael'
     developerName = 'Raphael Seher'
     developerEmail = 'raphael@xamoom.com'
