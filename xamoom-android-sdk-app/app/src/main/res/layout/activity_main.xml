@@ -63,6 +63,13 @@
             android:id="@+id/getContentList_button"
             android:onClick="getContentListButtonOnClick" />
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="xamoomcontentblocks"
+            android:id="@+id/button"
+            android:onClick="xamoomcontentBlocksClick" />
+
         <Switch
             android:layout_width="100dp"
             android:layout_height="wrap_content"
@@ -93,5 +100,10 @@
             android:id="@+id/outputTextView"
             android:background="#ffd0d0d0" />
 
+        <FrameLayout
+            android:id="@+id/xamoomContentBlocksFrameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:background="@color/material_blue_grey_800"/>
     </LinearLayout>
 </ScrollView>

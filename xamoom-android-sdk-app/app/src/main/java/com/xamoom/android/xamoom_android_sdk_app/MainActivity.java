@@ -7,20 +7,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import com.xamoom.android.*;
 import com.xamoom.android.XamoomEndUserApi;
+import com.xamoom.android.mapping.Content;
 import com.xamoom.android.mapping.ContentById;
 import com.xamoom.android.mapping.ContentByLocation;
 import com.xamoom.android.mapping.ContentByLocationIdentifier;
 import com.xamoom.android.mapping.ContentList;
 import com.xamoom.android.mapping.SpotMap;
+import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 
 import retrofit.RetrofitError;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements XamoomContentFragment.OnXamoomContentFragmentInteractionListener {
 
     private static String TESTING_CONTENT_ID = "d8be762e9b644fc4bb7aedfa8c0e17b7"; //pingeb.org about page (productive)
     private static String TESTING_MARKER_ID = "5k9kv"; //Gründerzenturm Build QR Marker
@@ -158,6 +161,38 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void xamoomcontentBlocksClick (View v) {
+        mProgressDialog.show();
+        XamoomEndUserApi.getInstance(this.getApplicationContext(), mApiKey).getContentbyIdFull(TESTING_CONTENT_ID, mStyleSwitchStatus, mMenuSwitchStatus, "de", true, new APICallback<ContentById>() {
+            @Override
+            public void finished(ContentById result) {
+                mProgressDialog.dismiss();
+                XamoomContentFragment fragment = XamoomContentFragment.newInstance(null, mApiKey);
+                fragment.setContent(result.getContent());
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.xamoomContentBlocksFrameLayout, fragment)
+                        .commit();
+            }
+
+            @Override
+            public void error(RetrofitError error) {
+
+            }
+        });
+    }
+
+    @Override
+    public void clickedContentBlock(Content content) {
+        XamoomContentFragment fragment = XamoomContentFragment.newInstance(null, mApiKey);
+        fragment.setContent(content);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.xamoomContentBlocksFrameLayout, fragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -179,4 +214,5 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }
