@@ -3,6 +3,7 @@ package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -61,6 +62,20 @@ public class ContentBlock7ViewHolder extends RecyclerView.ViewHolder {
             String test = String.format(mSoundCloudHTML, cb7.getSoundcloudUrl());
             mSoundCloudWebview.loadData(test, "text/html", "utf-8");
             isSetup = true;
+
+            mSoundCloudWebview.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+                @Override
+                public void onViewAttachedToWindow(View v) {
+                    Log.v("pingeborg", "onViewAttachedToWindow");
+                }
+
+                @Override
+                public void onViewDetachedFromWindow(View v) {
+                    Log.v("pingeborg", "onViewDeattachedToWindow");
+                    WebView x = (WebView)v;
+                    x.reload();
+                }
+            });
         }
     }
 }
