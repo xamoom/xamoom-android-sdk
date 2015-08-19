@@ -26,6 +26,10 @@ Add in your Gradle in dependencies
 
 ## Setup XMMEnduserApi
 
+Add internet permission to your manifest.
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+
 ```java
 
 ```
