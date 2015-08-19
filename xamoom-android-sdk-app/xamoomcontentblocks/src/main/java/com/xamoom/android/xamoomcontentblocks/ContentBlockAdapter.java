@@ -27,6 +27,7 @@ import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock6ViewHolde
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock7ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock8ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock9ViewHolder;
+import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentHeaderViewHolder;
 
 import java.util.List;
 
@@ -69,6 +70,10 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
+            case -1:
+                View view0 = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.content_header_layout, parent, false);
+                return new ContentHeaderViewHolder(view0);
             case 0:
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.content_block_0_layout, parent, false);
@@ -120,6 +125,12 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         ContentBlock cb = mContentBlocks.get(position);
 
         switch (cb.getContentBlockType()) {
+            case -1:
+                ContentBlockType0 cb00 = (ContentBlockType0)cb;
+                ContentHeaderViewHolder newHeaderHolder = (ContentHeaderViewHolder) holder;
+                newHeaderHolder.setLinkColor(mLinkColor);
+                newHeaderHolder.setupContentBlock(cb00);
+                break;
             case 0:
                 ContentBlockType0 cb0 = (ContentBlockType0)cb;
                 ContentBlock0ViewHolder newHolder = (ContentBlock0ViewHolder) holder;

@@ -3,5 +3,6 @@
     <dimen name="fragment_margin">16dp</dimen>
     <dimen name="contentblock_to_contentblock_margin">8dp</dimen>
     <dimen name="contentblock_children_margin">4dp</dimen>
-    <dimen name="contentblock_title_size">24sp</dimen>
+    <dimen name="contentblock_title_size">22sp</dimen>
+    <dimen name="contentHeader_title_size">26sp</dimen>
 </resources>

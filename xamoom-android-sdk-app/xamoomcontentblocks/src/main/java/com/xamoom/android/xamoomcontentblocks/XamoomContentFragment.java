@@ -263,7 +263,7 @@ public class XamoomContentFragment extends Fragment {
         mContentBlocks = new LinkedList<>();
         mContentBlocks.addAll(mContent.getContentBlocks());
 
-        ContentBlockType0 cb0 = new ContentBlockType0(mContent.getTitle(), true, 0, mContent.getDescriptionOfContent());
+        ContentBlockType0 cb0 = new ContentBlockType0(mContent.getTitle(), true, -1, mContent.getDescriptionOfContent());
         mContentBlocks.add(0, cb0);
 
         if(mContent.getImagePublicUrl() != null) {
