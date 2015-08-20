@@ -39,11 +39,20 @@ Add internet permission to your manifest.
 Grab a contentId from your [xamoom-system](https://xamoom.net/) (open a page and copy id from url) and make your first call like this:
 
 ```java
+XamoomEndUserApi.getInstance(this.getApplicationContext(), mApiKey).getContentbyIdFull(mContentId, false, false, null, true, new APICallback<ContentById>() {
+            @Override
+            public void finished(ContentById contentById) {
+                Log.v("xamoom", "Works: " + contentById.getContent().getTitle());
+            }
 
+            @Override
+            public void error(RetrofitError retrofitError) {
+                Log.v("xamoom", "Error: " + retrofitError.getMessage());
+            }
+        });
 ```
 
 ## API Calls
-
 
 ### [contentWithContentId: includeStyle: includeMenu: withLanguage: full: completion: error:](http://xamoom.github.io/xamoom-ios-sdk/docs/html/Classes/XMMEnduserApi.html#//api/name/contentWithContentId:includeStyle:includeMenu:withLanguage:full:completion:error:)
 
