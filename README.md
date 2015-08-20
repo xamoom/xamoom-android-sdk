@@ -267,4 +267,4 @@ How to use it is in our [Step by Step Guide](https://github.com/xamoom/xamoom-an
 
 # Requirements
 
-*
+* Android 4.3
