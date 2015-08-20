@@ -24,7 +24,7 @@ Add in your Gradle in dependencies
 
 # Usage
 
-## Setup XMMEnduserApi
+## Setup XamoomEnduserApi
 
 Add internet permission to your manifest.
 
