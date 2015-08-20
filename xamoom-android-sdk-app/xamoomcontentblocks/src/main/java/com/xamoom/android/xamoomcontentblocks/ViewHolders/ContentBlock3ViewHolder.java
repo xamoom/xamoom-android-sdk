@@ -112,7 +112,7 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
             resizeImageViewWithScaling(mImageView, mFragment, scaleX);
         }
 
-        if(cb3.getLinkUrl() != null) {
+        if(cb3.getLinkUrl() != null && cb3.getLinkUrl() != "") {
             mImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

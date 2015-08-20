@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
 
-version = "0.9.3"
+version = "0.9.4"
 group = "com.xamoom.android"
 
 ext {
@@ -15,7 +15,7 @@ ext {
     siteUrl = 'https://github.com/xamoom/xamoom-android-sdk'
     gitUrl = 'https://github.com/xamoom/xamoom-android-sdk.git'
 
-    libraryVersion = '0.9.3'
+    libraryVersion = '0.9.4'
     developerId = 'xamoom-raphael'
     developerName = 'Raphael Seher'
     developerEmail = 'raphael@xamoom.com'
