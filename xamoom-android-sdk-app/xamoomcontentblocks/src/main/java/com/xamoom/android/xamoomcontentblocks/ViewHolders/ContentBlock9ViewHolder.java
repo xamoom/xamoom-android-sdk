@@ -66,7 +66,7 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
         mApiKey = apiKey;
         mTitleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
         mRootLayout = (LinearLayout) itemView.findViewById(R.id.rootLayout);
-        mMapFragment = new SupportMapFragment().newInstance();
+        mMapFragment = new SupportMapFragment();
 
         //setting up map fragment
         FrameLayout parentFrameLayout = (FrameLayout) itemView.findViewById(R.id.map);
