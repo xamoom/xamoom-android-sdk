@@ -49,7 +49,7 @@ import retrofit.http.QueryMap;
 public class XamoomEndUserApi {
 
     private static final String TAG = "XamoomEndUserApi";
-    private static final String apiUrl = "https://13-dot-xamoom-api-dot-xamoom-cloud.appspot.com/_ah/api/";
+    private static final String apiUrl = "https://13-dot-xamoom-api-dot-xamoom-cloud-dev.appspot.com/_ah/api/";
     private static XamoomEndUserApi api;
 
     private Context mContext;

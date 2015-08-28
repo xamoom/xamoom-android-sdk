@@ -25,7 +25,7 @@ import retrofit.RetrofitError;
 
 public class MainActivity extends AppCompatActivity implements XamoomContentFragment.OnXamoomContentFragmentInteractionListener {
 
-    private static String TESTING_CONTENT_ID = "d8be762e9b644fc4bb7aedfa8c0e17b7"; //pingeb.org about page (productive)
+    private static String TESTING_CONTENT_ID = "8f51819db5c6403d8455593322437c07"; //pingeb.org about page (productive)
     private static String TESTING_MARKER_ID = "5k9kv"; //Gründerzenturm Build QR Marker
     private TextView outputTextView;
     private ProgressDialog mProgressDialog;
