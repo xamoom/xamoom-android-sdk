@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
 
-version = "0.9.7"
+version = "0.9.8"
 group = "com.xamoom.android"
 
 ext {
@@ -15,7 +15,7 @@ ext {
     siteUrl = 'https://github.com/xamoom/xamoom-android-sdk'
     gitUrl = 'https://github.com/xamoom/xamoom-android-sdk.git'
 
-    libraryVersion = '0.9.7'
+    libraryVersion = '0.9.8'
     developerId = 'xamoom-raphael'
     developerName = 'Raphael Seher'
     developerEmail = 'raphael@xamoom.com'
@@ -26,12 +26,12 @@ ext {
 }
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion "22.0.1"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.1"
 
     defaultConfig {
         minSdkVersion 18
-        targetSdkVersion 22
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
     }
@@ -45,7 +45,7 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:22.2.1'
+    compile 'com.android.support:appcompat-v7:23.0.1'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
 }
 

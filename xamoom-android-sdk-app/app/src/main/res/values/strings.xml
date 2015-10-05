@@ -10,4 +10,5 @@
     <string name="getClosestSpots_button_name">get closest spots</string>
     <string name="getContentList_button_name">get content list</string>
     <string name="outputTextViewLabel_text">Output</string>
+    <string name="getByLocationIdentifierBeacon_button_name">Get with Beacon</string>
 </resources>
