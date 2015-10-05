@@ -49,7 +49,7 @@ import retrofit.http.QueryMap;
 public class XamoomEndUserApi {
 
     private static final String TAG = "XamoomEndUserApi";
-    private static final String apiUrl = "https://13-dot-xamoom-api-dot-xamoom-cloud-dev.appspot.com/_ah/api/";
+    private static final String apiUrl = "https://16-dot-xamoom-api-dot-xamoom-cloud.appspot.com/_ah/api/";
     private static XamoomEndUserApi api;
 
     private Context mContext;
@@ -153,7 +153,9 @@ public class XamoomEndUserApi {
     /**
      * Returns the content connected to a locationIdentifier (QR or NFC).
      *
-     * @param locationIdentifier LocationIdentifier from the scanned QR or NFC.
+     * @param locationIdentifier LocationIdentifier from the scanned QR, NFC or iBeacons minor.
+     *                           (Eddystone - only send the locationIdentifier)
+     * @param iBeaconMajor Major id from an iBeacon.
      * @param style True for returning xamoom style, else false.
      * @param menu True for returning xamoom menu, else false.
      * @param language The language for the response (if available on xamoom-cloud), else systemLanguage. For german: "de". If null == systemLanguage.
@@ -163,7 +165,7 @@ public class XamoomEndUserApi {
      * @see com.xamoom.android.mapping.Menu
      * @since 1.0
      */
-    public void getContentByLocationIdentifier(String locationIdentifier, boolean style, boolean menu, String language, final APICallback<ContentByLocationIdentifier> callback) {
+    public void getContentByLocationIdentifier(String locationIdentifier, String iBeaconMajor, boolean style, boolean menu, String language, final APICallback<ContentByLocationIdentifier> callback) {
         if (language == null)
             language = systemLanguage;
 
@@ -172,6 +174,10 @@ public class XamoomEndUserApi {
         params.put("include_style", style ? "True" : "False");
         params.put("include_menu", menu ? "True" : "False");
         params.put("language", language);
+
+        if (iBeaconMajor != null) {
+            params.put("ibeacon_major", iBeaconMajor);
+        }
 
         apiInterface.getContentByLocationIdentifier(params, new Callback<ContentByLocationIdentifier>() {
             @Override
