@@ -154,7 +154,7 @@ public class XamoomContentFragment extends Fragment {
      * Setup the recyclerview.
      */
     private void setupRecyclerView() {
-        if(mContent == null)
+        if(mContent == null || mContentBlockAdapter != null)
             return;
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity().getApplicationContext()));

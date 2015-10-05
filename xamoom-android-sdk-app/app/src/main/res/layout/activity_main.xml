@@ -43,6 +43,14 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/getByLocationIdentifierBeacon_button_name"
+            android:id="@+id/getByLocationIdentifierBeacon_button"
+            android:onClick="getByLocationIdentifierBeaconButtonOnClick" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="@string/getSpotMap_button_name"
             android:id="@+id/getSpotMap_button"
             android:onClick="getSpotMapButtonOnClick" />

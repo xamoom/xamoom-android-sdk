@@ -25,8 +25,9 @@ import retrofit.RetrofitError;
 
 public class MainActivity extends AppCompatActivity implements XamoomContentFragment.OnXamoomContentFragmentInteractionListener {
 
-    private static String TESTING_CONTENT_ID = "d8be762e9b644fc4bb7aedfa8c0e17b7"; //pingeb.org about page (productive)
+    private static String TESTING_CONTENT_ID = "8f51819db5c6403d8455593322437c07"; //pingeb.org about page (productive)
     private static String TESTING_MARKER_ID = "5k9kv"; //Gründerzenturm Build QR Marker
+    private static String[] TESTING_BEACON = new String[]{"de2b94ae-ed98-11e4-3432-78616d6f6f6d","5704","1209"};
     private TextView outputTextView;
     private ProgressDialog mProgressDialog;
     private Switch mMenuSwitch;
@@ -83,7 +84,23 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
 
     public void getByLocationIdentifierButtonOnClick (View v) {
         mProgressDialog.show();
-        XamoomEndUserApi.getInstance(this.getApplicationContext(), mApiKey).getContentByLocationIdentifier(TESTING_MARKER_ID, mStyleSwitchStatus, mMenuSwitchStatus, "de", new APICallback<ContentByLocationIdentifier>() {
+        XamoomEndUserApi.getInstance(this.getApplicationContext(), mApiKey).getContentByLocationIdentifier(TESTING_MARKER_ID, null, mStyleSwitchStatus, mMenuSwitchStatus, "de", new APICallback<ContentByLocationIdentifier>() {
+            @Override
+            public void finished(ContentByLocationIdentifier result) {
+                mProgressDialog.dismiss();
+                outputTextView.setText(result.toString());
+            }
+
+            @Override
+            public void error(RetrofitError error) {
+
+            }
+        });
+    }
+
+    public void getByLocationIdentifierBeaconButtonOnClick (View v) {
+        mProgressDialog.show();
+        XamoomEndUserApi.getInstance(this.getApplicationContext(), mApiKey).getContentByLocationIdentifier(TESTING_BEACON[2], TESTING_BEACON[1], mStyleSwitchStatus, mMenuSwitchStatus, "de", new APICallback<ContentByLocationIdentifier>() {
             @Override
             public void finished(ContentByLocationIdentifier result) {
                 mProgressDialog.dismiss();
