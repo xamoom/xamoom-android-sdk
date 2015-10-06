@@ -20,15 +20,33 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
         super(Application.class);
     }
 
+    private boolean isDev = true;
     private String API_KEY;
-    private static String TESTING_CONTENT_ID = "a814886d3ef9409682b71b46802031c4";
-    private static String TESTING_MARKER_ID = "0ana0";
-    private static String[] TESTING_BEACON = new String[]{"de2b94ae-ed98-11e4-3432-78616d6f6f6d","5704","1209"};
+    private static String TESTING_CONTENT_ID;
+    private static String TESTING_MARKER_ID;
+    private static String[] TESTING_BEACON;
 
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        API_KEY = this.getSystemContext().getString(R.string.apiKey);
+
+        if (isDev) {
+            API_KEY = this.getSystemContext().getString(R.string.dev_apiKey);
+            TESTING_CONTENT_ID = this.getSystemContext().getString(R.string.dev_content_id);
+            TESTING_MARKER_ID = this.getSystemContext().getString(R.string.dev_marker_id);
+            TESTING_BEACON = new String[]{
+                    this.getSystemContext().getString(R.string.dev_ibeacon_id_1),
+                    this.getSystemContext().getString(R.string.dev_ibeacon_id_2),
+                    this.getSystemContext().getString(R.string.dev_ibeacon_id_3)};
+        } else {
+            API_KEY = this.getSystemContext().getString(R.string.prod_apiKey);
+            TESTING_CONTENT_ID = this.getSystemContext().getString(R.string.prod_content_id);
+            TESTING_MARKER_ID = this.getSystemContext().getString(R.string.prod_marker_id);
+            TESTING_BEACON = new String[]{
+                    this.getSystemContext().getString(R.string.prod_ibeacon_id_1),
+                    this.getSystemContext().getString(R.string.prod_ibeacon_id_2),
+                    this.getSystemContext().getString(R.string.prod_ibeacon_id_3)};
+        }
     }
 
     public void testGetInstance() throws Exception {
