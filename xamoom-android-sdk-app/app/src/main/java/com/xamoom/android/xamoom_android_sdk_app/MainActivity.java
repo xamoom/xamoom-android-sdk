@@ -1,13 +1,21 @@
 package com.xamoom.android.xamoom_android_sdk_app;
 
+import android.app.Notification;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.NotificationCompat;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
-import android.widget.FrameLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -21,13 +29,19 @@ import com.xamoom.android.mapping.ContentList;
 import com.xamoom.android.mapping.SpotMap;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 
+import org.altbeacon.beacon.Beacon;
+import org.altbeacon.beacon.BeaconConsumer;
+
+import java.util.ArrayList;
+
 import retrofit.RetrofitError;
 
 public class MainActivity extends AppCompatActivity implements XamoomContentFragment.OnXamoomContentFragmentInteractionListener {
 
-    private static String TESTING_CONTENT_ID = "8f51819db5c6403d8455593322437c07"; //pingeb.org about page (productive)
-    private static String TESTING_MARKER_ID = "5k9kv"; //Gründerzenturm Build QR Marker
-    private static String[] TESTING_BEACON = new String[]{"de2b94ae-ed98-11e4-3432-78616d6f6f6d","5704","1209"};
+    private static final String TAG = "XamoomAndroidSdkApp";
+    private static final String TESTING_CONTENT_ID = "8f51819db5c6403d8455593322437c07"; //pingeb.org about page (productive)
+    private static final String TESTING_MARKER_ID = "5k9kv"; //Gründerzenturm Build QR Marker
+    private static final String[] TESTING_BEACON = new String[]{"de2b94ae-ed98-11e4-3432-78616d6f6f6d","5704","1209"};
     private TextView outputTextView;
     private ProgressDialog mProgressDialog;
     private Switch mMenuSwitch;
@@ -35,6 +49,62 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
     private boolean mMenuSwitchStatus;
     private boolean mStyleSwitchStatus;
     private String mApiKey;
+
+    private String output = new String("");
+
+    private final BroadcastReceiver mEnterRegionBroadCastReciever = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG, "enterRegion");
+        }
+    };
+
+    private final BroadcastReceiver mExitRegionBroadCastReciever = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG, "exitRegion");
+        }
+    };
+
+    private final BroadcastReceiver mFoundBeaconsBroadCastReciever = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            ArrayList<Parcelable> beacons = intent.getParcelableArrayListExtra(XamoomBeaconService.BEACONS);
+            Log.d(TAG, "found beacons : " + beacons.size());
+        }
+    };
+
+    private final BroadcastReceiver mNoBeaconsBroadCastReciever = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG, "no beacons");
+            outputTextView.setText("no beacons");
+        }
+    };
+
+    private final BroadcastReceiver mImmediateBeaconsBroadCastReciever = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            ArrayList<Parcelable> beacons = intent.getParcelableArrayListExtra(XamoomBeaconService.BEACONS);
+            Log.d(TAG, "immediate beacons: " + beacons.size());
+        }
+    };
+
+    private final BroadcastReceiver mNearBeaconsBroadCastReciever = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            ArrayList<Parcelable> beacons = intent.getParcelableArrayListExtra(XamoomBeaconService.BEACONS);
+            Log.d(TAG, "near beacons: " + beacons.size());
+        }
+    };
+
+    private final BroadcastReceiver mFarBeaconsBroadCastReciever = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            ArrayList<Parcelable> beacons = intent.getParcelableArrayListExtra(XamoomBeaconService.BEACONS);
+            Log.d(TAG, "far beacons: " + beacons.size());
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +134,24 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
         });
 
         mApiKey = getResources().getString(R.string.apiKey);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //registerReceiver(mEnterRegionBroadCastReciever, new IntentFilter(XamoomBeaconService.ENTER_REGION_BROADCAST));
+        //registerReceiver(mExitRegionBroadCastReciever, new IntentFilter(XamoomBeaconService.EXIT_REGION_BROADCAST));
+        //registerReceiver(mFoundBeaconsBroadCastReciever, new IntentFilter(XamoomBeaconService.FOUND_BEACON_BROADCAST));
+        //registerReceiver(mNoBeaconsBroadCastReciever, new IntentFilter(XamoomBeaconService.NO_BEACON_BROADCAST));
+        //registerReceiver(mImmediateBeaconsBroadCastReciever, new IntentFilter(XamoomBeaconService.IMMEDIATE_BEACON_BROADCAST));
+        //registerReceiver(mNearBeaconsBroadCastReciever, new IntentFilter(XamoomBeaconService.NEAR_BEACON_BROADCAST));
+        //registerReceiver(mFarBeaconsBroadCastReciever, new IntentFilter(XamoomBeaconService.FAR_BEACON_BROADCAST));
+        registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                XamoomBeaconService.getInstance(getApplicationContext()).startRangingBeacons();
+            }
+        }, new IntentFilter(XamoomBeaconService.BEACON_SERVICE_CONNECT_BROADCAST));
     }
 
     public void getByIdFullButtonOnClick (View v) {
