@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
+        android:name="com.xamoom.android.xamoom_android_sdk_app.XamoomAndroidApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -23,6 +24,7 @@
             android:value="AIzaSyDVXzS3KtwnCjzKAK_QLnvL_ZdvfAeJuE4" />
         <activity
             android:name=".MainActivity"
+            android:launchMode="singleInstance"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
