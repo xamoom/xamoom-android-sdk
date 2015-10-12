@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.RemoteException;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -12,6 +13,7 @@ import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
 import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.BeaconParser;
+import org.altbeacon.beacon.Identifier;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
 import org.altbeacon.beacon.powersave.BackgroundPowerSaver;
@@ -57,14 +59,17 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
         return mInstance;
     }
 
-    public void startBeaconService() {
+    public void startBeaconService(@NonNull String majorId) {
         Log.i(TAG, "startBeaconService");
         mBeaconManager = BeaconManager.getInstanceForApplication(mContext);
         mBeaconManager.getBeaconParsers().add(new BeaconParser().
                 setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
         mBeaconManager.setRangeNotifier(this);
 
-        mRegion = new Region("test", null, null, null);
+        if (majorId.equalsIgnoreCase("")) {
+            throw new IllegalArgumentException("MajorId should not be a number.");
+        }
+        mRegion = new Region("test", Identifier.parse("de2b94ae-ed98-11e4-3432-78616d6f6f6d"), Identifier.parse("majorId"), null);
 
         BackgroundPowerSaver backgroundPowerSaver = new BackgroundPowerSaver(mContext);
 
