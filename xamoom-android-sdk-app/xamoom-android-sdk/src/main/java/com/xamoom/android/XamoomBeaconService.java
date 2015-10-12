@@ -69,7 +69,7 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
         if (majorId.equalsIgnoreCase("")) {
             throw new IllegalArgumentException("MajorId should not be a number.");
         }
-        mRegion = new Region("test", Identifier.parse("de2b94ae-ed98-11e4-3432-78616d6f6f6d"), Identifier.parse("majorId"), null);
+        mRegion = new Region("test", Identifier.parse("de2b94ae-ed98-11e4-3432-78616d6f6f6d"), Identifier.parse(majorId), null);
 
         BackgroundPowerSaver backgroundPowerSaver = new BackgroundPowerSaver(mContext);
 
