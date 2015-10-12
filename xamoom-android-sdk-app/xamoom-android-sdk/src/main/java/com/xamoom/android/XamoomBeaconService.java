@@ -95,7 +95,7 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
 
     @Override
     public void didEnterRegion(Region region) {
-        Log.d(TAG, "didEnterRegion");
+        Log.i(TAG, "didEnterRegion");
 
         sendBroadcast(ENTER_REGION_BROADCAST, null);
 
@@ -106,7 +106,7 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
 
     @Override
     public void didExitRegion(Region region) {
-        Log.d(TAG, "didExitRegion");
+        Log.i(TAG, "didExitRegion");
 
         if (automaticRanging) {
             this.stopRangingBeacons();
@@ -117,12 +117,11 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
 
     @Override
     public void didDetermineStateForRegion(int i, Region region) {
-        Log.d(TAG, "didDetermineStateForRegion");
     }
 
     @Override
     public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
-        Log.d(TAG, "didRangeBeaconsInRegion: " + beacons.size());
+        Log.i(TAG, "didRangeBeaconsInRegion: " + beacons.size());
 
         if (beacons.size() > 0) {
             sendBroadcast(FOUND_BEACON_BROADCAST, new ArrayList<Beacon>(beacons));
@@ -179,6 +178,16 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
         } catch (RemoteException e) {
             Log.e(TAG, e.getMessage());
         }
+    }
+
+    public void stopMonitoringRegion() {
+        Log.i(TAG, "Stop monitoring beacons");
+        mRegionBootstrap.disable();
+    }
+
+    public void startMonitoringRegion() {
+        Log.i(TAG, "Start monitoring beacons");
+        mRegionBootstrap = new RegionBootstrap(this, mRegion);
     }
 
     @Override
