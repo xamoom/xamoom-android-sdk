@@ -46,6 +46,7 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
     private Region mRegion;
     private RegionBootstrap mRegionBootstrap;
 
+    private ArrayList<Beacon> mBeacons = new ArrayList<>();
     private ArrayList<Beacon> immediateBeacons = new ArrayList<>();
     private ArrayList<Beacon> nearBeacons = new ArrayList<>();
     private ArrayList<Beacon> farBeacons = new ArrayList<>();
@@ -72,7 +73,7 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
         mRegion = new Region("test", Identifier.parse("de2b94ae-ed98-11e4-3432-78616d6f6f6d"), Identifier.parse(majorId), null);
 
         mRegionBootstrap = new RegionBootstrap(this, mRegion);
-        
+
         mBeaconManager = BeaconManager.getInstanceForApplication(mContext);
         mBeaconManager.getBeaconParsers().add(new BeaconParser().
                 setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
@@ -86,6 +87,17 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
     private void setBackgroundScanningSpeeds(int betweenScanPeriod, int scanPeriod){
         mBeaconManager.setBackgroundBetweenScanPeriod(betweenScanPeriod);
         mBeaconManager.setBackgroundScanPeriod(scanPeriod);
+
+        try {
+            mBeaconManager.updateScanPeriods();
+        } catch (RemoteException e) {
+            Log.e(TAG, "Failed to update background scan periods. " + e.getMessage());
+        }
+    }
+
+    private void setForegroundScanningSpeeds(int betweenScanPeriod, int scanPeriod){
+        mBeaconManager.setForegroundBetweenScanPeriod(betweenScanPeriod);
+        mBeaconManager.setForegroundScanPeriod(scanPeriod);
 
         try {
             mBeaconManager.updateScanPeriods();
@@ -111,7 +123,7 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
         sendBroadcast(ENTER_REGION_BROADCAST, null);
 
         if (fastInsideRegionScanning) {
-            setBackgroundScanningSpeeds(1000,1000);
+            setBackgroundScanningSpeeds(1000,1100);
         }
 
         if (automaticRanging) {
@@ -142,8 +154,11 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
     public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
         Log.i(TAG, "didRangeBeaconsInRegion: " + beacons.size());
 
+        mBeacons.clear();
+
         if (beacons.size() > 0) {
-            sendBroadcast(FOUND_BEACON_BROADCAST, new ArrayList<Beacon>(beacons));
+            mBeacons.addAll(beacons);
+            sendBroadcast(FOUND_BEACON_BROADCAST, mBeacons);
         } else {
             sendBroadcast(NO_BEACON_BROADCAST, null);
         }
