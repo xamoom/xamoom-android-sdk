@@ -1,6 +1,5 @@
 package com.xamoom.android;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -47,8 +46,13 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
     private Region mRegion;
     private RegionBootstrap mRegionBootstrap;
 
+    private ArrayList<Beacon> immediateBeacons = new ArrayList<>();
+    private ArrayList<Beacon> nearBeacons = new ArrayList<>();
+    private ArrayList<Beacon> farBeacons = new ArrayList<>();
+
     public boolean automaticRanging = false;
     public boolean approximateDistanceRanging = false;
+    public boolean fastInsideRegionScanning = true;
 
     public static XamoomBeaconService getInstance(Context context) {
         if (mInstance == null) {
@@ -61,19 +65,14 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
 
     public void startBeaconService(@NonNull String majorId) {
         Log.i(TAG, "startBeaconService");
-        mBeaconManager = BeaconManager.getInstanceForApplication(mContext);
-        mBeaconManager.getBeaconParsers().add(new BeaconParser().
-                setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
-        mBeaconManager.setRangeNotifier(this);
 
         if (majorId.equalsIgnoreCase("")) {
             throw new IllegalArgumentException("MajorId should not be a number.");
         }
         mRegion = new Region("test", Identifier.parse("de2b94ae-ed98-11e4-3432-78616d6f6f6d"), Identifier.parse(majorId), null);
 
-        BackgroundPowerSaver backgroundPowerSaver = new BackgroundPowerSaver(mContext);
-
         mRegionBootstrap = new RegionBootstrap(this, mRegion);
+
         mBeaconManager.bind(this);
     }
 
@@ -135,13 +134,8 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
         }
 
         if (approximateDistanceRanging) {
-            ArrayList<Beacon> immediateBeacons = new ArrayList<>();
-            ArrayList<Beacon> nearBeacons = new ArrayList<>();
-            ArrayList<Beacon> farBeacons = new ArrayList<>();
 
             for (Beacon beacon : beacons) {
-                Log.d(TAG, "Distance: " + beacon.getDistance());
-
                 if (beacon.getDistance() <= 0.5) {
                     immediateBeacons.add(beacon);
                 } else if (beacon.getDistance() < 3.0 && beacon.getDistance() > 0.5) {
@@ -151,17 +145,6 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
                 }
             }
 
-            if (immediateBeacons.size() > 0) {
-                sendBroadcast(IMMEDIATE_BEACON_BROADCAST, immediateBeacons);
-            }
-
-            if (nearBeacons.size() > 0) {
-                sendBroadcast(NEAR_BEACON_BROADCAST, nearBeacons);
-            }
-
-            if (farBeacons.size() > 0) {
-                sendBroadcast(FAR_BEACON_BROADCAST, farBeacons);
-            }
         }
     }
 
