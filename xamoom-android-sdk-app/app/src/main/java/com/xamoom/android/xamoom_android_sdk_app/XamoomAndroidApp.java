@@ -20,9 +20,9 @@ public class XamoomAndroidApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        XamoomBeaconService.getInstance(getApplicationContext()).startBeaconService();
-        //XamoomBeaconService.getInstance(getApplicationContext()).automaticRanging = true;
-        //XamoomBeaconService.getInstance(getApplicationContext()).approximateDistanceRanging = true;
+        XamoomBeaconService.getInstance(getApplicationContext()).startBeaconService("5704");
+        XamoomBeaconService.getInstance(getApplicationContext()).automaticRanging = true;
+        XamoomBeaconService.getInstance(getApplicationContext()).approximateDistanceRanging = true;
 
         //only place to do things, when scanning in background
         //registerReceiver(mEnterRegionBroadCastReciever, new IntentFilter(XamoomBeaconService.ENTER_REGION_BROADCAST));
@@ -40,7 +40,6 @@ public class XamoomAndroidApp extends Application {
                     .setContentTitle("xamoom in der Nähe")
                     .setContentInfo("Beacon")
                     .setSmallIcon(R.drawable.ic_xamoom_ble)
-                    .setStyle(new NotificationCompat.BigTextStyle().bigText("BigText"))
                     .setNumber(1);
             Notification notification = notificationBuilder.build();
 
