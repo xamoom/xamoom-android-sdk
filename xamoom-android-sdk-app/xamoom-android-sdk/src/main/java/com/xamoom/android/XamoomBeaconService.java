@@ -72,6 +72,13 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
         mRegion = new Region("test", Identifier.parse("de2b94ae-ed98-11e4-3432-78616d6f6f6d"), Identifier.parse(majorId), null);
 
         mRegionBootstrap = new RegionBootstrap(this, mRegion);
+        
+        mBeaconManager = BeaconManager.getInstanceForApplication(mContext);
+        mBeaconManager.getBeaconParsers().add(new BeaconParser().
+                setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
+        mBeaconManager.setRangeNotifier(this);
+
+        setBackgroundScanningSpeeds(60000, 10000);
 
         mBeaconManager.bind(this);
     }
@@ -103,6 +110,10 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
 
         sendBroadcast(ENTER_REGION_BROADCAST, null);
 
+        if (fastInsideRegionScanning) {
+            setBackgroundScanningSpeeds(1000,1000);
+        }
+
         if (automaticRanging) {
             this.startRangingBeacons();
         }
@@ -114,6 +125,10 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
 
         if (automaticRanging) {
             this.stopRangingBeacons();
+        }
+
+        if (fastInsideRegionScanning) {
+            setBackgroundScanningSpeeds(60000, 6000);
         }
 
         sendBroadcast(EXIT_REGION_BROADCAST, null);
@@ -134,6 +149,9 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
         }
 
         if (approximateDistanceRanging) {
+            immediateBeacons.clear();
+            nearBeacons.clear();
+            farBeacons.clear();
 
             for (Beacon beacon : beacons) {
                 if (beacon.getDistance() <= 0.5) {
@@ -145,6 +163,9 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
                 }
             }
 
+            sendBroadcast(IMMEDIATE_BEACON_BROADCAST, immediateBeacons);
+            sendBroadcast(NEAR_BEACON_BROADCAST, nearBeacons);
+            sendBroadcast(FAR_BEACON_BROADCAST, farBeacons);
         }
     }
 
