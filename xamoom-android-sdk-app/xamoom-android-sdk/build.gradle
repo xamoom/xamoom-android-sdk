@@ -15,7 +15,7 @@ ext {
     siteUrl = 'https://github.com/xamoom/xamoom-android-sdk'
     gitUrl = 'https://github.com/xamoom/xamoom-android-sdk.git'
 
-    libraryVersion = '0.9.8'
+    libraryVersion = '0.9.9'
     developerId = 'xamoom-raphael'
     developerName = 'Raphael Seher'
     developerEmail = 'raphael@xamoom.com'
