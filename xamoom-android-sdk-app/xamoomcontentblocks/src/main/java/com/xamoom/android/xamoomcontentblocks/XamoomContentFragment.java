@@ -67,6 +67,7 @@ public class XamoomContentFragment extends Fragment {
 
     private String mContentId;
     private String mLocationIdentifier;
+    private String mBeaconId2;
     private Content mContent;
 
     private List<ContentBlock> mContentBlocks;
@@ -133,7 +134,7 @@ public class XamoomContentFragment extends Fragment {
         else if(mContentId != null) {
             loadDataWithContentId(mContentId);
         } else if(mLocationIdentifier != null) {
-            loadDateWithLocationIdentifier(mLocationIdentifier);
+            loadDateWithLocationIdentifier(mLocationIdentifier, mBeaconId2);
         }
 
         return view;
@@ -228,13 +229,13 @@ public class XamoomContentFragment extends Fragment {
     /**
      * Load the data from xamoom cloud with a locationIdentifier.
      * It wil always load the full content.
-     * 
+     *
      * @param mLocationIdentifier LocationIdentifier to load data from xamoom cloud.
      */
-    private void loadDateWithLocationIdentifier(String mLocationIdentifier) {
+    private void loadDateWithLocationIdentifier(String mLocationIdentifier, String beaconId2) {
         mProgressbar.setVisibility(View.VISIBLE);
 
-        XamoomEndUserApi.getInstance(this.getActivity(), mApiKey).getContentByLocationIdentifier(mLocationIdentifier, false, false, null, new APICallback<ContentByLocationIdentifier>() {
+        XamoomEndUserApi.getInstance(this.getActivity(), mApiKey).getContentByLocationIdentifier(mLocationIdentifier, beaconId2, false, false, null, new APICallback<ContentByLocationIdentifier>() {
             @Override
             public void finished(ContentByLocationIdentifier result) {
                 mContent = result.getContent();
@@ -252,10 +253,10 @@ public class XamoomContentFragment extends Fragment {
     /**
      * There should always be the contents text, description and image
      * on top of the other contentBlocks.
-     * 
+     *
      * Here it creates a text and an image contentBlock and adds them
      * to achieve this.
-     * 
+     *
      * When you want to have all link ContentBlocks displayed for all
      * stores (to promote your app), you have to set {@link #displayAllStoreLinks} to true.
      */
@@ -329,6 +330,10 @@ public class XamoomContentFragment extends Fragment {
 
     public void setLocationIdentifier(String mLocationIdentifier) {
         this.mLocationIdentifier = mLocationIdentifier;
+    }
+
+    public void setBeaconId2(String beaconId2) {
+        mBeaconId2 = beaconId2;
     }
 
     @Override
