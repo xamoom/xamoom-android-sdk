@@ -25,8 +25,8 @@ public class XamoomAndroidApp extends Application {
         XamoomBeaconService.getInstance(getApplicationContext()).approximateDistanceRanging = true;
 
         //only place to do things, when scanning in background
-        //registerReceiver(mEnterRegionBroadCastReciever, new IntentFilter(XamoomBeaconService.ENTER_REGION_BROADCAST));
-        //registerReceiver(mExitRegionBroadCastReciever, new IntentFilter(XamoomBeaconService.EXIT_REGION_BROADCAST));
+        registerReceiver(mEnterRegionBroadCastReciever, new IntentFilter(XamoomBeaconService.ENTER_REGION_BROADCAST));
+        registerReceiver(mExitRegionBroadCastReciever, new IntentFilter(XamoomBeaconService.EXIT_REGION_BROADCAST));
     }
 
     private final BroadcastReceiver mEnterRegionBroadCastReciever = new BroadcastReceiver() {
