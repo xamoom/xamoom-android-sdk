@@ -237,7 +237,8 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
      */
     @Override
     public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
-        if (region != mRegion) {
+        if (region.getId2() == mRegion.getId2()) {
+            Log.i(TAG, "false region");
             return;
         }
 
@@ -324,7 +325,7 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
     public void onBeaconServiceConnect() {
         Log.i(TAG, "onBeaconServiceConnect");
         sendBroadcast(BEACON_SERVICE_CONNECT_BROADCAST, null);
-        
+
         setBackgroundScanningSpeeds(60000, 10000);
     }
 
