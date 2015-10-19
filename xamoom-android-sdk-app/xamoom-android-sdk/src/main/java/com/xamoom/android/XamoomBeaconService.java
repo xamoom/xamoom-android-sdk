@@ -189,7 +189,7 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
         sendBroadcast(ENTER_REGION_BROADCAST, null);
 
         if (fastInsideRegionScanning) {
-            setBackgroundScanningSpeeds(1000,1100);
+            setBackgroundScanningSpeeds(1000, 1100);
         }
 
         if (automaticRanging) {
@@ -239,6 +239,10 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
      */
     @Override
     public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
+        if (region != mRegion) {
+            return;
+        }
+
         Log.i(TAG, "didRangeBeaconsInRegion: " + beacons.size());
 
         mBeacons.clear();
