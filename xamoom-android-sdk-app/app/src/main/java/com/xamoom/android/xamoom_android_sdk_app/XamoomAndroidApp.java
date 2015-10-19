@@ -43,8 +43,8 @@ public class XamoomAndroidApp extends Application {
 
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext());
             notificationBuilder
-                    .setContentText("Öffne um etwas zu Entdecken.")
-                    .setContentTitle("xamoom in der Nähe")
+                    .setContentText("XamoomAndroidSDKApp")
+                    .setContentTitle("Beacon in der Nähe")
                     .setContentInfo("Beacon")
                     .setSmallIcon(R.drawable.ic_xamoom_ble)
                     .setContentIntent(pendingIntent)
