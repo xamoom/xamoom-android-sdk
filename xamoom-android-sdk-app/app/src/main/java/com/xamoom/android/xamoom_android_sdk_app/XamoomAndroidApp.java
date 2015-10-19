@@ -2,6 +2,7 @@ package com.xamoom.android.xamoom_android_sdk_app;
 
 import android.app.Application;
 import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -34,12 +35,19 @@ public class XamoomAndroidApp extends Application {
         public void onReceive(Context context, Intent intent) {
             Log.d("XamoomBeaconService", "background: enterRegion");
 
+            Intent activityIntent = new Intent(XamoomAndroidApp.this, MainActivity.class);
+            activityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
+                    activityIntent, 0);
+
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext());
             notificationBuilder
                     .setContentText("Öffne um etwas zu Entdecken.")
                     .setContentTitle("xamoom in der Nähe")
                     .setContentInfo("Beacon")
                     .setSmallIcon(R.drawable.ic_xamoom_ble)
+                    .setContentIntent(pendingIntent)
                     .setNumber(1);
             Notification notification = notificationBuilder.build();
 
