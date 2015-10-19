@@ -118,8 +118,6 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
                 setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
         mBeaconManager.setRangeNotifier(this);
 
-        setBackgroundScanningSpeeds(60000, 10000);
-
         mBeaconManager.bind(this);
     }
 
@@ -326,6 +324,8 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
     public void onBeaconServiceConnect() {
         Log.i(TAG, "onBeaconServiceConnect");
         sendBroadcast(BEACON_SERVICE_CONNECT_BROADCAST, null);
+        
+        setBackgroundScanningSpeeds(60000, 10000);
     }
 
     @Override
