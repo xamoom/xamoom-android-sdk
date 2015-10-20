@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @see MenuItem
  * @see com.xamoom.android.XamoomEndUserApi#getContentbyIdFull(String, boolean, boolean, String, boolean, APICallback)
- * @see com.xamoom.android.XamoomEndUserApi#getContentByLocationIdentifier(String, boolean, boolean, String, APICallback)
+ * @see com.xamoom.android.XamoomEndUserApi#getContentByLocationIdentifier(String, String, boolean, boolean, String, APICallback)
  */
 public class Menu {
 

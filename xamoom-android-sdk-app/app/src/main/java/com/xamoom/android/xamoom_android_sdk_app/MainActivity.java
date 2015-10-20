@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
             }
         });
 
-        mApiKey = getResources().getString(R.string.apiKey);
+        mApiKey = getResources().getString(R.string.prod_apiKey);
 
         checkPermission();
     }

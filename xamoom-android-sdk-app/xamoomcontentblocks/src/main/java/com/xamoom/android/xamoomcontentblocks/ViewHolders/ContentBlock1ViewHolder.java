@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 /**
- * TODO
+ * Displays audio content blocks.
  */
 public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
     private Fragment mFragment;
