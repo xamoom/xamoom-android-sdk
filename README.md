@@ -50,7 +50,7 @@ XamoomEndUserApi.getInstance(this.getApplicationContext(), API_KEY).getContentby
 
 ## Beacons
 
-To use xamooms integrated beacon support, look at [XamoomBeaconSerice](https://github.com/xamoom/xamoom-android-sdk/wiki/XamoomBeaconService).
+To use the integrated beacon support, look at [XamoomBeaconService](https://github.com/xamoom/xamoom-android-sdk/wiki/XamoomBeaconService).
 
 ## API Calls
 
