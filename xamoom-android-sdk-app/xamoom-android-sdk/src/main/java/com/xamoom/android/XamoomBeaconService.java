@@ -122,13 +122,13 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
     }
 
     /**
-     * Change the backgroundScanningSpeed from the beaconManager. Can make your app use more
-     * energy than needed.
+     * Change the backgroundScanningSpeed from the beaconManager.
+     * Can make your app use more energy than needed.
      *
      * @param betweenScanPeriod Value in ms to wait between scans.
      * @param scanPeriod Value in ms to scan for beacons. Should not be below 1100 ms.
      */
-    private void setBackgroundScanningSpeeds(int betweenScanPeriod, int scanPeriod){
+    public void setBackgroundScanningSpeeds(int betweenScanPeriod, int scanPeriod) {
         mBeaconManager.setBackgroundBetweenScanPeriod(betweenScanPeriod);
         mBeaconManager.setBackgroundScanPeriod(scanPeriod);
 
@@ -140,13 +140,13 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
     }
 
     /**
-     * Change the foregroundScanningSpeed from the beaconManager. Can make your app use more
-     * energy than needed.
+     * Change the foregroundScanningSpeed from the beaconManager.
+     * Can make your app use more energy than needed.
      *
      * @param betweenScanPeriod Value in ms to wait between scans.
      * @param scanPeriod Value in ms to scan for beacons. Should not be below 1100 ms.
      */
-    private void setForegroundScanningSpeeds(int betweenScanPeriod, int scanPeriod){
+    public void setForegroundScanningSpeeds(int betweenScanPeriod, int scanPeriod) {
         mBeaconManager.setForegroundBetweenScanPeriod(betweenScanPeriod);
         mBeaconManager.setForegroundScanPeriod(scanPeriod);
 
