@@ -5,4 +5,5 @@
     <string name="distanceLabel">Entfernung</string>
     <string name="meterLabel">Meter</string>
     <string name="noLocation">Location wird gesucht &#8230;</string>
+    <string name="header_picture_alt_text">Kopfbild</string>
 </resources>

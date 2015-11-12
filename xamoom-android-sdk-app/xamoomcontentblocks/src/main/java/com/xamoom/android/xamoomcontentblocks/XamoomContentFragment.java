@@ -268,7 +268,7 @@ public class XamoomContentFragment extends Fragment {
         mContentBlocks.add(0, cb0);
 
         if(mContent.getImagePublicUrl() != null) {
-            ContentBlockType3 cb3 = new ContentBlockType3(null, true, 3, mContent.getImagePublicUrl(), 0);
+            ContentBlockType3 cb3 = new ContentBlockType3(null, true, 3, mContent.getImagePublicUrl(), 0, getString(R.string.header_picture_alt_text));
             mContentBlocks.add(1, cb3);
         }
 

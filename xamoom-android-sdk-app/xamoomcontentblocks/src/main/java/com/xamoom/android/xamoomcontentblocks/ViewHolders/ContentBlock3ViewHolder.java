@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -74,6 +75,8 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
             params.setMargins(0,0,0,0);
             mImageView.setLayoutParams(params);
         }
+
+        setImageViewContentDescription(cb3);
 
         if(cb3.getFileId() != null) {
             final float scaleX;
@@ -147,6 +150,14 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
                 return false;
             }
         });
+    }
+
+    public void setImageViewContentDescription(ContentBlockType3 contentBlockType3) {
+        if (contentBlockType3.getAltText() != null && !contentBlockType3.getAltText().equalsIgnoreCase("")) {
+            mImageView.setContentDescription(contentBlockType3.getAltText());
+        } else if (contentBlockType3.getTitle() != null && !contentBlockType3.getTitle().equalsIgnoreCase("")) {
+            mImageView.setContentDescription(contentBlockType3.getTitle());
+        }
     }
 
     public void resizeImageViewWithScaling(ImageView imageView, Fragment fragment, float scaleX) {
