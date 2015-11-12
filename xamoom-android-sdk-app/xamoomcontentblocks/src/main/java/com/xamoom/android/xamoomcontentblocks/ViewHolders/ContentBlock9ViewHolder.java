@@ -1,16 +1,20 @@
 package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -47,6 +51,8 @@ import retrofit.RetrofitError;
  * SpotMapBlock
  */
 public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements OnMapReadyCallback {
+    private static final String TAG = ContentBlock9ViewHolder.class.getSimpleName();
+
     private Fragment mFragment;
     private String mApiKey;
     private TextView mTitleTextView;
@@ -359,6 +365,12 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
     }
 
     private void setupLocation() {
+        if (ContextCompat.checkSelfPermission(mFragment.getContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Log.e(TAG, "No location permission. Ask the user for location permission.");
+            return;
+        }
+
         mBestLocationProvider = new BestLocationProvider(mFragment.getActivity(), false, true, 1000, 1000, 5, 10);
         BestLocationListener mBestLocationListener = new BestLocationListener() {
             @Override
