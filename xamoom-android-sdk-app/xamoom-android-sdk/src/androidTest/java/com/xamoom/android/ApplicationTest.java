@@ -2,12 +2,15 @@ package com.xamoom.android;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
+import android.test.suitebuilder.annotation.SmallTest;
+import android.util.Log;
 
 import com.xamoom.android.mapping.ContentById;
 import com.xamoom.android.mapping.ContentByLocationIdentifier;
 import com.xamoom.android.mapping.ContentList;
 import com.xamoom.android.mapping.SpotMap;
 
+import java.io.Console;
 import java.util.concurrent.CountDownLatch;
 
 import retrofit.RetrofitError;
@@ -20,7 +23,8 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
         super(Application.class);
     }
 
-    private boolean isDev = true;
+    private static final String TAG = "ApplicationTest";
+
     private String API_KEY;
     private static String TESTING_CONTENT_ID;
     private static String TESTING_MARKER_ID;
@@ -30,23 +34,13 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
     public void setUp() throws Exception {
         super.setUp();
 
-        if (isDev) {
-            API_KEY = this.getSystemContext().getString(R.string.dev_apiKey);
-            TESTING_CONTENT_ID = this.getSystemContext().getString(R.string.dev_content_id);
-            TESTING_MARKER_ID = this.getSystemContext().getString(R.string.dev_marker_id);
-            TESTING_BEACON = new String[]{
-                    this.getSystemContext().getString(R.string.dev_ibeacon_id_1),
-                    this.getSystemContext().getString(R.string.dev_ibeacon_id_2),
-                    this.getSystemContext().getString(R.string.dev_ibeacon_id_3)};
-        } else {
-            API_KEY = this.getSystemContext().getString(R.string.prod_apiKey);
-            TESTING_CONTENT_ID = this.getSystemContext().getString(R.string.prod_content_id);
-            TESTING_MARKER_ID = this.getSystemContext().getString(R.string.prod_marker_id);
-            TESTING_BEACON = new String[]{
-                    this.getSystemContext().getString(R.string.prod_ibeacon_id_1),
-                    this.getSystemContext().getString(R.string.prod_ibeacon_id_2),
-                    this.getSystemContext().getString(R.string.prod_ibeacon_id_3)};
-        }
+        API_KEY = this.getSystemContext().getString(R.string.dev_apiKey);
+        TESTING_CONTENT_ID = this.getSystemContext().getString(R.string.dev_content_id);
+        TESTING_MARKER_ID = this.getSystemContext().getString(R.string.dev_marker_id);
+        TESTING_BEACON = new String[]{
+                this.getSystemContext().getString(R.string.dev_ibeacon_id_1),
+                this.getSystemContext().getString(R.string.dev_ibeacon_id_2),
+                this.getSystemContext().getString(R.string.dev_ibeacon_id_3)};
     }
 
     public void testGetInstance() throws Exception {
@@ -73,7 +67,7 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
 
             @Override
             public void error(RetrofitError error) {
-                assertTrue(false);
+                assertNull(error);
                 signal.countDown();
             }
         });
@@ -101,7 +95,7 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
 
             @Override
             public void error(RetrofitError error) {
-                assertTrue(false);
+                assertNull(error);
                 signal.countDown();
             }
         });
@@ -131,7 +125,7 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
 
             @Override
             public void error(RetrofitError error) {
-                assertTrue(false);
+                assertNull(error);
                 signal.countDown();
             }
         });
@@ -161,7 +155,7 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
 
             @Override
             public void error(RetrofitError error) {
-                assertTrue(false);
+                assertNull(error);
                 signal.countDown();
             }
         });
@@ -176,7 +170,7 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
             @Override
             public void finished(SpotMap result) {
                 assertNotNull("getSpotMap() should return an object", result);
-                if(result.getItems().size() > 0) {
+                if (result.getItems().size() > 0) {
                     assertNotNull("getSpotMap() should return items", result.getItems());
                 }
                 assertNotNull("getSpotMap() should return a style", result.getStyle());
@@ -186,7 +180,7 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
 
             @Override
             public void error(RetrofitError error) {
-                assertTrue(false);
+                assertNull(error);
                 signal.countDown();
             }
         });
@@ -194,6 +188,7 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
         signal.await();
     }
 
+    @SmallTest
     public void testGetClosestSpots() throws Exception {
         final CountDownLatch signal = new CountDownLatch(1);
 
@@ -212,7 +207,7 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
 
             @Override
             public void error(RetrofitError error) {
-                assertTrue(false);
+                assertNull(error);
                 signal.countDown();
             }
 
@@ -239,7 +234,7 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
 
             @Override
             public void error(RetrofitError error) {
-                assertTrue(false);
+                assertNull(error);
                 signal.countDown();
             }
         });
