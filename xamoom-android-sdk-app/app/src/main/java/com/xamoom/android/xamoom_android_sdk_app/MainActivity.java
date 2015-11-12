@@ -150,6 +150,17 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
         registerReceiver(mFarBeaconsBroadCastReciever, new IntentFilter(XamoomBeaconService.FAR_BEACON_BROADCAST));
     }
 
+    @Override
+    protected void onPause() {
+        unregisterReceiver(mEnterRegionBroadCastReciever);
+        unregisterReceiver(mExitRegionBroadCastReciever);
+        unregisterReceiver(mFoundBeaconsBroadCastReciever);
+        unregisterReceiver(mNoBeaconsBroadCastReciever);
+        unregisterReceiver(mImmediateBeaconsBroadCastReciever);
+        unregisterReceiver(mNearBeaconsBroadCastReciever);
+        unregisterReceiver(mFarBeaconsBroadCastReciever);
+    }
+
     private void checkPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
