@@ -32,6 +32,7 @@ public class XamoomEndUserApiTest extends ApplicationTestCase<Application> {
      */
     public void testThatGetInstanceReturnsObject() {
         XamoomEndUserApi api = XamoomEndUserApi.getInstance(getContext(), apikey);
+
         assertNotNull(api);
     }
 
@@ -43,7 +44,9 @@ public class XamoomEndUserApiTest extends ApplicationTestCase<Application> {
      * Check if getSystemLanguage returns something.
      */
     public void testThatGetSystemLanguageReturnsLanguage() {
-        assertNotNull(XamoomEndUserApi.getInstance(getContext(), apikey).getSystemLanguage());
+        String testLanguage = XamoomEndUserApi.getInstance(getContext(), apikey).getSystemLanguage();
+
+        assertNotNull(testLanguage);
     }
 
     /**
