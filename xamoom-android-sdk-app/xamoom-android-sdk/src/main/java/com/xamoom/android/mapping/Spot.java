@@ -1,6 +1,7 @@
 package com.xamoom.android.mapping;
 
 
+import com.google.gson.annotations.SerializedName;
 import com.xamoom.android.request.Location;
 
 /**
@@ -12,15 +13,23 @@ import com.xamoom.android.request.Location;
  * @see SpotMap
  */
 public class Spot {
+    @SerializedName("display_name")
     private String displayName;
+    @SerializedName("description")
     private String description;
+    @SerializedName("location")
     private Location location;
+    @SerializedName("image")
     private String image;
+    @SerializedName("content_id")
+    private String contentId;
 
     @Override
     public String toString() {
         return String.format("\ndisplayName: %s, \ndescription: %s, \nlocation: %f, %f, \nimage: %s", displayName, description, location.getLat(), location.getLon(), image);
     }
+
+    //getters
 
     public String getDisplayName() {
         return displayName;
@@ -36,5 +45,9 @@ public class Spot {
 
     public String getImage() {
         return image;
+    }
+
+    public String getContentId() {
+        return contentId;
     }
 }
