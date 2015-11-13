@@ -24,6 +24,7 @@ import retrofit.Callback;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
+import retrofit.android.AndroidLog;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 import retrofit.http.Body;
@@ -68,8 +69,8 @@ public class XamoomEndUserApi {
         //create restAdapter with custom gsonConverter
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(apiUrl)
-                //.setLogLevel(RestAdapter.LogLevel.FULL)
-                //.setLog(new AndroidLog(TAG))
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setLog(new AndroidLog(TAG))
                 .setRequestInterceptor(new RequestInterceptor() {
                     @Override
                     public void intercept(RequestFacade request) {
@@ -277,22 +278,20 @@ public class XamoomEndUserApi {
      * Returns a list of spots.
      * For example for a map.
      *
-     * @param systemId When calling with an API Key, can be 0.
      * @param mapTags  StringArray with mapTags you want to display.
      * @param language The language for the response (if available on xamoom-cloud), else systemLanguage. For german: "de". If null == systemLanguage.
-
+     * @param withContent Sends you connected contentIds to the spot.
      * @see SpotMap
      * @since 1.0
      */
-    public void getSpotMap(String systemId, String[] mapTags, String language, final APICallback<SpotMap> callback) {
+    public void getSpotMap(String[] mapTags, String language, boolean withContent, final APICallback<SpotMap> callback) {
         if (language == null)
             language = systemLanguage;
 
-        if(systemId == null) {
-            systemId = "0";
-        }
+        LinkedHashMap<String, String> params = new LinkedHashMap<>();
+        params.put("include_content", withContent ? "True" : "False");
 
-        apiInterface.getSpotMap(systemId, TextUtils.join(",", mapTags), language, new Callback<SpotMap>() {
+        apiInterface.getSpotMap("0", TextUtils.join(",", mapTags), language, params, new Callback<SpotMap>() {
             @Override
             public void success(SpotMap result, Response response) {
                 //Log.v(TAG, "Debug Hellyeah: " + content);
@@ -458,16 +457,16 @@ public class XamoomEndUserApi {
          * @param systemId The systemId of the system.
          * @param mapTags MapTags seperated with comma.
          * @param language The language for the response.
-         * @param cb Callback-Method with the result as ContentByLocation.
-         *
-         * @see SpotMap
+         * @param withContent
+         *@param cb Callback-Method with the result as ContentByLocation.
+         *  @see SpotMap
          */
         @Headers({
                 "Accept: application/json",
                 "User-Agent: xamoom-android-sdk",
         })
         @GET("/xamoomEndUserApi/v1/spotmap/{system_id}/{map_tag}/{language}")
-        void getSpotMap(@Path("system_id") String systemId, @Path("map_tag") String mapTags, @Path("language") String language, Callback<SpotMap> cb);
+        void getSpotMap(@Path("system_id") String systemId, @Path("map_tag") String mapTags, @Path("language") String language, @QueryMap Map<String, String> params, Callback<SpotMap> cb);
 
         /**
          * Post to /xamoomEndUserApi/v1/get_closest_spots.

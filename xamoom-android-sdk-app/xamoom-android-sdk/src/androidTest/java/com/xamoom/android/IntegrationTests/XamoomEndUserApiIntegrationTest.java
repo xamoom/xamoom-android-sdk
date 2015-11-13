@@ -10,8 +10,12 @@ import com.xamoom.android.XamoomEndUserApi;
 import com.xamoom.android.mapping.ContentById;
 import com.xamoom.android.mapping.ContentByLocationIdentifier;
 import com.xamoom.android.mapping.ContentList;
+import com.xamoom.android.mapping.Spot;
 import com.xamoom.android.mapping.SpotMap;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import retrofit.RetrofitError;
@@ -291,13 +295,42 @@ public class XamoomEndUserApiIntegrationTest extends ApplicationTestCase<Applica
     public void testThatGetSpotMapReturnsSpots() throws Exception {
         final CountDownLatch signal = new CountDownLatch(1);
 
-        XamoomEndUserApi.getInstance(getContext(), API_KEY).getSpotMap("0",
-                new String[]{"allspots"}, "de", new APICallback<SpotMap>() {
+        XamoomEndUserApi.getInstance(getContext(), API_KEY).getSpotMap(
+                new String[]{"allspots"}, "de", false, new APICallback<SpotMap>() {
                     @Override
                     public void finished(SpotMap result) {
                         assertNotNull("getSpotMap() should return an object", result);
                         assertNotNull("getSpotMap() should return items", result.getItems());
                         assertNotNull("getSpotMap() should return a style", result.getStyle());
+
+                        signal.countDown();
+                    }
+
+                    @Override
+                    public void error(RetrofitError error) {
+                        assertNull(error);
+                        signal.countDown();
+                    }
+                });
+
+        signal.await();
+    }
+
+    /**
+     * Check if getSpotMap returns a result, items and style.
+     *
+     * @throws Exception
+     */
+    public void testThatGetSpotMapReturnsSpotsWithContentId() throws Exception {
+        final CountDownLatch signal = new CountDownLatch(1);
+
+        XamoomEndUserApi.getInstance(getContext(), API_KEY).getSpotMap(
+                new String[]{"allspots"}, "de", true, new APICallback<SpotMap>() {
+                    @Override
+                    public void finished(SpotMap result) {
+                        List<Spot> spots = result.getItems();
+
+                        assertNotNull("spot should have contentId", spots.get(0).getContentId());
 
                         signal.countDown();
                     }
