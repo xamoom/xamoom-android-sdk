@@ -457,9 +457,9 @@ public class XamoomEndUserApi {
          * @param systemId The systemId of the system.
          * @param mapTags MapTags seperated with comma.
          * @param language The language for the response.
-         * @param withContent
-         *@param cb Callback-Method with the result as ContentByLocation.
-         *  @see SpotMap
+         * @param params Map with the parameters for the get.
+         * @param cb Callback-Method with the result as ContentByLocation.
+         * @see SpotMap
          */
         @Headers({
                 "Accept: application/json",

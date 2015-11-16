@@ -235,7 +235,7 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
 
     public void getSpotMapButtonOnClick (View v) {
         mProgressDialog.show();
-        XamoomEndUserApi.getInstance(this.getApplicationContext(), mApiKey).getSpotMap("0", new String[]{"stw"}, "de", new APICallback<SpotMap>() {
+        XamoomEndUserApi.getInstance(this.getApplicationContext(), mApiKey).getSpotMap(new String[]{"stw"}, "de", true, new APICallback<SpotMap>() {
             @Override
             public void finished(SpotMap result) {
                 mProgressDialog.dismiss();
@@ -306,6 +306,19 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
     public void clickedContentBlock(Content content) {
         XamoomContentFragment fragment = XamoomContentFragment.newInstance(null, mApiKey);
         fragment.setContent(content);
+        fragment.setShowSpotMapContentLinks(true);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.xamoomContentBlocksFrameLayout, fragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    //Do smt.
+    @Override
+    public void clickedSpotMapContentLink(String contentId) {
+        XamoomContentFragment fragment = XamoomContentFragment.newInstance(null, mApiKey);
+        fragment.setContentId(contentId);
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.xamoomContentBlocksFrameLayout, fragment)

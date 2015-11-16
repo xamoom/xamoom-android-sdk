@@ -78,6 +78,7 @@ public class XamoomContentFragment extends Fragment {
 
     private boolean loadFullContent = true;
     private boolean displayAllStoreLinks = false;
+    private boolean showSpotMapContentLinks = false;
     private boolean isAnimated = false;
 
     private OnXamoomContentFragmentInteractionListener mListener;
@@ -158,9 +159,11 @@ public class XamoomContentFragment extends Fragment {
         if(mContent == null || mContentBlockAdapter != null)
             return;
 
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity().getApplicationContext()));
+        mRecyclerView.setLayoutManager(
+                new LinearLayoutManager(this.getActivity().getApplicationContext()));
 
-        mContentBlockAdapter = new ContentBlockAdapter(this, mContentBlocks, mLinkColor, mApiKey);
+        mContentBlockAdapter = new ContentBlockAdapter(this, mContentBlocks, mLinkColor, mApiKey,
+                showSpotMapContentLinks);
         mRecyclerView.setAdapter(mContentBlockAdapter);
     }
 
@@ -332,6 +335,10 @@ public class XamoomContentFragment extends Fragment {
         this.mLocationIdentifier = mLocationIdentifier;
     }
 
+    public void setShowSpotMapContentLinks(boolean showSpotMapContentLinks) {
+        this.showSpotMapContentLinks = showSpotMapContentLinks;
+    }
+
     public void setBeaconId2(String beaconId2) {
         mBeaconId2 = beaconId2;
     }
@@ -363,9 +370,14 @@ public class XamoomContentFragment extends Fragment {
      */
     public interface OnXamoomContentFragmentInteractionListener {
         void clickedContentBlock(Content content);
+        void clickedSpotMapContentLink(String contentId);
     }
 
     public void contentBlockClick(Content content) {
         mListener.clickedContentBlock(content);
+    }
+
+    public void spotMapContentLinkClick(String contentId) {
+        mListener.clickedSpotMapContentLink(contentId);
     }
 }
