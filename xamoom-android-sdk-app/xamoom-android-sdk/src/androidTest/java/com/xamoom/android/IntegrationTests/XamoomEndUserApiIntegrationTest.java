@@ -3,10 +3,12 @@ package com.xamoom.android.IntegrationTests;
 import android.app.Application;
 import android.test.ApplicationTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
+import android.util.Log;
 
 import com.xamoom.android.APICallback;
 import com.xamoom.android.R;
 import com.xamoom.android.XamoomEndUserApi;
+import com.xamoom.android.mapping.ContentBlocks.MenuItem;
 import com.xamoom.android.mapping.ContentById;
 import com.xamoom.android.mapping.ContentByLocationIdentifier;
 import com.xamoom.android.mapping.ContentList;
@@ -378,6 +380,39 @@ public class XamoomEndUserApiIntegrationTest extends ApplicationTestCase<Applica
         });
 
         signal.await();
+    }
+
+    /*
+     * menu test
+     */
+
+    public void testThatTheMenuGetsIcons() {
+        final CountDownLatch signal = new CountDownLatch(1);
+
+        XamoomEndUserApi.getInstance(getContext(), API_KEY).getContentbyIdFull(TESTING_CONTENT_ID,
+                false, true, "de", true, new APICallback<ContentById>() {
+                    @Override
+                    public void finished(ContentById result) {
+
+                        assertNotNull(result.getMenu());
+                        MenuItem menuItem = result.getMenu().getItems().get(2);
+                        Log.v(TAG, "Hellyeah: " + menuItem.getCategory());
+                        assertNotNull(menuItem.getCategory());
+                        signal.countDown();
+                    }
+
+                    @Override
+                    public void error(RetrofitError error) {
+                        assertNull(error);
+                        signal.countDown();
+                    }
+                });
+
+        try {
+            signal.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     /*
