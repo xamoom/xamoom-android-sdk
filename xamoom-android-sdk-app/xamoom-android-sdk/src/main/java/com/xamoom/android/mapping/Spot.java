@@ -23,6 +23,8 @@ public class Spot {
     private String image;
     @SerializedName("content_id")
     private String contentId;
+    @SerializedName("category")
+    private int category;
 
     @Override
     public String toString() {
@@ -49,5 +51,9 @@ public class Spot {
 
     public String getContentId() {
         return contentId;
+    }
+
+    public int getCategory() {
+        return category;
     }
 }

@@ -6,7 +6,7 @@ import android.test.ApplicationTestCase;
 import com.xamoom.android.APICallback;
 import com.xamoom.android.R;
 import com.xamoom.android.XamoomEndUserApi;
-import com.xamoom.android.mapping.ContentBlocks.MenuItem;
+import com.xamoom.android.mapping.MenuItem;
 import com.xamoom.android.mapping.ContentById;
 import com.xamoom.android.mapping.ContentByLocationIdentifier;
 import com.xamoom.android.mapping.ContentList;
@@ -329,6 +329,35 @@ public class XamoomEndUserApiIntegrationTest extends ApplicationTestCase<Applica
                         List<Spot> spots = result.getItems();
 
                         assertNotNull("spot should have contentId", spots.get(0).getContentId());
+
+                        signal.countDown();
+                    }
+
+                    @Override
+                    public void error(RetrofitError error) {
+                        assertNull(error);
+                        signal.countDown();
+                    }
+                });
+
+        signal.await();
+    }
+
+    /**
+     * Check if getSpotMap returns spot with category.
+     *
+     * @throws Exception
+     */
+    public void testThatGetSpotMapReturnsSpotsWithCategory() throws Exception {
+        final CountDownLatch signal = new CountDownLatch(1);
+
+        XamoomEndUserApi.getInstance(getContext(), API_KEY).getSpotMap(
+                new String[]{"spot1"}, "de", true, new APICallback<SpotMap>() {
+                    @Override
+                    public void finished(SpotMap result) {
+                        List<Spot> spots = result.getItems();
+
+                        assertNotNull("spot should have category", spots.get(0).getCategory());
 
                         signal.countDown();
                     }
