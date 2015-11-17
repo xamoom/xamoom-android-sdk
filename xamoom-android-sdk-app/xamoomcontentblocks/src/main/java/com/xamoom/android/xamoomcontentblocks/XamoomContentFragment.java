@@ -213,7 +213,8 @@ public class XamoomContentFragment extends Fragment {
     private void loadDataWithContentId(final String mContentId) {
         mProgressbar.setVisibility(View.VISIBLE);
 
-        XamoomEndUserApi.getInstance(this.getActivity(), mApiKey).getContentbyId(mContentId, false, false, null, loadFullContent, new APICallback<ContentById>() {
+        XamoomEndUserApi.getInstance(this.getActivity(), mApiKey).getContentbyId(mContentId, false,
+                false, null, loadFullContent, false, new APICallback<ContentById>() {
             @Override
             public void finished(ContentById result) {
                 mContent = result.getContent();

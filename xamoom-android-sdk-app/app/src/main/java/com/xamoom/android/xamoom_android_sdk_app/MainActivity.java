@@ -170,7 +170,9 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
 
     public void getByIdFullButtonOnClick (View v) {
         mProgressDialog.show();
-        XamoomEndUserApi.getInstance(this.getApplicationContext(), mApiKey).getContentbyId(TESTING_CONTENT_ID, mStyleSwitchStatus, mMenuSwitchStatus, "de", true, new APICallback<ContentById>() {
+        XamoomEndUserApi.getInstance(this.getApplicationContext(), mApiKey)
+                .getContentbyId(TESTING_CONTENT_ID, mStyleSwitchStatus, mMenuSwitchStatus, "de",
+                        true, false, new APICallback<ContentById>() {
             @Override
             public void finished(ContentById result) {
                 mProgressDialog.dismiss();
@@ -282,7 +284,9 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
 
     public void xamoomcontentBlocksClick (View v) {
         mProgressDialog.show();
-        XamoomEndUserApi.getInstance(this.getApplicationContext(), mApiKey).getContentbyId(TESTING_CONTENT_ID, mStyleSwitchStatus, mMenuSwitchStatus, "de", true, new APICallback<ContentById>() {
+        XamoomEndUserApi.getInstance(this.getApplicationContext(), mApiKey)
+                .getContentbyId(TESTING_CONTENT_ID, mStyleSwitchStatus, mMenuSwitchStatus, "de",
+                        true, false, new APICallback<ContentById>() {
             @Override
             public void finished(ContentById result) {
                 mProgressDialog.dismiss();
