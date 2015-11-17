@@ -44,7 +44,8 @@ public class XamoomEndUserApiTest extends ApplicationTestCase<Application> {
      * Check if getSystemLanguage returns something.
      */
     public void testThatGetSystemLanguageReturnsLanguage() {
-        String testLanguage = XamoomEndUserApi.getInstance(getContext(), apikey).getSystemLanguage();
+        String testLanguage = XamoomEndUserApi.getInstance(getContext(), apikey)
+                .getSystemLanguage();
 
         assertNotNull(testLanguage);
     }
@@ -54,7 +55,8 @@ public class XamoomEndUserApiTest extends ApplicationTestCase<Application> {
      */
     public void testThatGetSystemLanguageReturnsDeviceLanguage() {
         String deviceLanguage = Locale.getDefault().getLanguage();
-        String languageFromApi = XamoomEndUserApi.getInstance(getContext(), apikey).getSystemLanguage();
+        String languageFromApi = XamoomEndUserApi.getInstance(getContext(), apikey)
+                .getSystemLanguage();
 
         assertEquals(deviceLanguage, languageFromApi);
     }
@@ -66,7 +68,8 @@ public class XamoomEndUserApiTest extends ApplicationTestCase<Application> {
      */
     public void testThatGetSystemLanguageReturnsEnglish() {
         String testLanguage = "en";
-        String languageFromApi = XamoomEndUserApi.getInstance(getContext(), apikey).getSystemLanguage();
+        String languageFromApi = XamoomEndUserApi.getInstance(getContext(), apikey)
+                .getSystemLanguage();
 
         assertEquals(testLanguage, languageFromApi);
     }
