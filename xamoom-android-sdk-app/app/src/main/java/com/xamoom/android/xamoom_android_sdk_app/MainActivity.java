@@ -11,7 +11,6 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -171,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
 
     public void getByIdFullButtonOnClick (View v) {
         mProgressDialog.show();
-        XamoomEndUserApi.getInstance(this.getApplicationContext(), mApiKey).getContentbyIdFull(TESTING_CONTENT_ID, mStyleSwitchStatus, mMenuSwitchStatus, "de", true, new APICallback<ContentById>() {
+        XamoomEndUserApi.getInstance(this.getApplicationContext(), mApiKey).getContentbyId(TESTING_CONTENT_ID, mStyleSwitchStatus, mMenuSwitchStatus, "de", true, new APICallback<ContentById>() {
             @Override
             public void finished(ContentById result) {
                 mProgressDialog.dismiss();
@@ -283,7 +282,7 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
 
     public void xamoomcontentBlocksClick (View v) {
         mProgressDialog.show();
-        XamoomEndUserApi.getInstance(this.getApplicationContext(), mApiKey).getContentbyIdFull(TESTING_CONTENT_ID, mStyleSwitchStatus, mMenuSwitchStatus, "de", true, new APICallback<ContentById>() {
+        XamoomEndUserApi.getInstance(this.getApplicationContext(), mApiKey).getContentbyId(TESTING_CONTENT_ID, mStyleSwitchStatus, mMenuSwitchStatus, "de", true, new APICallback<ContentById>() {
             @Override
             public void finished(ContentById result) {
                 mProgressDialog.dismiss();

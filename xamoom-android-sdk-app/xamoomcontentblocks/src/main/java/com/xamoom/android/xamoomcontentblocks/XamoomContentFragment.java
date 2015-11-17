@@ -20,7 +20,6 @@ import com.xamoom.android.mapping.ContentBlocks.ContentBlock;
 import com.xamoom.android.mapping.ContentBlocks.ContentBlockType0;
 import com.xamoom.android.mapping.ContentBlocks.ContentBlockType3;
 import com.xamoom.android.mapping.ContentBlocks.ContentBlockType4;
-import com.xamoom.android.mapping.ContentBlocks.ContentBlockType6;
 import com.xamoom.android.mapping.ContentById;
 import com.xamoom.android.mapping.ContentByLocationIdentifier;
 import com.xamoom.android.mapping.Menu;
@@ -214,7 +213,7 @@ public class XamoomContentFragment extends Fragment {
     private void loadDataWithContentId(final String mContentId) {
         mProgressbar.setVisibility(View.VISIBLE);
 
-        XamoomEndUserApi.getInstance(this.getActivity(), mApiKey).getContentbyIdFull(mContentId, false, false, null, loadFullContent, new APICallback<ContentById>() {
+        XamoomEndUserApi.getInstance(this.getActivity(), mApiKey).getContentbyId(mContentId, false, false, null, loadFullContent, new APICallback<ContentById>() {
             @Override
             public void finished(ContentById result) {
                 mContent = result.getContent();

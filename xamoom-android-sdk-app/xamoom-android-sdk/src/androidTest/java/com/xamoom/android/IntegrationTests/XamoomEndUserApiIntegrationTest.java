@@ -2,8 +2,6 @@ package com.xamoom.android.IntegrationTests;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
-import android.test.suitebuilder.annotation.SmallTest;
-import android.util.Log;
 
 import com.xamoom.android.APICallback;
 import com.xamoom.android.R;
@@ -15,8 +13,6 @@ import com.xamoom.android.mapping.ContentList;
 import com.xamoom.android.mapping.Spot;
 import com.xamoom.android.mapping.SpotMap;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
@@ -65,21 +61,21 @@ public class XamoomEndUserApiIntegrationTest extends ApplicationTestCase<Applica
     public void testThatGetContentbyIdFullReturnsResult() throws Exception {
         final CountDownLatch signal = new CountDownLatch(1);
 
-        XamoomEndUserApi.getInstance(getContext(), API_KEY).getContentbyIdFull(TESTING_CONTENT_ID,
-                false, false, "de", true, new APICallback<ContentById>() {
+        XamoomEndUserApi.getInstance(getContext(), API_KEY).getContentbyId(TESTING_CONTENT_ID,
+                false, false, "de", true, false, new APICallback<ContentById>() {
                     @Override
                     public void finished(ContentById result) {
-                        assertNotNull("getContentbyIdFull() should return an object", result);
+                        assertNotNull("getContentbyId() should return an object", result);
 
-                        assertNotNull("getContentbyIdFull() should return a systemName",
+                        assertNotNull("getContentbyId() should return a systemName",
                                 result.getSystemName());
-                        assertNotNull("getContentbyIdFull() should return a systemUrl",
+                        assertNotNull("getContentbyId() should return a systemUrl",
                                 result.getSystemUrl());
-                        assertNotNull("getContentbyIdFull() should return a systemId",
+                        assertNotNull("getContentbyId() should return a systemId",
                                 result.getSystemId());
-                        assertNull("getContentbyIdFull() should not return a style",
+                        assertNull("getContentbyId() should not return a style",
                                 result.getStyle());
-                        assertNull("getContentbyIdFull() should not return a menu",
+                        assertNull("getContentbyId() should not return a menu",
                                 result.getMenu());
 
                         signal.countDown();
@@ -104,21 +100,21 @@ public class XamoomEndUserApiIntegrationTest extends ApplicationTestCase<Applica
     public void testThatGetContentbyIdFullReturnsResultWithStyleMenu() throws Exception {
         final CountDownLatch signal = new CountDownLatch(1);
 
-        XamoomEndUserApi.getInstance(getContext(), API_KEY).getContentbyIdFull(TESTING_CONTENT_ID,
-                true, true, "de", true, new APICallback<ContentById>() {
+        XamoomEndUserApi.getInstance(getContext(), API_KEY).getContentbyId(TESTING_CONTENT_ID,
+                true, true, "de", true, false, new APICallback<ContentById>() {
                     @Override
                     public void finished(ContentById result) {
-                        assertNotNull("getContentbyIdFull() should return an object", result);
+                        assertNotNull("getContentbyId() should return an object", result);
 
-                        assertNotNull("getContentbyIdFull() should return a systemName",
+                        assertNotNull("getContentbyId() should return a systemName",
                                 result.getSystemName());
-                        assertNotNull("getContentbyIdFull() should return a systemUrl",
+                        assertNotNull("getContentbyId() should return a systemUrl",
                                 result.getSystemUrl());
-                        assertNotNull("getContentbyIdFull() should return a systemId",
+                        assertNotNull("getContentbyId() should return a systemId",
                                 result.getSystemId());
-                        assertNotNull("getContentbyIdFull() should return a style",
+                        assertNotNull("getContentbyId() should return a style",
                                 result.getStyle());
-                        assertNotNull("getContentbyIdFull() should return a menu",
+                        assertNotNull("getContentbyId() should return a menu",
                                 result.getMenu());
 
                         signal.countDown();
@@ -389,14 +385,13 @@ public class XamoomEndUserApiIntegrationTest extends ApplicationTestCase<Applica
     public void testThatTheMenuGetsIcons() {
         final CountDownLatch signal = new CountDownLatch(1);
 
-        XamoomEndUserApi.getInstance(getContext(), API_KEY).getContentbyIdFull(TESTING_CONTENT_ID,
-                false, true, "de", true, new APICallback<ContentById>() {
+        XamoomEndUserApi.getInstance(getContext(), API_KEY).getContentbyId(TESTING_CONTENT_ID,
+                false, true, "de", true, false, new APICallback<ContentById>() {
                     @Override
                     public void finished(ContentById result) {
 
                         assertNotNull(result.getMenu());
                         MenuItem menuItem = result.getMenu().getItems().get(2);
-                        Log.v(TAG, "Hellyeah: " + menuItem.getCategory());
                         assertNotNull(menuItem.getCategory());
                         signal.countDown();
                     }

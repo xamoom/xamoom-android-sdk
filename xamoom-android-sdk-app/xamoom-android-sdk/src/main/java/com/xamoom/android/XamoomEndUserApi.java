@@ -120,7 +120,9 @@ public class XamoomEndUserApi {
      * @see com.xamoom.android.mapping.Menu
      * @since 1.0
      */
-    public void getContentbyIdFull(String contentId, boolean style, boolean menu, String language, boolean full, final APICallback<ContentById> callback) {
+    public void getContentbyId(String contentId, boolean style, boolean menu, String language,
+                               boolean full, boolean preview,
+                               final APICallback<ContentById> callback) {
         if (language == null)
             language = systemLanguage;
 
@@ -130,6 +132,7 @@ public class XamoomEndUserApi {
         params.put("include_menu", menu ? "True" : "False");
         params.put("language", language);
         params.put("full", full ? "True" : "False");
+        params.put("preview", full ? "True" : "False");
 
         apiInterface.getContentByIdFull(params, new Callback<ContentById>() {
             @Override
