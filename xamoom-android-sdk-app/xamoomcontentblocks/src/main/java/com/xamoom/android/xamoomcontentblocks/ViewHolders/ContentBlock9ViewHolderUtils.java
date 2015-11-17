@@ -1,4 +1,4 @@
-package com.xamoom.android.xamoomcontentblocks;
+package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

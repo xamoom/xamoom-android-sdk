@@ -1,4 +1,4 @@
-package com.xamoom.android.xamoomcontentblocks;
+package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
 import android.location.Location;
 import android.support.v4.app.Fragment;
@@ -13,6 +13,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 import com.squareup.picasso.Picasso;
 import com.xamoom.android.mapping.Spot;
+import com.xamoom.android.xamoomcontentblocks.MarkerCallback;
+import com.xamoom.android.xamoomcontentblocks.R;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock9ViewHolder;
 
 /**
