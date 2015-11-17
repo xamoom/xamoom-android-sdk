@@ -1,8 +1,6 @@
 package com.xamoom.android.mapping;
 
-import com.google.gson.annotations.SerializedName;
 import com.xamoom.android.APICallback;
-import com.xamoom.android.mapping.ContentBlocks.MenuItem;
 
 import java.util.List;
 
@@ -13,7 +11,7 @@ import java.util.List;
  * @author Raphael Seher
  *
  * @see MenuItem
- * @see com.xamoom.android.XamoomEndUserApi#getContentbyIdFull(String, boolean, boolean, String, boolean, APICallback)
+ * @see com.xamoom.android.XamoomEndUserApi#getContentbyId(String, boolean, boolean, String, boolean, boolean, APICallback)
  * @see com.xamoom.android.XamoomEndUserApi#getContentByLocationIdentifier(String, String, boolean, boolean, String, APICallback)
  */
 public class Menu {
