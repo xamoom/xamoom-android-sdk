@@ -443,4 +443,34 @@ public class XamoomEndUserApiIntegrationTest extends ApplicationTestCase<Applica
 
         signal.await();
     }
+
+    /**
+     * Check if getContentList returns a result if you pass an "umlaut".
+     *
+     * @throws Exception
+     */
+    public void testThatGetContentListWithUmlautReturnsResult() throws Exception {
+        final CountDownLatch signal = new CountDownLatch(1);
+
+        XamoomEndUserApi.getInstance(getContext(), API_KEY).getContentList("de", 7, null,
+                new String[]{"Wörthersee"}, new APICallback<ContentList>() {
+                    @Override
+                    public void finished(ContentList result) {
+                        assertNotNull("getContentList() should return an object", result);
+                        assertEquals(1, result.getItems().size());
+                        assertNotNull("getContentList() should return a cursor", result.getCursor());
+                        assertNotNull("getContentList() should return an isMore", result.isMore());
+
+                        signal.countDown();
+                    }
+
+                    @Override
+                    public void error(RetrofitError error) {
+                        assertNull(error);
+                        signal.countDown();
+                    }
+                });
+
+        signal.await();
+    }
 }
