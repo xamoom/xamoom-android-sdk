@@ -1,4 +1,4 @@
-package com.xamoom.android.mapping.ContentBlocks;
+package com.xamoom.android.mapping;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -17,7 +17,7 @@ public class MenuItem {
     @SerializedName("content_id")
     private String contentId;
     @SerializedName("category")
-    private String category;
+    private int category;
 
     @Override
     public String toString() {
@@ -32,7 +32,7 @@ public class MenuItem {
         return contentId;
     }
 
-    public String getCategory() {
+    public int getCategory() {
         return category;
     }
 }
