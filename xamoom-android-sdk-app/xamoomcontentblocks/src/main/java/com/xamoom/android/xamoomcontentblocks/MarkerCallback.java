@@ -14,7 +14,7 @@ import com.squareup.picasso.Callback;
 public class MarkerCallback implements Callback {
     Marker marker = null;
 
-    MarkerCallback(Marker marker) {
+    public MarkerCallback(Marker marker) {
         this.marker = marker;
     }
 
