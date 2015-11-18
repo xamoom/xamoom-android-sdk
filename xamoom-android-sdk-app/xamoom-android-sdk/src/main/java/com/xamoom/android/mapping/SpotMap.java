@@ -16,7 +16,7 @@ import java.util.List;
  *
  * @see Spot
  * @see Style
- * @see com.xamoom.android.XamoomEndUserApi#getSpotMap(String, String[], String, APICallback)
+ * @see com.xamoom.android.XamoomEndUserApi#getSpotMap(String[], String, boolean, APICallback)
  * @see com.xamoom.android.XamoomEndUserApi#getClosestSpots(double, double, String, int, int, APICallback)
  */
 public class SpotMap {
