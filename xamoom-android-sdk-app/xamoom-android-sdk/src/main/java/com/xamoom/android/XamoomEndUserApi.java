@@ -69,8 +69,8 @@ public class XamoomEndUserApi {
         //create restAdapter with custom gsonConverter
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(apiUrl)
-                .setLogLevel(RestAdapter.LogLevel.FULL)
-                .setLog(new AndroidLog(TAG))
+                //.setLogLevel(RestAdapter.LogLevel.FULL)
+                //.setLog(new AndroidLog(TAG))
                 .setRequestInterceptor(new RequestInterceptor() {
                     @Override
                     public void intercept(RequestFacade request) {
