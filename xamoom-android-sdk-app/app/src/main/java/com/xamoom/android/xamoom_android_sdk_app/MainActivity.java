@@ -41,9 +41,9 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
 
     private static final String TAG = "XamoomAndroidSdkApp";
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
-    private static final String TESTING_CONTENT_ID = "8f51819db5c6403d8455593322437c07";
+    private static final String TESTING_CONTENT_ID = "2c54a044f54b4b488b9aec2a10ba3f37";
     private static final String TESTING_MARKER_ID = "5k9kv";
-    private static final String[] TESTING_BEACON = new String[]{"de2b94ae-ed98-11e4-3432-78616d6f6f6d","5704","1209"};
+    private static final String[] TESTING_BEACON = new String[]{"de2b94ae-ed98-11e4-3432-78616d6f6f6d","52414","29267"};
     private TextView outputTextView;
     private ProgressDialog mProgressDialog;
     private Switch mMenuSwitch;
@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
             }
         });
 
-        mApiKey = getResources().getString(R.string.dev_apiKey);
+        mApiKey = getResources().getString(R.string.prod_apiKey);
 
         checkPermission();
     }

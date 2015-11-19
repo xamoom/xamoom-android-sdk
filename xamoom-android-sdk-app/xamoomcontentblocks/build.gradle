@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
 
-version = "0.9.9"
+version = "1.0.0"
 group = "com.xamoom.android"
 
 ext {
@@ -15,7 +15,7 @@ ext {
     siteUrl = 'https://github.com/xamoom/xamoom-android-sdk'
     gitUrl = 'https://github.com/xamoom/xamoom-android-sdk.git'
 
-    libraryVersion = '0.9.9'
+    libraryVersion = '1.0.0'
     developerId = 'xamoom-raphael'
     developerName = 'Raphael Seher'
     developerEmail = 'raphael@xamoom.com'
@@ -44,11 +44,11 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:23.1.0'
-    compile 'com.android.support:recyclerview-v7:23.1.0'
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.android.support:recyclerview-v7:23.1.1'
     compile 'com.github.bumptech.glide:glide:3.6.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.google.android.gms:play-services:8.1.0'
+    compile 'com.google.android.gms:play-services-maps:8.3.0'
     compile project(':xamoom-android-sdk')
     compile files('libs/YouTubeAndroidPlayerApi.jar')
     compile files('libs/androidsvg-1.2.1.jar')
