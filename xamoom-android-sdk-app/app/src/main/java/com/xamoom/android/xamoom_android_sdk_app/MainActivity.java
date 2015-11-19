@@ -84,18 +84,6 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
         checkPermission();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        registerReceiver(mEnterRegionBroadCastReciever, new IntentFilter(XamoomBeaconService.ENTER_REGION_BROADCAST));
-        registerReceiver(mExitRegionBroadCastReciever, new IntentFilter(XamoomBeaconService.EXIT_REGION_BROADCAST));
-        registerReceiver(mFoundBeaconsBroadCastReciever, new IntentFilter(XamoomBeaconService.FOUND_BEACON_BROADCAST));
-        registerReceiver(mNoBeaconsBroadCastReciever, new IntentFilter(XamoomBeaconService.NO_BEACON_BROADCAST));
-        registerReceiver(mImmediateBeaconsBroadCastReciever, new IntentFilter(XamoomBeaconService.IMMEDIATE_BEACON_BROADCAST));
-        registerReceiver(mNearBeaconsBroadCastReciever, new IntentFilter(XamoomBeaconService.NEAR_BEACON_BROADCAST));
-        registerReceiver(mFarBeaconsBroadCastReciever, new IntentFilter(XamoomBeaconService.FAR_BEACON_BROADCAST));
-    }
-
     private final BroadcastReceiver mEnterRegionBroadCastReciever = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -148,38 +136,6 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
             Log.d(TAG, "far beacons");
         }
     };
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        outputTextView = (TextView)findViewById(R.id.outputTextView);
-
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setIndeterminate(false);
-        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-
-        mMenuSwitch = (Switch)findViewById(R.id.menuSwitch);
-        mMenuSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mMenuSwitchStatus = isChecked;
-            }
-        });
-
-        mStyleSwitch = (Switch)findViewById(R.id.styleSwitch);
-        mStyleSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mStyleSwitchStatus = isChecked;
-            }
-        });
-
-        mApiKey = getResources().getString(R.string.prod_apiKey);
-
-        checkPermission();
-    }
 
     @Override
     protected void onResume() {
