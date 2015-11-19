@@ -79,7 +79,9 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder {
                 }
             });
         } else {
-            XamoomEndUserApi.getInstance(mFragment.getActivity().getApplicationContext(), mApiKey).getContentbyIdFull(cb6.getContentId(), false, false, null, false, new APICallback<ContentById>() {
+            XamoomEndUserApi.getInstance(mFragment.getActivity().getApplicationContext(), mApiKey)
+                    .getContentbyId(cb6.getContentId(), false, false, null, false, true,
+                            new APICallback<ContentById>() {
                 @Override
                 public void finished(final ContentById result) {
                     //save result

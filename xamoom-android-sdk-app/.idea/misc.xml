@@ -4,7 +4,11 @@
     <entry_points version="2.0" />
   </component>
   <component name="JavadocGenerationManager">
+<<<<<<< HEAD
     <option name="OUTPUT_DIRECTORY" value="$USER_HOME$/Downloads/docu" />
+=======
+    <option name="OUTPUT_DIRECTORY" value="$USER_HOME$/Desktop/doc" />
+>>>>>>> dev
     <option name="OPTION_SCOPE" value="protected" />
     <option name="OPTION_HIERARCHY" value="true" />
     <option name="OPTION_NAVIGATOR" value="true" />
@@ -55,7 +59,7 @@
     <ConfirmationsSetting value="0" id="Add" />
     <ConfirmationsSetting value="0" id="Remove" />
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_7" default="true" assert-keyword="true" jdk-15="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" assert-keyword="true" jdk-15="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

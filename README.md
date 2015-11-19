@@ -20,7 +20,7 @@ More informations about xamoom and how xamoom works? Visit our Github page [xamo
 
 Add in your Gradle in dependencies
 
-    compile 'com.xamoom.android:xamoom-android-sdk:0.9.9'
+    compile 'com.xamoom.android:xamoom-android-sdk:1.0.0'
 
 # Usage
 
@@ -35,7 +35,7 @@ Add internet permission to your manifest.
 Grab a contentId from your [xamoom-system](https://xamoom.net/) (open a page and copy id from url) and make your first call like this:
 
 ```java
-XamoomEndUserApi.getInstance(this.getApplicationContext(), API_KEY).getContentbyIdFull(mContentId, false, false, null, true, new APICallback<ContentById>() {
+XamoomEndUserApi.getInstance(this.getApplicationContext(), API_KEY).getContentbyId(mContentId, false, false, null, true, false, new APICallback<ContentById>() {
             @Override
             public void finished(ContentById contentById) {
                 Log.v(LOG_TAG, "Works: " + contentById.getContent().getTitle());

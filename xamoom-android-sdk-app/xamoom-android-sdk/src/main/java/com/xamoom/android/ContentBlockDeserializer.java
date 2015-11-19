@@ -1,5 +1,7 @@
 package com.xamoom.android;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -23,13 +25,23 @@ import java.lang.reflect.Type;
 /**
  * Used for differ between the contentBlocks when deserializing the JSON.
  */
-class ContentBlockDeserializer implements JsonDeserializer {
-    public ContentBlock deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+public class ContentBlockDeserializer implements JsonDeserializer {
 
+    private static final String TAG = ContentBlockDeserializer.class.getSimpleName();
+
+    public ContentBlock deserialize(JsonElement json, Type typeOfT,
+                                    JsonDeserializationContext context) throws JsonParseException {
         ContentBlock cb;
+        int cbt;
 
         JsonObject jsonObject = json.getAsJsonObject();
-        int cbt = jsonObject.get("content_block_type").getAsInt();
+        try {
+            cbt = jsonObject.get("content_block_type").getAsInt();
+        } catch (NumberFormatException e) {
+            Log.e(TAG, "content_block_type not an int.");
+            e.printStackTrace();
+            return null;
+        }
 
         switch (cbt) {
             case 0:

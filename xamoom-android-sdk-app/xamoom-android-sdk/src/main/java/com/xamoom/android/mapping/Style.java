@@ -25,7 +25,9 @@ public class Style {
     private String foregroundColor;
     @SerializedName("ch_color")
     private String chromeHeaderColor;
+    @SerializedName("custom_marker")
     private String customMarker;
+    @SerializedName("icon")
     private String icon;
 
     public String toString () {

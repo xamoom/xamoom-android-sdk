@@ -20,7 +20,6 @@ import com.xamoom.android.mapping.ContentBlocks.ContentBlock;
 import com.xamoom.android.mapping.ContentBlocks.ContentBlockType0;
 import com.xamoom.android.mapping.ContentBlocks.ContentBlockType3;
 import com.xamoom.android.mapping.ContentBlocks.ContentBlockType4;
-import com.xamoom.android.mapping.ContentBlocks.ContentBlockType6;
 import com.xamoom.android.mapping.ContentById;
 import com.xamoom.android.mapping.ContentByLocationIdentifier;
 import com.xamoom.android.mapping.Menu;
@@ -78,6 +77,7 @@ public class XamoomContentFragment extends Fragment {
 
     private boolean loadFullContent = true;
     private boolean displayAllStoreLinks = false;
+    private boolean showSpotMapContentLinks = false;
     private boolean isAnimated = false;
 
     private OnXamoomContentFragmentInteractionListener mListener;
@@ -158,9 +158,11 @@ public class XamoomContentFragment extends Fragment {
         if(mContent == null || mContentBlockAdapter != null)
             return;
 
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity().getApplicationContext()));
+        mRecyclerView.setLayoutManager(
+                new LinearLayoutManager(this.getActivity().getApplicationContext()));
 
-        mContentBlockAdapter = new ContentBlockAdapter(this, mContentBlocks, mLinkColor, mApiKey);
+        mContentBlockAdapter = new ContentBlockAdapter(this, mContentBlocks, mLinkColor, mApiKey,
+                showSpotMapContentLinks);
         mRecyclerView.setAdapter(mContentBlockAdapter);
     }
 
@@ -211,7 +213,8 @@ public class XamoomContentFragment extends Fragment {
     private void loadDataWithContentId(final String mContentId) {
         mProgressbar.setVisibility(View.VISIBLE);
 
-        XamoomEndUserApi.getInstance(this.getActivity(), mApiKey).getContentbyIdFull(mContentId, false, false, null, loadFullContent, new APICallback<ContentById>() {
+        XamoomEndUserApi.getInstance(this.getActivity(), mApiKey).getContentbyId(mContentId, false,
+                false, null, loadFullContent, false, new APICallback<ContentById>() {
             @Override
             public void finished(ContentById result) {
                 mContent = result.getContent();
@@ -268,7 +271,7 @@ public class XamoomContentFragment extends Fragment {
         mContentBlocks.add(0, cb0);
 
         if(mContent.getImagePublicUrl() != null) {
-            ContentBlockType3 cb3 = new ContentBlockType3(null, true, 3, mContent.getImagePublicUrl(), 0);
+            ContentBlockType3 cb3 = new ContentBlockType3(null, true, 3, mContent.getImagePublicUrl(), 0, getString(R.string.header_picture_alt_text));
             mContentBlocks.add(1, cb3);
         }
 
@@ -332,6 +335,10 @@ public class XamoomContentFragment extends Fragment {
         this.mLocationIdentifier = mLocationIdentifier;
     }
 
+    public void setShowSpotMapContentLinks(boolean showSpotMapContentLinks) {
+        this.showSpotMapContentLinks = showSpotMapContentLinks;
+    }
+
     public void setBeaconId2(String beaconId2) {
         mBeaconId2 = beaconId2;
     }
@@ -363,9 +370,14 @@ public class XamoomContentFragment extends Fragment {
      */
     public interface OnXamoomContentFragmentInteractionListener {
         void clickedContentBlock(Content content);
+        void clickedSpotMapContentLink(String contentId);
     }
 
     public void contentBlockClick(Content content) {
         mListener.clickedContentBlock(content);
+    }
+
+    public void spotMapContentLinkClick(String contentId) {
+        mListener.clickedSpotMapContentLink(contentId);
     }
 }

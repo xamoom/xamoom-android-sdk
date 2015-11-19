@@ -1,8 +1,9 @@
 <resources>
-    <string name="app_name">XamoomContentBlocks</string>
-    <string name="image_saved_text">Bild gespeichert</string>
-    <string name="cannot_save_image">SVGs und GIFs können nicht gespeichert werden</string>
-    <string name="distanceLabel">Entfernung</string>
-    <string name="meterLabel">Meter</string>
-    <string name="noLocation">Location wird gesucht &#8230;</string>
+    <string name="app_name" translatable="false">XamoomContentBlocks</string>
+    <string name="image_saved_text">Image saved</string>
+    <string name="cannot_save_image">Cannot save SVGs and GIFs</string>
+    <string name="distanceLabel">Distance</string>
+    <string name="meterLabel">meter</string>
+    <string name="noLocation">Searching for location.</string>
+    <string name="header_picture_alt_text">Headerimage</string>
 </resources>

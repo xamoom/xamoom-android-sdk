@@ -24,6 +24,7 @@ import retrofit.Callback;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
+import retrofit.android.AndroidLog;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 import retrofit.http.Body;
@@ -49,7 +50,7 @@ import retrofit.http.QueryMap;
 public class XamoomEndUserApi {
 
     private static final String TAG = "XamoomEndUserApi";
-    private static final String apiUrl = "https://16-dot-xamoom-api-dot-xamoom-cloud.appspot.com/_ah/api/";
+    private static final String apiUrl = "https://19-dot-xamoom-api-dot-xamoom-cloud.appspot.com/_ah/api/";
     private static XamoomEndUserApi api;
 
     private Context mContext;
@@ -119,7 +120,9 @@ public class XamoomEndUserApi {
      * @see com.xamoom.android.mapping.Menu
      * @since 1.0
      */
-    public void getContentbyIdFull(String contentId, boolean style, boolean menu, String language, boolean full, final APICallback<ContentById> callback) {
+    public void getContentbyId(String contentId, boolean style, boolean menu, String language,
+                               boolean full, boolean preview,
+                               final APICallback<ContentById> callback) {
         if (language == null)
             language = systemLanguage;
 
@@ -129,6 +132,7 @@ public class XamoomEndUserApi {
         params.put("include_menu", menu ? "True" : "False");
         params.put("language", language);
         params.put("full", full ? "True" : "False");
+        params.put("preview", full ? "True" : "False");
 
         apiInterface.getContentByIdFull(params, new Callback<ContentById>() {
             @Override
@@ -277,22 +281,20 @@ public class XamoomEndUserApi {
      * Returns a list of spots.
      * For example for a map.
      *
-     * @param systemId When calling with an API Key, can be 0.
      * @param mapTags  StringArray with mapTags you want to display.
      * @param language The language for the response (if available on xamoom-cloud), else systemLanguage. For german: "de". If null == systemLanguage.
-
+     * @param withContent Sends you connected contentIds to the spot.
      * @see SpotMap
      * @since 1.0
      */
-    public void getSpotMap(String systemId, String[] mapTags, String language, final APICallback<SpotMap> callback) {
+    public void getSpotMap(String[] mapTags, String language, boolean withContent, final APICallback<SpotMap> callback) {
         if (language == null)
             language = systemLanguage;
 
-        if(systemId == null) {
-            systemId = "0";
-        }
+        LinkedHashMap<String, String> params = new LinkedHashMap<>();
+        params.put("include_content", withContent ? "True" : "False");
 
-        apiInterface.getSpotMap(systemId, TextUtils.join(",", mapTags), language, new Callback<SpotMap>() {
+        apiInterface.getSpotMap("0", TextUtils.join(",", mapTags), language, params, new Callback<SpotMap>() {
             @Override
             public void success(SpotMap result, Response response) {
                 //Log.v(TAG, "Debug Hellyeah: " + content);
@@ -458,8 +460,8 @@ public class XamoomEndUserApi {
          * @param systemId The systemId of the system.
          * @param mapTags MapTags seperated with comma.
          * @param language The language for the response.
+         * @param params Map with the parameters for the get.
          * @param cb Callback-Method with the result as ContentByLocation.
-         *
          * @see SpotMap
          */
         @Headers({
@@ -467,7 +469,7 @@ public class XamoomEndUserApi {
                 "User-Agent: xamoom-android-sdk",
         })
         @GET("/xamoomEndUserApi/v1/spotmap/{system_id}/{map_tag}/{language}")
-        void getSpotMap(@Path("system_id") String systemId, @Path("map_tag") String mapTags, @Path("language") String language, Callback<SpotMap> cb);
+        void getSpotMap(@Path("system_id") String systemId, @Path("map_tag") String mapTags, @Path("language") String language, @QueryMap Map<String, String> params, Callback<SpotMap> cb);
 
         /**
          * Post to /xamoomEndUserApi/v1/get_closest_spots.

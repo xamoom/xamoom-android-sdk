@@ -42,6 +42,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private List<ContentBlock> mContentBlocks;
     private String mLinkColor;
     private String mApiKey;
+    private boolean showContentLinks;
 
     /**
      * Constructor for the Adapter.
@@ -50,11 +51,13 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
      * @param contentBlocks ContentBlocks to display.
      * @param linkColor LinkColor as hex (e.g. "00F"), will be blue if null
      */
-    public ContentBlockAdapter(Fragment fragment, List<ContentBlock> contentBlocks, String linkColor, String apiKey) {
+    public ContentBlockAdapter(Fragment fragment, List<ContentBlock> contentBlocks,
+                               String linkColor, String apiKey, boolean showSpotMapContentLinks) {
         mFragment = fragment;
         mContentBlocks = contentBlocks;
         mLinkColor = linkColor;
         mApiKey = apiKey;
+        showContentLinks = showSpotMapContentLinks;
     }
 
     @Override
@@ -181,6 +184,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 ContentBlockType9 cb9 = (ContentBlockType9) cb;
                 ContentBlock9ViewHolder newHolder9 = (ContentBlock9ViewHolder) holder;
                 newHolder9.setupContentBlock(cb9);
+                newHolder9.showContentLinks = showContentLinks;
                 break;
         }
     }

@@ -13,7 +13,8 @@ import com.xamoom.android.APICallback;
  * @see Content
  * @see Style
  * @see Menu
- * @see com.xamoom.android.XamoomEndUserApi#getContentbyIdFull(String, boolean, boolean, String, boolean, APICallback)
+ * @see com.xamoom.android.XamoomEndUserApi#getContentbyId(String, boolean, boolean, String,
+   boolean, boolean, APICallback)
  */
 public class ContentById {
 

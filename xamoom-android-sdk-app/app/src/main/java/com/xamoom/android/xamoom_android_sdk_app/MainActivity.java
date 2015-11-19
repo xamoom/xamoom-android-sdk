@@ -11,7 +11,6 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -42,9 +41,9 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
 
     private static final String TAG = "XamoomAndroidSdkApp";
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
-    private static final String TESTING_CONTENT_ID = "8f51819db5c6403d8455593322437c07";
+    private static final String TESTING_CONTENT_ID = "2c54a044f54b4b488b9aec2a10ba3f37";
     private static final String TESTING_MARKER_ID = "5k9kv";
-    private static final String[] TESTING_BEACON = new String[]{"de2b94ae-ed98-11e4-3432-78616d6f6f6d","5704","1209"};
+    private static final String[] TESTING_BEACON = new String[]{"de2b94ae-ed98-11e4-3432-78616d6f6f6d","52414","29267"};
     private TextView outputTextView;
     private ProgressDialog mProgressDialog;
     private Switch mMenuSwitch;
@@ -52,6 +51,50 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
     private boolean mMenuSwitchStatus;
     private boolean mStyleSwitchStatus;
     private String mApiKey;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        outputTextView = (TextView)findViewById(R.id.outputTextView);
+
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setIndeterminate(false);
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
+        mMenuSwitch = (Switch)findViewById(R.id.menuSwitch);
+        mMenuSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mMenuSwitchStatus = isChecked;
+            }
+        });
+
+        mStyleSwitch = (Switch)findViewById(R.id.styleSwitch);
+        mStyleSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mStyleSwitchStatus = isChecked;
+            }
+        });
+
+        mApiKey = getResources().getString(R.string.prod_apiKey);
+
+        checkPermission();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(mEnterRegionBroadCastReciever, new IntentFilter(XamoomBeaconService.ENTER_REGION_BROADCAST));
+        registerReceiver(mExitRegionBroadCastReciever, new IntentFilter(XamoomBeaconService.EXIT_REGION_BROADCAST));
+        registerReceiver(mFoundBeaconsBroadCastReciever, new IntentFilter(XamoomBeaconService.FOUND_BEACON_BROADCAST));
+        registerReceiver(mNoBeaconsBroadCastReciever, new IntentFilter(XamoomBeaconService.NO_BEACON_BROADCAST));
+        registerReceiver(mImmediateBeaconsBroadCastReciever, new IntentFilter(XamoomBeaconService.IMMEDIATE_BEACON_BROADCAST));
+        registerReceiver(mNearBeaconsBroadCastReciever, new IntentFilter(XamoomBeaconService.NEAR_BEACON_BROADCAST));
+        registerReceiver(mFarBeaconsBroadCastReciever, new IntentFilter(XamoomBeaconService.FAR_BEACON_BROADCAST));
+    }
 
     private final BroadcastReceiver mEnterRegionBroadCastReciever = new BroadcastReceiver() {
         @Override
@@ -182,7 +225,9 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
 
     public void getByIdFullButtonOnClick (View v) {
         mProgressDialog.show();
-        XamoomEndUserApi.getInstance(this.getApplicationContext(), mApiKey).getContentbyIdFull(TESTING_CONTENT_ID, mStyleSwitchStatus, mMenuSwitchStatus, "de", true, new APICallback<ContentById>() {
+        XamoomEndUserApi.getInstance(this.getApplicationContext(), mApiKey)
+                .getContentbyId(TESTING_CONTENT_ID, mStyleSwitchStatus, mMenuSwitchStatus, "de",
+                        true, false, new APICallback<ContentById>() {
             @Override
             public void finished(ContentById result) {
                 mProgressDialog.dismiss();
@@ -246,7 +291,7 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
 
     public void getSpotMapButtonOnClick (View v) {
         mProgressDialog.show();
-        XamoomEndUserApi.getInstance(this.getApplicationContext(), mApiKey).getSpotMap("0", new String[]{"stw"}, "de", new APICallback<SpotMap>() {
+        XamoomEndUserApi.getInstance(this.getApplicationContext(), mApiKey).getSpotMap(new String[]{"stw"}, "de", true, new APICallback<SpotMap>() {
             @Override
             public void finished(SpotMap result) {
                 mProgressDialog.dismiss();
@@ -294,7 +339,9 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
 
     public void xamoomcontentBlocksClick (View v) {
         mProgressDialog.show();
-        XamoomEndUserApi.getInstance(this.getApplicationContext(), mApiKey).getContentbyIdFull(TESTING_CONTENT_ID, mStyleSwitchStatus, mMenuSwitchStatus, "de", true, new APICallback<ContentById>() {
+        XamoomEndUserApi.getInstance(this.getApplicationContext(), mApiKey)
+                .getContentbyId(TESTING_CONTENT_ID, mStyleSwitchStatus, mMenuSwitchStatus, "de",
+                        true, false, new APICallback<ContentById>() {
             @Override
             public void finished(ContentById result) {
                 mProgressDialog.dismiss();
@@ -317,6 +364,19 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
     public void clickedContentBlock(Content content) {
         XamoomContentFragment fragment = XamoomContentFragment.newInstance(null, mApiKey);
         fragment.setContent(content);
+        fragment.setShowSpotMapContentLinks(true);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.xamoomContentBlocksFrameLayout, fragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    //Do smt.
+    @Override
+    public void clickedSpotMapContentLink(String contentId) {
+        XamoomContentFragment fragment = XamoomContentFragment.newInstance(null, mApiKey);
+        fragment.setContentId(contentId);
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.xamoomContentBlocksFrameLayout, fragment)

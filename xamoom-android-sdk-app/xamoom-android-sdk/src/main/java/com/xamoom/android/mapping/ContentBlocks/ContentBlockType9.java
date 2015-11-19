@@ -11,7 +11,7 @@ import com.xamoom.android.APICallback;
  * @author Raphael Seher
  *
  * @see ContentBlock
- * @see com.xamoom.android.XamoomEndUserApi#getSpotMap(String, String[], String, APICallback)
+ * @see com.xamoom.android.XamoomEndUserApi#getSpotMap(String[], String, boolean, APICallback)
  */
 public class ContentBlockType9 extends ContentBlock {
 

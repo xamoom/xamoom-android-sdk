@@ -20,11 +20,14 @@ public class ContentBlockType3 extends ContentBlock {
     private float scaleX;
     @SerializedName("link_url")
     private String linkUrl;
+    @SerializedName("alt_text")
+    private String altText;
 
-    public ContentBlockType3(String title, boolean publicStatus, int contentBlockType, String fileId, float scaleX) {
+    public ContentBlockType3(String title, boolean publicStatus, int contentBlockType, String fileId, float scaleX, String altText) {
         super(title, publicStatus, contentBlockType);
         this.fileId = fileId;
         this.scaleX = scaleX;
+        this.altText = altText;
     }
 
     @Override
@@ -46,5 +49,9 @@ public class ContentBlockType3 extends ContentBlock {
 
     public String getLinkUrl() {
         return linkUrl;
+    }
+
+    public String getAltText() {
+        return altText;
     }
 }
