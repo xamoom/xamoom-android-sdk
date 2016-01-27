@@ -21,7 +21,7 @@ public class XamoomAndroidApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        XamoomBeaconService.getInstance(getApplicationContext()).startBeaconService("5704");
+        XamoomBeaconService.getInstance(getApplicationContext()).startBeaconService("52414");
         XamoomBeaconService.getInstance(getApplicationContext()).automaticRanging = true;
         XamoomBeaconService.getInstance(getApplicationContext()).approximateDistanceRanging = true;
 
@@ -33,7 +33,7 @@ public class XamoomAndroidApp extends Application {
     private final BroadcastReceiver mEnterRegionBroadCastReciever = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d("XamoomBeaconService", "background: enterRegion");
+            Log.d("XamoomAndroidApp", "background: enterRegion");
 
             Intent activityIntent = new Intent(XamoomAndroidApp.this, MainActivity.class);
             activityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -59,7 +59,7 @@ public class XamoomAndroidApp extends Application {
     private final BroadcastReceiver mExitRegionBroadCastReciever = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d("XamoomBeaconService", "background: exitRegion");
+            Log.d("XamoomAndroidApp", "background: exitRegion");
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
             notificationManager.cancel(1);
         }

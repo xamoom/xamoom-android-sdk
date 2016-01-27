@@ -111,14 +111,13 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
         mRegion = new Region("test", Identifier.parse("de2b94ae-ed98-11e4-3432-78616d6f6f6d"),
                 Identifier.parse(majorId), null);
 
-        mRegionBootstrap = new RegionBootstrap(this, mRegion);
 
         mBeaconManager = BeaconManager.getInstanceForApplication(mContext);
-        mBeaconManager.getBeaconParsers().add(new BeaconParser().
-                setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
+        mBeaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
         mBeaconManager.setRangeNotifier(this);
 
         mBeaconManager.bind(this);
+        mRegionBootstrap = new RegionBootstrap(this, mRegion);
     }
 
     /**
@@ -128,7 +127,7 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
      * @param betweenScanPeriod Value in ms to wait between scans.
      * @param scanPeriod Value in ms to scan for beacons. Should not be below 1100 ms.
      */
-    private void setBackgroundScanningSpeeds(int betweenScanPeriod, int scanPeriod){
+    public void setBackgroundScanningSpeeds(int betweenScanPeriod, int scanPeriod){
         mBeaconManager.setBackgroundBetweenScanPeriod(betweenScanPeriod);
         mBeaconManager.setBackgroundScanPeriod(scanPeriod);
 
@@ -146,7 +145,7 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
      * @param betweenScanPeriod Value in ms to wait between scans.
      * @param scanPeriod Value in ms to scan for beacons. Should not be below 1100 ms.
      */
-    private void setForegroundScanningSpeeds(int betweenScanPeriod, int scanPeriod){
+    public void setForegroundScanningSpeeds(int betweenScanPeriod, int scanPeriod){
         mBeaconManager.setForegroundBetweenScanPeriod(betweenScanPeriod);
         mBeaconManager.setForegroundScanPeriod(scanPeriod);
 
