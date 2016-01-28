@@ -64,6 +64,8 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
     public static final String BEACON_SERVICE_CONNECT_BROADCAST =
             "com.xamoom.android.BEACON_SERVICE_CONNECT_BROADCAST";
 
+    private static final String BEACON_UUID = "de2b94ae-ed98-11e4-3432-78616d6f6f6d";
+
     private static XamoomBeaconService mInstance;
 
     private Context mContext;
@@ -108,7 +110,7 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
         if (majorId.equalsIgnoreCase("")) {
             throw new IllegalArgumentException("MajorId should not be a number.");
         }
-        mRegion = new Region("test", Identifier.parse("de2b94ae-ed98-11e4-3432-78616d6f6f6d"),
+        mRegion = new Region("com.xamoom.android.beaconRegion"+BEACON_UUID+majorId, Identifier.parse(BEACON_UUID),
                 Identifier.parse(majorId), null);
 
 
