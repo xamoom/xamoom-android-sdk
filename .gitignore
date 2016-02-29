@@ -1,5 +1,3 @@
-xamoom-android-sdk-app/xamoom-android-sdk/src/main/res/values/apikey.xml
-
 .gradle
 /local.properties
 /.idea/workspace.xml
@@ -8,4 +6,5 @@ xamoom-android-sdk-app/xamoom-android-sdk/src/main/res/values/apikey.xml
 /build
 /captures
 
-xamoom-android-sdk-app/app/src/main/res/values/apiKey.xml
+*TestingIDs.*
+

@@ -1,1 +1,0 @@
-include ':app', ':xamoom-android-sdk', ':xamoomcontentblocks'
