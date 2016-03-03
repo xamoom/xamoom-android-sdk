@@ -146,6 +146,10 @@ public class EnduserApi {
     });
   }
 
+  public void getContentByBeacon(int major, int minor, final APICallback<Content, ErrorMessage> callback) {
+    getContentByLocationIdentifier(String.format("%s|%s", major, minor), callback);
+  }
+
   private Map<String, String> getUrlParameter() {
     Map<String, String> params = new LinkedHashMap<>();
     params.put("lang", mLanguage);

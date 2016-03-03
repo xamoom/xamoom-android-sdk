@@ -219,4 +219,54 @@ public class EnduserApiTests {
     verify(enduserApiInterface).getContent(anyMap(), mResponseCallbackArgumentCaptor.capture());
     mResponseCallbackArgumentCaptor.getValue().failure(new ErrorMessage());
   }
+
+  @Test
+  public void testGetContentWithBeaconCallsSuccess() throws Exception {
+    ArgumentCaptor<Map> argumentsCaptured = ArgumentCaptor.forClass(Map.class);
+
+    EnduserApi enduserApi = new EnduserApi("123456");
+    EnduserApiInterface enduserApiInterface = mock(EnduserApiInterface.class);
+    enduserApi.setEnduserApiInterface(enduserApiInterface);
+
+    Map<String, String> params = new LinkedHashMap<>();
+    params.put("lang","en");
+    params.put("filter[location-identifier]","123|456");
+
+    enduserApi.getContentByBeacon(123, 456, new APICallback<Content, ErrorMessage>() {
+      @Override
+      public void finished(Content result) {
+        assertNull(result);
+      }
+
+      @Override
+      public void error(ErrorMessage error) {
+      }
+    });
+
+    verify(enduserApiInterface).getContent(argumentsCaptured.capture(), mResponseCallbackArgumentCaptor.capture());
+    mResponseCallbackArgumentCaptor.getValue().success(null, null);
+    assertTrue(argumentsCaptured.getValue().equals(params));
+  }
+
+  @Test
+  public void testGetContentWithBeaconCallsError() throws Exception {
+    EnduserApi enduserApi = new EnduserApi("123456");
+    EnduserApiInterface enduserApiInterface = mock(EnduserApiInterface.class);
+    enduserApi.setEnduserApiInterface(enduserApiInterface);
+
+    enduserApi.getContentByBeacon(123, 456, new APICallback<Content, ErrorMessage>() {
+      @Override
+      public void finished(Content result) {
+      }
+
+      @Override
+      public void error(ErrorMessage error) {
+        assertNotNull(error);
+      }
+    });
+
+    verify(enduserApiInterface).getContent(anyMap(), mResponseCallbackArgumentCaptor.capture());
+    mResponseCallbackArgumentCaptor.getValue().failure(new ErrorMessage());
+  }
+
 }
