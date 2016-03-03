@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
     mEnduserApi.getContent("e9c917086aca465eb454e38c0146428b", new APICallback<Content, ErrorMessage>() {
       @Override
       public void finished(Content content) {
-        Log.v(TAG, "Content: " + content.getTitle());
+        Log.v(TAG, "Content: " + content.getSystem().getID());
       }
 
       @Override
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
     mEnduserApi.getContent("e5be72be162d44b189893a406aff5227", EnumSet.of(ContentFlags.PREVIEW, ContentFlags.PRIVATE), new APICallback<Content, ErrorMessage>() {
       @Override
       public void finished(Content content) {
-        Log.v(TAG, "Content: " + content);
+        Log.v(TAG, "Content: " + content.getSystem().getID());
       }
 
       @Override

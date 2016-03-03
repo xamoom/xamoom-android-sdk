@@ -1,5 +1,7 @@
 package com.xamoom.android.xamoomsdk;
 
+import android.util.Log;
+
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.GsonBuilder;
 import com.xamoom.android.xamoomsdk.Resource.Attributes.ContentAttributesMessage;
@@ -81,8 +83,7 @@ public class EnduserApi {
       public void success(JsonApiMessage<EmptyMessage, DataMessage<ContentAttributesMessage,
           ContentRelationships>, List<DataMessage<ContentBlockAttributeMessage, EmptyMessage>>>
                               jsonApiMessage, Response response) {
-
-        Content content = Content.createFromJsonApiMessage(jsonApiMessage);
+        Content content = JsonApiObjectGenerator.jsonToContent(jsonApiMessage);
         callback.finished(content);
       }
 
@@ -113,7 +114,7 @@ public class EnduserApi {
           ContentRelationships>, List<DataMessage<ContentBlockAttributeMessage, EmptyMessage>>>
                               jsonApiMessage, Response response) {
 
-        Content content = Content.createFromJsonApiMessage(jsonApiMessage);
+        Content content = JsonApiObjectGenerator.jsonToContent(jsonApiMessage);
         callback.finished(content);
       }
 
