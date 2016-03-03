@@ -125,6 +125,27 @@ public class EnduserApi {
     });
   }
 
+  public void getContentByLocationIdentifier(String locationIdentifier, final APICallback<Content,
+      ErrorMessage> callback) {
+    Map<String, String> params = getUrlParameter();
+    params.put("filter[location-identifier]", locationIdentifier);
+
+    mEnduserApiInterface.getContent(params, new ResponseCallback<JsonApiMessage<EmptyMessage,
+        DataMessage<ContentAttributesMessage, ContentRelationships>,
+        List<DataMessage<ContentBlockAttributeMessage, EmptyMessage>>>>() {
+      @Override
+      public void success(JsonApiMessage<EmptyMessage, DataMessage<ContentAttributesMessage, ContentRelationships>, List<DataMessage<ContentBlockAttributeMessage, EmptyMessage>>> jsonApiMessage, Response response) {
+        Content content = JsonApiObjectGenerator.jsonToContent(jsonApiMessage);
+        callback.finished(content);
+      }
+
+      @Override
+      public void failure(ErrorMessage error) {
+        callback.error(error);
+      }
+    });
+  }
+
   private Map<String, String> getUrlParameter() {
     Map<String, String> params = new LinkedHashMap<>();
     params.put("lang", mLanguage);

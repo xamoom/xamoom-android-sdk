@@ -7,6 +7,7 @@ import com.xamoom.android.xamoomsdk.Resource.Base.EmptyMessage;
 import com.xamoom.android.xamoomsdk.Resource.Base.JsonApiMessage;
 import com.xamoom.android.xamoomsdk.Resource.Relationships.ContentRelationships;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**

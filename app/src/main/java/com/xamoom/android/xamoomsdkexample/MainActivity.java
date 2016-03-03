@@ -38,8 +38,9 @@ public class MainActivity extends AppCompatActivity {
 
     setupEnduserApi();
 
-    getContent();
-    getContentOption();
+    //getContent();
+    //getContentOption();
+    getContentLocationIdentifier();
   }
 
   @Override
@@ -104,6 +105,20 @@ public class MainActivity extends AppCompatActivity {
       @Override
       public void finished(Content content) {
         Log.v(TAG, "Content: " + content.getSystem().getID());
+      }
+
+      @Override
+      public void error(ErrorMessage error) {
+
+      }
+    });
+  }
+
+  public void getContentLocationIdentifier() {
+    mEnduserApi.getContentByLocationIdentifier(getResources().getString(R.string.qrMarker), new APICallback<Content, ErrorMessage>() {
+      @Override
+      public void finished(Content result) {
+
       }
 
       @Override

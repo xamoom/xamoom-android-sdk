@@ -11,6 +11,7 @@ import com.xamoom.android.xamoomsdk.Resource.Relationships.ContentRelationships;
 import com.xamoom.android.xamoomsdk.Resource.Relationships.SystemRelationships;
 import com.xamoom.android.xamoomsdk.Resource.System;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,7 +23,12 @@ public class JsonApiObjectGenerator {
   public static Content jsonToContent(JsonApiMessage<EmptyMessage,
       DataMessage<ContentAttributesMessage, ContentRelationships>,
       List<DataMessage<ContentBlockAttributeMessage, EmptyMessage>>> jsonApiMessage) {
-    String ID;
+    String ID = null;
+    try {
+      ID = jsonApiMessage.getData().getId();
+    } catch (NullPointerException e) {
+      e.printStackTrace();
+    }
     String title;
     String description;
     String language;
@@ -33,14 +39,13 @@ public class JsonApiObjectGenerator {
     com.xamoom.android.xamoomsdk.Resource.System system;
 
     try {
-      ID = jsonApiMessage.getData().getId();
       title = jsonApiMessage.getData().getAttributes().getTitle();
       description = jsonApiMessage.getData().getAttributes().getDescription();
       language = jsonApiMessage.getData().getAttributes().getLanguage();
       category = jsonApiMessage.getData().getAttributes().getCategory();
       tags = jsonApiMessage.getData().getAttributes().getTags();
       publicImageUrl = jsonApiMessage.getData().getAttributes().getPublicImageUrl();
-      contentBlocks = ContentBlock.jsonToContentBlocks(jsonApiMessage.getIncluded());
+      contentBlocks = JsonApiObjectGenerator.jsonToContentBlocks(jsonApiMessage.getIncluded());
       system = JsonApiObjectGenerator.relationToSystem(jsonApiMessage.getData().getRelationships()
           .getSystem().getRelationshipData());
     } catch (NullPointerException e) {
@@ -48,6 +53,33 @@ public class JsonApiObjectGenerator {
     }
     return new Content(ID, title, description, language, category, tags, publicImageUrl,
         contentBlocks, system);
+  }
+
+  public static List<ContentBlock> jsonToContentBlocks(List<DataMessage<ContentBlockAttributeMessage, EmptyMessage>> message) {
+    List<ContentBlock> contentBlocks = new ArrayList<ContentBlock>();
+
+    for (DataMessage<ContentBlockAttributeMessage, EmptyMessage> blockDataMessage : message) {
+      String ID = blockDataMessage.getId();
+      int blockType = blockDataMessage.getAttributes().getBlockType();
+      boolean publicStatus = blockDataMessage.getAttributes().isPublic();
+      String title = blockDataMessage.getAttributes().getTitle();
+      String text = blockDataMessage.getAttributes().getText();
+      String artists = blockDataMessage.getAttributes().getArtists();
+      String fileId = blockDataMessage.getAttributes().getFileId();
+      String soundcloudUrl = blockDataMessage.getAttributes().getSoundcloudUrl();
+      int linkType = blockDataMessage.getAttributes().getLinkType();
+      String linkUrl = blockDataMessage.getAttributes().getLinkUrl();
+      String contentId = blockDataMessage.getAttributes().getContentId();
+      int downloadType = blockDataMessage.getAttributes().getDownloadType();
+      List<String> spotMapTags = blockDataMessage.getAttributes().getSpotMapTags();
+      float scaleX = blockDataMessage.getAttributes().getScaleX();
+      String videoUrl = blockDataMessage.getAttributes().getVideoUrl();
+      boolean showContentOnSpotmap = blockDataMessage.getAttributes().isShowContentOnSpotmap();
+      String altText = blockDataMessage.getAttributes().getAltText();
+      contentBlocks.add(new ContentBlock(ID, blockType, publicStatus, title, text, artists, fileId, soundcloudUrl, linkType, linkUrl, contentId, downloadType, spotMapTags, scaleX, videoUrl, showContentOnSpotmap, altText));
+    }
+
+    return contentBlocks;
   }
 
   public static System jsonToSystem(DataMessage<SystemAttributesMessage,

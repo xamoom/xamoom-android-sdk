@@ -45,31 +45,4 @@ public class ContentBlock {
     this.showContentOnSpotmap = showContentOnSpotmap;
     this.altText = altText;
   }
-
-  public static List<ContentBlock> jsonToContentBlocks(List<DataMessage<ContentBlockAttributeMessage, EmptyMessage>> message) {
-    List<ContentBlock> contentBlocks = new ArrayList<ContentBlock>();
-
-    for (DataMessage<ContentBlockAttributeMessage, EmptyMessage> blockDataMessage : message) {
-      String ID = blockDataMessage.getId();
-      int blockType = blockDataMessage.getAttributes().getBlockType();
-      boolean publicStatus = blockDataMessage.getAttributes().isPublic();
-      String title = blockDataMessage.getAttributes().getTitle();
-      String text = blockDataMessage.getAttributes().getText();
-      String artists = blockDataMessage.getAttributes().getArtists();
-      String fileId = blockDataMessage.getAttributes().getFileId();
-      String soundcloudUrl = blockDataMessage.getAttributes().getSoundcloudUrl();
-      int linkType = blockDataMessage.getAttributes().getLinkType();
-      String linkUrl = blockDataMessage.getAttributes().getLinkUrl();
-      String contentId = blockDataMessage.getAttributes().getContentId();
-      int downloadType = blockDataMessage.getAttributes().getDownloadType();
-      List<String> spotMapTags = blockDataMessage.getAttributes().getSpotMapTags();
-      float scaleX = blockDataMessage.getAttributes().getScaleX();
-      String videoUrl = blockDataMessage.getAttributes().getVideoUrl();
-      boolean showContentOnSpotmap = blockDataMessage.getAttributes().isShowContentOnSpotmap();
-      String altText = blockDataMessage.getAttributes().getAltText();
-      contentBlocks.add(new ContentBlock(ID, blockType, publicStatus, title, text, artists, fileId, soundcloudUrl, linkType, linkUrl, contentId, downloadType, spotMapTags, scaleX, videoUrl, showContentOnSpotmap, altText));
-    }
-
-    return contentBlocks;
-  }
 }

@@ -121,6 +121,8 @@ public class EnduserApiTests {
 
   @Test
   public void testGetContentWithFlags() throws Exception {
+    ArgumentCaptor<Map> argumentsCaptured = ArgumentCaptor.forClass(Map.class);
+
     EnduserApi enduserApi = new EnduserApi("123456");
     EnduserApiInterface enduserApiInterface = mock(EnduserApiInterface.class);
     enduserApi.setEnduserApiInterface(enduserApiInterface);
@@ -142,7 +144,6 @@ public class EnduserApiTests {
           }
         });
 
-    ArgumentCaptor<Map> argumentsCaptured = ArgumentCaptor.forClass(Map.class);
 
     verify(enduserApiInterface).getContent(anyString(), argumentsCaptured.capture(), mResponseCallbackArgumentCaptor.capture());
     mResponseCallbackArgumentCaptor.getValue().success(null, null);
@@ -170,4 +171,52 @@ public class EnduserApiTests {
     mResponseCallbackArgumentCaptor.getValue().failure(new ErrorMessage());
   }
 
+  @Test
+  public void testGetContentWithLocationIdentifierCallsSuccess() throws Exception {
+    ArgumentCaptor<Map> argumentsCaptured = ArgumentCaptor.forClass(Map.class);
+
+    EnduserApi enduserApi = new EnduserApi("123456");
+    EnduserApiInterface enduserApiInterface = mock(EnduserApiInterface.class);
+    enduserApi.setEnduserApiInterface(enduserApiInterface);
+
+    Map<String, String> params = new LinkedHashMap<>();
+    params.put("lang","en");
+    params.put("filter[location-identifier]","123456");
+
+    enduserApi.getContentByLocationIdentifier("123456", new APICallback<Content, ErrorMessage>() {
+      @Override
+      public void finished(Content result) {
+        assertNull(result);
+      }
+
+      @Override
+      public void error(ErrorMessage error) {
+      }
+    });
+
+    verify(enduserApiInterface).getContent(argumentsCaptured.capture(), mResponseCallbackArgumentCaptor.capture());
+    mResponseCallbackArgumentCaptor.getValue().success(null, null);
+    assertTrue(argumentsCaptured.getValue().equals(params));
+  }
+
+  @Test
+  public void testGetContentWithLocationIdentifierCallsError() throws Exception {
+    EnduserApi enduserApi = new EnduserApi("123456");
+    EnduserApiInterface enduserApiInterface = mock(EnduserApiInterface.class);
+    enduserApi.setEnduserApiInterface(enduserApiInterface);
+
+    enduserApi.getContentByLocationIdentifier("123456", new APICallback<Content, ErrorMessage>() {
+      @Override
+      public void finished(Content result) {
+      }
+
+      @Override
+      public void error(ErrorMessage error) {
+        assertNotNull(error);
+      }
+    });
+
+    verify(enduserApiInterface).getContent(anyMap(), mResponseCallbackArgumentCaptor.capture());
+    mResponseCallbackArgumentCaptor.getValue().failure(new ErrorMessage());
+  }
 }

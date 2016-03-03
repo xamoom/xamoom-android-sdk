@@ -29,4 +29,12 @@ public interface EnduserApiInterface {
                  ResponseCallback<JsonApiMessage<EmptyMessage, DataMessage<ContentAttributesMessage, ContentRelationships>,
                      List<DataMessage<ContentBlockAttributeMessage, EmptyMessage>>>> cb);
 
+  @Headers({"Content-Type: application/vnd.api+json",
+      "Accept: application/json",
+      "User-Agent: XamoomSDK Android",})
+  @GET("/contents")
+  void getContent(@QueryMap Map<String, String> options,
+                  ResponseCallback<JsonApiMessage<EmptyMessage, DataMessage<ContentAttributesMessage, ContentRelationships>,
+                      List<DataMessage<ContentBlockAttributeMessage, EmptyMessage>>>> cb);
+
 }
