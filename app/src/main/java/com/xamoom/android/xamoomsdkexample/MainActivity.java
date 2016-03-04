@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
         ErrorMessage>() {
       @Override
       public void finished(List<Content> result, String cursor, boolean hasMore) {
-        Log.v(TAG, "Finished: " + result.get(0).getContentBlocks().get(0).getID());
+        Log.v(TAG, "Content: " + result.get(0));
         Log.v(TAG, "Finished: " + cursor);
         Log.v(TAG, "Finished: " + hasMore);
       }
