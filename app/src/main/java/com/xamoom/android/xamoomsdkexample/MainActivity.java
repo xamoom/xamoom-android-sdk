@@ -1,5 +1,6 @@
 package com.xamoom.android.xamoomsdkexample;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -10,6 +11,7 @@ import android.view.MenuItem;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.GsonBuilder;
 import com.xamoom.android.xamoomsdk.APICallback;
+import com.xamoom.android.xamoomsdk.APIListCallback;
 import com.xamoom.android.xamoomsdk.ContentFlags;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.Resource.Attributes.ContentAttributesMessage;
@@ -17,6 +19,7 @@ import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.Error.ErrorMessage;
 
 import java.util.EnumSet;
+import java.util.List;
 
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
@@ -40,7 +43,8 @@ public class MainActivity extends AppCompatActivity {
 
     //getContent();
     //getContentOption();
-    getContentLocationIdentifier();
+    //getContentLocationIdentifier();
+    getContentsLocation();
   }
 
   @Override
@@ -119,6 +123,26 @@ public class MainActivity extends AppCompatActivity {
       @Override
       public void finished(Content result) {
 
+      }
+
+      @Override
+      public void error(ErrorMessage error) {
+
+      }
+    });
+  }
+
+  public void getContentsLocation() {
+    Location location = new Location("Custom");
+    location.setLatitude(46.615106);
+    location.setLongitude(14.262126);
+    mEnduserApi.getContentsByLocation(location, 10, null, null, new APIListCallback<List<Content>,
+        ErrorMessage>() {
+      @Override
+      public void finished(List<Content> result, String cursor, boolean hasMore) {
+        Log.v(TAG, "Finished: " + result.get(0).getContentBlocks().get(0).getID());
+        Log.v(TAG, "Finished: " + cursor);
+        Log.v(TAG, "Finished: " + hasMore);
       }
 
       @Override

@@ -5,6 +5,7 @@ import com.xamoom.android.xamoomsdk.Resource.Attributes.ContentBlockAttributeMes
 import com.xamoom.android.xamoomsdk.Resource.Base.DataMessage;
 import com.xamoom.android.xamoomsdk.Resource.Base.EmptyMessage;
 import com.xamoom.android.xamoomsdk.Resource.Base.JsonApiMessage;
+import com.xamoom.android.xamoomsdk.Resource.Meta.PagingMeta;
 import com.xamoom.android.xamoomsdk.Resource.Relationships.ContentRelationships;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public interface EnduserApiInterface {
       "Accept: application/json",
       "User-Agent: XamoomSDK Android",})
   @GET("/contents/{id}")
-  void getContent(@Path("id") String contentID, @QueryMap Map<String, String> options,
+  void getContent(@Path("id") String contentID, @QueryMap Map<String, String> param,
                  ResponseCallback<JsonApiMessage<EmptyMessage, DataMessage<ContentAttributesMessage, ContentRelationships>,
                      List<DataMessage<ContentBlockAttributeMessage, EmptyMessage>>>> cb);
 
@@ -33,8 +34,14 @@ public interface EnduserApiInterface {
       "Accept: application/json",
       "User-Agent: XamoomSDK Android",})
   @GET("/contents")
-  void getContent(@QueryMap Map<String, String> options,
+  void getContent(@QueryMap Map<String, String> param,
                   ResponseCallback<JsonApiMessage<EmptyMessage, DataMessage<ContentAttributesMessage, ContentRelationships>,
                       List<DataMessage<ContentBlockAttributeMessage, EmptyMessage>>>> cb);
 
+  @Headers({"Content-Type: application/vnd.api+json",
+      "Accept: application/json",
+      "User-Agent: XamoomSDK Android",})
+  @GET("/contents")
+  void getContents(@QueryMap Map<String, String> param, ResponseCallback<JsonApiMessage<PagingMeta, List<DataMessage<ContentAttributesMessage, ContentRelationships>>,
+      List<DataMessage<ContentBlockAttributeMessage, EmptyMessage>>>> cb);
 }

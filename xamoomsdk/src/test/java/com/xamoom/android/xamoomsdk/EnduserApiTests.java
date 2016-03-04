@@ -1,5 +1,7 @@
 package com.xamoom.android.xamoomsdk;
 
+import android.location.Location;
+
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.GsonBuilder;
 import com.xamoom.android.xamoomsdk.Resource.Attributes.ContentAttributesMessage;
@@ -9,15 +11,13 @@ import com.xamoom.android.xamoomsdk.Resource.Base.EmptyMessage;
 import com.xamoom.android.xamoomsdk.Resource.Base.JsonApiMessage;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.Error.ErrorMessage;
-import com.xamoom.android.xamoomsdk.Resource.Error.Errors;
+import com.xamoom.android.xamoomsdk.Resource.Meta.PagingMeta;
 import com.xamoom.android.xamoomsdk.Resource.Relationships.ContentRelationships;
 
-import org.hamcrest.Matcher;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.Matchers;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.EnumSet;
@@ -33,9 +33,6 @@ import retrofit.converter.GsonConverter;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-/**
- * To work on unit tests, switch the Test Artifact in the Build Variants view.
- */
 @RunWith(MockitoJUnitRunner.class)
 public class EnduserApiTests {
   private static final String TAG = EnduserApiTests.class.getSimpleName();
@@ -75,7 +72,7 @@ public class EnduserApiTests {
   @Captor
   ArgumentCaptor <ResponseCallback<JsonApiMessage<EmptyMessage, DataMessage<ContentAttributesMessage,
       ContentRelationships>, List<DataMessage<ContentBlockAttributeMessage, EmptyMessage>>>>>
-      mResponseCallbackArgumentCaptor;
+      mContentCallbackArgumentCaptor;
 
   @Test
   public void testGetContentWithIDCallsSuccess() throws Exception {
@@ -94,8 +91,8 @@ public class EnduserApiTests {
       }
     });
 
-    verify(enduserApiInterface).getContent(anyString(), anyMap(), mResponseCallbackArgumentCaptor.capture());
-    mResponseCallbackArgumentCaptor.getValue().success(null, null);
+    verify(enduserApiInterface).getContent(anyString(), anyMap(), mContentCallbackArgumentCaptor.capture());
+    mContentCallbackArgumentCaptor.getValue().success(null, null);
   }
 
   @Test
@@ -115,8 +112,8 @@ public class EnduserApiTests {
       }
     });
 
-    verify(enduserApiInterface).getContent(anyString(), anyMap(), mResponseCallbackArgumentCaptor.capture());
-    mResponseCallbackArgumentCaptor.getValue().failure(new ErrorMessage());
+    verify(enduserApiInterface).getContent(anyString(), anyMap(), mContentCallbackArgumentCaptor.capture());
+    mContentCallbackArgumentCaptor.getValue().failure(new ErrorMessage());
   }
 
   @Test
@@ -145,8 +142,8 @@ public class EnduserApiTests {
         });
 
 
-    verify(enduserApiInterface).getContent(anyString(), argumentsCaptured.capture(), mResponseCallbackArgumentCaptor.capture());
-    mResponseCallbackArgumentCaptor.getValue().success(null, null);
+    verify(enduserApiInterface).getContent(anyString(), argumentsCaptured.capture(), mContentCallbackArgumentCaptor.capture());
+    mContentCallbackArgumentCaptor.getValue().success(null, null);
     assertTrue(argumentsCaptured.getValue().equals(params));
   }
 
@@ -167,8 +164,8 @@ public class EnduserApiTests {
       }
     });
 
-    verify(enduserApiInterface).getContent(anyString(), anyMap(), mResponseCallbackArgumentCaptor.capture());
-    mResponseCallbackArgumentCaptor.getValue().failure(new ErrorMessage());
+    verify(enduserApiInterface).getContent(anyString(), anyMap(), mContentCallbackArgumentCaptor.capture());
+    mContentCallbackArgumentCaptor.getValue().failure(new ErrorMessage());
   }
 
   @Test
@@ -194,8 +191,8 @@ public class EnduserApiTests {
       }
     });
 
-    verify(enduserApiInterface).getContent(argumentsCaptured.capture(), mResponseCallbackArgumentCaptor.capture());
-    mResponseCallbackArgumentCaptor.getValue().success(null, null);
+    verify(enduserApiInterface).getContent(argumentsCaptured.capture(), mContentCallbackArgumentCaptor.capture());
+    mContentCallbackArgumentCaptor.getValue().success(null, null);
     assertTrue(argumentsCaptured.getValue().equals(params));
   }
 
@@ -216,8 +213,8 @@ public class EnduserApiTests {
       }
     });
 
-    verify(enduserApiInterface).getContent(anyMap(), mResponseCallbackArgumentCaptor.capture());
-    mResponseCallbackArgumentCaptor.getValue().failure(new ErrorMessage());
+    verify(enduserApiInterface).getContent(anyMap(), mContentCallbackArgumentCaptor.capture());
+    mContentCallbackArgumentCaptor.getValue().failure(new ErrorMessage());
   }
 
   @Test
@@ -243,8 +240,8 @@ public class EnduserApiTests {
       }
     });
 
-    verify(enduserApiInterface).getContent(argumentsCaptured.capture(), mResponseCallbackArgumentCaptor.capture());
-    mResponseCallbackArgumentCaptor.getValue().success(null, null);
+    verify(enduserApiInterface).getContent(argumentsCaptured.capture(), mContentCallbackArgumentCaptor.capture());
+    mContentCallbackArgumentCaptor.getValue().success(null, null);
     assertTrue(argumentsCaptured.getValue().equals(params));
   }
 
@@ -265,8 +262,77 @@ public class EnduserApiTests {
       }
     });
 
-    verify(enduserApiInterface).getContent(anyMap(), mResponseCallbackArgumentCaptor.capture());
-    mResponseCallbackArgumentCaptor.getValue().failure(new ErrorMessage());
+    verify(enduserApiInterface).getContent(anyMap(), mContentCallbackArgumentCaptor.capture());
+    mContentCallbackArgumentCaptor.getValue().failure(new ErrorMessage());
   }
 
+  @Captor
+  ArgumentCaptor <ResponseCallback<JsonApiMessage<PagingMeta, List<DataMessage<ContentAttributesMessage, ContentRelationships>>,
+      List<DataMessage<ContentBlockAttributeMessage, EmptyMessage>>>>>
+      mContentListCallbackArgumentCaptor;
+
+  @Test
+  public void testGetContentsWithLocation() throws Exception {
+    ArgumentCaptor<Map> argumentsCaptured = ArgumentCaptor.forClass(Map.class);
+    EnduserApi enduserApi = new EnduserApi("123456");
+    EnduserApiInterface enduserApiInterface = mock(EnduserApiInterface.class);
+    enduserApi.setEnduserApiInterface(enduserApiInterface);
+    Location location = mock(Location.class);
+    when(location.getLatitude()).thenReturn(123.0);
+    when(location.getLongitude()).thenReturn(456.0);
+    Map<String, String> params = new LinkedHashMap<>();
+    params.put("lang", "en");
+    params.put("filter[lat]", "123.0");
+    params.put("filter[lon]", "456.0");
+    params.put("page[size]","10");
+
+    JsonApiMessage<PagingMeta, List<DataMessage<ContentAttributesMessage, ContentRelationships>>,
+        List<DataMessage<ContentBlockAttributeMessage, EmptyMessage>>> jsonApiMessage;
+    jsonApiMessage = mock(JsonApiMessage.class);
+    when(jsonApiMessage.getMeta()).thenReturn(mock(PagingMeta.class));
+    when(jsonApiMessage.getMeta().getCursor()).thenReturn("1");
+    when(jsonApiMessage.getMeta().hasMore()).thenReturn(false);
+
+    enduserApi.getContentsByLocation(location, 10, null, null, new APIListCallback<List<Content>, ErrorMessage>() {
+      @Override
+      public void finished(List<Content> result, String cursor, boolean hasMore) {
+        assertNotNull(result);
+        assertTrue(cursor == "1");
+        assertFalse(hasMore);
+      }
+
+      @Override
+      public void error(ErrorMessage error) {
+      }
+    });
+
+    verify(enduserApiInterface).getContents(argumentsCaptured.capture(), mContentListCallbackArgumentCaptor.capture());
+    mContentListCallbackArgumentCaptor.getValue().success(jsonApiMessage, null);
+    assertTrue(argumentsCaptured.getValue().equals(params));
+  }
+
+  @Test
+  public void testGetContentsWithLocationError() throws Exception {
+    ArgumentCaptor<Map> argumentsCaptured = ArgumentCaptor.forClass(Map.class);
+    EnduserApi enduserApi = new EnduserApi("123456");
+    EnduserApiInterface enduserApiInterface = mock(EnduserApiInterface.class);
+    enduserApi.setEnduserApiInterface(enduserApiInterface);
+    Location location = mock(Location.class);
+    when(location.getLatitude()).thenReturn(123.0);
+    when(location.getLongitude()).thenReturn(456.0);
+
+    enduserApi.getContentsByLocation(location, 10, null, null, new APIListCallback<List<Content>, ErrorMessage>() {
+      @Override
+      public void finished(List<Content> result, String cursor, boolean hasMore) {
+      }
+
+      @Override
+      public void error(ErrorMessage error) {
+        assertNotNull(error);
+      }
+    });
+
+    verify(enduserApiInterface).getContents(argumentsCaptured.capture(), mContentListCallbackArgumentCaptor.capture());
+    mContentListCallbackArgumentCaptor.getValue().failure(new ErrorMessage());
+  }
 }

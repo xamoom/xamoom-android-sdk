@@ -1,11 +1,5 @@
 package com.xamoom.android.xamoomsdk.Resource;
 
-import android.util.Log;
-
-import com.xamoom.android.xamoomsdk.Resource.Attributes.SystemAttributesMessage;
-import com.xamoom.android.xamoomsdk.Resource.Base.DataMessage;
-import com.xamoom.android.xamoomsdk.Resource.Relationships.SystemRelationships;
-
 /**
  * Localized system from xamoom-cloud.
  */

@@ -11,16 +11,22 @@ import java.util.List;
 
 public class ContentRelationships {
   @SerializedName("blocks")
-  private RelationshipDataMessage<List<ContentBlockAttributeMessage>> blocks;
+  private RelationshipDataMessage<List<DataMessage<ContentBlockAttributeMessage, EmptyMessage>>> blocks;
   @SerializedName("system")
   private RelationshipDataMessage<DataMessage<EmptyMessage, EmptyMessage>> system;
+  @SerializedName("spot")
+  private RelationshipDataMessage<DataMessage<EmptyMessage, EmptyMessage>> spot;
 
-  public RelationshipDataMessage<List<ContentBlockAttributeMessage>> getBlocks() {
+  public RelationshipDataMessage<List<DataMessage<ContentBlockAttributeMessage, EmptyMessage>>> getBlocks() {
     return blocks;
   }
 
   public RelationshipDataMessage<DataMessage<EmptyMessage, EmptyMessage>> getSystem() {
     return system;
+  }
+
+  public RelationshipDataMessage<DataMessage<EmptyMessage, EmptyMessage>> getSpot() {
+    return spot;
   }
 }
 

@@ -7,6 +7,7 @@ import com.xamoom.android.xamoomsdk.Resource.Attributes.SystemAttributesMessage;
 import com.xamoom.android.xamoomsdk.Resource.Base.DataMessage;
 import com.xamoom.android.xamoomsdk.Resource.Base.EmptyMessage;
 import com.xamoom.android.xamoomsdk.Resource.Base.JsonApiMessage;
+import com.xamoom.android.xamoomsdk.Resource.Meta.PagingMeta;
 import com.xamoom.android.xamoomsdk.Resource.Relationships.ContentRelationships;
 import com.xamoom.android.xamoomsdk.Resource.Relationships.SystemRelationships;
 import com.xamoom.android.xamoomsdk.Resource.System;
@@ -27,7 +28,7 @@ public class JsonApiObjectGenerator {
     try {
       ID = jsonApiMessage.getData().getId();
     } catch (NullPointerException e) {
-      e.printStackTrace();
+      return null;
     }
     String title;
     String description;
@@ -55,28 +56,80 @@ public class JsonApiObjectGenerator {
         contentBlocks, system);
   }
 
-  public static List<ContentBlock> jsonToContentBlocks(List<DataMessage<ContentBlockAttributeMessage, EmptyMessage>> message) {
+  public static List<Content> jsonToContents(JsonApiMessage<PagingMeta, List<DataMessage<ContentAttributesMessage, ContentRelationships>>,
+      List<DataMessage<ContentBlockAttributeMessage, EmptyMessage>>> jsonApiMessage) {
+    List<Content> contents = new ArrayList<Content>();
+
+    try {
+      for (DataMessage<ContentAttributesMessage, ContentRelationships> dataMessage : jsonApiMessage.getData()) {
+        String ID = null;
+        try {
+          ID = dataMessage.getId();
+        } catch (NullPointerException e) {
+          e.printStackTrace();
+        }
+        String title = null;
+        String description = null;
+        String language = null;
+        int category = 0;
+        List<String> tags = null;
+        String publicImageUrl = null;
+        List<ContentBlock> contentBlocks = null;
+        System system = null;
+
+        try {
+          title = dataMessage.getAttributes().getTitle();
+          description = dataMessage.getAttributes().getDescription();
+          language = dataMessage.getAttributes().getLanguage();
+          category = dataMessage.getAttributes().getCategory();
+          tags = dataMessage.getAttributes().getTags();
+          publicImageUrl = dataMessage.getAttributes().getPublicImageUrl();
+          contentBlocks = JsonApiObjectGenerator.jsonToContentBlocks(dataMessage.getRelationships()
+              .getBlocks().getRelationshipData());
+          system = JsonApiObjectGenerator.relationToSystem(dataMessage.getRelationships()
+              .getSystem().getRelationshipData());
+        } catch (NullPointerException e) {
+          e.printStackTrace();
+        }
+
+        contents.add(new Content(ID, title, description, language, category, tags, publicImageUrl,
+            contentBlocks, system));
+      }
+    } catch (NullPointerException e) {
+      return contents;
+    }
+
+    return contents;
+  }
+
+  public static List<ContentBlock> jsonToContentBlocks(List<DataMessage<ContentBlockAttributeMessage,
+      EmptyMessage>> message) {
     List<ContentBlock> contentBlocks = new ArrayList<ContentBlock>();
 
     for (DataMessage<ContentBlockAttributeMessage, EmptyMessage> blockDataMessage : message) {
       String ID = blockDataMessage.getId();
-      int blockType = blockDataMessage.getAttributes().getBlockType();
-      boolean publicStatus = blockDataMessage.getAttributes().isPublic();
-      String title = blockDataMessage.getAttributes().getTitle();
-      String text = blockDataMessage.getAttributes().getText();
-      String artists = blockDataMessage.getAttributes().getArtists();
-      String fileId = blockDataMessage.getAttributes().getFileId();
-      String soundcloudUrl = blockDataMessage.getAttributes().getSoundcloudUrl();
-      int linkType = blockDataMessage.getAttributes().getLinkType();
-      String linkUrl = blockDataMessage.getAttributes().getLinkUrl();
-      String contentId = blockDataMessage.getAttributes().getContentId();
-      int downloadType = blockDataMessage.getAttributes().getDownloadType();
-      List<String> spotMapTags = blockDataMessage.getAttributes().getSpotMapTags();
-      float scaleX = blockDataMessage.getAttributes().getScaleX();
-      String videoUrl = blockDataMessage.getAttributes().getVideoUrl();
-      boolean showContentOnSpotmap = blockDataMessage.getAttributes().isShowContentOnSpotmap();
-      String altText = blockDataMessage.getAttributes().getAltText();
-      contentBlocks.add(new ContentBlock(ID, blockType, publicStatus, title, text, artists, fileId, soundcloudUrl, linkType, linkUrl, contentId, downloadType, spotMapTags, scaleX, videoUrl, showContentOnSpotmap, altText));
+      try {
+        int blockType = blockDataMessage.getAttributes().getBlockType();
+        boolean publicStatus = blockDataMessage.getAttributes().isPublic();
+        String title = blockDataMessage.getAttributes().getTitle();
+        String text = blockDataMessage.getAttributes().getText();
+        String artists = blockDataMessage.getAttributes().getArtists();
+        String fileId = blockDataMessage.getAttributes().getFileId();
+        String soundcloudUrl = blockDataMessage.getAttributes().getSoundcloudUrl();
+        int linkType = blockDataMessage.getAttributes().getLinkType();
+        String linkUrl = blockDataMessage.getAttributes().getLinkUrl();
+        String contentId = blockDataMessage.getAttributes().getContentId();
+        int downloadType = blockDataMessage.getAttributes().getDownloadType();
+        List<String> spotMapTags = blockDataMessage.getAttributes().getSpotMapTags();
+        float scaleX = blockDataMessage.getAttributes().getScaleX();
+        String videoUrl = blockDataMessage.getAttributes().getVideoUrl();
+        boolean showContentOnSpotmap = blockDataMessage.getAttributes().isShowContentOnSpotmap();
+        String altText = blockDataMessage.getAttributes().getAltText();
+        contentBlocks.add(new ContentBlock(ID, blockType, publicStatus, title, text, artists, fileId, soundcloudUrl, linkType, linkUrl, contentId, downloadType, spotMapTags, scaleX, videoUrl, showContentOnSpotmap, altText));
+      } catch (NullPointerException e) {
+        contentBlocks.add(new ContentBlock(ID, 0, true, null, null, null, null, null, 0, null,
+            null, 0, null, 100, null, false, null));
+      }
     }
 
     return contentBlocks;
