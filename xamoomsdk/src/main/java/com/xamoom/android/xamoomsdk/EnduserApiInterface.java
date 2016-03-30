@@ -1,20 +1,13 @@
 package com.xamoom.android.xamoomsdk;
 
-import com.xamoom.android.xamoomsdk.Resource.Attributes.ContentAttributesMessage;
-import com.xamoom.android.xamoomsdk.Resource.Attributes.ContentBlockAttributeMessage;
-import com.xamoom.android.xamoomsdk.Resource.Base.DataMessage;
-import com.xamoom.android.xamoomsdk.Resource.Base.EmptyMessage;
-import com.xamoom.android.xamoomsdk.Resource.Base.JsonApiMessage;
-import com.xamoom.android.xamoomsdk.Resource.Meta.PagingMeta;
-import com.xamoom.android.xamoomsdk.Resource.Relationships.ContentRelationships;
-
-import java.util.List;
 import java.util.Map;
 
-import retrofit.http.GET;
-import retrofit.http.Headers;
-import retrofit.http.Path;
-import retrofit.http.QueryMap;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.http.GET;
+import retrofit2.http.Headers;
+import retrofit2.http.Path;
+import retrofit2.http.QueryMap;
 
 /**
  * Interface with all EnduserApi calls.
@@ -25,23 +18,13 @@ public interface EnduserApiInterface {
   @Headers({"Content-Type: application/vnd.api+json",
       "Accept: application/json",
       "User-Agent: XamoomSDK Android",})
-  @GET("/contents/{id}")
-  void getContent(@Path("id") String contentID, @QueryMap Map<String, String> param,
-                 ResponseCallback<JsonApiMessage<EmptyMessage, DataMessage<ContentAttributesMessage, ContentRelationships>,
-                     List<DataMessage<ContentBlockAttributeMessage, EmptyMessage>>>> cb);
+  @GET("contents/{id}")
+  Call<ResponseBody> getContent(@Path("id") String contentID, @QueryMap Map<String, String> param);
+
 
   @Headers({"Content-Type: application/vnd.api+json",
       "Accept: application/json",
       "User-Agent: XamoomSDK Android",})
   @GET("/contents")
-  void getContent(@QueryMap Map<String, String> param,
-                  ResponseCallback<JsonApiMessage<EmptyMessage, DataMessage<ContentAttributesMessage, ContentRelationships>,
-                      List<DataMessage<ContentBlockAttributeMessage, EmptyMessage>>>> cb);
-
-  @Headers({"Content-Type: application/vnd.api+json",
-      "Accept: application/json",
-      "User-Agent: XamoomSDK Android",})
-  @GET("/contents")
-  void getContents(@QueryMap Map<String, String> param, ResponseCallback<JsonApiMessage<PagingMeta, List<DataMessage<ContentAttributesMessage, ContentRelationships>>,
-      List<DataMessage<ContentBlockAttributeMessage, EmptyMessage>>>> cb);
+  Call<ResponseBody> getContents(@QueryMap Map<String, String> param);
 }

@@ -2,23 +2,12 @@ package com.xamoom.android.xamoomsdk;
 
 import android.location.Location;
 import android.support.annotation.Nullable;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
-import android.util.Log;
 
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.GsonBuilder;
-import com.xamoom.android.xamoomsdk.Resource.Attributes.ContentAttributesMessage;
-import com.xamoom.android.xamoomsdk.Resource.Attributes.ContentBlockAttributeMessage;
-import com.xamoom.android.xamoomsdk.Resource.Base.DataMessage;
-import com.xamoom.android.xamoomsdk.Resource.Base.EmptyMessage;
-import com.xamoom.android.xamoomsdk.Resource.Base.JsonApiMessage;
 import com.xamoom.android.xamoomsdk.Resource.Content;
-import com.xamoom.android.xamoomsdk.Resource.Error.ErrorMessage;
-import com.xamoom.android.xamoomsdk.Resource.Meta.PagingMeta;
-import com.xamoom.android.xamoomsdk.Resource.Relationships.ContentRelationships;
+import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 
-import java.lang.reflect.Array;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.LinkedHashMap;
@@ -26,10 +15,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import retrofit.RequestInterceptor;
-import retrofit.RestAdapter;
-import retrofit.client.Response;
-import retrofit.converter.GsonConverter;
+import at.rags.morpheus.*;
+import at.rags.morpheus.Error;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 /**
  * EnduserApi is the main part of the XamoomSDK. You can use it to send api request to
@@ -37,38 +29,50 @@ import retrofit.converter.GsonConverter;
  *
  * Use {@link #EnduserApi(String)} to initialize.
  *
- * Change the requested language by setting {@link #mLanguage}. The users language is saved
+ * Change the requested language by  setting {@link #mLanguage}. The users language is saved
  * in {@link #mSystemLanguage}.
  */
 public class EnduserApi {
   private static final String TAG = EnduserApi.class.getSimpleName();
-  private static final String API_URL = "https://xamoom-cloud.appspot.com/_api/v2/consumer";
+  private static final String API_URL = "https://xamoom-cloud.appspot.com/_api/v2/consumer/";
 
+  private Morpheus mMorpheus;
   private EnduserApiInterface mEnduserApiInterface;
   private String mLanguage;
   private String mSystemLanguage;
 
   public EnduserApi(final String apikey) {
-    RestAdapter restAdapter = new RestAdapter.Builder()
-        .setEndpoint(API_URL)
+    Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl(API_URL)
+        /*
         .setRequestInterceptor(new RequestInterceptor() {
           @Override
           public void intercept(RequestFacade request) {
             request.addHeader("APIKEY", apikey);
           }
-        })
-        .setConverter(new GsonConverter(new GsonBuilder()
-            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-            .create()))
+        })*/
         .build();
 
-    mEnduserApiInterface = restAdapter.create(EnduserApiInterface.class);
-    mSystemLanguage = Locale.getDefault().getLanguage();
-    mLanguage = mSystemLanguage;
+    mEnduserApiInterface = retrofit.create(EnduserApiInterface.class);
+
+    initMorpheus();
+    initVars();
   }
 
-  public EnduserApi(RestAdapter restAdapter) {
-    mEnduserApiInterface = restAdapter.create(EnduserApiInterface.class);
+  public EnduserApi(Retrofit retrofit) {
+    mEnduserApiInterface = retrofit.create(EnduserApiInterface.class);
+
+    initMorpheus();
+    initVars();
+  }
+
+  private void initMorpheus() {
+    mMorpheus = new Morpheus();
+    Deserializer.registerResourceClass("contents", Content.class);
+    Deserializer.registerResourceClass("contentblocks", ContentBlock.class);
+  }
+
+  private void initVars() {
     mSystemLanguage = Locale.getDefault().getLanguage();
     mLanguage = mSystemLanguage;
   }
@@ -79,26 +83,11 @@ public class EnduserApi {
    * @param contentID ContentID from xamoom-cloud.
    * @param callback {@link APICallback}.
    */
-  public void getContent(final String contentID, final APICallback<Content, ErrorMessage> callback) {
+  public void getContent(final String contentID, final APICallback<Content, List<Error>> callback) {
     Map<String, String> params = getUrlParameter();
 
-    mEnduserApiInterface.getContent(contentID, params, new ResponseCallback<JsonApiMessage<EmptyMessage,
-        DataMessage<ContentAttributesMessage, ContentRelationships>,
-        List<DataMessage<ContentBlockAttributeMessage, EmptyMessage>>>>() {
-
-      @Override
-      public void success(JsonApiMessage<EmptyMessage, DataMessage<ContentAttributesMessage,
-          ContentRelationships>, List<DataMessage<ContentBlockAttributeMessage, EmptyMessage>>>
-                              jsonApiMessage, Response response) {
-        Content content = JsonApiObjectGenerator.jsonToContent(jsonApiMessage);
-        callback.finished(content);
-      }
-
-      @Override
-      public void failure(ErrorMessage error) {
-        callback.error(error);
-      }
-    });
+    Call<ResponseBody> call = mEnduserApiInterface.getContent(contentID, params);
+    enqueContentCall(call, callback);
   }
 
   /**
@@ -109,27 +98,13 @@ public class EnduserApi {
    * @param callback {@link APICallback}.
    */
   public void getContent(String contentID, EnumSet<ContentFlags> contentFlags, final APICallback<Content,
-      ErrorMessage> callback) {
+      List<at.rags.morpheus.Error>> callback) {
     Map<String, String> params = getUrlParameterContent(contentFlags);
 
-    mEnduserApiInterface.getContent(contentID, params, new ResponseCallback<JsonApiMessage<EmptyMessage,
-        DataMessage<ContentAttributesMessage, ContentRelationships>,
-        List<DataMessage<ContentBlockAttributeMessage, EmptyMessage>>>>() {
-
-      @Override
-      public void success(JsonApiMessage<EmptyMessage, DataMessage<ContentAttributesMessage,
-          ContentRelationships>, List<DataMessage<ContentBlockAttributeMessage, EmptyMessage>>>
-                              jsonApiMessage, Response response) {
-
-        Content content = JsonApiObjectGenerator.jsonToContent(jsonApiMessage);
-        callback.finished(content);
-      }
-
-      @Override
-      public void failure(ErrorMessage error) {
-        callback.error(error);
-      }
-    });
+    Call<ResponseBody> call = mEnduserApiInterface.getContent(contentID, params);
+    if (call != null) {
+      enqueContentCall(call, callback);
+    }
   }
 
   /**
@@ -139,26 +114,12 @@ public class EnduserApi {
    * @param callback {@link APICallback}.
    */
   public void getContentByLocationIdentifier(String locationIdentifier, final APICallback<Content,
-      ErrorMessage> callback) {
+      List<Error>> callback) {
     Map<String, String> params = getUrlParameter();
     params.put("filter[location-identifier]", locationIdentifier);
 
-    mEnduserApiInterface.getContent(params, new ResponseCallback<JsonApiMessage<EmptyMessage,
-        DataMessage<ContentAttributesMessage, ContentRelationships>,
-        List<DataMessage<ContentBlockAttributeMessage, EmptyMessage>>>>() {
-      @Override
-      public void success(JsonApiMessage<EmptyMessage, DataMessage<ContentAttributesMessage,
-          ContentRelationships>, List<DataMessage<ContentBlockAttributeMessage,
-          EmptyMessage>>> jsonApiMessage, Response response) {
-        Content content = JsonApiObjectGenerator.jsonToContent(jsonApiMessage);
-        callback.finished(content);
-      }
-
-      @Override
-      public void failure(ErrorMessage error) {
-        callback.error(error);
-      }
-    });
+    Call<ResponseBody> call = mEnduserApiInterface.getContents(params);
+    enqueContentCall(call, callback);
   }
 
   /**
@@ -168,7 +129,7 @@ public class EnduserApi {
    * @param minor Beacon minor ID.
    * @param callback {@link APICallback}.
    */
-  public void getContentByBeacon(int major, int minor, final APICallback<Content, ErrorMessage>
+  public void getContentByBeacon(int major, int minor, final APICallback<Content, List<Error>>
       callback) {
     getContentByLocationIdentifier(String.format("%s|%s", major, minor), callback);
   }
@@ -183,32 +144,95 @@ public class EnduserApi {
    * @param callback {@link APIListCallback}.
    */
   public void getContentsByLocation(Location location, int pageSize, @Nullable String cursor,
-      final EnumSet<ContentSortFlags> sortFlags, final APIListCallback<List<Content>, ErrorMessage> callback) {
-
+      final EnumSet<ContentSortFlags> sortFlags, final APIListCallback<List<Content>,
+      List<Error>> callback) {
     Map<String, String> params = getUrlParameterContentSort(sortFlags);
     params = addPagingToUrl(params, pageSize, cursor);
     params.put("filter[lat]", Double.toString(location.getLatitude()));
     params.put("filter[lon]", Double.toString(location.getLongitude()));
 
-    mEnduserApiInterface.getContents(params, new ResponseCallback<JsonApiMessage<PagingMeta,
-        List<DataMessage<ContentAttributesMessage, ContentRelationships>>,
-        List<DataMessage<ContentBlockAttributeMessage, EmptyMessage>>>>() {
+    Call<ResponseBody> call = mEnduserApiInterface.getContents(params);
+    call.enqueue(new Callback<ResponseBody>() {
       @Override
-      public void failure(ErrorMessage error) {
-        callback.error(error);
+      public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+        String json = getJsonFromResponse(response);
+
+        try {
+          JsonApiObject jsonApiObject = mMorpheus.parse(json);
+
+          if (jsonApiObject.getResources() != null) {
+            List<Content> contents = (List<Content>)(List<?>)jsonApiObject.getResources();
+            String cursor = jsonApiObject.getMeta().get("cursor").toString();
+            boolean hasMore = (boolean) jsonApiObject.getMeta().get("has-more");
+            callback.finished(contents, cursor, hasMore);
+          } else if (jsonApiObject.getErrors().size() > 0) {
+            callback.error(jsonApiObject.getErrors());
+          }
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
       }
 
       @Override
-      public void success(JsonApiMessage<PagingMeta, List<DataMessage<ContentAttributesMessage,
-          ContentRelationships>>, List<DataMessage<ContentBlockAttributeMessage, EmptyMessage>>>
-                              jsonApiMessage, Response response) {
-
-        List<Content> contents = JsonApiObjectGenerator.jsonToContents(jsonApiMessage);
-        String cursor = jsonApiMessage.getMeta().getCursor();
-        boolean hasMore = jsonApiMessage.getMeta().hasMore();
-        callback.finished(contents, cursor, hasMore);
+      public void onFailure(Call<ResponseBody> call, Throwable t) {
+        callback.error(null);
       }
     });
+  }
+
+  /**
+   * Makes the call and uses Morpheus to parse the jsonapi response.
+   *
+   * @param call Call<ResponseBody> from Retrofit
+   * @param callback {@link APICallback}
+   */
+  private void enqueContentCall(Call<ResponseBody> call, final APICallback<Content, List<Error>> callback) {
+    call.enqueue(new Callback<ResponseBody>() {
+      @Override
+      public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+        String json = getJsonFromResponse(response);
+
+        try {
+          JsonApiObject jsonApiObject = mMorpheus.parse(json);
+
+          if (jsonApiObject.getResource() != null) {
+            Content content = (Content) jsonApiObject.getResource();
+            callback.finished(content);
+          } else if (jsonApiObject.getErrors().size() > 0) {
+            callback.error(jsonApiObject.getErrors());
+          }
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
+
+      @Override
+      public void onFailure(Call<ResponseBody> call, Throwable t) {
+        callback.error(null);
+      }
+    });
+  }
+
+  private String getJsonFromResponse(Response<ResponseBody> response) {
+    String json = null;
+
+    if (response.body() != null) {
+      try {
+        json = response.body().string();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+
+    if (response.errorBody() != null) {
+      try {
+        json = response.errorBody().string();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+
+    return json;
   }
 
   private Map<String, String> getUrlParameter() {
@@ -286,6 +310,10 @@ public class EnduserApi {
 
   public void setEnduserApiInterface(EnduserApiInterface enduserApiInterface) {
     mEnduserApiInterface = enduserApiInterface;
+  }
+
+  public void setMorpheus(Morpheus morpheus) {
+    mMorpheus = morpheus;
   }
 }
 

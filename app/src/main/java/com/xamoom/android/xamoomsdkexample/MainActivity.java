@@ -8,27 +8,26 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.GsonBuilder;
 import com.xamoom.android.xamoomsdk.APICallback;
-import com.xamoom.android.xamoomsdk.APIListCallback;
 import com.xamoom.android.xamoomsdk.ContentFlags;
 import com.xamoom.android.xamoomsdk.EnduserApi;
-import com.xamoom.android.xamoomsdk.Resource.Attributes.ContentAttributesMessage;
 import com.xamoom.android.xamoomsdk.Resource.Content;
-import com.xamoom.android.xamoomsdk.Resource.Error.ErrorMessage;
 
+import java.io.IOException;
 import java.util.EnumSet;
 import java.util.List;
 
-import retrofit.RequestInterceptor;
-import retrofit.RestAdapter;
-import retrofit.android.AndroidLog;
-import retrofit.converter.GsonConverter;
+import at.rags.morpheus.*;
+import at.rags.morpheus.Error;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity {
   private static final String TAG = MainActivity.class.getSimpleName();
-  private static final String API_URL = "https://xamoom-cloud-dev.appspot.com/_api/v2/consumer";
+  private static final String API_URL = "https://xamoom-cloud-dev.appspot.com/_api/v2/consumer/";
 
   private EnduserApi mEnduserApi;
 
@@ -41,10 +40,10 @@ public class MainActivity extends AppCompatActivity {
 
     setupEnduserApi();
 
-    //getContent();
+    getContent();
     //getContentOption();
     //getContentLocationIdentifier();
-    getContentsLocation();
+    //getContentsLocation();
   }
 
   @Override
@@ -70,40 +69,43 @@ public class MainActivity extends AppCompatActivity {
   }
 
   public void setupEnduserApi() {
-    RestAdapter restAdapter = new RestAdapter.Builder()
-        .setEndpoint(API_URL)
-        .setLogLevel(RestAdapter.LogLevel.FULL)
-        .setLog(new AndroidLog(TAG))
-        .setRequestInterceptor(new RequestInterceptor() {
-          @Override
-          public void intercept(RequestFacade request) {
-            request.addHeader("ContentAttributesMessage-Type", "application/vnd.api+json");
-            request.addHeader("APIKEY", getResources().getString(R.string.APIKEY));
-            request.addHeader("X-DEVKEY", getResources().getString(R.string.XDEVKEY));
-          }
-        })
-        .setConverter(new GsonConverter(new GsonBuilder()
-            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-            .create()))
+    OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
+    builder.addInterceptor(new Interceptor() {
+      @Override public Response intercept(Chain chain) throws IOException {
+        Request request = chain.request().newBuilder()
+            .addHeader("ContentAttributesMessage-Type", "application/vnd.api+json")
+            .addHeader("APIKEY", getResources().getString(R.string.APIKEY))
+            .addHeader("X-DEVKEY", getResources().getString(R.string.XDEVKEY))
+            .build();
+        return chain.proceed(request);
+      }
+    });
+
+    OkHttpClient httpClient = builder.build();
+
+    Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl(API_URL)
+        .client(httpClient)
         .build();
 
-     mEnduserApi = new EnduserApi(restAdapter);
+     mEnduserApi = new EnduserApi(retrofit);
   }
 
   public void getContent() {
-    mEnduserApi.getContent("e9c917086aca465eb454e38c0146428b", new APICallback<Content, ErrorMessage>() {
+    mEnduserApi.getContent("e9c917086aca465eb454e38c0146428b", new APICallback<Content, List<at.rags.morpheus.Error>>() {
       @Override
-      public void finished(Content content) {
-        Log.v(TAG, "Content: " + content.getSystem().getID());
+      public void finished(Content result) {
+        Log.v(TAG, "finished: " + result);
       }
 
       @Override
-      public void error(ErrorMessage error) {
-        Log.e(TAG, "Error: " + error);
+      public void error(List<Error> error) {
+        Log.v(TAG, "error: " + error);
       }
     });
   }
 
+  /*
   public void getContentOption() {
     mEnduserApi.getContent("e5be72be162d44b189893a406aff5227", EnumSet.of(ContentFlags.PREVIEW, ContentFlags.PRIVATE), new APICallback<Content, ErrorMessage>() {
       @Override
@@ -151,4 +153,5 @@ public class MainActivity extends AppCompatActivity {
       }
     });
   }
+  */
 }

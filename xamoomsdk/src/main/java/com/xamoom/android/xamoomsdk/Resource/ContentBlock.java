@@ -1,14 +1,10 @@
 package com.xamoom.android.xamoomsdk.Resource;
 
-import com.xamoom.android.xamoomsdk.Resource.Attributes.ContentBlockAttributeMessage;
-import com.xamoom.android.xamoomsdk.Resource.Base.DataMessage;
-import com.xamoom.android.xamoomsdk.Resource.Base.EmptyMessage;
-
-import java.util.ArrayList;
 import java.util.List;
 
-public class ContentBlock {
-  private String ID;
+import at.rags.morpheus.Resource;
+
+public class ContentBlock extends Resource {
   private int blockType;
   private boolean publicStatus;
   private String title;
@@ -25,30 +21,6 @@ public class ContentBlock {
   private String videoUrl;
   private boolean showContentOnSpotmap;
   private String altText;
-
-  public ContentBlock(String ID, int blockType, boolean publicStatus, String title, String text, String artists, String fileId, String soundcloudUrl, int linkType, String linkUrl, String contentId, int downloadType, List<String> spotMapTags, float scaleX, String videoUrl, boolean showContentOnSpotmap, String altText) {
-    this.ID = ID;
-    this.blockType = blockType;
-    this.publicStatus = publicStatus;
-    this.title = title;
-    this.text = text;
-    this.artists = artists;
-    this.fileId = fileId;
-    this.soundcloudUrl = soundcloudUrl;
-    this.linkType = linkType;
-    this.linkUrl = linkUrl;
-    this.contentId = contentId;
-    this.downloadType = downloadType;
-    this.spotMapTags = spotMapTags;
-    this.scaleX = scaleX;
-    this.videoUrl = videoUrl;
-    this.showContentOnSpotmap = showContentOnSpotmap;
-    this.altText = altText;
-  }
-
-  public String getID() {
-    return ID;
-  }
 
   public int getBlockType() {
     return blockType;

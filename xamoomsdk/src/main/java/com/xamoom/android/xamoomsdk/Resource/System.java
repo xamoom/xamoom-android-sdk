@@ -12,17 +12,6 @@ public class System {
   private Object settings;
   private Object menu;
 
-  public System(String ID, String name, String url, boolean demo, Object style, Object settings,
-                Object menu) {
-    this.ID = ID;
-    this.name = name;
-    this.url = url;
-    this.demo = demo;
-    this.style = style;
-    this.settings = settings;
-    this.menu = menu;
-  }
-
   public String getID() {
     return ID;
   }

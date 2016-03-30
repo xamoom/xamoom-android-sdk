@@ -1,46 +1,24 @@
 package com.xamoom.android.xamoomsdk.Resource;
 
-import com.xamoom.android.xamoomsdk.Resource.Attributes.ContentAttributesMessage;
-import com.xamoom.android.xamoomsdk.Resource.Attributes.ContentBlockAttributeMessage;
-import com.xamoom.android.xamoomsdk.Resource.Base.DataMessage;
-import com.xamoom.android.xamoomsdk.Resource.Base.EmptyMessage;
-import com.xamoom.android.xamoomsdk.Resource.Base.JsonApiMessage;
-import com.xamoom.android.xamoomsdk.Resource.Relationships.ContentRelationships;
-
-import java.util.ArrayList;
 import java.util.List;
+
+import at.rags.morpheus.Annotations.SerializeName;
+import at.rags.morpheus.Resource;
 
 /**
  * Localized content from xamoom-cloud.
  */
-public class Content {
-  private String ID;
+public class Content extends Resource {
+  @SerializeName("display-name")
   private String title;
   private String description;
   private String language;
   private int category;
   private List<String> tags;
+  @SerializeName("cover-image-url")
   private String publicImageUrl;
-  private List<ContentBlock> contentBlocks;
-  private System system;
-
-  public Content(String ID, String title, String description, String language, int category,
-                 List<String> tags, String publicImageUrl, List<ContentBlock> contentBlocks,
-                 System system) {
-    this.ID = ID;
-    this.title = title;
-    this.description = description;
-    this.language = language;
-    this.category = category;
-    this.tags = tags;
-    this.publicImageUrl = publicImageUrl;
-    this.contentBlocks = contentBlocks;
-    this.system = system;
-  }
-
-  public String getID() {
-    return ID;
-  }
+  //private List<ContentBlock> contentBlocks;
+  //private System system;
 
   public String getTitle() {
     return title;
@@ -66,11 +44,27 @@ public class Content {
     return publicImageUrl;
   }
 
-  public List<ContentBlock> getContentBlocks() {
-    return contentBlocks;
+  public void setTitle(String title) {
+    this.title = title;
   }
 
-  public System getSystem() {
-    return system;
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public void setLanguage(String language) {
+    this.language = language;
+  }
+
+  public void setCategory(int category) {
+    this.category = category;
+  }
+
+  public void setTags(List<String> tags) {
+    this.tags = tags;
+  }
+
+  public void setPublicImageUrl(String publicImageUrl) {
+    this.publicImageUrl = publicImageUrl;
   }
 }

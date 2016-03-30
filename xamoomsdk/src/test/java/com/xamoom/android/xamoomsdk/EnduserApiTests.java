@@ -1,34 +1,34 @@
 package com.xamoom.android.xamoomsdk;
 
 import android.location.Location;
+import android.util.ArrayMap;
 
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.GsonBuilder;
-import com.xamoom.android.xamoomsdk.Resource.Attributes.ContentAttributesMessage;
-import com.xamoom.android.xamoomsdk.Resource.Attributes.ContentBlockAttributeMessage;
-import com.xamoom.android.xamoomsdk.Resource.Base.DataMessage;
-import com.xamoom.android.xamoomsdk.Resource.Base.EmptyMessage;
-import com.xamoom.android.xamoomsdk.Resource.Base.JsonApiMessage;
 import com.xamoom.android.xamoomsdk.Resource.Content;
-import com.xamoom.android.xamoomsdk.Resource.Error.ErrorMessage;
-import com.xamoom.android.xamoomsdk.Resource.Meta.PagingMeta;
-import com.xamoom.android.xamoomsdk.Resource.Relationships.ContentRelationships;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Semaphore;
 
-import retrofit.RequestInterceptor;
-import retrofit.RestAdapter;
-import retrofit.android.AndroidLog;
-import retrofit.converter.GsonConverter;
+import at.rags.morpheus.Error;
+import at.rags.morpheus.JsonApiObject;
+import at.rags.morpheus.Morpheus;
+import at.rags.morpheus.Resource;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
+import retrofit2.Retrofit;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -36,6 +36,34 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class EnduserApiTests {
   private static final String TAG = EnduserApiTests.class.getSimpleName();
+
+  private MockWebServer mMockWebServer;
+  private EnduserApi mEnduserApi;
+  private Morpheus mMockMorpheus;
+
+  @Captor ArgumentCaptor<Map<String, String>> mMapArgumentCaptor;
+
+  @Before
+  public void setup() {
+    mMockWebServer = new MockWebServer();
+
+    Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl(mMockWebServer.url(""))
+        .build();
+    mEnduserApi = new EnduserApi(retrofit);
+
+    mMockMorpheus = mock(Morpheus.class);
+    mEnduserApi.setMorpheus(mMockMorpheus);
+  }
+
+  @After
+  public void teardown() {
+    try {
+      mMockWebServer.shutdown();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
 
   @Test
   public void testInitWithApikey() throws Exception {
@@ -47,292 +75,233 @@ public class EnduserApiTests {
 
   @Test
   public void testInitWithRestAdapter() throws Exception {
-    RestAdapter restAdapter = new RestAdapter.Builder()
-        .setEndpoint("URL")
-        .setLogLevel(RestAdapter.LogLevel.FULL)
-        .setLog(new AndroidLog(TAG))
-        .setRequestInterceptor(new RequestInterceptor() {
-          @Override
-          public void intercept(RequestFacade request) {
-            request.addHeader("APIKEY", "KEY");
-            request.addHeader("X-DEVKEY", "XKEY");
-          }
-        })
-        .setConverter(new GsonConverter(new GsonBuilder()
-            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-            .create()))
+    Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl("http://www.xamoom.com/")
         .build();
 
-    EnduserApi enduserApi = new EnduserApi(restAdapter);
+    EnduserApi enduserApi = new EnduserApi(retrofit);
 
     assertNotNull(enduserApi.getEnduserApiInterface());
     assertEquals(enduserApi.getSystemLanguage(), "en");
   }
 
-  @Captor
-  ArgumentCaptor <ResponseCallback<JsonApiMessage<EmptyMessage, DataMessage<ContentAttributesMessage,
-      ContentRelationships>, List<DataMessage<ContentBlockAttributeMessage, EmptyMessage>>>>>
-      mContentCallbackArgumentCaptor;
-
   @Test
-  public void testGetContentWithIDCallsSuccess() throws Exception {
-    EnduserApi enduserApi = new EnduserApi("123456");
-    EnduserApiInterface enduserApiInterface = mock(EnduserApiInterface.class);
-    enduserApi.setEnduserApiInterface(enduserApiInterface);
+  public void testGetContentWithIDSuccess() throws Exception {
+    mMockWebServer.enqueue(new MockResponse().setBody(""));
 
-    enduserApi.getContent("123456", new APICallback<Content, ErrorMessage>() {
+    final Content[] checkContent = {null};
+
+    Content content = new Content();
+    content.setTitle("Test");
+
+    JsonApiObject jsonApiObject = new JsonApiObject();
+    jsonApiObject.setResource(content);
+
+    when(mMockMorpheus.parse(anyString())).thenReturn(jsonApiObject);
+
+    final Semaphore semaphore = new Semaphore(0);
+
+    mEnduserApi.getContent("123456", new APICallback<Content, List<at.rags.morpheus.Error>>() {
       @Override
       public void finished(Content result) {
-        assertNull(result);
+        checkContent[0] = result;
+        semaphore.release();
       }
 
       @Override
-      public void error(ErrorMessage error) {
+      public void error(List<Error> error) {
+        fail();
       }
     });
 
-    verify(enduserApiInterface).getContent(anyString(), anyMap(), mContentCallbackArgumentCaptor.capture());
-    mContentCallbackArgumentCaptor.getValue().success(null, null);
+    semaphore.acquire();
+
+    assertTrue(checkContent[0].getTitle().equals("Test"));
+    RecordedRequest request1 = mMockWebServer.takeRequest();
+    assertEquals("/contents/123456?lang=en", request1.getPath());
   }
 
   @Test
-  public void testGetContentWithIDCallsError() throws Exception {
-    EnduserApi enduserApi = new EnduserApi("123456");
-    EnduserApiInterface enduserApiInterface = mock(EnduserApiInterface.class);
-    enduserApi.setEnduserApiInterface(enduserApiInterface);
+  public void testGetContentWithIDError() throws Exception {
+    mMockWebServer.enqueue(new MockResponse().setBody(""));
 
-    enduserApi.getContent("123456", new APICallback<Content, ErrorMessage>() {
+    final Error[] checkError = {null};
+
+    Error error = new Error();
+    error.setTitle("Fail");
+    ArrayList<Error> errors = new ArrayList<>();
+    errors.add(error);
+
+    JsonApiObject jsonApiObject = new JsonApiObject();
+    jsonApiObject.setErrors(errors);
+
+    when(mMockMorpheus.parse(anyString())).thenReturn(jsonApiObject);
+
+    final Semaphore semaphore = new Semaphore(0);
+
+    mEnduserApi.getContent("123456", new APICallback<Content, List<at.rags.morpheus.Error>>() {
       @Override
       public void finished(Content result) {
+        fail();
       }
 
       @Override
-      public void error(ErrorMessage error) {
-        assertNotNull(error);
+      public void error(List<Error> error) {
+        checkError[0] = error.get(0);
+        semaphore.release();
       }
     });
 
-    verify(enduserApiInterface).getContent(anyString(), anyMap(), mContentCallbackArgumentCaptor.capture());
-    mContentCallbackArgumentCaptor.getValue().failure(new ErrorMessage());
+    semaphore.acquire();
+
+    assertTrue(checkError[0].getTitle().equals("Fail"));
+    RecordedRequest request1 = mMockWebServer.takeRequest();
+    assertEquals("/contents/123456?lang=en", request1.getPath());
   }
 
   @Test
-  public void testGetContentWithFlags() throws Exception {
-    ArgumentCaptor<Map> argumentsCaptured = ArgumentCaptor.forClass(Map.class);
-
+  public void testGetContentWithIDParam() throws Exception {
     EnduserApi enduserApi = new EnduserApi("123456");
     EnduserApiInterface enduserApiInterface = mock(EnduserApiInterface.class);
     enduserApi.setEnduserApiInterface(enduserApiInterface);
-
-    Map<String, String> params = new LinkedHashMap<>();
-    params.put("lang","en");
-    params.put("preview","true");
-    params.put("public-only", "true");
 
     enduserApi.getContent("123456", EnumSet.of(ContentFlags.PREVIEW, ContentFlags.PRIVATE),
-        new APICallback<Content, ErrorMessage>() {
+        new APICallback<Content, List<at.rags.morpheus.Error>>() {
           @Override
           public void finished(Content result) {
-            assertNull(result);
           }
 
           @Override
-          public void error(ErrorMessage error) {
+          public void error(List<Error> error) {
           }
         });
 
+    HashMap<String, String> checkParams = new HashMap<>();
+    checkParams.put("lang", "en");
+    checkParams.put("preview", "true");
+    checkParams.put("public-only", "true");
 
-    verify(enduserApiInterface).getContent(anyString(), argumentsCaptured.capture(), mContentCallbackArgumentCaptor.capture());
-    mContentCallbackArgumentCaptor.getValue().success(null, null);
-    assertTrue(argumentsCaptured.getValue().equals(params));
+    verify(enduserApiInterface).getContent(eq("123456"), mMapArgumentCaptor.capture());
+    assertTrue(mMapArgumentCaptor.getValue().equals(checkParams));
   }
 
   @Test
-  public void testGetContentWithFlagsCallsError() throws Exception {
-    EnduserApi enduserApi = new EnduserApi("123456");
-    EnduserApiInterface enduserApiInterface = mock(EnduserApiInterface.class);
-    enduserApi.setEnduserApiInterface(enduserApiInterface);
+  public void testGetContentWithLocationIdentifierSuccess() throws Exception {
+    mMockWebServer.enqueue(new MockResponse().setBody(""));
 
-    enduserApi.getContent("123456", null, new APICallback<Content, ErrorMessage>() {
+    final Content[] checkContent = {null};
+
+    Content content = new Content();
+    content.setTitle("Test");
+
+    JsonApiObject jsonApiObject = new JsonApiObject();
+    jsonApiObject.setResource(content);
+
+    when(mMockMorpheus.parse(anyString())).thenReturn(jsonApiObject);
+
+    final Semaphore semaphore = new Semaphore(0);
+
+    mEnduserApi.getContentByLocationIdentifier("1234", new APICallback<Content, List<Error>>() {
       @Override
       public void finished(Content result) {
+        checkContent[0] = result;
+        semaphore.release();
       }
 
       @Override
-      public void error(ErrorMessage error) {
-        assertNotNull(error);
+      public void error(List<Error> error) {
+        fail();
       }
     });
 
-    verify(enduserApiInterface).getContent(anyString(), anyMap(), mContentCallbackArgumentCaptor.capture());
-    mContentCallbackArgumentCaptor.getValue().failure(new ErrorMessage());
+    semaphore.acquire();
+
+    assertTrue(checkContent[0].getTitle().equals("Test"));
+    RecordedRequest request1 = mMockWebServer.takeRequest();
+    assertEquals("/contents?lang=en&filter[location-identifier]=1234", request1.getPath());
   }
 
   @Test
-  public void testGetContentWithLocationIdentifierCallsSuccess() throws Exception {
-    ArgumentCaptor<Map> argumentsCaptured = ArgumentCaptor.forClass(Map.class);
+  public void testGetContentWithBeaconSuccess() throws Exception {
+    mMockWebServer.enqueue(new MockResponse().setBody(""));
 
-    EnduserApi enduserApi = new EnduserApi("123456");
-    EnduserApiInterface enduserApiInterface = mock(EnduserApiInterface.class);
-    enduserApi.setEnduserApiInterface(enduserApiInterface);
+    final Content[] checkContent = {null};
 
-    Map<String, String> params = new LinkedHashMap<>();
-    params.put("lang","en");
-    params.put("filter[location-identifier]","123456");
+    Content content = new Content();
+    content.setTitle("Test");
 
-    enduserApi.getContentByLocationIdentifier("123456", new APICallback<Content, ErrorMessage>() {
+    JsonApiObject jsonApiObject = new JsonApiObject();
+    jsonApiObject.setResource(content);
+
+    when(mMockMorpheus.parse(anyString())).thenReturn(jsonApiObject);
+
+    final Semaphore semaphore = new Semaphore(0);
+
+    mEnduserApi.getContentByBeacon(1, 2, new APICallback<Content, List<Error>>() {
       @Override
       public void finished(Content result) {
-        assertNull(result);
+        checkContent[0] = result;
+        semaphore.release();
       }
 
       @Override
-      public void error(ErrorMessage error) {
+      public void error(List<Error> error) {
+        fail();
       }
     });
 
-    verify(enduserApiInterface).getContent(argumentsCaptured.capture(), mContentCallbackArgumentCaptor.capture());
-    mContentCallbackArgumentCaptor.getValue().success(null, null);
-    assertTrue(argumentsCaptured.getValue().equals(params));
+    semaphore.acquire();
+
+    assertTrue(checkContent[0].getTitle().equals("Test"));
+    RecordedRequest request1 = mMockWebServer.takeRequest();
+    assertEquals("/contents?lang=en&filter[location-identifier]=1|2", request1.getPath());
   }
 
-  @Test
-  public void testGetContentWithLocationIdentifierCallsError() throws Exception {
-    EnduserApi enduserApi = new EnduserApi("123456");
-    EnduserApiInterface enduserApiInterface = mock(EnduserApiInterface.class);
-    enduserApi.setEnduserApiInterface(enduserApiInterface);
-
-    enduserApi.getContentByLocationIdentifier("123456", new APICallback<Content, ErrorMessage>() {
-      @Override
-      public void finished(Content result) {
-      }
-
-      @Override
-      public void error(ErrorMessage error) {
-        assertNotNull(error);
-      }
-    });
-
-    verify(enduserApiInterface).getContent(anyMap(), mContentCallbackArgumentCaptor.capture());
-    mContentCallbackArgumentCaptor.getValue().failure(new ErrorMessage());
-  }
 
   @Test
-  public void testGetContentWithBeaconCallsSuccess() throws Exception {
-    ArgumentCaptor<Map> argumentsCaptured = ArgumentCaptor.forClass(Map.class);
+  public void testGetContentsWithLocationSuccess() throws Exception {
+    mMockWebServer.enqueue(new MockResponse().setBody(""));
 
-    EnduserApi enduserApi = new EnduserApi("123456");
-    EnduserApiInterface enduserApiInterface = mock(EnduserApiInterface.class);
-    enduserApi.setEnduserApiInterface(enduserApiInterface);
+    final List<Content> checkContents = new ArrayList<>();
 
-    Map<String, String> params = new LinkedHashMap<>();
-    params.put("lang","en");
-    params.put("filter[location-identifier]","123|456");
+    Content content = new Content();
+    content.setTitle("Test");
+    ArrayList<Resource> contents = new ArrayList<Resource>();
+    contents.add(content);
 
-    enduserApi.getContentByBeacon(123, 456, new APICallback<Content, ErrorMessage>() {
-      @Override
-      public void finished(Content result) {
-        assertNull(result);
-      }
+    HashMap<String, Object> meta = new HashMap<>();
+    meta.put("cursor", "1");
+    meta.put("has-more", true);
 
-      @Override
-      public void error(ErrorMessage error) {
-      }
-    });
+    JsonApiObject jsonApiObject = new JsonApiObject();
+    jsonApiObject.setResources(contents);
+    jsonApiObject.setMeta(meta);
 
-    verify(enduserApiInterface).getContent(argumentsCaptured.capture(), mContentCallbackArgumentCaptor.capture());
-    mContentCallbackArgumentCaptor.getValue().success(null, null);
-    assertTrue(argumentsCaptured.getValue().equals(params));
-  }
-
-  @Test
-  public void testGetContentWithBeaconCallsError() throws Exception {
-    EnduserApi enduserApi = new EnduserApi("123456");
-    EnduserApiInterface enduserApiInterface = mock(EnduserApiInterface.class);
-    enduserApi.setEnduserApiInterface(enduserApiInterface);
-
-    enduserApi.getContentByBeacon(123, 456, new APICallback<Content, ErrorMessage>() {
-      @Override
-      public void finished(Content result) {
-      }
-
-      @Override
-      public void error(ErrorMessage error) {
-        assertNotNull(error);
-      }
-    });
-
-    verify(enduserApiInterface).getContent(anyMap(), mContentCallbackArgumentCaptor.capture());
-    mContentCallbackArgumentCaptor.getValue().failure(new ErrorMessage());
-  }
-
-  @Captor
-  ArgumentCaptor <ResponseCallback<JsonApiMessage<PagingMeta, List<DataMessage<ContentAttributesMessage, ContentRelationships>>,
-      List<DataMessage<ContentBlockAttributeMessage, EmptyMessage>>>>>
-      mContentListCallbackArgumentCaptor;
-
-  @Test
-  public void testGetContentsWithLocation() throws Exception {
-    ArgumentCaptor<Map> argumentsCaptured = ArgumentCaptor.forClass(Map.class);
-    EnduserApi enduserApi = new EnduserApi("123456");
-    EnduserApiInterface enduserApiInterface = mock(EnduserApiInterface.class);
-    enduserApi.setEnduserApiInterface(enduserApiInterface);
     Location location = mock(Location.class);
-    when(location.getLatitude()).thenReturn(123.0);
-    when(location.getLongitude()).thenReturn(456.0);
-    Map<String, String> params = new LinkedHashMap<>();
-    params.put("lang", "en");
-    params.put("filter[lat]", "123.0");
-    params.put("filter[lon]", "456.0");
-    params.put("page[size]","10");
+    when(location.getLatitude()).thenReturn(1.0);
+    when(location.getLongitude()).thenReturn(2.0);
 
-    JsonApiMessage<PagingMeta, List<DataMessage<ContentAttributesMessage, ContentRelationships>>,
-        List<DataMessage<ContentBlockAttributeMessage, EmptyMessage>>> jsonApiMessage;
-    jsonApiMessage = mock(JsonApiMessage.class);
-    when(jsonApiMessage.getMeta()).thenReturn(mock(PagingMeta.class));
-    when(jsonApiMessage.getMeta().getCursor()).thenReturn("1");
-    when(jsonApiMessage.getMeta().hasMore()).thenReturn(false);
+    when(mMockMorpheus.parse(anyString())).thenReturn(jsonApiObject);
 
-    enduserApi.getContentsByLocation(location, 10, null, null, new APIListCallback<List<Content>, ErrorMessage>() {
+    final Semaphore semaphore = new Semaphore(0);
+
+    mEnduserApi.getContentsByLocation(location, 10, null, null, new APIListCallback<List<Content>, List<Error>>() {
       @Override
       public void finished(List<Content> result, String cursor, boolean hasMore) {
-        assertNotNull(result);
-        assertTrue(cursor == "1");
-        assertFalse(hasMore);
+        checkContents.addAll(result);
+        semaphore.release();
       }
 
       @Override
-      public void error(ErrorMessage error) {
+      public void error(List<Error> error) {
+        fail();
       }
     });
 
-    verify(enduserApiInterface).getContents(argumentsCaptured.capture(), mContentListCallbackArgumentCaptor.capture());
-    mContentListCallbackArgumentCaptor.getValue().success(jsonApiMessage, null);
-    assertTrue(argumentsCaptured.getValue().equals(params));
-  }
+    semaphore.acquire();
 
-  @Test
-  public void testGetContentsWithLocationError() throws Exception {
-    ArgumentCaptor<Map> argumentsCaptured = ArgumentCaptor.forClass(Map.class);
-    EnduserApi enduserApi = new EnduserApi("123456");
-    EnduserApiInterface enduserApiInterface = mock(EnduserApiInterface.class);
-    enduserApi.setEnduserApiInterface(enduserApiInterface);
-    Location location = mock(Location.class);
-    when(location.getLatitude()).thenReturn(123.0);
-    when(location.getLongitude()).thenReturn(456.0);
-
-    enduserApi.getContentsByLocation(location, 10, null, null, new APIListCallback<List<Content>, ErrorMessage>() {
-      @Override
-      public void finished(List<Content> result, String cursor, boolean hasMore) {
-      }
-
-      @Override
-      public void error(ErrorMessage error) {
-        assertNotNull(error);
-      }
-    });
-
-    verify(enduserApiInterface).getContents(argumentsCaptured.capture(), mContentListCallbackArgumentCaptor.capture());
-    mContentListCallbackArgumentCaptor.getValue().failure(new ErrorMessage());
+    assertTrue(checkContents.get(0).getTitle().equals("Test"));
+    RecordedRequest request1 = mMockWebServer.takeRequest();
+    assertEquals("/contents?lang=en&page[size]=10&filter[lat]=1.0&filter[lon]=2.0", request1.getPath());
   }
 }

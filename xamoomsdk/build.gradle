@@ -28,9 +28,11 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:1.10.10'
+    testCompile 'com.squareup.okhttp3:mockwebserver:3.2.0'
 
     compile 'com.android.support:appcompat-v7:23.2.0'
-    compile 'com.squareup.retrofit:retrofit:1.9.0'
+    compile 'com.squareup.retrofit2:retrofit:2.0.0'
+    compile 'com.xamoom.android:morpheus:0.3.1'
 
     androidTestCompile 'com.android.support.test:runner:0.4'
 
