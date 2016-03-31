@@ -1,12 +1,13 @@
 package com.xamoom.android.xamoomsdk;
 
 import android.location.Location;
-import android.util.ArrayMap;
+import android.text.TextUtils;
 
 import com.xamoom.android.xamoomsdk.Resource.Content;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -110,7 +111,7 @@ public class EnduserApiTests {
 
       @Override
       public void error(List<Error> error) {
-        fail();
+        semaphore.release();
       }
     });
 
@@ -142,7 +143,7 @@ public class EnduserApiTests {
     mEnduserApi.getContent("123456", new APICallback<Content, List<at.rags.morpheus.Error>>() {
       @Override
       public void finished(Content result) {
-        fail();
+        semaphore.release();
       }
 
       @Override
@@ -210,7 +211,7 @@ public class EnduserApiTests {
 
       @Override
       public void error(List<Error> error) {
-        fail();
+        semaphore.release();
       }
     });
 
@@ -246,7 +247,7 @@ public class EnduserApiTests {
 
       @Override
       public void error(List<Error> error) {
-        fail();
+        semaphore.release();
       }
     });
 
@@ -294,7 +295,7 @@ public class EnduserApiTests {
 
       @Override
       public void error(List<Error> error) {
-        fail();
+        semaphore.release();
       }
     });
 
@@ -303,5 +304,52 @@ public class EnduserApiTests {
     assertTrue(checkContents.get(0).getTitle().equals("Test"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
     assertEquals("/contents?lang=en&page[size]=10&filter[lat]=1.0&filter[lon]=2.0", request1.getPath());
+  }
+
+  @Test
+  public void testGetContentsWithTagsSuccess() throws Exception {
+    mMockWebServer.enqueue(new MockResponse().setBody(""));
+
+    final List<Content> checkContents = new ArrayList<>();
+
+    Content content = new Content();
+    content.setTitle("Test");
+    ArrayList<Resource> contents = new ArrayList<Resource>();
+    contents.add(content);
+
+    HashMap<String, Object> meta = new HashMap<>();
+    meta.put("cursor", "1");
+    meta.put("has-more", true);
+
+    JsonApiObject jsonApiObject = new JsonApiObject();
+    jsonApiObject.setResources(contents);
+    jsonApiObject.setMeta(meta);
+
+    List<String> tags = new ArrayList<>();
+    tags.add("tag1");
+    tags.add("tag2");
+
+    when(mMockMorpheus.parse(anyString())).thenReturn(jsonApiObject);
+
+    final Semaphore semaphore = new Semaphore(0);
+
+    mEnduserApi.getContentsByTags(tags, 10, null, null, new APIListCallback<List<Content>, List<Error>>() {
+      @Override
+      public void finished(List<Content> result, String cursor, boolean hasMore) {
+        checkContents.addAll(result);
+        semaphore.release();
+      }
+
+      @Override
+      public void error(List<Error> error) {
+        semaphore.release();
+      }
+    });
+
+    semaphore.acquire();
+
+    assertTrue(checkContents.get(0).getTitle().equals("Test"));
+    RecordedRequest request1 = mMockWebServer.takeRequest();
+    assertEquals("/contents?lang=en&page[size]=10&filter[tags]=tag1,tag2", request1.getPath());
   }
 }

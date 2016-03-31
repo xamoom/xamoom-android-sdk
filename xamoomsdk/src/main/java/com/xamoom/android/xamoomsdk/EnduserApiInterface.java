@@ -18,13 +18,13 @@ public interface EnduserApiInterface {
   @Headers({"Content-Type: application/vnd.api+json",
       "Accept: application/json",
       "User-Agent: XamoomSDK Android",})
-  @GET("contents/{id}")
+  @GET("_api/v2/consumer/contents/{id}")
   Call<ResponseBody> getContent(@Path("id") String contentID, @QueryMap Map<String, String> param);
 
 
   @Headers({"Content-Type: application/vnd.api+json",
       "Accept: application/json",
       "User-Agent: XamoomSDK Android",})
-  @GET("/contents")
+  @GET("_api/v2/consumer/contents")
   Call<ResponseBody> getContents(@QueryMap Map<String, String> param);
 }

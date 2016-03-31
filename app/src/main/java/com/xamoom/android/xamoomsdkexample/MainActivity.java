@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.xamoom.android.xamoomsdk.APICallback;
+import com.xamoom.android.xamoomsdk.APIListCallback;
 import com.xamoom.android.xamoomsdk.ContentFlags;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.Resource.Content;
@@ -23,11 +24,12 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity {
   private static final String TAG = MainActivity.class.getSimpleName();
-  private static final String API_URL = "https://xamoom-cloud-dev.appspot.com/_api/v2/consumer/";
+  private static final String API_URL = "https://xamoom-cloud-dev.appspot.com/";
 
   private EnduserApi mEnduserApi;
 
@@ -41,9 +43,9 @@ public class MainActivity extends AppCompatActivity {
     setupEnduserApi();
 
     getContent();
-    //getContentOption();
-    //getContentLocationIdentifier();
-    //getContentsLocation();
+    getContentOption();
+    getContentLocationIdentifier();
+    getContentsLocation();
   }
 
   @Override
@@ -69,9 +71,13 @@ public class MainActivity extends AppCompatActivity {
   }
 
   public void setupEnduserApi() {
+    HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+    loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
     OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
     builder.addInterceptor(new Interceptor() {
-      @Override public Response intercept(Chain chain) throws IOException {
+      @Override
+      public Response intercept(Chain chain) throws IOException {
         Request request = chain.request().newBuilder()
             .addHeader("ContentAttributesMessage-Type", "application/vnd.api+json")
             .addHeader("APIKEY", getResources().getString(R.string.APIKEY))
@@ -81,6 +87,8 @@ public class MainActivity extends AppCompatActivity {
       }
     });
 
+    //builder.addInterceptor(loggingInterceptor);
+
     OkHttpClient httpClient = builder.build();
 
     Retrofit retrofit = new Retrofit.Builder()
@@ -88,14 +96,14 @@ public class MainActivity extends AppCompatActivity {
         .client(httpClient)
         .build();
 
-     mEnduserApi = new EnduserApi(retrofit);
+    mEnduserApi = new EnduserApi(retrofit);
   }
 
   public void getContent() {
     mEnduserApi.getContent("e9c917086aca465eb454e38c0146428b", new APICallback<Content, List<at.rags.morpheus.Error>>() {
       @Override
       public void finished(Content result) {
-        Log.v(TAG, "finished: " + result);
+        Log.v(TAG, "getContent: " + result);
       }
 
       @Override
@@ -105,53 +113,52 @@ public class MainActivity extends AppCompatActivity {
     });
   }
 
-  /*
+
   public void getContentOption() {
-    mEnduserApi.getContent("e5be72be162d44b189893a406aff5227", EnumSet.of(ContentFlags.PREVIEW, ContentFlags.PRIVATE), new APICallback<Content, ErrorMessage>() {
-      @Override
-      public void finished(Content content) {
-        Log.v(TAG, "Content: " + content.getSystem().getID());
-      }
+    mEnduserApi.getContent("e5be72be162d44b189893a406aff5227", EnumSet.of(ContentFlags.PREVIEW, ContentFlags.PRIVATE),
+        new APICallback<Content, List<Error>>() {
+          @Override
+          public void finished(Content result) {
+            Log.v(TAG, "getContent: " + result);
+          }
 
-      @Override
-      public void error(ErrorMessage error) {
+          @Override
+          public void error(List<Error> error) {
 
-      }
-    });
+          }
+        });
   }
 
   public void getContentLocationIdentifier() {
-    mEnduserApi.getContentByLocationIdentifier(getResources().getString(R.string.qrMarker), new APICallback<Content, ErrorMessage>() {
-      @Override
-      public void finished(Content result) {
+    mEnduserApi.getContentByLocationIdentifier(getResources().getString(R.string.qrMarker),
+        new APICallback<Content, List<Error>>() {
+          @Override
+          public void finished(Content result) {
+            Log.v(TAG, "getContentByLocationIdentifier: " + result);
+          }
 
-      }
+          @Override
+          public void error(List<Error> error) {
 
-      @Override
-      public void error(ErrorMessage error) {
-
-      }
-    });
+          }
+        });
   }
 
   public void getContentsLocation() {
     Location location = new Location("Custom");
     location.setLatitude(46.615106);
     location.setLongitude(14.262126);
-    mEnduserApi.getContentsByLocation(location, 10, null, null, new APIListCallback<List<Content>,
-        ErrorMessage>() {
+    mEnduserApi.getContentsByLocation(location, 10, null, null, new APIListCallback<List<Content>, List<Error>>() {
       @Override
       public void finished(List<Content> result, String cursor, boolean hasMore) {
-        Log.v(TAG, "Content: " + result.get(0));
-        Log.v(TAG, "Finished: " + cursor);
-        Log.v(TAG, "Finished: " + hasMore);
+        Log.v(TAG, "getContentsLocation: " + result.get(0));
       }
 
       @Override
-      public void error(ErrorMessage error) {
+      public void error(List<Error> error) {
 
       }
     });
   }
-  */
+
 }

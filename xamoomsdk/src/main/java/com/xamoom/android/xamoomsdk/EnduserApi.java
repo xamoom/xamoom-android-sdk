@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
+import com.xamoom.android.xamoomsdk.Utils.ListUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -144,7 +145,7 @@ public class EnduserApi {
    * @param callback {@link APIListCallback}.
    */
   public void getContentsByLocation(Location location, int pageSize, @Nullable String cursor,
-      final EnumSet<ContentSortFlags> sortFlags, final APIListCallback<List<Content>,
+                                    final EnumSet<ContentSortFlags> sortFlags, final APIListCallback<List<Content>,
       List<Error>> callback) {
     Map<String, String> params = getUrlParameterContentSort(sortFlags);
     params = addPagingToUrl(params, pageSize, cursor);
@@ -152,32 +153,18 @@ public class EnduserApi {
     params.put("filter[lon]", Double.toString(location.getLongitude()));
 
     Call<ResponseBody> call = mEnduserApiInterface.getContents(params);
-    call.enqueue(new Callback<ResponseBody>() {
-      @Override
-      public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-        String json = getJsonFromResponse(response);
+    enqueContentsCall(call, callback);
+  }
 
-        try {
-          JsonApiObject jsonApiObject = mMorpheus.parse(json);
+  public void getContentsByTags(List<String> tags, int pageSize, String cursor,
+                                EnumSet<ContentSortFlags> sortFlags,
+                                APIListCallback<List<Content>, List<Error>> callback) {
+    Map<String, String> params = getUrlParameterContentSort(sortFlags);
+    params = addPagingToUrl(params, pageSize, cursor);
+    params.put("filter[tags]", ListUtil.joinStringList(tags, ","));
 
-          if (jsonApiObject.getResources() != null) {
-            List<Content> contents = (List<Content>)(List<?>)jsonApiObject.getResources();
-            String cursor = jsonApiObject.getMeta().get("cursor").toString();
-            boolean hasMore = (boolean) jsonApiObject.getMeta().get("has-more");
-            callback.finished(contents, cursor, hasMore);
-          } else if (jsonApiObject.getErrors().size() > 0) {
-            callback.error(jsonApiObject.getErrors());
-          }
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-      }
-
-      @Override
-      public void onFailure(Call<ResponseBody> call, Throwable t) {
-        callback.error(null);
-      }
-    });
+    Call<ResponseBody> call = mEnduserApiInterface.getContents(params);
+    enqueContentsCall(call, callback);
   }
 
   /**
@@ -198,6 +185,36 @@ public class EnduserApi {
           if (jsonApiObject.getResource() != null) {
             Content content = (Content) jsonApiObject.getResource();
             callback.finished(content);
+          } else if (jsonApiObject.getErrors().size() > 0) {
+            callback.error(jsonApiObject.getErrors());
+          }
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
+
+      @Override
+      public void onFailure(Call<ResponseBody> call, Throwable t) {
+        callback.error(null);
+      }
+    });
+  }
+
+  private void enqueContentsCall(Call<ResponseBody> call, final APIListCallback<List<Content>,
+      List<Error>> callback) {
+    call.enqueue(new Callback<ResponseBody>() {
+      @Override
+      public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+        String json = getJsonFromResponse(response);
+
+        try {
+          JsonApiObject jsonApiObject = mMorpheus.parse(json);
+
+          if (jsonApiObject.getResources() != null) {
+            List<Content> contents = (List<Content>) (List<?>) jsonApiObject.getResources();
+            String cursor = jsonApiObject.getMeta().get("cursor").toString();
+            boolean hasMore = (boolean) jsonApiObject.getMeta().get("has-more");
+            callback.finished(contents, cursor, hasMore);
           } else if (jsonApiObject.getErrors().size() > 0) {
             callback.error(jsonApiObject.getErrors());
           }
