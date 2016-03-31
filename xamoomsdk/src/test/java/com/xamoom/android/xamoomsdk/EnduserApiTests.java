@@ -1,13 +1,13 @@
 package com.xamoom.android.xamoomsdk;
 
 import android.location.Location;
-import android.text.TextUtils;
 
+import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
 import com.xamoom.android.xamoomsdk.Resource.Content;
+import com.xamoom.android.xamoomsdk.Resource.Spot;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -119,7 +119,7 @@ public class EnduserApiTests {
 
     assertTrue(checkContent[0].getTitle().equals("Test"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
-    assertEquals("/contents/123456?lang=en", request1.getPath());
+    assertEquals("/_api/v2/consumer/contents/123456?lang=en", request1.getPath());
   }
 
   @Test
@@ -157,7 +157,7 @@ public class EnduserApiTests {
 
     assertTrue(checkError[0].getTitle().equals("Fail"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
-    assertEquals("/contents/123456?lang=en", request1.getPath());
+    assertEquals("/_api/v2/consumer/contents/123456?lang=en", request1.getPath());
   }
 
   @Test
@@ -219,7 +219,7 @@ public class EnduserApiTests {
 
     assertTrue(checkContent[0].getTitle().equals("Test"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
-    assertEquals("/contents?lang=en&filter[location-identifier]=1234", request1.getPath());
+    assertEquals("/_api/v2/consumer/contents?lang=en&filter[location-identifier]=1234", request1.getPath());
   }
 
   @Test
@@ -255,7 +255,7 @@ public class EnduserApiTests {
 
     assertTrue(checkContent[0].getTitle().equals("Test"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
-    assertEquals("/contents?lang=en&filter[location-identifier]=1|2", request1.getPath());
+    assertEquals("/_api/v2/consumer/contents?lang=en&filter[location-identifier]=1|2", request1.getPath());
   }
 
 
@@ -303,7 +303,7 @@ public class EnduserApiTests {
 
     assertTrue(checkContents.get(0).getTitle().equals("Test"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
-    assertEquals("/contents?lang=en&page[size]=10&filter[lat]=1.0&filter[lon]=2.0", request1.getPath());
+    assertEquals("/_api/v2/consumer/contents?lang=en&page[size]=10&filter[lat]=1.0&filter[lon]=2.0", request1.getPath());
   }
 
   @Test
@@ -350,6 +350,55 @@ public class EnduserApiTests {
 
     assertTrue(checkContents.get(0).getTitle().equals("Test"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
-    assertEquals("/contents?lang=en&page[size]=10&filter[tags]=tag1,tag2", request1.getPath());
+    assertEquals("/_api/v2/consumer/contents?lang=en&page[size]=10&filter[tags]=tag1,tag2", request1.getPath());
   }
+
+  @Test
+  public void testGetSpotsWithLocationSuccess() throws Exception {
+    mMockWebServer.enqueue(new MockResponse().setBody(""));
+
+    final List<Spot> checkSpots = new ArrayList<>();
+
+    Spot spot = new Spot();
+    spot.setName("Test");
+    ArrayList<Resource> spots = new ArrayList<>();
+    spots.add(spot);
+
+    HashMap<String, Object> meta = new HashMap<>();
+    meta.put("cursor", "1");
+    meta.put("has-more", true);
+
+    JsonApiObject jsonApiObject = new JsonApiObject();
+    jsonApiObject.setResources(spots);
+    jsonApiObject.setMeta(meta);
+
+    Location location = mock(Location.class);
+    when(location.getLatitude()).thenReturn(1.0);
+    when(location.getLongitude()).thenReturn(2.0);
+
+    when(mMockMorpheus.parse(anyString())).thenReturn(jsonApiObject);
+
+    final Semaphore semaphore = new Semaphore(0);
+
+    mEnduserApi.getSpotsByLocation(location, 100, null, null, new APIListCallback<List<Spot>, List<Error>>() {
+      @Override
+      public void finished(List<Spot> result, String cursor, boolean hasMore) {
+        checkSpots.add(result.get(0));
+        semaphore.release();
+      }
+
+      @Override
+      public void error(List<Error> error) {
+        semaphore.release();
+      }
+    });
+
+    semaphore.acquire();
+
+    assertTrue(checkSpots.get(0).getName().equals("Test"));
+    RecordedRequest request1 = mMockWebServer.takeRequest();
+    assertEquals("/_api/v2/consumer/spots?lang=en&filter[lat]=1.0&filter[lon]=2.0&filter[radius]=100", request1.getPath());
+  }
+
+
 }

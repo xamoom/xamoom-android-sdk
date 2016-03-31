@@ -1,4 +1,7 @@
-package com.xamoom.android.xamoomsdk;
+package com.xamoom.android.xamoomsdk.Enums;
+
+import com.xamoom.android.xamoomsdk.APICallback;
+import com.xamoom.android.xamoomsdk.EnduserApi;
 
 import java.util.EnumSet;
 

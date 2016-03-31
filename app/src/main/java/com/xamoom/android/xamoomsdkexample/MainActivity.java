@@ -10,15 +10,15 @@ import android.view.MenuItem;
 
 import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.APIListCallback;
-import com.xamoom.android.xamoomsdk.ContentFlags;
+import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.Resource.Content;
+import com.xamoom.android.xamoomsdk.Resource.Spot;
 
 import java.io.IOException;
 import java.util.EnumSet;
 import java.util.List;
 
-import at.rags.morpheus.*;
 import at.rags.morpheus.Error;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     getContentOption();
     getContentLocationIdentifier();
     getContentsLocation();
+    getSpotsWithLocation();
   }
 
   @Override
@@ -148,10 +149,12 @@ public class MainActivity extends AppCompatActivity {
     Location location = new Location("Custom");
     location.setLatitude(46.615106);
     location.setLongitude(14.262126);
-    mEnduserApi.getContentsByLocation(location, 10, null, null, new APIListCallback<List<Content>, List<Error>>() {
+    mEnduserApi.getContentsByLocation(location, 1, null, null, new APIListCallback<List<Content>, List<Error>>() {
       @Override
       public void finished(List<Content> result, String cursor, boolean hasMore) {
         Log.v(TAG, "getContentsLocation: " + result.get(0));
+        Log.v(TAG, "getContentsLocation: " + cursor);
+        Log.v(TAG, "getContentsLocation: " + hasMore);
       }
 
       @Override
@@ -161,4 +164,20 @@ public class MainActivity extends AppCompatActivity {
     });
   }
 
+  public void getSpotsWithLocation() {
+    Location location = new Location("Custom");
+    location.setLatitude(46.615106);
+    location.setLongitude(14.262126);
+    mEnduserApi.getSpotsByLocation(location, 1000, null, null, new APIListCallback<List<Spot>, List<Error>>() {
+      @Override
+      public void finished(List<Spot> result, String cursor, boolean hasMore) {
+        Log.v(TAG, "getSpotsWithLocation: " + result.get(0));
+      }
+
+      @Override
+      public void error(List<Error> error) {
+
+      }
+    });
+  }
 }

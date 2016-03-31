@@ -4,8 +4,13 @@ import android.location.Location;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
+import com.xamoom.android.xamoomsdk.Enums.ContentSortFlags;
+import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
+import com.xamoom.android.xamoomsdk.Enums.SpotSortFlags;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
+import com.xamoom.android.xamoomsdk.Resource.Spot;
 import com.xamoom.android.xamoomsdk.Utils.ListUtil;
 
 import java.io.IOException;
@@ -71,6 +76,8 @@ public class EnduserApi {
     mMorpheus = new Morpheus();
     Deserializer.registerResourceClass("contents", Content.class);
     Deserializer.registerResourceClass("contentblocks", ContentBlock.class);
+    Deserializer.registerResourceClass("spots", Spot.class);
+
   }
 
   private void initVars() {
@@ -100,7 +107,7 @@ public class EnduserApi {
    */
   public void getContent(String contentID, EnumSet<ContentFlags> contentFlags, final APICallback<Content,
       List<at.rags.morpheus.Error>> callback) {
-    Map<String, String> params = getUrlParameterContent(contentFlags);
+    Map<String, String> params = addContentParameter(getUrlParameter(), contentFlags);
 
     Call<ResponseBody> call = mEnduserApiInterface.getContent(contentID, params);
     if (call != null) {
@@ -147,7 +154,7 @@ public class EnduserApi {
   public void getContentsByLocation(Location location, int pageSize, @Nullable String cursor,
                                     final EnumSet<ContentSortFlags> sortFlags, final APIListCallback<List<Content>,
       List<Error>> callback) {
-    Map<String, String> params = getUrlParameterContentSort(sortFlags);
+    Map<String, String> params = addContentSortingParameter(getUrlParameter(), sortFlags);
     params = addPagingToUrl(params, pageSize, cursor);
     params.put("filter[lat]", Double.toString(location.getLatitude()));
     params.put("filter[lon]", Double.toString(location.getLongitude()));
@@ -159,7 +166,7 @@ public class EnduserApi {
   public void getContentsByTags(List<String> tags, int pageSize, String cursor,
                                 EnumSet<ContentSortFlags> sortFlags,
                                 APIListCallback<List<Content>, List<Error>> callback) {
-    Map<String, String> params = getUrlParameterContentSort(sortFlags);
+    Map<String, String> params = addContentSortingParameter(getUrlParameter(), sortFlags);
     params = addPagingToUrl(params, pageSize, cursor);
     params.put("filter[tags]", ListUtil.joinStringList(tags, ","));
 
@@ -167,11 +174,23 @@ public class EnduserApi {
     enqueContentsCall(call, callback);
   }
 
+  public void getSpotsByLocation(Location location, int radius, EnumSet<SpotFlags> spotFlags, EnumSet<SpotSortFlags> sortFlags,
+                                 APIListCallback<List<Spot>, List<Error>> callback) {
+    Map<String, String> params = addSpotParameter(getUrlParameter(), spotFlags);
+    params = addSpotSortingParameter(params, sortFlags);
+    params.put("filter[lat]", Double.toString(location.getLatitude()));
+    params.put("filter[lon]", Double.toString(location.getLongitude()));
+    params.put("filter[radius]", Integer.toString(radius));
+
+    Call<ResponseBody> call = mEnduserApiInterface.getSpots(params);
+    enqueSpotsCall(call, callback);
+  }
+
   /**
-   * Makes the call and uses Morpheus to parse the jsonapi response.
+   * Makes the call and uses Morpheus to parse content.
    *
-   * @param call Call<ResponseBody> from Retrofit
-   * @param callback {@link APICallback}
+   * @param call Call<ResponseBody> from Retrofit.
+   * @param callback {@link APICallback}.
    */
   private void enqueContentCall(Call<ResponseBody> call, final APICallback<Content, List<Error>> callback) {
     call.enqueue(new Callback<ResponseBody>() {
@@ -200,6 +219,12 @@ public class EnduserApi {
     });
   }
 
+  /**
+   * Makes the call and uses Morpheus to parse contents.
+   *
+   * @param call Call<ResponseBody> from Retrofit.
+   * @param callback {@link APIListCallback}.
+   */
   private void enqueContentsCall(Call<ResponseBody> call, final APIListCallback<List<Content>,
       List<Error>> callback) {
     call.enqueue(new Callback<ResponseBody>() {
@@ -215,6 +240,42 @@ public class EnduserApi {
             String cursor = jsonApiObject.getMeta().get("cursor").toString();
             boolean hasMore = (boolean) jsonApiObject.getMeta().get("has-more");
             callback.finished(contents, cursor, hasMore);
+          } else if (jsonApiObject.getErrors().size() > 0) {
+            callback.error(jsonApiObject.getErrors());
+          }
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
+
+      @Override
+      public void onFailure(Call<ResponseBody> call, Throwable t) {
+        callback.error(null);
+      }
+    });
+  }
+
+  /**
+   * Makes the call and uses Morpheus to parse spots.
+   *
+   * @param call Call<ResponseBody> from Retrofit.
+   * @param callback {@link APIListCallback}.
+   */
+  private void enqueSpotsCall(Call<ResponseBody> call, final APIListCallback<List<Spot>,
+      List<Error>> callback) {
+    call.enqueue(new Callback<ResponseBody>() {
+      @Override
+      public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+        String json = getJsonFromResponse(response);
+
+        try {
+          JsonApiObject jsonApiObject = mMorpheus.parse(json);
+
+          if (jsonApiObject.getResources() != null) {
+            List<Spot> spots = (List<Spot>) (List<?>) jsonApiObject.getResources();
+            String cursor = jsonApiObject.getMeta().get("cursor").toString();
+            boolean hasMore = (boolean) jsonApiObject.getMeta().get("has-more");
+            callback.finished(spots, cursor, hasMore);
           } else if (jsonApiObject.getErrors().size() > 0) {
             callback.error(jsonApiObject.getErrors());
           }
@@ -258,9 +319,7 @@ public class EnduserApi {
     return params;
   }
 
-  private Map<String, String> getUrlParameterContent(EnumSet<ContentFlags> contentFlags) {
-    Map<String, String> params = getUrlParameter();
-
+  private Map<String, String> addContentParameter(Map<String, String> params, EnumSet<ContentFlags> contentFlags) {
     if (contentFlags == null) {
       return params;
     }
@@ -276,9 +335,8 @@ public class EnduserApi {
     return params;
   }
 
-  private Map<String, String> getUrlParameterContentSort(EnumSet<ContentSortFlags> contentSortFlags) {
-    Map<String, String> params = getUrlParameter();
-
+  private Map<String, String> addContentSortingParameter(Map<String, String> params,
+                                                         EnumSet<ContentSortFlags> contentSortFlags) {
     if (contentSortFlags == null) {
       return params;
     }
@@ -291,6 +349,51 @@ public class EnduserApi {
 
     if (contentSortFlags.contains(ContentSortFlags.NAME_DESC)) {
       sortParams.add("-name");
+    }
+
+    params.put("sort", TextUtils.join(",", sortParams));
+    return params;
+  }
+
+  private Map<String, String> addSpotParameter(Map<String, String> params,
+                                                      EnumSet<SpotFlags> spotFlags) {
+    if (spotFlags == null) {
+      return params;
+    }
+
+    if (spotFlags.contains(SpotFlags.INCLUDE_CONTENT)) {
+      params.put("include_content", "true");
+    }
+
+    if (spotFlags.contains(SpotFlags.INCLUDE_MARKERS)) {
+      params.put("include_markers", "true");
+    }
+
+    return params;
+  }
+
+  private Map<String, String> addSpotSortingParameter(Map<String, String> params,
+                                                      EnumSet<SpotSortFlags> spotSortFlags) {
+    if (spotSortFlags == null) {
+      return params;
+    }
+
+    ArrayList<String> sortParams = new ArrayList<String>();
+
+    if (spotSortFlags.contains(SpotSortFlags.NAME)) {
+      sortParams.add("name");
+    }
+
+    if (spotSortFlags.contains(SpotSortFlags.NAME_DESC)) {
+      sortParams.add("-name");
+    }
+
+    if (spotSortFlags.contains(SpotSortFlags.DISTANCE)) {
+      sortParams.add("distance");
+    }
+
+    if (spotSortFlags.contains(SpotSortFlags.DISTANCE_DESC)) {
+      sortParams.add("-distance");
     }
 
     params.put("sort", TextUtils.join(",", sortParams));
