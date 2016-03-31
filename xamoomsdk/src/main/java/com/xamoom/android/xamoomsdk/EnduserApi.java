@@ -146,7 +146,7 @@ public class EnduserApi {
    * Get list of contents with your location. Geofence radius is 40m.
    *
    * @param location Users location.
-   * @param pageSize PageSize for returned contents. Default 100.
+   * @param pageSize PageSize for returned contents (max 100)
    * @param cursor Cursor for paging.
    * @param sortFlags {@link ContentSortFlags} to sort results.
    * @param callback {@link APIListCallback}.
@@ -163,7 +163,7 @@ public class EnduserApi {
     enqueContentsCall(call, callback);
   }
 
-  public void getContentsByTags(List<String> tags, int pageSize, String cursor,
+  public void getContentsByTags(List<String> tags, int pageSize, @Nullable String cursor,
                                 EnumSet<ContentSortFlags> sortFlags,
                                 APIListCallback<List<Content>, List<Error>> callback) {
     Map<String, String> params = addContentSortingParameter(getUrlParameter(), sortFlags);
@@ -174,13 +174,66 @@ public class EnduserApi {
     enqueContentsCall(call, callback);
   }
 
-  public void getSpotsByLocation(Location location, int radius, EnumSet<SpotFlags> spotFlags, EnumSet<SpotSortFlags> sortFlags,
+  /**
+   * Get list of spots inside radius of a location.
+   *
+   * @param location User location.
+   * @param radius Radius to search in meter (max 5000).
+   * @param spotFlags {@link SpotFlags}.
+   * @param sortFlags {@link SpotSortFlags}
+   * @param callback {@link APIListCallback}
+   */
+  public void getSpotsByLocation(Location location, int radius, EnumSet<SpotFlags> spotFlags,
+                                 @Nullable EnumSet<SpotSortFlags> sortFlags,
+                                 APIListCallback<List<Spot>, List<Error>> callback) {
+    getSpotsByLocation(location, radius, 0, null, spotFlags, sortFlags, callback);
+  }
+
+  /**
+   * Get list of spots inside radius of a location.
+   *
+   * @param location User location.
+   * @param radius Radius to search in meter (max 5000).
+   * @param pageSize Size for pages. (max 100)
+   * @param cursor Cursor of last search.
+   * @param spotFlags {@link SpotFlags}.
+   * @param sortFlags {@link SpotSortFlags}
+   * @param callback {@link APIListCallback}
+   */
+  public void getSpotsByLocation(Location location, int radius, int pageSize, @Nullable String cursor,
+                                 @Nullable EnumSet<SpotFlags> spotFlags,
+                                 @Nullable EnumSet<SpotSortFlags> sortFlags,
                                  APIListCallback<List<Spot>, List<Error>> callback) {
     Map<String, String> params = addSpotParameter(getUrlParameter(), spotFlags);
     params = addSpotSortingParameter(params, sortFlags);
+    params = addPagingToUrl(params, pageSize, cursor);
     params.put("filter[lat]", Double.toString(location.getLatitude()));
     params.put("filter[lon]", Double.toString(location.getLongitude()));
     params.put("filter[radius]", Integer.toString(radius));
+
+    Call<ResponseBody> call = mEnduserApiInterface.getSpots(params);
+    enqueSpotsCall(call, callback);
+  }
+
+  /**
+   * Get list of spots with with tags.
+   * Or operation used when searching with tags.
+   *
+   * @param tags List<String> with tag names.
+   * @param pageSize Size for pages. (max 100)
+   * @param cursor Cursor of last search.
+   * @param spotFlags {@link SpotFlags}.
+   * @param sortFlags {@link SpotSortFlags}
+   * @param callback {@link APIListCallback}
+   */
+  public void getSpotsByTags(List<String> tags, int pageSize, @Nullable String cursor,
+                             @Nullable EnumSet<SpotFlags> spotFlags,
+                             @Nullable EnumSet<SpotSortFlags> sortFlags,
+                             APIListCallback<List<Spot>, List<Error>> callback) {
+    Map<String, String> params = addSpotParameter(getUrlParameter(), spotFlags);
+    params = addSpotSortingParameter(params, sortFlags);
+    params = addPagingToUrl(params, pageSize, cursor);
+    params.put("filter[tags]", ListUtil.joinStringList(tags, ","));
 
     Call<ResponseBody> call = mEnduserApiInterface.getSpots(params);
     enqueSpotsCall(call, callback);
@@ -356,7 +409,7 @@ public class EnduserApi {
   }
 
   private Map<String, String> addSpotParameter(Map<String, String> params,
-                                                      EnumSet<SpotFlags> spotFlags) {
+                                               EnumSet<SpotFlags> spotFlags) {
     if (spotFlags == null) {
       return params;
     }
@@ -401,7 +454,9 @@ public class EnduserApi {
   }
 
   private Map<String, String> addPagingToUrl( Map<String, String> params, int pageSize, String cursor) {
-    params.put("page[size]", Integer.toString(pageSize));
+    if (pageSize != 0) {
+      params.put("page[size]", Integer.toString(pageSize));
+    }
 
     if (cursor != null) {
       params.put("page[cursor]", cursor);

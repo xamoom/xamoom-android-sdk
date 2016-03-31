@@ -16,6 +16,7 @@ import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.Spot;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     getContentLocationIdentifier();
     getContentsLocation();
     getSpotsWithLocation();
+    getSpotsWithTags();
   }
 
   @Override
@@ -88,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
       }
     });
 
-    //builder.addInterceptor(loggingInterceptor);
+    builder.addInterceptor(loggingInterceptor);
 
     OkHttpClient httpClient = builder.build();
 
@@ -172,6 +174,26 @@ public class MainActivity extends AppCompatActivity {
       @Override
       public void finished(List<Spot> result, String cursor, boolean hasMore) {
         Log.v(TAG, "getSpotsWithLocation: " + result.get(0));
+        Log.v(TAG, "getSpotsWithLocation: " + cursor);
+        Log.v(TAG, "getSpotsWithLocation: " + hasMore);
+      }
+
+      @Override
+      public void error(List<Error> error) {
+
+      }
+    });
+  }
+
+  public void getSpotsWithTags() {
+    List<String> tags = new ArrayList<>();
+    tags.add("tag1");
+    mEnduserApi.getSpotsByTags(tags, 0, null, null, null, new APIListCallback<List<Spot>, List<Error>>() {
+      @Override
+      public void finished(List<Spot> result, String cursor, boolean hasMore) {
+        Log.v(TAG, "getSpotsWithTags: " + result.get(0));
+        Log.v(TAG, "getSpotsWithTags: " + cursor);
+        Log.v(TAG, "getSpotsWithTags: " + hasMore);
       }
 
       @Override
