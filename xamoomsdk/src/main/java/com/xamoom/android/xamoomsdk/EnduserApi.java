@@ -216,6 +216,21 @@ public class EnduserApi {
   }
 
   /**
+   * Get list of spots with tags.
+   * Or operation used when searching with tags.
+   *
+   * @param tags List<String> with tag names
+   * @param spotFlags {@link SpotFlags}.
+   * @param sortFlags {@link SpotSortFlags}
+   * @param callback {@link APIListCallback}
+   */
+  public void getSpotsByTags(List<String> tags, @Nullable EnumSet<SpotFlags> spotFlags,
+                             @Nullable EnumSet<SpotSortFlags> sortFlags,
+                             APIListCallback<List<Spot>, List<Error>> callback) {
+    getSpotsByTags(tags, 0, null, spotFlags, sortFlags, callback);
+  }
+
+  /**
    * Get list of spots with with tags.
    * Or operation used when searching with tags.
    *
