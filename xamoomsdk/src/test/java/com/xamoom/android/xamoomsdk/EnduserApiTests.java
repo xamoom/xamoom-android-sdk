@@ -3,8 +3,8 @@ package com.xamoom.android.xamoomsdk;
 import android.location.Location;
 
 import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
-import com.xamoom.android.xamoomsdk.Resource.Content;
-import com.xamoom.android.xamoomsdk.Resource.Spot;
+import com.xamoom.android.xamoomsdk.Resource.*;
+import com.xamoom.android.xamoomsdk.Resource.System;
 
 import org.junit.After;
 import org.junit.Before;
@@ -440,7 +440,7 @@ public class EnduserApiTests {
 
       @Override
       public void error(List<Error> error) {
-
+        semaphore.release();
       }
     });
 
@@ -451,4 +451,75 @@ public class EnduserApiTests {
     assertEquals("/_api/v2/consumer/spots?lang=en&filter[tags]=tag1,tag2", request1.getPath());
   }
 
+  @Test
+  public void testGetSystemSuccess() throws Exception {
+    mMockWebServer.enqueue(new MockResponse().setBody(""));
+
+    final System[] checkSystem = {null};
+
+    final System system = new System();
+    system.setName("Test");
+
+    JsonApiObject jsonApiObject = new JsonApiObject();
+    jsonApiObject.setResource(system);
+
+    when(mMockMorpheus.parse(anyString())).thenReturn(jsonApiObject);
+
+    final Semaphore semaphore = new Semaphore(0);
+
+    mEnduserApi.getSystem(new APICallback<System, List<Error>>() {
+      @Override
+      public void finished(System result) {
+        checkSystem[0] = result;
+        semaphore.release();
+      }
+
+      @Override
+      public void error(List<Error> error) {
+        semaphore.release();
+      }
+    });
+
+    semaphore.acquire();
+
+    assertTrue(checkSystem[0].getName().equals("Test"));
+    RecordedRequest request1 = mMockWebServer.takeRequest();
+    assertEquals("/_api/v2/consumer/systems?lang=en", request1.getPath());
+  }
+
+  @Test
+  public void testGetMenuSuccess() throws Exception {
+    mMockWebServer.enqueue(new MockResponse().setBody(""));
+
+    final Menu[] checkMenu = {null};
+
+    final Menu menu = new Menu();
+    menu.setId("123456");
+
+    JsonApiObject jsonApiObject = new JsonApiObject();
+    jsonApiObject.setResource(menu);
+
+    when(mMockMorpheus.parse(anyString())).thenReturn(jsonApiObject);
+
+    final Semaphore semaphore = new Semaphore(0);
+
+    mEnduserApi.getMenu("123456", new APICallback<Menu, List<Error>>() {
+      @Override
+      public void finished(Menu result) {
+        checkMenu[0] = result;
+        semaphore.release();
+      }
+
+      @Override
+      public void error(List<Error> error) {
+        semaphore.release();
+      }
+    });
+
+    semaphore.acquire();
+
+    assertTrue(checkMenu[0].getId().equals("123456"));
+    RecordedRequest request1 = mMockWebServer.takeRequest();
+    assertEquals("/_api/v2/consumer/menus/123456?lang=en", request1.getPath());
+  }
 }

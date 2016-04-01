@@ -33,7 +33,7 @@ dependencies {
 	compile 'com.android.support:appcompat-v7:23.2.0'
 	compile 'com.squareup.retrofit2:retrofit:2.0.0'
 	compile 'com.squareup.okhttp3:logging-interceptor:3.0.1'
-	compile 'com.xamoom.android:morpheus:0.3.1'
+	compile 'com.xamoom.android:morpheus:0.3.2'
 
 	androidTestCompile 'com.android.support.test:runner:0.4'
 }

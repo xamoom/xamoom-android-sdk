@@ -12,8 +12,8 @@ import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.APIListCallback;
 import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
 import com.xamoom.android.xamoomsdk.EnduserApi;
-import com.xamoom.android.xamoomsdk.Resource.Content;
-import com.xamoom.android.xamoomsdk.Resource.Spot;
+import com.xamoom.android.xamoomsdk.Resource.*;
+import com.xamoom.android.xamoomsdk.Resource.System;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -49,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
     getContentsLocation();
     getSpotsWithLocation();
     getSpotsWithTags();
+    getSystem();
+    getMenu();
   }
 
   @Override
@@ -90,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
       }
     });
 
-    builder.addInterceptor(loggingInterceptor);
+    //builder.addInterceptor(loggingInterceptor);
 
     OkHttpClient httpClient = builder.build();
 
@@ -194,6 +196,34 @@ public class MainActivity extends AppCompatActivity {
         Log.v(TAG, "getSpotsWithTags: " + result.get(0));
         Log.v(TAG, "getSpotsWithTags: " + cursor);
         Log.v(TAG, "getSpotsWithTags: " + hasMore);
+      }
+
+      @Override
+      public void error(List<Error> error) {
+
+      }
+    });
+  }
+
+  public void getSystem() {
+    mEnduserApi.getSystem(new APICallback<com.xamoom.android.xamoomsdk.Resource.System, List<Error>>() {
+      @Override
+      public void finished(System result) {
+        Log.v(TAG, "getSystem: " + result.getId());
+      }
+
+      @Override
+      public void error(List<Error> error) {
+
+      }
+    });
+  }
+
+  public void getMenu() {
+    mEnduserApi.getMenu("5755996320301056", new APICallback<com.xamoom.android.xamoomsdk.Resource.Menu, List<Error>>() {
+      @Override
+      public void finished(com.xamoom.android.xamoomsdk.Resource.Menu result) {
+        Log.v(TAG, "getMenu: " + result.getItems());
       }
 
       @Override

@@ -2,11 +2,12 @@ package com.xamoom.android.xamoomsdk.Resource;
 
 import java.util.List;
 
+import at.rags.morpheus.Annotations.Relationship;
 import at.rags.morpheus.Annotations.SerializeName;
 import at.rags.morpheus.Resource;
 
 /**
- * Localized content from xamoom-cloud.
+ *  xamoom Content model.
  */
 public class Content extends Resource {
   @SerializeName("display-name")
@@ -18,7 +19,8 @@ public class Content extends Resource {
   @SerializeName("cover-image-url")
   private String publicImageUrl;
   //private List<ContentBlock> contentBlocks;
-  //private System system;
+  @Relationship("system")
+  private System system;
 
   public String getTitle() {
     return title;

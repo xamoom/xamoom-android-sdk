@@ -6,7 +6,7 @@ import at.rags.morpheus.Annotations.SerializeName;
 import at.rags.morpheus.Resource;
 
 /**
- * Created by raphaelseher on 31/03/16.
+ * xamoom Spot model.
  */
 public class Spot extends Resource {
   private String name;

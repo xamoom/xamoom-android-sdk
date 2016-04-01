@@ -8,9 +8,8 @@ import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
 import com.xamoom.android.xamoomsdk.Enums.ContentSortFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotSortFlags;
-import com.xamoom.android.xamoomsdk.Resource.Content;
-import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
-import com.xamoom.android.xamoomsdk.Resource.Spot;
+import com.xamoom.android.xamoomsdk.Resource.*;
+import com.xamoom.android.xamoomsdk.Resource.System;
 import com.xamoom.android.xamoomsdk.Utils.ListUtil;
 
 import java.io.IOException;
@@ -75,9 +74,11 @@ public class EnduserApi {
   private void initMorpheus() {
     mMorpheus = new Morpheus();
     Deserializer.registerResourceClass("contents", Content.class);
+    Deserializer.registerResourceClass("content", Content.class);
     Deserializer.registerResourceClass("contentblocks", ContentBlock.class);
     Deserializer.registerResourceClass("spots", Spot.class);
-
+    Deserializer.registerResourceClass("systems", System.class);
+    Deserializer.registerResourceClass("menus", Menu.class);
   }
 
   private void initVars() {
@@ -105,7 +106,7 @@ public class EnduserApi {
    * @param contentFlags Different flags {@link ContentFlags}.
    * @param callback {@link APICallback}.
    */
-  public void getContent(String contentID, EnumSet<ContentFlags> contentFlags, final APICallback<Content,
+  public void getContent(String contentID, EnumSet<ContentFlags> contentFlags, APICallback<Content,
       List<at.rags.morpheus.Error>> callback) {
     Map<String, String> params = addContentParameter(getUrlParameter(), contentFlags);
 
@@ -121,7 +122,7 @@ public class EnduserApi {
    * @param locationIdentifier LocationIdentifier from QR or NFC.
    * @param callback {@link APICallback}.
    */
-  public void getContentByLocationIdentifier(String locationIdentifier, final APICallback<Content,
+  public void getContentByLocationIdentifier(String locationIdentifier, APICallback<Content,
       List<Error>> callback) {
     Map<String, String> params = getUrlParameter();
     params.put("filter[location-identifier]", locationIdentifier);
@@ -137,7 +138,7 @@ public class EnduserApi {
    * @param minor Beacon minor ID.
    * @param callback {@link APICallback}.
    */
-  public void getContentByBeacon(int major, int minor, final APICallback<Content, List<Error>>
+  public void getContentByBeacon(int major, int minor, APICallback<Content, List<Error>>
       callback) {
     getContentByLocationIdentifier(String.format("%s|%s", major, minor), callback);
   }
@@ -152,7 +153,8 @@ public class EnduserApi {
    * @param callback {@link APIListCallback}.
    */
   public void getContentsByLocation(Location location, int pageSize, @Nullable String cursor,
-                                    final EnumSet<ContentSortFlags> sortFlags, final APIListCallback<List<Content>,
+                                    final EnumSet<ContentSortFlags> sortFlags,
+                                    APIListCallback<List<Content>,
       List<Error>> callback) {
     Map<String, String> params = addContentSortingParameter(getUrlParameter(), sortFlags);
     params = addPagingToUrl(params, pageSize, cursor);
@@ -252,6 +254,75 @@ public class EnduserApi {
 
     Call<ResponseBody> call = mEnduserApiInterface.getSpots(params);
     enqueSpotsCall(call, callback);
+  }
+
+  /**
+   * Get the system connected to your api key.
+   *
+   * @param callback {@link APIListCallback}.
+   */
+  public void getSystem(final APICallback<System, List<Error>> callback) {
+    Map<String, String> params = getUrlParameter();
+    Call<ResponseBody> call = mEnduserApiInterface.getSystem(params);
+    call.enqueue(new Callback<ResponseBody>() {
+      @Override
+      public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+        String json = getJsonFromResponse(response);
+
+        try {
+          JsonApiObject jsonApiObject = mMorpheus.parse(json);
+
+          if (jsonApiObject.getResource() != null) {
+            System system = (System) jsonApiObject.getResource();
+            callback.finished(system);
+          } else if (jsonApiObject.getErrors().size() > 0) {
+            callback.error(jsonApiObject.getErrors());
+          }
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
+
+      @Override
+      public void onFailure(Call<ResponseBody> call, Throwable t) {
+        callback.error(null);
+      }
+    });
+  }
+
+  /**
+   * Get the menu to your system.
+   *
+   * @param systemId Systems systemId.
+   * @param callback {@link APIListCallback}.
+   */
+  public void getMenu(String systemId, final APICallback<Menu, List<Error>> callback) {
+    Map<String, String> params = getUrlParameter();
+    Call<ResponseBody> call = mEnduserApiInterface.getMenu(systemId, params);
+    call.enqueue(new Callback<ResponseBody>() {
+      @Override
+      public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+        String json = getJsonFromResponse(response);
+
+        try {
+          JsonApiObject jsonApiObject = mMorpheus.parse(json);
+
+          if (jsonApiObject.getResource() != null) {
+            Menu menu = (Menu) jsonApiObject.getResource();
+            callback.finished(menu);
+          } else if (jsonApiObject.getErrors().size() > 0) {
+            callback.error(jsonApiObject.getErrors());
+          }
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
+
+      @Override
+      public void onFailure(Call<ResponseBody> call, Throwable t) {
+        callback.error(null);
+      }
+    });
   }
 
   /**

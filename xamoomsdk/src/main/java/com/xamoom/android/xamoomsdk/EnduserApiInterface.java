@@ -19,8 +19,7 @@ public interface EnduserApiInterface {
       "Accept: application/json",
       "User-Agent: XamoomSDK Android",})
   @GET("_api/v2/consumer/contents/{id}")
-  Call<ResponseBody> getContent(@Path("id") String contentID, @QueryMap Map<String, String> param);
-
+  Call<ResponseBody> getContent(@Path("id") String contentId, @QueryMap Map<String, String> param);
 
   @Headers({"Content-Type: application/vnd.api+json",
       "Accept: application/json",
@@ -34,4 +33,15 @@ public interface EnduserApiInterface {
   @GET("_api/v2/consumer/spots")
   Call<ResponseBody> getSpots(@QueryMap Map<String, String> param);
 
+  @Headers({"Content-Type: application/vnd.api+json",
+      "Accept: application/json",
+      "User-Agent: XamoomSDK Android",})
+  @GET("_api/v2/consumer/systems")
+  Call<ResponseBody> getSystem(@QueryMap Map<String, String> param);
+
+  @Headers({"Content-Type: application/vnd.api+json",
+      "Accept: application/json",
+      "User-Agent: XamoomSDK Android",})
+  @GET("_api/v2/consumer/menus/{id}")
+  Call<ResponseBody> getMenu(@Path("id") String systemId, @QueryMap Map<String, String> param);
 }
