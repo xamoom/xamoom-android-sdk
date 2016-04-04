@@ -11,12 +11,19 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.android.AndroidLog;
 import retrofit.converter.GsonConverter;
+import retrofit2.Retrofit;
 
 import static junit.framework.Assert.assertTrue;
 
@@ -33,24 +40,32 @@ public class IntegrationTest extends InstrumentationTestCase {
 
   @Before
   public void setUp() {
-    RestAdapter restAdapter = new RestAdapter.Builder()
-        .setEndpoint(API_URL)
-        .setLogLevel(RestAdapter.LogLevel.FULL)
-        .setLog(new AndroidLog(TAG))
-        .setRequestInterceptor(new RequestInterceptor() {
-          @Override
-          public void intercept(RequestFacade request) {
-            request.addHeader("ContentAttributesMessage-Type", "application/vnd.api+json");
-            request.addHeader("APIKEY", getInstrumentation().getContext().getString(R.string.APIKEY));
-            request.addHeader("X-DEVKEY", getInstrumentation().getContext().getString(R.string.XDEVKEY));
-          }
-        })
-        .setConverter(new GsonConverter(new GsonBuilder()
-            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-            .create()))
+    HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+    loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+    OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
+    builder.addInterceptor(new Interceptor() {
+      @Override
+      public Response intercept(Chain chain) throws IOException {
+        Request request = chain.request().newBuilder()
+            .addHeader("ContentAttributesMessage-Type", "application/vnd.api+json")
+            .addHeader("APIKEY", getInstrumentation().getContext().getResources().getString(R.string.))
+            .addHeader("X-DEVKEY", getInstrumentation().getContext()..getString(R.string.XDEVKEY))
+            .build();
+        return chain.proceed(request);
+      }
+    });
+
+    //builder.addInterceptor(loggingInterceptor);
+
+    OkHttpClient httpClient = builder.build();
+
+    Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl(API_URL)
+        .client(httpClient)
         .build();
 
-    api = new EnduserApi(restAdapter);
+    api = new EnduserApi(retrofit);
   }
 
   @Test
