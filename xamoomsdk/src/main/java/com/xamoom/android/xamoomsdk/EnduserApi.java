@@ -2,7 +2,6 @@ package com.xamoom.android.xamoomsdk;
 
 import android.location.Location;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 
 import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
 import com.xamoom.android.xamoomsdk.Enums.ContentSortFlags;
@@ -11,21 +10,21 @@ import com.xamoom.android.xamoomsdk.Enums.SpotSortFlags;
 import com.xamoom.android.xamoomsdk.Resource.*;
 import com.xamoom.android.xamoomsdk.Resource.System;
 import com.xamoom.android.xamoomsdk.Utils.ListUtil;
+import com.xamoom.android.xamoomsdk.Utils.UrlUtil;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import at.rags.morpheus.*;
 import at.rags.morpheus.Error;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 
 /**
@@ -34,45 +33,54 @@ import retrofit2.Retrofit;
  *
  * Use {@link #EnduserApi(String)} to initialize.
  *
- * Change the requested language by  setting {@link #mLanguage}. The users language is saved
- * in {@link #mSystemLanguage}.
+ * Change the requested language by  setting {@link #language}. The users language is saved
+ * in {@link #systemLanguage}.
  */
 public class EnduserApi {
   private static final String TAG = EnduserApi.class.getSimpleName();
   private static final String API_URL = "https://xamoom-cloud.appspot.com/_api/v2/consumer/";
 
-  private Morpheus mMorpheus;
-  private EnduserApiInterface mEnduserApiInterface;
-  private String mLanguage;
-  private String mSystemLanguage;
+  private EnduserApiInterface enduserApiInterface;
+  private CallHandler callHandler;
+  private Morpheus morpheus;
+  private String language;
+  private String systemLanguage;
 
   public EnduserApi(final String apikey) {
+    OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
+    builder.addInterceptor(new Interceptor() {
+      @Override
+      public okhttp3.Response intercept(Chain chain) throws IOException {
+        Request request = chain.request().newBuilder()
+            .addHeader("ContentAttributesMessage-Type", "application/vnd.api+json")
+            .addHeader("APIKEY", apikey)
+            .build();
+        return chain.proceed(request);
+      }
+    });
+    OkHttpClient httpClient = builder.build();
+
     Retrofit retrofit = new Retrofit.Builder()
         .baseUrl(API_URL)
-        /*
-        .setRequestInterceptor(new RequestInterceptor() {
-          @Override
-          public void intercept(RequestFacade request) {
-            request.addHeader("APIKEY", apikey);
-          }
-        })*/
+        .client(httpClient)
         .build();
-
-    mEnduserApiInterface = retrofit.create(EnduserApiInterface.class);
+    enduserApiInterface = retrofit.create(EnduserApiInterface.class);
 
     initMorpheus();
     initVars();
   }
 
   public EnduserApi(Retrofit retrofit) {
-    mEnduserApiInterface = retrofit.create(EnduserApiInterface.class);
+    enduserApiInterface = retrofit.create(EnduserApiInterface.class);
 
     initMorpheus();
     initVars();
   }
 
   private void initMorpheus() {
-    mMorpheus = new Morpheus();
+    morpheus = new Morpheus();
+    callHandler = new CallHandler(morpheus);
+
     Deserializer.registerResourceClass("contents", Content.class);
     Deserializer.registerResourceClass("content", Content.class);
     Deserializer.registerResourceClass("contentblocks", ContentBlock.class);
@@ -84,8 +92,8 @@ public class EnduserApi {
   }
 
   private void initVars() {
-    mSystemLanguage = Locale.getDefault().getLanguage();
-    mLanguage = mSystemLanguage;
+    systemLanguage = Locale.getDefault().getLanguage();
+    language = systemLanguage;
   }
 
   /**
@@ -94,11 +102,11 @@ public class EnduserApi {
    * @param contentID ContentID from xamoom-cloud.
    * @param callback {@link APICallback}.
    */
-  public void getContent(final String contentID, final APICallback<Content, List<Error>> callback) {
-    Map<String, String> params = getUrlParameter();
+  public void getContent(final String contentID, APICallback<Content, List<Error>> callback) {
+    Map<String, String> params = UrlUtil.getUrlParameter(language);
 
-    Call<ResponseBody> call = mEnduserApiInterface.getContent(contentID, params);
-    enqueContentCall(call, callback);
+    Call<ResponseBody> call = enduserApiInterface.getContent(contentID, params);
+    callHandler.enqueCall(call, callback);
   }
 
   /**
@@ -110,12 +118,11 @@ public class EnduserApi {
    */
   public void getContent(String contentID, EnumSet<ContentFlags> contentFlags, APICallback<Content,
       List<at.rags.morpheus.Error>> callback) {
-    Map<String, String> params = addContentParameter(getUrlParameter(), contentFlags);
+    Map<String, String> params = UrlUtil.addContentParameter(UrlUtil.getUrlParameter(language),
+        contentFlags);
 
-    Call<ResponseBody> call = mEnduserApiInterface.getContent(contentID, params);
-    if (call != null) {
-      enqueContentCall(call, callback);
-    }
+    Call<ResponseBody> call = enduserApiInterface.getContent(contentID, params);
+    callHandler.enqueCall(call, callback);
   }
 
   /**
@@ -126,11 +133,11 @@ public class EnduserApi {
    */
   public void getContentByLocationIdentifier(String locationIdentifier, APICallback<Content,
       List<Error>> callback) {
-    Map<String, String> params = getUrlParameter();
+    Map<String, String> params = UrlUtil.getUrlParameter(language);
     params.put("filter[location-identifier]", locationIdentifier);
 
-    Call<ResponseBody> call = mEnduserApiInterface.getContents(params);
-    enqueContentCall(call, callback);
+    Call<ResponseBody> call = enduserApiInterface.getContents(params);
+    callHandler.enqueCall(call, callback);
   }
 
   /**
@@ -158,24 +165,26 @@ public class EnduserApi {
                                     final EnumSet<ContentSortFlags> sortFlags,
                                     APIListCallback<List<Content>,
       List<Error>> callback) {
-    Map<String, String> params = addContentSortingParameter(getUrlParameter(), sortFlags);
-    params = addPagingToUrl(params, pageSize, cursor);
+    Map<String, String> params = UrlUtil.addContentSortingParameter(UrlUtil.getUrlParameter(language),
+        sortFlags);
+    params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
     params.put("filter[lat]", Double.toString(location.getLatitude()));
     params.put("filter[lon]", Double.toString(location.getLongitude()));
 
-    Call<ResponseBody> call = mEnduserApiInterface.getContents(params);
-    enqueContentsCall(call, callback);
+    Call<ResponseBody> call = enduserApiInterface.getContents(params);
+    callHandler.enqueListCall(call, callback);
   }
 
   public void getContentsByTags(List<String> tags, int pageSize, @Nullable String cursor,
                                 EnumSet<ContentSortFlags> sortFlags,
                                 APIListCallback<List<Content>, List<Error>> callback) {
-    Map<String, String> params = addContentSortingParameter(getUrlParameter(), sortFlags);
-    params = addPagingToUrl(params, pageSize, cursor);
+    Map<String, String> params = UrlUtil.addContentSortingParameter(UrlUtil.getUrlParameter(language),
+        sortFlags);
+    params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
     params.put("filter[tags]", ListUtil.joinStringList(tags, ","));
 
-    Call<ResponseBody> call = mEnduserApiInterface.getContents(params);
-    enqueContentsCall(call, callback);
+    Call<ResponseBody> call = enduserApiInterface.getContents(params);
+    callHandler.enqueListCall(call, callback);
   }
 
   /**
@@ -208,15 +217,16 @@ public class EnduserApi {
                                  @Nullable EnumSet<SpotFlags> spotFlags,
                                  @Nullable EnumSet<SpotSortFlags> sortFlags,
                                  APIListCallback<List<Spot>, List<Error>> callback) {
-    Map<String, String> params = addSpotParameter(getUrlParameter(), spotFlags);
-    params = addSpotSortingParameter(params, sortFlags);
-    params = addPagingToUrl(params, pageSize, cursor);
+    Map<String, String> params = UrlUtil.addSpotParameter(UrlUtil.getUrlParameter(language),
+        spotFlags);
+    params = UrlUtil.addSpotSortingParameter(params, sortFlags);
+    params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
     params.put("filter[lat]", Double.toString(location.getLatitude()));
     params.put("filter[lon]", Double.toString(location.getLongitude()));
     params.put("filter[radius]", Integer.toString(radius));
 
-    Call<ResponseBody> call = mEnduserApiInterface.getSpots(params);
-    enqueSpotsCall(call, callback);
+    Call<ResponseBody> call = enduserApiInterface.getSpots(params);
+    callHandler.enqueListCall(call, callback);
   }
 
   /**
@@ -249,13 +259,14 @@ public class EnduserApi {
                              @Nullable EnumSet<SpotFlags> spotFlags,
                              @Nullable EnumSet<SpotSortFlags> sortFlags,
                              APIListCallback<List<Spot>, List<Error>> callback) {
-    Map<String, String> params = addSpotParameter(getUrlParameter(), spotFlags);
-    params = addSpotSortingParameter(params, sortFlags);
-    params = addPagingToUrl(params, pageSize, cursor);
+    Map<String, String> params = UrlUtil.addSpotParameter(UrlUtil.getUrlParameter(language),
+        spotFlags);
+    params = UrlUtil.addSpotSortingParameter(params, sortFlags);
+    params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
     params.put("filter[tags]", ListUtil.joinStringList(tags, ","));
 
-    Call<ResponseBody> call = mEnduserApiInterface.getSpots(params);
-    enqueSpotsCall(call, callback);
+    Call<ResponseBody> call = enduserApiInterface.getSpots(params);
+    callHandler.enqueListCall(call, callback);
   }
 
   /**
@@ -264,32 +275,9 @@ public class EnduserApi {
    * @param callback {@link APIListCallback}.
    */
   public void getSystem(final APICallback<System, List<Error>> callback) {
-    Map<String, String> params = getUrlParameter();
-    Call<ResponseBody> call = mEnduserApiInterface.getSystem(params);
-    call.enqueue(new Callback<ResponseBody>() {
-      @Override
-      public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-        String json = getJsonFromResponse(response);
-
-        try {
-          JsonApiObject jsonApiObject = mMorpheus.parse(json);
-
-          if (jsonApiObject.getResource() != null) {
-            System system = (System) jsonApiObject.getResource();
-            callback.finished(system);
-          } else if (jsonApiObject.getErrors().size() > 0) {
-            callback.error(jsonApiObject.getErrors());
-          }
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-      }
-
-      @Override
-      public void onFailure(Call<ResponseBody> call, Throwable t) {
-        callback.error(null);
-      }
-    });
+    Map<String, String> params = UrlUtil.getUrlParameter(language);
+    Call<ResponseBody> call = enduserApiInterface.getSystem(params);
+    callHandler.enqueCall(call, callback);
   }
 
   /**
@@ -299,32 +287,9 @@ public class EnduserApi {
    * @param callback {@link APIListCallback}.
    */
   public void getMenu(String systemId, final APICallback<Menu, List<Error>> callback) {
-    Map<String, String> params = getUrlParameter();
-    Call<ResponseBody> call = mEnduserApiInterface.getMenu(systemId, params);
-    call.enqueue(new Callback<ResponseBody>() {
-      @Override
-      public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-        String json = getJsonFromResponse(response);
-
-        try {
-          JsonApiObject jsonApiObject = mMorpheus.parse(json);
-
-          if (jsonApiObject.getResource() != null) {
-            Menu menu = (Menu) jsonApiObject.getResource();
-            callback.finished(menu);
-          } else if (jsonApiObject.getErrors().size() > 0) {
-            callback.error(jsonApiObject.getErrors());
-          }
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-      }
-
-      @Override
-      public void onFailure(Call<ResponseBody> call, Throwable t) {
-        callback.error(null);
-      }
-    });
+    Map<String, String> params = UrlUtil.getUrlParameter(language);
+    Call<ResponseBody> call = enduserApiInterface.getMenu(systemId, params);
+    callHandler.enqueCall(call, callback);
   }
 
   /**
@@ -334,32 +299,9 @@ public class EnduserApi {
    * @param callback {@link APIListCallback}.
    */
   public void getSystemSetting(String systemId, final APICallback<SystemSetting, List<Error>> callback) {
-    Map<String, String> params = getUrlParameter();
-    Call<ResponseBody> call = mEnduserApiInterface.getSetting(systemId, params);
-    call.enqueue(new Callback<ResponseBody>() {
-      @Override
-      public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-        String json = getJsonFromResponse(response);
-
-        try {
-          JsonApiObject jsonApiObject = mMorpheus.parse(json);
-
-          if (jsonApiObject.getResource() != null) {
-            SystemSetting systemSetting = (SystemSetting) jsonApiObject.getResource();
-            callback.finished(systemSetting);
-          } else if (jsonApiObject.getErrors().size() > 0) {
-            callback.error(jsonApiObject.getErrors());
-          }
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-      }
-
-      @Override
-      public void onFailure(Call<ResponseBody> call, Throwable t) {
-        callback.error(null);
-      }
-    });
+    Map<String, String> params = UrlUtil.getUrlParameter(language);
+    Call<ResponseBody> call = enduserApiInterface.getSetting(systemId, params);
+    callHandler.enqueCall(call, callback);
   }
 
   /**
@@ -369,284 +311,30 @@ public class EnduserApi {
    * @param callback {@link APIListCallback}.
    */
   public void getStyle(String systemId, final APICallback<Style, List<Error>> callback) {
-    Map<String, String> params = getUrlParameter();
-    Call<ResponseBody> call = mEnduserApiInterface.getStyle(systemId, params);
-    call.enqueue(new Callback<ResponseBody>() {
-      @Override
-      public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-        String json = getJsonFromResponse(response);
-
-        try {
-          JsonApiObject jsonApiObject = mMorpheus.parse(json);
-
-          if (jsonApiObject.getResource() != null) {
-            Style style = (Style) jsonApiObject.getResource();
-            callback.finished(style);
-          } else if (jsonApiObject.getErrors().size() > 0) {
-            callback.error(jsonApiObject.getErrors());
-          }
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-      }
-
-      @Override
-      public void onFailure(Call<ResponseBody> call, Throwable t) {
-        callback.error(null);
-      }
-    });
-  }
-
-  /**
-   * Makes the call and uses Morpheus to parse content.
-   *
-   * @param call Call<ResponseBody> from Retrofit.
-   * @param callback {@link APICallback}.
-   */
-  private void enqueContentCall(Call<ResponseBody> call, final APICallback<Content, List<Error>> callback) {
-    call.enqueue(new Callback<ResponseBody>() {
-      @Override
-      public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-        String json = getJsonFromResponse(response);
-
-        try {
-          JsonApiObject jsonApiObject = mMorpheus.parse(json);
-
-          if (jsonApiObject.getResource() != null) {
-            Content content = (Content) jsonApiObject.getResource();
-            callback.finished(content);
-          } else if (jsonApiObject.getErrors().size() > 0) {
-            callback.error(jsonApiObject.getErrors());
-          }
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-      }
-
-      @Override
-      public void onFailure(Call<ResponseBody> call, Throwable t) {
-        callback.error(null);
-      }
-    });
-  }
-
-  /**
-   * Makes the call and uses Morpheus to parse contents.
-   *
-   * @param call Call<ResponseBody> from Retrofit.
-   * @param callback {@link APIListCallback}.
-   */
-  private void enqueContentsCall(Call<ResponseBody> call, final APIListCallback<List<Content>,
-      List<Error>> callback) {
-    call.enqueue(new Callback<ResponseBody>() {
-      @Override
-      public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-        String json = getJsonFromResponse(response);
-
-        try {
-          JsonApiObject jsonApiObject = mMorpheus.parse(json);
-
-          if (jsonApiObject.getResources() != null) {
-            List<Content> contents = (List<Content>) (List<?>) jsonApiObject.getResources();
-            String cursor = jsonApiObject.getMeta().get("cursor").toString();
-            boolean hasMore = (boolean) jsonApiObject.getMeta().get("has-more");
-            callback.finished(contents, cursor, hasMore);
-          } else if (jsonApiObject.getErrors().size() > 0) {
-            callback.error(jsonApiObject.getErrors());
-          }
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-      }
-
-      @Override
-      public void onFailure(Call<ResponseBody> call, Throwable t) {
-        callback.error(null);
-      }
-    });
-  }
-
-  /**
-   * Makes the call and uses Morpheus to parse spots.
-   *
-   * @param call Call<ResponseBody> from Retrofit.
-   * @param callback {@link APIListCallback}.
-   */
-  private void enqueSpotsCall(Call<ResponseBody> call, final APIListCallback<List<Spot>,
-      List<Error>> callback) {
-    call.enqueue(new Callback<ResponseBody>() {
-      @Override
-      public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-        String json = getJsonFromResponse(response);
-
-        try {
-          JsonApiObject jsonApiObject = mMorpheus.parse(json);
-
-          if (jsonApiObject.getResources() != null) {
-            List<Spot> spots = (List<Spot>) (List<?>) jsonApiObject.getResources();
-            String cursor = jsonApiObject.getMeta().get("cursor").toString();
-            boolean hasMore = (boolean) jsonApiObject.getMeta().get("has-more");
-            callback.finished(spots, cursor, hasMore);
-          } else if (jsonApiObject.getErrors().size() > 0) {
-            callback.error(jsonApiObject.getErrors());
-          }
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-      }
-
-      @Override
-      public void onFailure(Call<ResponseBody> call, Throwable t) {
-        callback.error(null);
-      }
-    });
-  }
-
-  private String getJsonFromResponse(Response<ResponseBody> response) {
-    String json = null;
-
-    if (response.body() != null) {
-      try {
-        json = response.body().string();
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    }
-
-    if (response.errorBody() != null) {
-      try {
-        json = response.errorBody().string();
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    }
-
-    return json;
-  }
-
-  private Map<String, String> getUrlParameter() {
-    Map<String, String> params = new LinkedHashMap<>();
-    params.put("lang", mLanguage);
-    return params;
-  }
-
-  private Map<String, String> addContentParameter(Map<String, String> params, EnumSet<ContentFlags> contentFlags) {
-    if (contentFlags == null) {
-      return params;
-    }
-
-    if (contentFlags.contains(ContentFlags.PREVIEW)) {
-      params.put("preview", "true");
-    }
-
-    if (contentFlags.contains(ContentFlags.PRIVATE)) {
-      params.put("public-only", "true");
-    }
-
-    return params;
-  }
-
-  private Map<String, String> addContentSortingParameter(Map<String, String> params,
-                                                         EnumSet<ContentSortFlags> contentSortFlags) {
-    if (contentSortFlags == null) {
-      return params;
-    }
-
-    ArrayList<String> sortParams = new ArrayList<String>();
-
-    if (contentSortFlags.contains(ContentSortFlags.NAME)) {
-      sortParams.add("name");
-    }
-
-    if (contentSortFlags.contains(ContentSortFlags.NAME_DESC)) {
-      sortParams.add("-name");
-    }
-
-    params.put("sort", TextUtils.join(",", sortParams));
-    return params;
-  }
-
-  private Map<String, String> addSpotParameter(Map<String, String> params,
-                                               EnumSet<SpotFlags> spotFlags) {
-    if (spotFlags == null) {
-      return params;
-    }
-
-    if (spotFlags.contains(SpotFlags.INCLUDE_CONTENT)) {
-      params.put("include_content", "true");
-    }
-
-    if (spotFlags.contains(SpotFlags.INCLUDE_MARKERS)) {
-      params.put("include_markers", "true");
-    }
-
-    return params;
-  }
-
-  private Map<String, String> addSpotSortingParameter(Map<String, String> params,
-                                                      EnumSet<SpotSortFlags> spotSortFlags) {
-    if (spotSortFlags == null) {
-      return params;
-    }
-
-    ArrayList<String> sortParams = new ArrayList<String>();
-
-    if (spotSortFlags.contains(SpotSortFlags.NAME)) {
-      sortParams.add("name");
-    }
-
-    if (spotSortFlags.contains(SpotSortFlags.NAME_DESC)) {
-      sortParams.add("-name");
-    }
-
-    if (spotSortFlags.contains(SpotSortFlags.DISTANCE)) {
-      sortParams.add("distance");
-    }
-
-    if (spotSortFlags.contains(SpotSortFlags.DISTANCE_DESC)) {
-      sortParams.add("-distance");
-    }
-
-    params.put("sort", TextUtils.join(",", sortParams));
-    return params;
-  }
-
-  private Map<String, String> addPagingToUrl( Map<String, String> params, int pageSize, String cursor) {
-    if (pageSize != 0) {
-      params.put("page[size]", Integer.toString(pageSize));
-    }
-
-    if (cursor != null) {
-      params.put("page[cursor]", cursor);
-    }
-
-    return params;
+    Map<String, String> params = UrlUtil.getUrlParameter(language);
+    Call<ResponseBody> call = enduserApiInterface.getStyle(systemId, params);
+    callHandler.enqueCall(call, callback);
   }
 
   //getters & setters
-
   public String getSystemLanguage() {
-    return mSystemLanguage;
+    return systemLanguage;
   }
 
   public String getLanguage() {
-    return mLanguage;
+    return language;
   }
 
   public EnduserApiInterface getEnduserApiInterface() {
-    return mEnduserApiInterface;
+    return enduserApiInterface;
   }
 
   public void setLanguage(String language) {
-    mLanguage = language;
+    this.language = language;
   }
 
-  public void setEnduserApiInterface(EnduserApiInterface enduserApiInterface) {
-    mEnduserApiInterface = enduserApiInterface;
-  }
-
-  public void setMorpheus(Morpheus morpheus) {
-    mMorpheus = morpheus;
+  public CallHandler getCallHandler() {
+    return callHandler;
   }
 }
 

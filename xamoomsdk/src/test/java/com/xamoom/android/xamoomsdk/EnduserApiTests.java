@@ -54,7 +54,7 @@ public class EnduserApiTests {
     mEnduserApi = new EnduserApi(retrofit);
 
     mMockMorpheus = mock(Morpheus.class);
-    mEnduserApi.setMorpheus(mMockMorpheus);
+    mEnduserApi.getCallHandler().setMorpheus(mMockMorpheus);
   }
 
   @After
@@ -162,11 +162,11 @@ public class EnduserApiTests {
 
   @Test
   public void testGetContentWithIDParam() throws Exception {
-    EnduserApi enduserApi = new EnduserApi("123456");
-    EnduserApiInterface enduserApiInterface = mock(EnduserApiInterface.class);
-    enduserApi.setEnduserApiInterface(enduserApiInterface);
+    mMockWebServer.enqueue(new MockResponse().setBody(""));
+    JsonApiObject jsonApiObject = new JsonApiObject();
+    when(mMockMorpheus.parse(anyString())).thenReturn(jsonApiObject);
 
-    enduserApi.getContent("123456", EnumSet.of(ContentFlags.PREVIEW, ContentFlags.PRIVATE),
+    mEnduserApi.getContent("123456", EnumSet.of(ContentFlags.PREVIEW, ContentFlags.PRIVATE),
         new APICallback<Content, List<at.rags.morpheus.Error>>() {
           @Override
           public void finished(Content result) {
@@ -177,13 +177,8 @@ public class EnduserApiTests {
           }
         });
 
-    HashMap<String, String> checkParams = new HashMap<>();
-    checkParams.put("lang", "en");
-    checkParams.put("preview", "true");
-    checkParams.put("public-only", "true");
-
-    verify(enduserApiInterface).getContent(eq("123456"), mMapArgumentCaptor.capture());
-    assertTrue(mMapArgumentCaptor.getValue().equals(checkParams));
+    RecordedRequest request1 = mMockWebServer.takeRequest();
+    assertEquals("/_api/v2/consumer/contents/123456?lang=en&preview=true&public-only=true", request1.getPath());
   }
 
   @Test
