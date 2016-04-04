@@ -38,7 +38,7 @@ import retrofit2.Retrofit;
  */
 public class EnduserApi {
   private static final String TAG = EnduserApi.class.getSimpleName();
-  private static final String API_URL = "https://xamoom-cloud.appspot.com/_api/v2/consumer/";
+  private static final String API_URL = "https://xamoom-cloud.appspot.com/";
 
   private EnduserApiInterface enduserApiInterface;
   private CallHandler callHandler;
@@ -52,7 +52,7 @@ public class EnduserApi {
       @Override
       public okhttp3.Response intercept(Chain chain) throws IOException {
         Request request = chain.request().newBuilder()
-            .addHeader("ContentAttributesMessage-Type", "application/vnd.api+json")
+            .addHeader("Content-Type", "application/vnd.api+json")
             .addHeader("APIKEY", apikey)
             .build();
         return chain.proceed(request);

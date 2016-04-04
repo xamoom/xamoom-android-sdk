@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
       @Override
       public Response intercept(Chain chain) throws IOException {
         Request request = chain.request().newBuilder()
-            .addHeader("ContentAttributesMessage-Type", "application/vnd.api+json")
+            .addHeader("Content-Type", "application/vnd.api+json")
             .addHeader("APIKEY", getResources().getString(R.string.APIKEY))
             .addHeader("X-DEVKEY", getResources().getString(R.string.XDEVKEY))
             .build();

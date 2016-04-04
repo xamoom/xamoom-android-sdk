@@ -70,4 +70,20 @@ public class Content extends Resource {
   public void setPublicImageUrl(String publicImageUrl) {
     this.publicImageUrl = publicImageUrl;
   }
+
+  public System getSystem() {
+    return system;
+  }
+
+  public void setSystem(System system) {
+    this.system = system;
+  }
+
+  public List<ContentBlock> getContentBlocks() {
+    return contentBlocks;
+  }
+
+  public void setContentBlocks(List<ContentBlock> contentBlocks) {
+    this.contentBlocks = contentBlocks;
+  }
 }
