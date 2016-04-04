@@ -11,7 +11,8 @@ public class System extends Resource {
   @SerializeName("display-name")
   private String name;
   private String url;
-  private Object style;
+  @Relationship("style")
+  private Style style;
   @Relationship("setting")
   private SystemSetting systemSetting;
   @Relationship("menu")
@@ -37,7 +38,7 @@ public class System extends Resource {
     return style;
   }
 
-  public void setStyle(Object style) {
+  public void setStyle(Style style) {
     this.style = style;
   }
 
