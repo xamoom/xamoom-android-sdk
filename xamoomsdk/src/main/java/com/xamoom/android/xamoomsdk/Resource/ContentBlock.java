@@ -2,24 +2,38 @@ package com.xamoom.android.xamoomsdk.Resource;
 
 import java.util.List;
 
+import at.rags.morpheus.Annotations.SerializeName;
 import at.rags.morpheus.Resource;
 
 public class ContentBlock extends Resource {
+  @SerializeName("block-type")
   private int blockType;
+  @SerializeName("is-public")
   private boolean publicStatus;
   private String title;
   private String text;
   private String artists;
+  @SerializeName("file-id")
   private String fileId;
+  @SerializeName("soundcloud-url")
   private String soundcloudUrl;
+  @SerializeName("link-type")
   private int linkType;
+  @SerializeName("link-url")
   private String linkUrl;
+  @SerializeName("content-id")
   private String contentId;
+  @SerializeName("download-type")
   private int downloadType;
+  @SerializeName("spot-map-tags")
   private List<String> spotMapTags;
+  @SerializeName("scale-x")
   private float scaleX;
+  @SerializeName("video-url")
   private String videoUrl;
+  @SerializeName("should-show-content-on-spotmap")
   private boolean showContentOnSpotmap;
+  @SerializeName("alt-text")
   private String altText;
 
   public int getBlockType() {

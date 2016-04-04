@@ -12,7 +12,8 @@ public class System extends Resource {
   private String name;
   private String url;
   private Object style;
-  private Object settings;
+  @Relationship("setting")
+  private SystemSetting systemSetting;
   @Relationship("menu")
   private Menu menu;
 
@@ -40,12 +41,12 @@ public class System extends Resource {
     this.style = style;
   }
 
-  public Object getSettings() {
-    return settings;
+  public Object getSystemSetting() {
+    return systemSetting;
   }
 
-  public void setSettings(Object settings) {
-    this.settings = settings;
+  public void setSystemSetting(SystemSetting systemSetting) {
+    this.systemSetting = systemSetting;
   }
 
   public Menu getMenu() {
