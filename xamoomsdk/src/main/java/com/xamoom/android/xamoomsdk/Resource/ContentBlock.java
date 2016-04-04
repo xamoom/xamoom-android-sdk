@@ -5,6 +5,9 @@ import java.util.List;
 import at.rags.morpheus.Annotations.SerializeName;
 import at.rags.morpheus.Resource;
 
+/**
+ *  xamoom ContentBlock model.
+ */
 public class ContentBlock extends Resource {
   @SerializeName("block-type")
   private int blockType;

@@ -80,6 +80,7 @@ public class EnduserApi {
     Deserializer.registerResourceClass("systems", System.class);
     Deserializer.registerResourceClass("menus", Menu.class);
     Deserializer.registerResourceClass("settings", SystemSetting.class);
+    Deserializer.registerResourceClass("styles", Style.class);
   }
 
   private void initVars() {
@@ -326,7 +327,6 @@ public class EnduserApi {
     });
   }
 
-
   /**
    * Get the systemSettings to your system.
    *
@@ -335,7 +335,7 @@ public class EnduserApi {
    */
   public void getSystemSetting(String systemId, final APICallback<SystemSetting, List<Error>> callback) {
     Map<String, String> params = getUrlParameter();
-    Call<ResponseBody> call = mEnduserApiInterface.getSettings(systemId, params);
+    Call<ResponseBody> call = mEnduserApiInterface.getSetting(systemId, params);
     call.enqueue(new Callback<ResponseBody>() {
       @Override
       public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -362,6 +362,40 @@ public class EnduserApi {
     });
   }
 
+  /**
+   * Get the style to your system.
+   *
+   * @param systemId Systems systemId.
+   * @param callback {@link APIListCallback}.
+   */
+  public void getStyle(String systemId, final APICallback<Style, List<Error>> callback) {
+    Map<String, String> params = getUrlParameter();
+    Call<ResponseBody> call = mEnduserApiInterface.getStyle(systemId, params);
+    call.enqueue(new Callback<ResponseBody>() {
+      @Override
+      public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+        String json = getJsonFromResponse(response);
+
+        try {
+          JsonApiObject jsonApiObject = mMorpheus.parse(json);
+
+          if (jsonApiObject.getResource() != null) {
+            Style style = (Style) jsonApiObject.getResource();
+            callback.finished(style);
+          } else if (jsonApiObject.getErrors().size() > 0) {
+            callback.error(jsonApiObject.getErrors());
+          }
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
+
+      @Override
+      public void onFailure(Call<ResponseBody> call, Throwable t) {
+        callback.error(null);
+      }
+    });
+  }
 
   /**
    * Makes the call and uses Morpheus to parse content.

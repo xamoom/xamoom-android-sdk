@@ -558,4 +558,40 @@ public class EnduserApiTests {
     RecordedRequest request1 = mMockWebServer.takeRequest();
     assertEquals("/_api/v2/consumer/settings/123456?lang=en", request1.getPath());
   }
+
+  @Test
+  public void testGetStyleSuccess() throws Exception {
+    mMockWebServer.enqueue(new MockResponse().setBody(""));
+
+    final Style[] checkStyle = {null};
+
+    final Style style = new Style();
+    style.setId("123456");
+
+    JsonApiObject jsonApiObject = new JsonApiObject();
+    jsonApiObject.setResource(style);
+
+    when(mMockMorpheus.parse(anyString())).thenReturn(jsonApiObject);
+
+    final Semaphore semaphore = new Semaphore(0);
+
+    mEnduserApi.getStyle("123456", new APICallback<Style, List<Error>>() {
+      @Override
+      public void finished(Style result) {
+        checkStyle[0] = result;
+        semaphore.release();
+      }
+
+      @Override
+      public void error(List<Error> error) {
+
+      }
+    });
+
+    semaphore.acquire();
+
+    assertTrue(checkStyle[0].getId().equals("123456"));
+    RecordedRequest request1 = mMockWebServer.takeRequest();
+    assertEquals("/_api/v2/consumer/styles/123456?lang=en", request1.getPath());
+  }
 }

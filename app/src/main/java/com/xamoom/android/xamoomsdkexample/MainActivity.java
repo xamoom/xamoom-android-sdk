@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     getSystem();
     getMenu();
     getSystemSetting();
+    getStyle();
   }
 
   @Override
@@ -239,6 +240,20 @@ public class MainActivity extends AppCompatActivity {
       @Override
       public void finished(SystemSetting result) {
         Log.v(TAG, "getSystemSetting: " + result);
+      }
+
+      @Override
+      public void error(List<Error> error) {
+
+      }
+    });
+  }
+
+  public void getStyle() {
+    mEnduserApi.getStyle("5755996320301056", new APICallback<Style, List<Error>>() {
+      @Override
+      public void finished(Style result) {
+        Log.v(TAG, "getStyle: " + result);
       }
 
       @Override
