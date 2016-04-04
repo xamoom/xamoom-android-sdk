@@ -79,6 +79,7 @@ public class EnduserApi {
     Deserializer.registerResourceClass("spots", Spot.class);
     Deserializer.registerResourceClass("systems", System.class);
     Deserializer.registerResourceClass("menus", Menu.class);
+    Deserializer.registerResourceClass("settings", SystemSetting.class);
   }
 
   private void initVars() {
@@ -324,6 +325,43 @@ public class EnduserApi {
       }
     });
   }
+
+
+  /**
+   * Get the systemSettings to your system.
+   *
+   * @param systemId Systems systemId.
+   * @param callback {@link APIListCallback}.
+   */
+  public void getSystemSetting(String systemId, final APICallback<SystemSetting, List<Error>> callback) {
+    Map<String, String> params = getUrlParameter();
+    Call<ResponseBody> call = mEnduserApiInterface.getSettings(systemId, params);
+    call.enqueue(new Callback<ResponseBody>() {
+      @Override
+      public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+        String json = getJsonFromResponse(response);
+
+        try {
+          JsonApiObject jsonApiObject = mMorpheus.parse(json);
+
+          if (jsonApiObject.getResource() != null) {
+            SystemSetting systemSetting = (SystemSetting) jsonApiObject.getResource();
+            callback.finished(systemSetting);
+          } else if (jsonApiObject.getErrors().size() > 0) {
+            callback.error(jsonApiObject.getErrors());
+          }
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
+
+      @Override
+      public void onFailure(Call<ResponseBody> call, Throwable t) {
+        callback.error(null);
+      }
+    });
+  }
+
 
   /**
    * Makes the call and uses Morpheus to parse content.

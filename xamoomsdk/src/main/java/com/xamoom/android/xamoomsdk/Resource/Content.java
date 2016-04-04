@@ -18,7 +18,8 @@ public class Content extends Resource {
   private List<String> tags;
   @SerializeName("cover-image-url")
   private String publicImageUrl;
-  //private List<ContentBlock> contentBlocks;
+  @Relationship("blocks")
+  private List<ContentBlock> contentBlocks;
   @Relationship("system")
   private System system;
 

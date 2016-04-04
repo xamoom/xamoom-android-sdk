@@ -522,4 +522,40 @@ public class EnduserApiTests {
     RecordedRequest request1 = mMockWebServer.takeRequest();
     assertEquals("/_api/v2/consumer/menus/123456?lang=en", request1.getPath());
   }
+
+  @Test
+  public void testGetSystemSettingsSuccess() throws Exception {
+    mMockWebServer.enqueue(new MockResponse().setBody(""));
+
+    final SystemSetting[] checkSystemSetting = {null};
+
+    final SystemSetting systemSetting = new SystemSetting();
+    systemSetting.setId("123456");
+
+    JsonApiObject jsonApiObject = new JsonApiObject();
+    jsonApiObject.setResource(systemSetting);
+
+    when(mMockMorpheus.parse(anyString())).thenReturn(jsonApiObject);
+
+    final Semaphore semaphore = new Semaphore(0);
+
+    mEnduserApi.getSystemSetting("123456", new APICallback<SystemSetting, List<Error>>() {
+      @Override
+      public void finished(SystemSetting result) {
+        checkSystemSetting[0] = result;
+        semaphore.release();
+      }
+
+      @Override
+      public void error(List<Error> error) {
+        semaphore.release();
+      }
+    });
+
+    semaphore.acquire();
+
+    assertTrue(checkSystemSetting[0].getId().equals("123456"));
+    RecordedRequest request1 = mMockWebServer.takeRequest();
+    assertEquals("/_api/v2/consumer/settings/123456?lang=en", request1.getPath());
+  }
 }

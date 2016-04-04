@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     getSpotsWithTags();
     getSystem();
     getMenu();
+    getSystemSetting();
   }
 
   @Override
@@ -224,6 +225,20 @@ public class MainActivity extends AppCompatActivity {
       @Override
       public void finished(com.xamoom.android.xamoomsdk.Resource.Menu result) {
         Log.v(TAG, "getMenu: " + result.getItems());
+      }
+
+      @Override
+      public void error(List<Error> error) {
+
+      }
+    });
+  }
+
+  public void getSystemSetting() {
+    mEnduserApi.getSystemSetting("5755996320301056", new APICallback<SystemSetting, List<Error>>() {
+      @Override
+      public void finished(SystemSetting result) {
+        Log.v(TAG, "getSystemSetting: " + result);
       }
 
       @Override
