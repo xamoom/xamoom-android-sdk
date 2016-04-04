@@ -3,7 +3,8 @@ package com.xamoom.android.xamoomsdk.Utils;
 import java.util.List;
 
 /**
- * Created by raphaelseher on 31/03/16.
+ * ListUtil to join lists of string.
+ * (Because TextUtil gets mocked in tests)
  */
 public class ListUtil {
   /**
@@ -14,6 +15,10 @@ public class ListUtil {
    * @return Joined list.
    */
   public static String joinStringList(List<String> list, String seperator) {
+    if (list == null || seperator == null) {
+      return "";
+    }
+
     StringBuilder sb = new StringBuilder();
     int counter = 0;
     for (String item : list) {
