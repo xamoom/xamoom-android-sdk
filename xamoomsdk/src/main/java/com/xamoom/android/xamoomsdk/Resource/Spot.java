@@ -2,6 +2,7 @@ package com.xamoom.android.xamoomsdk.Resource;
 
 import java.util.List;
 
+import at.rags.morpheus.Annotations.Relationship;
 import at.rags.morpheus.Annotations.SerializeName;
 import at.rags.morpheus.Resource;
 
@@ -18,6 +19,10 @@ public class Spot extends Resource {
   @SerializeName("position-latitude")
   private double lon;
   private List<String> tags;
+  @Relationship("markers")
+  private List<Marker> markers;
+  @Relationship("system")
+  private System system;
 
   public String getName() {
     return name;
@@ -65,5 +70,21 @@ public class Spot extends Resource {
 
   public void setTags(List<String> tags) {
     this.tags = tags;
+  }
+
+  public List<Marker> getMarkers() {
+    return markers;
+  }
+
+  public void setMarkers(List<Marker> markers) {
+    this.markers = markers;
+  }
+
+  public System getSystem() {
+    return system;
+  }
+
+  public void setSystem(System system) {
+    this.system = system;
   }
 }
