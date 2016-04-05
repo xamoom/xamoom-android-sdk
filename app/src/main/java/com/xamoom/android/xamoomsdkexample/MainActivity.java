@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.APIListCallback;
 import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
@@ -28,7 +29,7 @@ import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements XamoomContentFragment.OnXamoomContentFragmentInteractionListener {
   private static final String TAG = MainActivity.class.getSimpleName();
   private static final String API_URL = "https://xamoom-cloud-dev.appspot.com/";
 
@@ -111,6 +112,10 @@ public class MainActivity extends AppCompatActivity {
       @Override
       public void finished(Content result) {
         Log.v(TAG, "getContent: " + result);
+
+        XamoomContentFragment xamoomFragment = XamoomContentFragment.newInstance("#000000", "API_KEY"); //create new instance
+        xamoomFragment.setContent(result);
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, xamoomFragment).commit(); //replace with xamoomFragment
       }
 
       @Override
@@ -119,7 +124,6 @@ public class MainActivity extends AppCompatActivity {
       }
     });
   }
-
 
   public void getContentOption() {
     mEnduserApi.getContent("e5be72be162d44b189893a406aff5227", EnumSet.of(ContentFlags.PREVIEW, ContentFlags.PRIVATE),
@@ -261,5 +265,16 @@ public class MainActivity extends AppCompatActivity {
 
       }
     });
+  }
+
+  @Override
+  public void clickedContentBlock(Content content) {
+    Log.v(TAG, "Click Content: " + content);
+  }
+
+  @Override
+  public void clickedSpotMapContentLink(String contentId) {
+    Log.v(TAG, "Click Spot: " + contentId);
+
   }
 }

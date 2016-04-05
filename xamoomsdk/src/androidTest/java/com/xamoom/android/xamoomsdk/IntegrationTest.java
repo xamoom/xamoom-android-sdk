@@ -73,6 +73,7 @@ public class IntegrationTest extends InstrumentationTestCase {
       @Override
       public void finished(Content result) {
         assertNotNull(result);
+        assertEquals(result.getId(), "e9c917086aca465eb454e38c0146428b");
         assertEquals(result.getCategory(), 0);
         assertEquals(result.getDescription(), "Test");
         assertEquals(result.getLanguage(), "de");
@@ -88,7 +89,7 @@ public class IntegrationTest extends InstrumentationTestCase {
         assertEquals(result.getContentBlocks().get(0).getBlockType(), 0);
         assertEquals(result.getContentBlocks().get(0).getTitle(), "Test");
         assertEquals(result.getContentBlocks().get(0).getText(), "<p>Test</p>");
-        //assertEquals(result.getContentBlocks().get(0).getId(), "e9c917086aca465eb454e38c0146428b");
+
         signal.countDown();
       }
 

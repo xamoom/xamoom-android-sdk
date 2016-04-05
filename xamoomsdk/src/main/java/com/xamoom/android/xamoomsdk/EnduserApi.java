@@ -85,6 +85,7 @@ public class EnduserApi {
     Deserializer.registerResourceClass("content", Content.class);
     Deserializer.registerResourceClass("contentblocks", ContentBlock.class);
     Deserializer.registerResourceClass("spots", Spot.class);
+    Deserializer.registerResourceClass("markers", Marker.class);
     Deserializer.registerResourceClass("systems", System.class);
     Deserializer.registerResourceClass("menus", Menu.class);
     Deserializer.registerResourceClass("settings", SystemSetting.class);
