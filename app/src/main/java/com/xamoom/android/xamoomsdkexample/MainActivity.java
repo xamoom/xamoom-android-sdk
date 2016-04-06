@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
   }
 
   public void getContent() {
-    mEnduserApi.getContent("e9c917086aca465eb454e38c0146428b", new APICallback<Content, List<at.rags.morpheus.Error>>() {
+    mEnduserApi.getContent("e5be72be162d44b189893a406aff5227", new APICallback<Content, List<at.rags.morpheus.Error>>() {
       @Override
       public void finished(Content result) {
         Log.v(TAG, "getContent: " + result);

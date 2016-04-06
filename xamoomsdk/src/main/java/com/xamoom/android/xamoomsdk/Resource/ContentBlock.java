@@ -31,7 +31,7 @@ public class ContentBlock extends Resource {
   @SerializeName("spot-map-tags")
   private List<String> spotMapTags;
   @SerializeName("scale-x")
-  private float scaleX;
+  private double scaleX;
   @SerializeName("video-url")
   private String videoUrl;
   @SerializeName("should-show-content-on-spotmap")
@@ -135,11 +135,11 @@ public class ContentBlock extends Resource {
     this.spotMapTags = spotMapTags;
   }
 
-  public float getScaleX() {
+  public double getScaleX() {
     return scaleX;
   }
 
-  public void setScaleX(float scaleX) {
+  public void setScaleX(double scaleX) {
     this.scaleX = scaleX;
   }
 

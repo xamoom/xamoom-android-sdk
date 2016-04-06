@@ -2,9 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:layout_marginBottom="@dimen/contentblock_to_contentblock_margin"
-              android:background="@color/amazon_linkblock_background_color">
+              android:layout_height="wrap_content"
+              android:paddingStart="@dimen/standard_contentblock_padding"
+              android:paddingEnd="@dimen/standard_contentblock_padding"
+              android:layout_marginBottom="@dimen/contentblock_to_contentblock_margin">
 
     <TextView
         android:id="@+id/titleTextView"

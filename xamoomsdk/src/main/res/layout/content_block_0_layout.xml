@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rootLayout"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginBottom="@dimen/contentblock_to_contentblock_margin"
-    android:background="@android:color/holo_blue_bright">
+              android:id="@+id/rootLayout"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginStart="@dimen/standard_contentblock_padding"
+              android:layout_marginEnd="@dimen/standard_contentblock_padding"
+              android:layout_marginBottom="@dimen/contentblock_to_contentblock_margin">
 
     <TextView
         android:id="@+id/titleTextView"

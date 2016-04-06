@@ -21,7 +21,9 @@ import java.util.regex.Pattern;
  */
 public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder {
 
-  final static String reg = "(?:youtube(?:-nocookie)?\\.com\\/(?:[^\\/\\n\\s]+\\/\\S+\\/|(?:v|e(?:mbed)?)\\/|\\S*?[?&]v=)|youtu\\.be\\/)([a-zA-Z0-9_-]{11})";
+  final static String youtubeRegex = "(?:youtube(?:-nocookie)?\\.com\\/(?:[^\\/\\n\\s]+\\/\\S+\\/|(?:v|e(?:mbed)?)\\/|\\S*?[?&]v=)|youtu\\.be\\/)([a-zA-Z0-9_-]{11})";
+  final static String vimeoRegex = "^.*(?:vimeo.com)\\/(?:channels\\/|groups\\/[^\\/]*\\/videos\\/|album\\/\\d+\\/video\\/|video\\/|)(\\d+)(?:$|\\/|\\?)";
+
   private Fragment mFragment;
   private TextView mTitleTextView;
   private WebView mVideoWebView;
@@ -47,7 +49,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder {
       mTitleTextView.setVisibility(View.GONE);
     }
 
-    if(getVideoId(contentBlock.getVideoUrl()) != null) {
+    if(getYoutubeVideoId(contentBlock.getVideoUrl()) != null) {
       setupYoutube(contentBlock);
     } else {
       setupHTMLPlayer(contentBlock);
@@ -55,20 +57,26 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder {
   }
 
   public void setupHTMLPlayer(final ContentBlock contentBlock) {
-    mVideoWebView.loadUrl(contentBlock.getVideoUrl());
-
-    mWebViewOverlay.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(contentBlock.getVideoUrl()));
-        intent.setDataAndType(Uri.parse(contentBlock.getVideoUrl()), "video/mp4");
-        mFragment.getActivity().startActivity(intent);
-      }
-    });
+    if (contentBlock.getVideoUrl().contains("vimeo.com/")) {
+      String vimeoEmbed = "<iframe src=\"https://player.vimeo.com/video/"
+          + getVimeoVideoId(contentBlock.getVideoUrl()) + "?badge=0\" width=\"500\" " +
+          "height=\"281\" frameborder=\"0\" webkitallowfullscreen mozallowfullscreen " +
+          "allowfullscreen></iframe>";
+      mVideoWebView.loadUrl(vimeoEmbed);
+    } else {
+      mVideoWebView.loadUrl(contentBlock.getVideoUrl());
+      mWebViewOverlay.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(contentBlock.getVideoUrl()));
+          intent.setDataAndType(Uri.parse(contentBlock.getVideoUrl()), "video/mp4");
+          mFragment.getActivity().startActivity(intent);
+        }
+      });
+    }
   }
-
   public void setupYoutube(ContentBlock contentBlock) {
-    mYoutubeVideoCode = getVideoId(contentBlock.getVideoUrl());
+    mYoutubeVideoCode = getYoutubeVideoId(contentBlock.getVideoUrl());
 
     String html = "<iframe style=\"display:block; margin:auto;\" src=\"https://www.youtube.com/embed/"+mYoutubeVideoCode+"\" frameborder=\"0\" allowfullscreen></iframe>";
     mVideoWebView.loadData(html, "text/html", "utf-8");
@@ -83,15 +91,32 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder {
 
   }
 
-  public static String getVideoId(String videoUrl) {
-    if (videoUrl == null || videoUrl.trim().length() <= 0)
+  public String getYoutubeVideoId(String videoUrl) {
+    if (videoUrl == null || videoUrl.trim().length() <= 0) {
       return null;
+    }
 
-    Pattern pattern = Pattern.compile(reg, Pattern.CASE_INSENSITIVE);
+    Pattern pattern = Pattern.compile(youtubeRegex, Pattern.CASE_INSENSITIVE);
     Matcher matcher = pattern.matcher(videoUrl);
 
-    if (matcher.find())
+    if (matcher.find()) {
       return matcher.group(1);
+    }
+
+    return null;
+  }
+
+  public String getVimeoVideoId(String videoUrl) {
+    if (videoUrl == null || videoUrl.trim().length() <= 0) {
+      return null;
+    }
+
+    Pattern pattern = Pattern.compile(vimeoRegex, Pattern.CASE_INSENSITIVE);
+    Matcher matcher = pattern.matcher(videoUrl);
+
+    if (matcher.find()) {
+      return matcher.group(1);
+    }
 
     return null;
   }

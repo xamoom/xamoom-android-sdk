@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="fragment_margin">16dp</dimen>
+    <dimen name="standard_contentblock_padding">16dp</dimen>
+    <dimen name="no_contentblock_padding">0dp</dimen>
     <dimen name="contentblock_to_contentblock_margin">8dp</dimen>
     <dimen name="contentblock_children_margin">4dp</dimen>
     <dimen name="contentblock_title_size">22sp</dimen>

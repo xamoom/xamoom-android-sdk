@@ -78,7 +78,7 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
         setImageViewContentDescription(contentBlock);
 
         if(contentBlock.getFileId() != null) {
-            final float scaleX;
+            final double scaleX;
             //checking scale and divide it by 100.0f
             if(contentBlock.getScaleX() != 0) {
                 scaleX = contentBlock.getScaleX()/100.0f;
@@ -159,13 +159,13 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    public void resizeImageViewWithScaling(ImageView imageView, Fragment fragment, float scaleX) {
+    public void resizeImageViewWithScaling(ImageView imageView, Fragment fragment, double scaleX) {
         int deviceWidth = mFragment.getResources().getDisplayMetrics().widthPixels;
-        float margin = mFragment.getResources().getDimension(R.dimen.fragment_margin);
+        double margin = 0;// TODO mFragment.getView().getLayoutParams().width;
 
         //calculate the diff between imageSize and scaledImageSize
-        float deviceWidthWithMargins =  (deviceWidth - (margin * 2));
-        float diff = deviceWidthWithMargins - (deviceWidthWithMargins*scaleX);
+        double deviceWidthWithMargins =  (deviceWidth - (margin * 2));
+        double diff = deviceWidthWithMargins - (deviceWidthWithMargins*scaleX);
         //set left and right margin to the half of the difference
         //so the imageView is doing all the resizing
         mImageView.setPadding((int)(diff/2),0,(int)(diff/2),0);
