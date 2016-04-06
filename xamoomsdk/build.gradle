@@ -39,6 +39,6 @@ dependencies {
 	compile 'com.android.support:recyclerview-v7:23.2.1'
 	compile 'com.github.bumptech.glide:glide:3.6.0'
 	compile 'com.squareup.picasso:picasso:2.5.2'
-	compile files('lib/androidsvg-1.2.1.jar')
-	compile files('lib/YouTubeAndroidPlayerApi.jar')
+	compile files('libs/androidsvg-1.2.1.jar')
+	compile files('libs/YouTubeAndroidPlayerApi.jar')
 }

@@ -25,6 +25,12 @@
             android:layout_width="match_parent"
             android:layout_height="300dp"/>
 
+        <com.google.android.youtube.player.YouTubeThumbnailView
+            android:id="@+id/youtube_thumbnail_view"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"/>
+
         <View
             android:id="@+id/webViewOverlay"
             android:layout_width="match_parent"

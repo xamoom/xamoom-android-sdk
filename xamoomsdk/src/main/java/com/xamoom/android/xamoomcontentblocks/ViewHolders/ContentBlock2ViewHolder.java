@@ -4,12 +4,16 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.TextView;
 
+import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubeIntents;
+import com.google.android.youtube.player.YouTubeThumbnailLoader;
+import com.google.android.youtube.player.YouTubeThumbnailView;
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 
@@ -29,6 +33,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder {
   private WebView mVideoWebView;
   private View mWebViewOverlay;
   private String mYoutubeVideoCode;
+  private YouTubeThumbnailView mYouTubeThumbnailView;
 
   public ContentBlock2ViewHolder(View itemView, Fragment fragment) {
     super(itemView);
@@ -36,13 +41,16 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder {
     mTitleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
     mVideoWebView = (WebView) itemView.findViewById(R.id.videoWebView);
     mWebViewOverlay = (View) itemView.findViewById(R.id.webViewOverlay);
-
+    mYouTubeThumbnailView = (YouTubeThumbnailView) itemView.findViewById(R.id.youtube_thumbnail_view);
     WebSettings webSettings = mVideoWebView.getSettings();
     webSettings.setJavaScriptEnabled(true);
   }
 
   public void setupContentBlock(ContentBlock contentBlock) {
     mTitleTextView.setVisibility(View.VISIBLE);
+    mYouTubeThumbnailView.setVisibility(View.VISIBLE);
+    mWebViewOverlay.setVisibility(View.VISIBLE);
+
     if(contentBlock.getTitle() != null)
       mTitleTextView.setText(contentBlock.getTitle());
     else {
@@ -57,6 +65,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder {
   }
 
   public void setupHTMLPlayer(final ContentBlock contentBlock) {
+    mYouTubeThumbnailView.setVisibility(View.GONE);
     if (contentBlock.getVideoUrl().contains("vimeo.com/")) {
       String vimeoEmbed = "<iframe src=\"https://player.vimeo.com/video/"
           + getVimeoVideoId(contentBlock.getVideoUrl()) + "?badge=0\" width=\"500\" " +
@@ -76,12 +85,34 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder {
     }
   }
   public void setupYoutube(ContentBlock contentBlock) {
+    mVideoWebView.setVisibility(View.GONE);
     mYoutubeVideoCode = getYoutubeVideoId(contentBlock.getVideoUrl());
+    //String html = "<iframe style=\"display:block; margin:auto;\" src=\"https://www.youtube.com/embed/"+mYoutubeVideoCode+"\" frameborder=\"0\" allowfullscreen></iframe>";
+    //mVideoWebView.loadData(html, "text/html", "utf-8");
 
-    String html = "<iframe style=\"display:block; margin:auto;\" src=\"https://www.youtube.com/embed/"+mYoutubeVideoCode+"\" frameborder=\"0\" allowfullscreen></iframe>";
-    mVideoWebView.loadData(html, "text/html", "utf-8");
+    mYouTubeThumbnailView.initialize("AIzaSyBNZUh3-dj4YYY9-csOtQeHG_MpoE8x69Q", new YouTubeThumbnailView.OnInitializedListener() {
+      @Override
+      public void onInitializationSuccess(YouTubeThumbnailView youTubeThumbnailView, YouTubeThumbnailLoader youTubeThumbnailLoader) {
+        youTubeThumbnailLoader.setVideo(mYoutubeVideoCode);
+        youTubeThumbnailLoader.setOnThumbnailLoadedListener(new YouTubeThumbnailLoader.OnThumbnailLoadedListener() {
+          @Override
+          public void onThumbnailLoaded(YouTubeThumbnailView youTubeThumbnailView, String s) {
+            Log.v("Test", "Success " + youTubeThumbnailView);
+          }
 
-    mWebViewOverlay.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onThumbnailError(YouTubeThumbnailView youTubeThumbnailView, YouTubeThumbnailLoader.ErrorReason errorReason) {
+            mYouTubeThumbnailView.setBackgroundColor(R.color.black);
+          }
+        });
+      }
+
+      @Override
+      public void onInitializationFailure(YouTubeThumbnailView youTubeThumbnailView, YouTubeInitializationResult youTubeInitializationResult) {
+      }
+    });
+
+    mYouTubeThumbnailView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
         Intent intent = YouTubeIntents.createPlayVideoIntent(mFragment.getActivity(), mYoutubeVideoCode);
