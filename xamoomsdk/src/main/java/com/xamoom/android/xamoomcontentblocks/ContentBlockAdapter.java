@@ -33,23 +33,25 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   private Fragment mFragment;
   private List<ContentBlock> mContentBlocks;
   private String mLinkColor;
+  private String mYoutubeApiKey;
   private EnduserApi mEnduserApi;
   private boolean showContentLinks;
 
   /**
    * Constructor for the Adapter.
-   *
-   * @param fragment Fragment with the recyclerView in it.
+   *  @param fragment Fragment with the recyclerView in it.
    * @param contentBlocks ContentBlocks to display.
    * @param linkColor LinkColor as hex (e.g. "00F"), will be blue if null
+   * @param youtubeApiKey Youtube api key from Google Developer Console.
    */
   public ContentBlockAdapter(Fragment fragment, List<ContentBlock> contentBlocks,
-                             String linkColor, EnduserApi enduserApi, boolean showSpotMapContentLinks) {
+                             String linkColor, EnduserApi enduserApi, boolean showSpotMapContentLinks, String youtubeApiKey) {
     mFragment = fragment;
     mContentBlocks = contentBlocks;
     mLinkColor = linkColor;
     mEnduserApi = enduserApi;
     showContentLinks = showSpotMapContentLinks;
+    mYoutubeApiKey = youtubeApiKey;
   }
 
   @Override
@@ -80,7 +82,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
       case 2:
         View view2 = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.content_block_2_layout, parent, false);
-        return new ContentBlock2ViewHolder(view2, mFragment);
+        return new ContentBlock2ViewHolder(view2, mFragment, mYoutubeApiKey);
       case 3:
         View view3 = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.content_block_3_layout, parent, false);

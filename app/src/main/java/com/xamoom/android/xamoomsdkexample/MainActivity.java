@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
           @Override
           public void finished(Content result) {
             Log.v(TAG, "getContent: " + result);
-            XamoomContentFragment xamoomFragment = XamoomContentFragment.newInstance("#000000"); //create new instance
+            XamoomContentFragment xamoomFragment = XamoomContentFragment.newInstance("#000000", "AIzaSyBNZUh3-dj4YYY9-csOtQeHG_MpoE8x69Q"); //create new instance
             xamoomFragment.setEnduserApi(mEnduserApi);
             xamoomFragment.setContent(result);
             getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, xamoomFragment).commit(); //replace with xamoomFragment

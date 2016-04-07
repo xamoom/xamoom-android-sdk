@@ -1,7 +1,11 @@
 package com.xamoom.android.xamoomcontentblocks;
 
 import android.app.Activity;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -45,11 +49,12 @@ import java.util.List;
  *
  */
 public class XamoomContentFragment extends Fragment {
-
   public static final String XAMOOM_CONTENT_ID = "xamoomContentId";
   public static final String XAMOOM_LOCATION_IDENTIFIER = "xamoomLocationIdentifier";
 
   private static final String LINK_COLOR_KEY = "LinkColorKeyParam";
+  private static final String YOUTUBE_API_KEY = "YoutubeApiKeyParam";
+
 
   private RecyclerView mRecyclerView;
   private ProgressBar mProgressbar;
@@ -64,6 +69,7 @@ public class XamoomContentFragment extends Fragment {
   private Style mStyle;
   private Menu mMenu;
   private String mLinkColor;
+  private String mYoutubeApiKey;
   private EnduserApi mEnduserApi;
 
   private boolean loadFullContent = true;
@@ -80,13 +86,17 @@ public class XamoomContentFragment extends Fragment {
    * @param linkColor LinkColor as hex (e.g. "00F"), will be blue if null
    * @return XamoomContentFragment Returns an Instance of XamoomContentFragment
    */
-  public static XamoomContentFragment newInstance(String linkColor) {
+  public static XamoomContentFragment newInstance(@Nullable String linkColor,
+                                                 @NonNull String youtubeApiKey) {
     XamoomContentFragment fragment = new XamoomContentFragment();
     Bundle args = new Bundle();
 
-    if(linkColor == null)
+    if(linkColor == null) {
       linkColor = "00F";
+    }
+
     args.putString(LINK_COLOR_KEY, linkColor);
+    args.putString(YOUTUBE_API_KEY, youtubeApiKey);
     fragment.setArguments(args);
     return fragment;
   }
@@ -100,6 +110,7 @@ public class XamoomContentFragment extends Fragment {
     super.onCreate(savedInstanceState);
     if (getArguments() != null) {
       mLinkColor = getArguments().getString(LINK_COLOR_KEY);
+      mYoutubeApiKey = getArguments().getString(YOUTUBE_API_KEY);
     }
   }
 
@@ -116,13 +127,8 @@ public class XamoomContentFragment extends Fragment {
     mRecyclerView = (RecyclerView) view.findViewById(R.id.contentBlocksRecycler);
     mProgressbar = (ProgressBar) view.findViewById(R.id.progressBar);
 
-    //check what to to
-    if(mContent != null)
+    if (mContent != null) {
       addContentTitleAndImage();
-    else if(mContentId != null) {
-      loadDataWithContentId(mContentId);
-    } else if(mLocationIdentifier != null) {
-      loadDateWithLocationIdentifier(mLocationIdentifier, mBeaconId2);
     }
 
     return view;
@@ -131,7 +137,6 @@ public class XamoomContentFragment extends Fragment {
   @Override
   public void onStart() {
     super.onStart();
-    Log.v("pingeborg","XamoomContentBlocks - onStart");
 
     //if there is no animation, the recyclerview will be setup here
     if(!isAnimated) {
@@ -150,7 +155,7 @@ public class XamoomContentFragment extends Fragment {
         new LinearLayoutManager(this.getActivity().getApplicationContext()));
 
     mContentBlockAdapter = new ContentBlockAdapter(this, mContentBlocks, mLinkColor, mEnduserApi,
-        showSpotMapContentLinks);
+        showSpotMapContentLinks, mYoutubeApiKey);
     mRecyclerView.setAdapter(mContentBlockAdapter);
   }
 
@@ -187,62 +192,6 @@ public class XamoomContentFragment extends Fragment {
   @Override
   public void onDestroyView() {
     super.onDestroyView();
-  }
-
-  /**
-   * Load the data from xamoom cloud with a contentId.
-   * It will load the full content.
-   *
-   * If you want to just load "synced" content from xamoom cloud,
-   * you have to set {@link #loadFullContent} to true.
-   *
-   * @param mContentId ContentId from xamoom cloud content
-   */
-  private void loadDataWithContentId(final String mContentId) {
-        /*
-        mProgressbar.setVisibility(View.VISIBLE);
-
-        XamoomEndUserApi.getInstance(this.getActivity(), mApiKey).getContentbyId(mContentId, false,
-                false, null, loadFullContent, false, new APICallback<ContentById>() {
-            @Override
-            public void finished(ContentById result) {
-                mContent = result.getContent();
-                addContentTitleAndImage();
-                setupRecyclerView();
-                mProgressbar.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void error(RetrofitError error) {
-            }
-        });
-        */
-  }
-
-  /**
-   * Load the data from xamoom cloud with a locationIdentifier.
-   * It wil always load the full content.
-   *
-   * @param mLocationIdentifier LocationIdentifier to load data from xamoom cloud.
-   */
-  private void loadDateWithLocationIdentifier(String mLocationIdentifier, String beaconId2) {
-        /*
-        mProgressbar.setVisibility(View.VISIBLE);
-
-        XamoomEndUserApi.getInstance(this.getActivity(), mApiKey).getContentByLocationIdentifier(mLocationIdentifier, beaconId2, false, false, null, new APICallback<ContentByLocationIdentifier>() {
-            @Override
-            public void finished(ContentByLocationIdentifier result) {
-                mContent = result.getContent();
-                addContentTitleAndImage();
-                setupRecyclerView();
-                mProgressbar.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void error(RetrofitError error) {
-            }
-        });
-        */
   }
 
   /**
@@ -290,59 +239,18 @@ public class XamoomContentFragment extends Fragment {
    * @return Manipulated contetnBlocks List
    */
   private List<ContentBlock> removeStoreLinks(List<ContentBlock> contentBlocks) {
-        /*
-        ArrayList<ContentBlock> cbToRemove = new ArrayList<>();
+    ArrayList<ContentBlock> cbToRemove = new ArrayList<>();
 
-        for (ContentBlock contentBlock : contentBlocks) {
-            if (contentBlock.getContentBlockType() == 4) {
-                ContentBlockType4 cb4 = (ContentBlockType4)contentBlock;
-                if(cb4.getLinkType() == 15 || cb4.getLinkType() == 17) {
-                    cbToRemove.add(contentBlock);
-                }
-            }
+    for (ContentBlock contentBlock : contentBlocks) {
+      if (contentBlock.getBlockType() == 4) {
+        if(contentBlock.getLinkType() == 15 || contentBlock.getLinkType() == 17) {
+          cbToRemove.add(contentBlock);
         }
+      }
+    }
 
-        //remove all found linkBlocks with other Stores
-        contentBlocks.removeAll(cbToRemove);
-        */
+    contentBlocks.removeAll(cbToRemove);
     return contentBlocks;
-  }
-
-  //setters
-  public void setContent(Content content) {
-    this.mContent = content;
-  }
-
-  public void setMenu(Menu mMenu) {
-    this.mMenu = mMenu;
-  }
-
-  public void setLoadFullContent(boolean loadFullContent) {
-    this.loadFullContent = loadFullContent;
-  }
-
-  public void setStyle(Style mStyle) {
-    this.mStyle = mStyle;
-  }
-
-  public void setIsStoreLinksActivated(boolean isStoreLinksActivated) {
-    this.displayAllStoreLinks = isStoreLinksActivated;
-  }
-
-  public void setContentId(String mContentId) {
-    this.mContentId = mContentId;
-  }
-
-  public void setLocationIdentifier(String mLocationIdentifier) {
-    this.mLocationIdentifier = mLocationIdentifier;
-  }
-
-  public void setShowSpotMapContentLinks(boolean showSpotMapContentLinks) {
-    this.showSpotMapContentLinks = showSpotMapContentLinks;
-  }
-
-  public void setBeaconId2(String beaconId2) {
-    mBeaconId2 = beaconId2;
   }
 
   @Override
@@ -381,6 +289,43 @@ public class XamoomContentFragment extends Fragment {
 
   public void spotMapContentLinkClick(String contentId) {
     mListener.clickedSpotMapContentLink(contentId);
+  }
+
+  //setters
+  public void setContent(Content content) {
+    this.mContent = content;
+  }
+
+  public void setMenu(Menu mMenu) {
+    this.mMenu = mMenu;
+  }
+
+  public void setLoadFullContent(boolean loadFullContent) {
+    this.loadFullContent = loadFullContent;
+  }
+
+  public void setStyle(Style mStyle) {
+    this.mStyle = mStyle;
+  }
+
+  public void setIsStoreLinksActivated(boolean isStoreLinksActivated) {
+    this.displayAllStoreLinks = isStoreLinksActivated;
+  }
+
+  public void setContentId(String mContentId) {
+    this.mContentId = mContentId;
+  }
+
+  public void setLocationIdentifier(String mLocationIdentifier) {
+    this.mLocationIdentifier = mLocationIdentifier;
+  }
+
+  public void setShowSpotMapContentLinks(boolean showSpotMapContentLinks) {
+    this.showSpotMapContentLinks = showSpotMapContentLinks;
+  }
+
+  public void setBeaconId2(String beaconId2) {
+    mBeaconId2 = beaconId2;
   }
 
   public void setEnduserApi(EnduserApi enduserApi) {

@@ -1,7 +1,9 @@
 package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.media.Image;
 import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
@@ -11,8 +13,11 @@ import android.os.Build;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ImageView;
@@ -49,10 +54,13 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder {
   private ImageView mVideoPlayImageView;
   private ProgressBar mProgressBar;
 
+  private String mYoutubeApiKey;
+
   private static HashMap<String, Bitmap> mBitmapCache = new HashMap<>();
 
-  public ContentBlock2ViewHolder(View itemView, Fragment fragment) {
+  public ContentBlock2ViewHolder(View itemView, Fragment fragment, String youtubeApiKey) {
     super(itemView);
+    mYoutubeApiKey = youtubeApiKey;
     mFragment = fragment;
     mTitleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
     mVideoWebView = (WebView) itemView.findViewById(R.id.videoWebView);
@@ -114,7 +122,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder {
       mYouTubeThumbnailView.setImageBitmap(mBitmapCache.get(contentBlock.getVideoUrl()));
       mProgressBar.setVisibility(View.GONE);
     } else {
-        new VideoThumbnail().execute(contentBlock.getVideoUrl());
+      new VideoThumbnail().execute(contentBlock.getVideoUrl());
     }
 
     mYouTubeThumbnailView.setOnClickListener(new View.OnClickListener() {
@@ -129,7 +137,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder {
 
   public void setupYoutube(ContentBlock contentBlock) {
     final String youtubeVideoId = getYoutubeVideoId(contentBlock.getVideoUrl());
-    mYouTubeThumbnailView.initialize("AIzaSyBNZUh3-dj4YYY9-csOtQeHG_MpoE8x69Q", new YouTubeThumbnailView.OnInitializedListener() {
+    mYouTubeThumbnailView.initialize(mYoutubeApiKey, new YouTubeThumbnailView.OnInitializedListener() {
       @Override
       public void onInitializationSuccess(YouTubeThumbnailView youTubeThumbnailView, YouTubeThumbnailLoader youTubeThumbnailLoader) {
         youTubeThumbnailLoader.setVideo(youtubeVideoId);
@@ -141,7 +149,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder {
 
           @Override
           public void onThumbnailError(YouTubeThumbnailView youTubeThumbnailView, YouTubeThumbnailLoader.ErrorReason errorReason) {
-            mYouTubeThumbnailView.setBackgroundColor(R.color.black);
+            mYouTubeThumbnailView.setBackgroundColor(Color.BLACK);
           }
         });
       }
