@@ -24,6 +24,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
+import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Resource.Spot;
@@ -52,10 +53,9 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
   private int mUniqueFrameId;
   public boolean showContentLinks;
 
-  public ContentBlock9ViewHolder(View itemView, Fragment fragment, String apiKey) {
+  public ContentBlock9ViewHolder(View itemView, Fragment fragment, EnduserApi enduserApi) {
     super(itemView);
     mFragment = fragment;
-    mApiKey = apiKey;
     mTitleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
     mRootLayout = (LinearLayout) itemView.findViewById(R.id.rootLayout);
       mMapFragment = SupportMapFragment.newInstance();

@@ -13,6 +13,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
 
+import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
@@ -49,7 +50,6 @@ public class XamoomContentFragment extends Fragment {
   public static final String XAMOOM_LOCATION_IDENTIFIER = "xamoomLocationIdentifier";
 
   private static final String LINK_COLOR_KEY = "LinkColorKeyParam";
-  private static final String API_KEY_KEY = "ApiKeyKeyParam";
 
   private RecyclerView mRecyclerView;
   private ProgressBar mProgressbar;
@@ -64,7 +64,7 @@ public class XamoomContentFragment extends Fragment {
   private Style mStyle;
   private Menu mMenu;
   private String mLinkColor;
-  private String mApiKey;
+  private EnduserApi mEnduserApi;
 
   private boolean loadFullContent = true;
   private boolean displayAllStoreLinks = false;
@@ -80,14 +80,13 @@ public class XamoomContentFragment extends Fragment {
    * @param linkColor LinkColor as hex (e.g. "00F"), will be blue if null
    * @return XamoomContentFragment Returns an Instance of XamoomContentFragment
    */
-  public static XamoomContentFragment newInstance(String linkColor, String apiKey) {
+  public static XamoomContentFragment newInstance(String linkColor) {
     XamoomContentFragment fragment = new XamoomContentFragment();
     Bundle args = new Bundle();
 
     if(linkColor == null)
       linkColor = "00F";
     args.putString(LINK_COLOR_KEY, linkColor);
-    args.putString(API_KEY_KEY, apiKey);
     fragment.setArguments(args);
     return fragment;
   }
@@ -101,7 +100,6 @@ public class XamoomContentFragment extends Fragment {
     super.onCreate(savedInstanceState);
     if (getArguments() != null) {
       mLinkColor = getArguments().getString(LINK_COLOR_KEY);
-      mApiKey = getArguments().getString(API_KEY_KEY);
     }
   }
 
@@ -151,7 +149,7 @@ public class XamoomContentFragment extends Fragment {
     mRecyclerView.setLayoutManager(
         new LinearLayoutManager(this.getActivity().getApplicationContext()));
 
-    mContentBlockAdapter = new ContentBlockAdapter(this, mContentBlocks, mLinkColor, mApiKey,
+    mContentBlockAdapter = new ContentBlockAdapter(this, mContentBlocks, mLinkColor, mEnduserApi,
         showSpotMapContentLinks);
     mRecyclerView.setAdapter(mContentBlockAdapter);
   }
@@ -383,5 +381,9 @@ public class XamoomContentFragment extends Fragment {
 
   public void spotMapContentLinkClick(String contentId) {
     mListener.clickedSpotMapContentLink(contentId);
+  }
+
+  public void setEnduserApi(EnduserApi enduserApi) {
+    mEnduserApi = enduserApi;
   }
 }

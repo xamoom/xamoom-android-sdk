@@ -17,6 +17,7 @@ import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock7ViewHolde
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock8ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock9ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentHeaderViewHolder;
+import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 
@@ -32,7 +33,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   private Fragment mFragment;
   private List<ContentBlock> mContentBlocks;
   private String mLinkColor;
-  private String mApiKey;
+  private EnduserApi mEnduserApi;
   private boolean showContentLinks;
 
   /**
@@ -43,11 +44,11 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
    * @param linkColor LinkColor as hex (e.g. "00F"), will be blue if null
    */
   public ContentBlockAdapter(Fragment fragment, List<ContentBlock> contentBlocks,
-                             String linkColor, String apiKey, boolean showSpotMapContentLinks) {
+                             String linkColor, EnduserApi enduserApi, boolean showSpotMapContentLinks) {
     mFragment = fragment;
     mContentBlocks = contentBlocks;
     mLinkColor = linkColor;
-    mApiKey = apiKey;
+    mEnduserApi = enduserApi;
     showContentLinks = showSpotMapContentLinks;
   }
 
@@ -95,7 +96,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
       case 6:
         View view6 = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.content_block_6_layout, parent, false);
-        return new ContentBlock6ViewHolder(view6, mFragment, mApiKey);
+        return new ContentBlock6ViewHolder(view6, mFragment, mEnduserApi);
       case 7:
         View view7 = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.content_block_7_layout, parent, false);
@@ -107,7 +108,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
       case 9:
         View view9 = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.content_block_9_layout, parent, false);
-        return new ContentBlock9ViewHolder(view9, mFragment, mApiKey);
+        return new ContentBlock9ViewHolder(view9, mFragment, mEnduserApi);
       default:
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.empty_layout, parent, false);
         return new ViewHolder(v);
