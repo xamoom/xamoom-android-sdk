@@ -95,8 +95,8 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder {
   }
 
   private void setupVimeo(final ContentBlock contentBlock) {
-    String vimeoEmbed = "<iframe src=\"https://player.vimeo.com/video/"
-        + getVimeoVideoId(contentBlock.getVideoUrl()) + "?badge=0\" width=\"100%%\" " +
+    String vimeoEmbed = "<style>html,body,iframe{padding:0; margin:0;}</style><iframe src=\"https://player.vimeo.com/video/"
+        + getVimeoVideoId(contentBlock.getVideoUrl()) + "?badge=0&byline=0\" width=\"100%%\" " +
         "height=\"100%%\" frameborder=\"0\" webkitallowfullscreen mozallowfullscreen " +
         "allowfullscreen></iframe>";
     mVideoWebView.loadData(vimeoEmbed, "text/html", "UTF-8");

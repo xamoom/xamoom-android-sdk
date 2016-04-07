@@ -23,12 +23,12 @@
         <WebView
             android:id="@+id/videoWebView"
             android:layout_width="match_parent"
-            android:layout_height="300dp"/>
+            android:layout_height="260dp"/>
 
         <View
             android:id="@+id/webViewOverlay"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="260dp"
             android:layout_alignParentTop="true"/>
 
         <com.google.android.youtube.player.YouTubeThumbnailView
