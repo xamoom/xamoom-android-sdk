@@ -46,6 +46,14 @@
             android:layout_centerInParent="true"
             android:src="@drawable/ic_videoplay"/>
 
+        <ProgressBar
+            android:id="@+id/video_progress_bar"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_centerInParent="true"/>
+
     </RelativeLayout>
 
 </LinearLayout>

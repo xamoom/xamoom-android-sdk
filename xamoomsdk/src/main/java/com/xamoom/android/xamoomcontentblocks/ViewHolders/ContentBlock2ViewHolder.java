@@ -16,6 +16,7 @@ import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.VideoView;
 
@@ -46,6 +47,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder {
   private View mWebViewOverlay;
   private YouTubeThumbnailView mYouTubeThumbnailView;
   private ImageView mVideoPlayImageView;
+  private ProgressBar mProgressBar;
 
   private static HashMap<String, Bitmap> mBitmapCache = new HashMap<>();
 
@@ -57,6 +59,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder {
     mWebViewOverlay = (View) itemView.findViewById(R.id.webViewOverlay);
     mYouTubeThumbnailView = (YouTubeThumbnailView) itemView.findViewById(R.id.youtube_thumbnail_view);
     mVideoPlayImageView = (ImageView) itemView.findViewById(R.id.video_play_image_view);
+    mProgressBar = (ProgressBar) itemView.findViewById(R.id.video_progress_bar);
     WebSettings webSettings = mVideoWebView.getSettings();
     webSettings.setJavaScriptEnabled(true);
   }
@@ -67,6 +70,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder {
     mVideoWebView.setVisibility(View.GONE);
     mWebViewOverlay.setVisibility(View.GONE);
     mVideoPlayImageView.setVisibility(View.GONE);
+    mProgressBar.setVisibility(View.GONE);
 
     if(contentBlock.getTitle() != null) {
       mTitleTextView.setVisibility(View.VISIBLE);
@@ -76,12 +80,14 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder {
     if(getYoutubeVideoId(contentBlock.getVideoUrl()) != null) {
       mYouTubeThumbnailView.setVisibility(View.VISIBLE);
       mVideoPlayImageView.setVisibility(View.VISIBLE);
+      mProgressBar.setVisibility(View.VISIBLE);
       setupYoutube(contentBlock);
     } else if (contentBlock.getVideoUrl().contains("vimeo.com/")) {
       mWebViewOverlay.setVisibility(View.VISIBLE);
       mVideoWebView.setVisibility(View.VISIBLE);
       setupVimeo(contentBlock);
     } else {
+      mProgressBar.setVisibility(View.VISIBLE);
       mYouTubeThumbnailView.setVisibility(View.VISIBLE);
       mVideoPlayImageView.setVisibility(View.VISIBLE);
       setupHTMLPlayer(contentBlock);
@@ -106,6 +112,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder {
   public void setupHTMLPlayer(final ContentBlock contentBlock) {
     if (mBitmapCache.get(contentBlock.getVideoUrl()) != null) {
       mYouTubeThumbnailView.setImageBitmap(mBitmapCache.get(contentBlock.getVideoUrl()));
+      mProgressBar.setVisibility(View.GONE);
     } else {
         new VideoThumbnail().execute(contentBlock.getVideoUrl());
     }
@@ -129,7 +136,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder {
         youTubeThumbnailLoader.setOnThumbnailLoadedListener(new YouTubeThumbnailLoader.OnThumbnailLoadedListener() {
           @Override
           public void onThumbnailLoaded(YouTubeThumbnailView youTubeThumbnailView, String s) {
-            Log.v("Test", "Success " + youTubeThumbnailView);
+            mProgressBar.setVisibility(View.GONE);
           }
 
           @Override
@@ -197,6 +204,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder {
       super.onPostExecute(bitmap);
       mYouTubeThumbnailView.setImageBitmap(bitmap);
       mBitmapCache.put(videoUrl, bitmap);
+      mProgressBar.setVisibility(View.GONE);
     }
 
     public Bitmap retriveVideoFrameFromVideo(String videoPath) {
