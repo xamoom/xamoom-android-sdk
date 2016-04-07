@@ -1,6 +1,7 @@
 package com.xamoom.android.xamoomsdk.Resource;
 
 import java.util.List;
+import java.util.Map;
 
 import at.rags.morpheus.Annotations.Relationship;
 import at.rags.morpheus.Annotations.SerializeName;
@@ -14,15 +15,14 @@ public class Spot extends Resource {
   @SerializeName("image")
   private String publicImageUrl;
   private String description;
-  @SerializeName("position-longitude")
-  private double lat;
-  @SerializeName("position-latitude")
-  private double lon;
+  private Map<String, Double> location;
   private List<String> tags;
   @Relationship("markers")
   private List<Marker> markers;
   @Relationship("system")
   private System system;
+  @Relationship("content")
+  private Content content;
 
   public String getName() {
     return name;
@@ -48,22 +48,6 @@ public class Spot extends Resource {
     this.description = description;
   }
 
-  public double getLat() {
-    return lat;
-  }
-
-  public void setLat(double lat) {
-    this.lat = lat;
-  }
-
-  public double getLon() {
-    return lon;
-  }
-
-  public void setLon(double lon) {
-    this.lon = lon;
-  }
-
   public List<String> getTags() {
     return tags;
   }
@@ -86,5 +70,29 @@ public class Spot extends Resource {
 
   public void setSystem(System system) {
     this.system = system;
+  }
+
+  public Content getContent() {
+    return content;
+  }
+
+  public void setContent(Content content) {
+    this.content = content;
+  }
+
+  public Map<String, Double> getLocation() {
+    return location;
+  }
+
+  public void setLocation(Map<String, Double> location) {
+    this.location = location;
+  }
+
+  public double getLat() {
+    return location.get("lat");
+  }
+
+  public double getLon() {
+    return location.get("lon");
   }
 }
