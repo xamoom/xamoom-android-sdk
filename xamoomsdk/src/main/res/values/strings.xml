@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">XamoomSDK</string>
+    <string name="app_name" translatable="false">XamoomSDK</string>
+
+    <string name="image_saved_text">Image saved</string>
+    <string name="cannot_save_image">Cannot save SVGs and GIFs</string>
+    <string name="distanceLabel">Distance</string>
+    <string name="meterLabel">meter</string>
+    <string name="noLocation">Searching for location.</string>
+    <string name="header_picture_alt_text">Headerimage</string>
 </resources>

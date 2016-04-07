@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -21,15 +22,26 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.xamoom.android.xamoomcontentblocks.BestLocationListener;
+import com.xamoom.android.xamoomcontentblocks.BestLocationProvider;
+import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
+import com.xamoom.android.xamoomsdk.APIListCallback;
 import com.xamoom.android.xamoomsdk.EnduserApi;
+import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Resource.Spot;
 
+import java.util.EnumSet;
 import java.util.List;
+
+import at.rags.morpheus.*;
+import at.rags.morpheus.Error;
 
 /**
  * SpotMapBlock
@@ -38,13 +50,13 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
   private static final String TAG = ContentBlock9ViewHolder.class.getSimpleName();
 
   private Fragment mFragment;
-  private String mApiKey;
+  private EnduserApi mEnduserApi;
   private TextView mTitleTextView;
   private SupportMapFragment mMapFragment;
   private ContentBlock mContentBlock;
   private GoogleMap mGoogleMap;
   private LinearLayout mRootLayout;
-  //private BestLocationProvider mBestLocationProvider;
+  private BestLocationProvider mBestLocationProvider;
   private Location mUserLocation;
   private ArrayMap<Marker, Spot> mMarkerArray;
   private ContentBlock9InfoWindowAdapter mInfoWindowAdapter;
@@ -56,9 +68,10 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
   public ContentBlock9ViewHolder(View itemView, Fragment fragment, EnduserApi enduserApi) {
     super(itemView);
     mFragment = fragment;
+    mEnduserApi = enduserApi;
     mTitleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
     mRootLayout = (LinearLayout) itemView.findViewById(R.id.rootLayout);
-      mMapFragment = SupportMapFragment.newInstance();
+    mMapFragment = SupportMapFragment.newInstance();
     mMarkerArray = new ArrayMap<>();
 
     //setting up unique map fragment
@@ -90,43 +103,45 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
   @Override
   public void onMapReady(final GoogleMap googleMap) {
     mGoogleMap = googleMap;
-        /*
-        XamoomEndUserApi.getInstance(mFragment.getActivity().getApplicationContext(),
-                mApiKey).getSpotMap(mContentBlock.getSpotMapTag().split(","),
-                null, true, new APICallback<SpotMap>() {
-                    @Override
-                    public void finished(SpotMap result) {
-                        if (mMapFragment.isAdded()) {
-                            setupLocation();
-                            setupGoogleMapAndMarker(result);
-                        }
-                    }
 
-                    @Override
-                    public void error(RetrofitError error) {
-                        Log.e(TAG, "Error:" + error);
-                    }
-                });
-        */
+    EnumSet<SpotFlags> spotOptions = null;
+    if (showContentLinks) {
+      spotOptions = EnumSet.of(SpotFlags.INCLUDE_CONTENT);
+    }
+
+    mEnduserApi.getSpotsByTags(mContentBlock.getSpotMapTags(), spotOptions, null, new APIListCallback<List<Spot>, List<at.rags.morpheus.Error>>() {
+      @Override
+      public void finished(List<Spot> result, String cursor, boolean hasMore) {
+        if (mMapFragment.isAdded()) {
+          setupLocation();
+          setupGoogleMapAndMarker(result);
+        }
+      }
+
+      @Override
+      public void error(List<Error> error) {
+        Log.e(TAG, "Error:" + error);
+      }
+    });
   }
 
-  private void setupGoogleMapAndMarker(List<Spot> result) {
-    /*
+  private void setupGoogleMapAndMarker(List<Spot> spotList) {
     mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
     mInfoWindowAdapter = new ContentBlock9InfoWindowAdapter(mFragment,
         mMarkerArray, mUserLocation, showContentLinks);
     mGoogleMap.setInfoWindowAdapter(mInfoWindowAdapter);
 
     //get icon
-    Bitmap icon = getIcon(result.getStyle().getCustomMarker());
+    //TODO GET ICON
+    Bitmap icon = getIcon(null);
 
     //display markers
-    for (Spot s : result.getItems()) {
+    for (Spot s : spotList) {
       Marker marker = mGoogleMap.addMarker(new MarkerOptions()
           .icon(BitmapDescriptorFactory.fromBitmap(icon))
           .anchor(0.0f, 1.0f) // Anchors the marker on the bottom left
-          .title(s.getDisplayName())
-          .position(new LatLng(s.getLocation().getLat(), s.getLocation().getLon())));
+          .title(s.getName())
+          .position(new LatLng(s.getLat(), s.getLon())));
 
       mMarkerArray.put(marker, s);
     }
@@ -161,9 +176,9 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
         public void onInfoWindowClick(Marker marker) {
           Spot spot = mMarkerArray.get(marker);
 
-          if (spot.getContentId() != null) {
+          if (spot.getContent().getId() != null) {
             XamoomContentFragment xamoomContentFragment = (XamoomContentFragment) mFragment;
-            xamoomContentFragment.spotMapContentLinkClick(spot.getContentId());
+            xamoomContentFragment.spotMapContentLinkClick(spot.getContent().getId());
           }
         }
       });
@@ -171,7 +186,7 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
 
     //zoom map to display all markers
     zoomToDisplayAllMarker();
-    */
+
   }
 
   /**
@@ -236,7 +251,6 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
   }
 
   private void setupLocation() {
-    /*
     if (ContextCompat.checkSelfPermission(mFragment.getContext(),
         Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
       Log.e(TAG, "No location permission. Ask the user for location permission.");
@@ -276,6 +290,5 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
 
     //start Location Updates
     mBestLocationProvider.startLocationUpdatesWithListener(mBestLocationListener);
-    */
   }
 }
