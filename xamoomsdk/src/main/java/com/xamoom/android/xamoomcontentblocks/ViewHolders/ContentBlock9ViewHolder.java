@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -30,17 +29,18 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.xamoom.android.xamoomcontentblocks.BestLocationListener;
 import com.xamoom.android.xamoomcontentblocks.BestLocationProvider;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
+import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.APIListCallback;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Resource.Spot;
+import com.xamoom.android.xamoomsdk.Resource.Style;
 
 import java.util.EnumSet;
 import java.util.List;
 
-import at.rags.morpheus.*;
 import at.rags.morpheus.Error;
 
 /**
@@ -60,6 +60,8 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
   private Location mUserLocation;
   private ArrayMap<Marker, Spot> mMarkerArray;
   private ContentBlock9InfoWindowAdapter mInfoWindowAdapter;
+  private String mBase64Icon;
+  private List<Spot> mSpotList;
 
   private static int mFrameId = 169147;
   private int mUniqueFrameId;
@@ -103,6 +105,7 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
   @Override
   public void onMapReady(final GoogleMap googleMap) {
     mGoogleMap = googleMap;
+    setupGoogleMapInfoWindow();
 
     EnumSet<SpotFlags> spotOptions = null;
     if (showContentLinks) {
@@ -113,8 +116,10 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
       @Override
       public void finished(List<Spot> result, String cursor, boolean hasMore) {
         if (mMapFragment.isAdded()) {
+          mSpotList = result;
           setupLocation();
-          setupGoogleMapAndMarker(result);
+          addMarkerToMap(result);
+          getStyle(result.get(0).getSystem().getId());
         }
       }
 
@@ -125,26 +130,43 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
     });
   }
 
-  private void setupGoogleMapAndMarker(List<Spot> spotList) {
-    mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
-    mInfoWindowAdapter = new ContentBlock9InfoWindowAdapter(mFragment,
-        mMarkerArray, mUserLocation, showContentLinks);
-    mGoogleMap.setInfoWindowAdapter(mInfoWindowAdapter);
+  private void getStyle(String systemId) {
+    mEnduserApi.getStyle(systemId, new APICallback<Style, List<Error>>() {
+      @Override
+      public void finished(Style result) {
+        mBase64Icon = result.getIcon();
+        mGoogleMap.clear();
+        addMarkerToMap(mSpotList);
+      }
 
-    //get icon
-    //TODO GET ICON
-    Bitmap icon = getIcon(null);
+      @Override
+      public void error(List<Error> error) {
 
+      }
+    });
+  }
+
+  private void addMarkerToMap(List<Spot> spotList) {
     //display markers
     for (Spot s : spotList) {
       Marker marker = mGoogleMap.addMarker(new MarkerOptions()
-          .icon(BitmapDescriptorFactory.fromBitmap(icon))
+          .icon(BitmapDescriptorFactory.fromBitmap(getIcon(mBase64Icon)))
           .anchor(0.0f, 1.0f) // Anchors the marker on the bottom left
           .title(s.getName())
           .position(new LatLng(s.getLat(), s.getLon())));
 
       mMarkerArray.put(marker, s);
     }
+
+    mInfoWindowAdapter.setMarkerArray(mMarkerArray);
+    zoomToDisplayAllMarker();
+  }
+
+  private void setupGoogleMapInfoWindow() {
+    mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
+    mInfoWindowAdapter = new ContentBlock9InfoWindowAdapter(mFragment,
+        mMarkerArray, mUserLocation, showContentLinks);
+    mGoogleMap.setInfoWindowAdapter(mInfoWindowAdapter);
 
     //click listener to move camera to spot and show the complete infoWindow
     mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -167,7 +189,6 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
 
         return false;
       }
-
     });
 
     if (showContentLinks) {
@@ -183,10 +204,6 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
         }
       });
     }
-
-    //zoom map to display all markers
-    zoomToDisplayAllMarker();
-
   }
 
   /**

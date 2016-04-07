@@ -102,4 +102,8 @@ public class ContentBlock9InfoWindowAdapter implements GoogleMap.InfoWindowAdapt
   public void setUserLocation(Location userLocation) {
     mUserLocation = userLocation;
   }
+
+  public void setMarkerArray(ArrayMap<Marker, Spot> markerArray) {
+    mMarkerArray = markerArray;
+  }
 }
