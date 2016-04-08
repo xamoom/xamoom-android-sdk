@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
 
     setupEnduserApi();
 
+    /*
     getContent();
     getContentOption();
     getContentLocationIdentifier();
@@ -63,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
     getMenu();
     getSystemSetting();
     getStyle();
+    */
   }
 
   @Override
@@ -80,8 +83,11 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
     int id = item.getItemId();
 
     //noinspection SimplifiableIfStatement
-    if (id == R.id.action_settings) {
-      return true;
+    if (id == R.id.action_close) {
+      Fragment currentFragment = getSupportFragmentManager().findFragmentByTag("XamoomFragment");
+      getSupportFragmentManager().beginTransaction().remove(currentFragment).commit();
+    } else if (id == R.id.action_open) {
+      getContentOption();
     }
 
     return super.onOptionsItemSelected(item);
@@ -157,10 +163,9 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
             Log.v(TAG, "getContent: " + result);
             XamoomContentFragment xamoomFragment = XamoomContentFragment.newInstance("#000000", "AIzaSyBNZUh3-dj4YYY9-csOtQeHG_MpoE8x69Q"); //create new instance
             xamoomFragment.setEnduserApi(mEnduserApi);
-            //xamoomFragment.setShowSpotMapContentLinks(true);
             xamoomFragment.setDisplayAllStoreLinks(true);
             xamoomFragment.setContent(result);
-            getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, xamoomFragment).commit(); //replace with xamoomFragment
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, xamoomFragment, "XamoomFragment").commit(); //replace with xamoomFragment
           }
 
           @Override

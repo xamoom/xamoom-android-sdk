@@ -2,6 +2,7 @@ package com.xamoom.android.xamoomcontentblocks;
 
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -169,6 +170,14 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         newHolder9.setupContentBlock(cb);
         break;
     }
+  }
+
+  @Override
+  public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+    mFragment = null;
+    mContentBlocks = null;
+    mEnduserApi = null;
+    super.onDetachedFromRecyclerView(recyclerView);
   }
 }
 
