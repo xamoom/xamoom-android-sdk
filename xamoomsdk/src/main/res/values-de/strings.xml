@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">XamoomContentBlocks</string>
     <string name="cannot_save_image">SVGs und GIFs können nicht gespeichert werden</string>
     <string name="distanceLabel">Entfernung</string>
     <string name="header_picture_alt_text">Kopfbild</string>

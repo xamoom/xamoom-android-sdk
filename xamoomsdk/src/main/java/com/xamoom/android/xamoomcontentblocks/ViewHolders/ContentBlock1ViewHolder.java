@@ -1,5 +1,6 @@
 package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
+import android.annotation.SuppressLint;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -105,6 +106,7 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
+    @SuppressLint("DefaultLocale")
     private String getTimeString(int milliseconds) {
         String output;
 

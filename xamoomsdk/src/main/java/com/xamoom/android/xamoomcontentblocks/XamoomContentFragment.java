@@ -1,6 +1,7 @@
 package com.xamoom.android.xamoomcontentblocks;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -46,20 +47,12 @@ import java.util.List;
  *
  */
 public class XamoomContentFragment extends Fragment {
-  public static final String XAMOOM_CONTENT_ID = "xamoomContentId";
-  public static final String XAMOOM_LOCATION_IDENTIFIER = "xamoomLocationIdentifier";
-
-  private static final String LINK_COLOR_KEY = "LinkColorKeyParam";
-  private static final String YOUTUBE_API_KEY = "YoutubeApiKeyParam";
-
+  private static final String LINK_COLOR_KEY = "0000";
+  private static final String YOUTUBE_API_KEY = "0001";
 
   private RecyclerView mRecyclerView;
-  private ProgressBar mProgressbar;
   private ContentBlockAdapter mContentBlockAdapter;
 
-  private String mContentId;
-  private String mLocationIdentifier;
-  private String mBeaconId2;
   private Content mContent;
 
   private List<ContentBlock> mContentBlocks;
@@ -69,7 +62,6 @@ public class XamoomContentFragment extends Fragment {
   private String mYoutubeApiKey;
   private EnduserApi mEnduserApi;
 
-  private boolean loadFullContent = true;
   private boolean displayAllStoreLinks = false;
   private boolean showSpotMapContentLinks = false;
   private boolean isAnimated = false;
@@ -122,7 +114,6 @@ public class XamoomContentFragment extends Fragment {
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.fragment_xamoom_content, container, false);
     mRecyclerView = (RecyclerView) view.findViewById(R.id.contentBlocksRecycler);
-    mProgressbar = (ProgressBar) view.findViewById(R.id.progressBar);
 
     if (mContent != null) {
       addContentTitleAndImage();
@@ -251,13 +242,19 @@ public class XamoomContentFragment extends Fragment {
   }
 
   @Override
-  public void onAttach(Activity activity) {
-    super.onAttach(activity);
-    try {
-      mListener = (OnXamoomContentFragmentInteractionListener) activity;
-    } catch (ClassCastException e) {
-      throw new ClassCastException(activity.toString()
-          + " must implement OnXamoomContentFragmentInteractionListener");
+  public void onAttach(Context context) {
+    super.onAttach(context);
+
+    Activity activity;
+    if (context instanceof Activity){
+      activity= (Activity)context;
+
+      try {
+        mListener = (OnXamoomContentFragmentInteractionListener) activity;
+      } catch (ClassCastException e) {
+        throw new ClassCastException(activity.toString()
+            + " must implement OnXamoomContentFragmentInteractionListener");
+      }
     }
   }
 
@@ -288,7 +285,16 @@ public class XamoomContentFragment extends Fragment {
     mListener.clickedSpotMapContentLink(contentId);
   }
 
-  //setters
+  // getters
+  public boolean isShowSpotMapContentLinks() {
+    return showSpotMapContentLinks;
+  }
+
+  public boolean isDisplayAllStoreLinks() {
+    return displayAllStoreLinks;
+  }
+
+  // setters
   public void setContent(Content content) {
     this.mContent = content;
   }
@@ -297,32 +303,16 @@ public class XamoomContentFragment extends Fragment {
     this.mMenu = mMenu;
   }
 
-  public void setLoadFullContent(boolean loadFullContent) {
-    this.loadFullContent = loadFullContent;
-  }
-
   public void setStyle(Style mStyle) {
     this.mStyle = mStyle;
   }
 
-  public void setIsStoreLinksActivated(boolean isStoreLinksActivated) {
-    this.displayAllStoreLinks = isStoreLinksActivated;
-  }
-
-  public void setContentId(String mContentId) {
-    this.mContentId = mContentId;
-  }
-
-  public void setLocationIdentifier(String mLocationIdentifier) {
-    this.mLocationIdentifier = mLocationIdentifier;
+  public void setDisplayAllStoreLinks(boolean displayAllStoreLinks) {
+    this.displayAllStoreLinks = displayAllStoreLinks;
   }
 
   public void setShowSpotMapContentLinks(boolean showSpotMapContentLinks) {
     this.showSpotMapContentLinks = showSpotMapContentLinks;
-  }
-
-  public void setBeaconId2(String beaconId2) {
-    mBeaconId2 = beaconId2;
   }
 
   public void setEnduserApi(EnduserApi enduserApi) {

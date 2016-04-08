@@ -29,7 +29,6 @@ import java.util.List;
  * @author Raphael Seher
  */
 public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
   private Fragment mFragment;
   private List<ContentBlock> mContentBlocks;
   private String mLinkColor;
@@ -39,7 +38,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
   /**
    * Constructor for the Adapter.
-   *  @param fragment Fragment with the recyclerView in it.
+   * @param fragment Fragment with the recyclerView in it.
    * @param contentBlocks ContentBlocks to display.
    * @param linkColor LinkColor as hex (e.g. "00F"), will be blue if null
    * @param youtubeApiKey Youtube api key from Google Developer Console.

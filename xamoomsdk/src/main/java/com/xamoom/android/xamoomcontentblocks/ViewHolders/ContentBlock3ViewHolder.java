@@ -97,12 +97,9 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
 
             } else {
                 //making the scaleX to a factor scaleX
-
                 Glide.with(mFragment)
                         .load(contentBlock.getFileId())
-                                //.placeholder(R.drawable.placeholder)
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                //.fitCenter()
                         .dontAnimate()
                         .into(new GlideDrawableImageViewTarget(mImageView) {
                             public void onResourceReady(GlideDrawable drawable, GlideAnimation anim) {
