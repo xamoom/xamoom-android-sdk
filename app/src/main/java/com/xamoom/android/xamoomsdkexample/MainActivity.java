@@ -325,7 +325,6 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
           });
           builder.show();
         }
-        return;
       }
     }
   }

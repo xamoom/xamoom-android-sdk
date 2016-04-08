@@ -1,7 +1,5 @@
 package com.xamoom.android.xamoomsdk.Utils;
 
-import android.text.TextUtils;
-
 import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
 import com.xamoom.android.xamoomsdk.Enums.ContentSortFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotFlags;

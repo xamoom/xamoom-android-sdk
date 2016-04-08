@@ -32,7 +32,7 @@ public class ContentBlock9InfoWindowAdapter implements GoogleMap.InfoWindowAdapt
     showContentLinks = showSpotMapContentLinks;
   }
 
-  public View displayContent(View v, final Spot spot, Marker marker) {
+  public View displayContent(View v, final Spot spot, final Marker marker) {
     TextView mNameTextView = (TextView) v.findViewById(R.id.infoWindowNameTextView);
     TextView mDescriptionTextView = (TextView) v.findViewById(R.id.infoWindowDescriptionTextView);
     TextView mDistanceTextView = (TextView) v.findViewById(R.id.infoWindowDistanceTextView);
@@ -53,7 +53,8 @@ public class ContentBlock9InfoWindowAdapter implements GoogleMap.InfoWindowAdapt
     if (spot.getPublicImageUrl() != null) {
       int width = (int) (200 * mFragment.getResources().getDisplayMetrics().density);
       int height = (int) (110 * mFragment.getResources().getDisplayMetrics().density);
-      Picasso.with(mFragment.getActivity()).load(spot.getPublicImageUrl()).resize(width, height)
+      Picasso.with(mFragment.getActivity())
+          .load(spot.getPublicImageUrl()).resize(width, height)
           .centerCrop().into(mImageView,
           new MarkerCallback(marker));
     } else {

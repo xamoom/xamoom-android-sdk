@@ -2,7 +2,6 @@ package com.xamoom.android.xamoomsdk.Enums;
 
 import android.location.Location;
 
-import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.APIListCallback;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 

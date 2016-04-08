@@ -7,8 +7,14 @@ import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
 import com.xamoom.android.xamoomsdk.Enums.ContentSortFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotSortFlags;
-import com.xamoom.android.xamoomsdk.Resource.*;
+import com.xamoom.android.xamoomsdk.Resource.Content;
+import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
+import com.xamoom.android.xamoomsdk.Resource.Marker;
+import com.xamoom.android.xamoomsdk.Resource.Menu;
+import com.xamoom.android.xamoomsdk.Resource.Spot;
+import com.xamoom.android.xamoomsdk.Resource.Style;
 import com.xamoom.android.xamoomsdk.Resource.System;
+import com.xamoom.android.xamoomsdk.Resource.SystemSetting;
 import com.xamoom.android.xamoomsdk.Utils.ListUtil;
 import com.xamoom.android.xamoomsdk.Utils.UrlUtil;
 
@@ -18,8 +24,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import at.rags.morpheus.*;
+import at.rags.morpheus.Deserializer;
 import at.rags.morpheus.Error;
+import at.rags.morpheus.Morpheus;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;

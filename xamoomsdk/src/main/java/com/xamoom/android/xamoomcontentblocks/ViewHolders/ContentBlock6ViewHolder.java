@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.EnduserApi;
@@ -22,7 +21,6 @@ import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import java.util.HashMap;
 import java.util.List;
 
-import at.rags.morpheus.*;
 import at.rags.morpheus.Error;
 
 

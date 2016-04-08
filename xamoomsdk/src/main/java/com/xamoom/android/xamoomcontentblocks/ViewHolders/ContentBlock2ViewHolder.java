@@ -1,36 +1,26 @@
 package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.media.Image;
 import android.media.MediaMetadataRetriever;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.VideoView;
 
-import com.bumptech.glide.Glide;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubeIntents;
 import com.google.android.youtube.player.YouTubeThumbnailLoader;
 import com.google.android.youtube.player.YouTubeThumbnailView;
-import com.squareup.picasso.Picasso;
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 
@@ -64,6 +54,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder {
     mFragment = fragment;
     mTitleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
     mVideoWebView = (WebView) itemView.findViewById(R.id.videoWebView);
+    mVideoWebView.setWebViewClient(new WebViewClient());
     mWebViewOverlay = (View) itemView.findViewById(R.id.webViewOverlay);
     mYouTubeThumbnailView = (YouTubeThumbnailView) itemView.findViewById(R.id.youtube_thumbnail_view);
     mVideoPlayImageView = (ImageView) itemView.findViewById(R.id.video_play_image_view);
@@ -150,12 +141,14 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder {
           @Override
           public void onThumbnailError(YouTubeThumbnailView youTubeThumbnailView, YouTubeThumbnailLoader.ErrorReason errorReason) {
             mYouTubeThumbnailView.setBackgroundColor(Color.BLACK);
+            mProgressBar.setVisibility(View.GONE);
           }
         });
       }
 
       @Override
       public void onInitializationFailure(YouTubeThumbnailView youTubeThumbnailView, YouTubeInitializationResult youTubeInitializationResult) {
+        mProgressBar.setVisibility(View.GONE);
       }
     });
 

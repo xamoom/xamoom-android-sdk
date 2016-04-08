@@ -3,8 +3,10 @@ package com.xamoom.android.xamoomsdk;
 import java.io.IOException;
 import java.util.List;
 
-import at.rags.morpheus.*;
 import at.rags.morpheus.Error;
+import at.rags.morpheus.JsonApiObject;
+import at.rags.morpheus.Morpheus;
+import at.rags.morpheus.Resource;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;

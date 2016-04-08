@@ -134,7 +134,7 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
     mEnduserApi.getStyle(systemId, new APICallback<Style, List<Error>>() {
       @Override
       public void finished(Style result) {
-        mBase64Icon = result.getIcon();
+        mBase64Icon = result.getCustomMarker();
         mGoogleMap.clear();
         addMarkerToMap(mSpotList);
       }
@@ -209,8 +209,8 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
   /**
    * Returns the icon for mapMarker.
    *
-   * @param customMarker
-   * @return icon
+   * @param customMarker base64 custom marker (mappin) from xamoom
+   * @return icon Bitmap of custom marker
    */
   private Bitmap getIcon(String customMarker) {
     Bitmap icon;
