@@ -197,7 +197,7 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
         public void onInfoWindowClick(Marker marker) {
           Spot spot = mMarkerArray.get(marker);
 
-          if (spot.getContent().getId() != null) {
+          if (spot.getContent() != null && spot.getContent() != null) {
             XamoomContentFragment xamoomContentFragment = (XamoomContentFragment) mFragment;
             xamoomContentFragment.spotMapContentLinkClick(spot.getContent().getId());
           }

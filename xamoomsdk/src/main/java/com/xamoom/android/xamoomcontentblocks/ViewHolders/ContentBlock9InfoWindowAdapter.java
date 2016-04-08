@@ -1,5 +1,6 @@
 package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
+import android.annotation.SuppressLint;
 import android.location.Location;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.ArrayMap;
@@ -32,6 +33,7 @@ public class ContentBlock9InfoWindowAdapter implements GoogleMap.InfoWindowAdapt
     showContentLinks = showSpotMapContentLinks;
   }
 
+  @SuppressLint("DefaultLocale")
   public View displayContent(View v, final Spot spot, final Marker marker) {
     TextView mNameTextView = (TextView) v.findViewById(R.id.infoWindowNameTextView);
     TextView mDescriptionTextView = (TextView) v.findViewById(R.id.infoWindowDescriptionTextView);
@@ -74,7 +76,7 @@ public class ContentBlock9InfoWindowAdapter implements GoogleMap.InfoWindowAdapt
       mDistanceTextView.setText(mFragment.getActivity().getString(R.string.noLocation));
     }
 
-    if (!showContentLinks) {
+    if (!showContentLinks || spot.getContent() == null) {
       mContentLinksLinearLayout.setVisibility(View.GONE);
     }
 
