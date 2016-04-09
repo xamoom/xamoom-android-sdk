@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
 
-version = "1.9.0"
+version = "1.9.3"
 group = "com.xamoom.android"
 
 android {
@@ -48,17 +48,17 @@ dependencies {
 
 ext {
 	bintrayRepo = 'maven'
-	bintrayName = 'xamoom-android-sdk'
+	bintrayName = 'xamoomsdk'
 	publishedGroupId = 'com.xamoom.android'
 	libraryName = 'xamoomsdk'
 	artifact = 'xamoomsdk'
 
-	libraryDescription = 'xamoom-android-sdk is a framework for the xamoom-cloud api. So you can write your own applications for the xamoom-cloud.'
+	libraryDescription = 'xamoomsdk is a framework for the xamoom-cloud api. So you can write your own applications for the xamoom-cloud.'
 
 	siteUrl = 'https://github.com/xamoom/xamoom-android-sdk'
 	gitUrl = 'https://github.com/xamoom/xamoom-android-sdk.git'
 
-	libraryVersion = '1.9.0'
+	libraryVersion = '1.9.3'
 	developerId = 'xamoom-raphael'
 	developerName = 'Raphael Seher'
 	developerEmail = 'raphael@xamoom.com'
