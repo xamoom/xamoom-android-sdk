@@ -58,7 +58,6 @@ public class XamoomContentFragment extends Fragment {
 
   private List<ContentBlock> mContentBlocks;
   private Style mStyle;
-  private Menu mMenu;
   private String mLinkColor;
   private String mYoutubeApiKey;
   private EnduserApi mEnduserApi;
@@ -277,8 +276,6 @@ public class XamoomContentFragment extends Fragment {
     }
   }
 
-
-
   /**
    * Implement OnXamoomContentFragmentInteractionListener and override
    * <code>clickedContentBlock(String)</code>.
@@ -312,10 +309,6 @@ public class XamoomContentFragment extends Fragment {
   // setters
   public void setContent(Content content) {
     this.mContent = content;
-  }
-
-  public void setMenu(Menu mMenu) {
-    this.mMenu = mMenu;
   }
 
   public void setStyle(Style mStyle) {
