@@ -141,7 +141,7 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
 
       @Override
       public void error(List<Error> error) {
-
+        Log.e(TAG, "getStyle error: " + error);
       }
     });
   }
