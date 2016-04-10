@@ -20,14 +20,18 @@ public class ListUtil {
     }
 
     StringBuilder sb = new StringBuilder();
+    sb.append("[");
     int counter = 0;
     for (String item : list) {
       counter++;
+      sb.append("'");
       sb.append(item);
+      sb.append("'");
       if (counter != list.size()) {
         sb.append(seperator);
       }
     }
+    sb.append("]");
     return sb.toString();
   }
 }
