@@ -15,6 +15,7 @@ import org.mockito.Captor;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -345,7 +346,7 @@ public class EnduserApiTests {
 
     assertTrue(checkContents.get(0).getTitle().equals("Test"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
-    assertEquals("/_api/v2/consumer/contents?lang=en&page[size]=10&filter[tags]=tag1,tag2", request1.getPath());
+    assertEquals("/_api/v2/consumer/contents?lang=en&page[size]=10&filter[tags]=[%27tag1%27,%27tag2%27]", request1.getPath());
   }
 
   @Test
@@ -443,7 +444,7 @@ public class EnduserApiTests {
 
     assertTrue(checkSpots.get(0).getName().equals("Test"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
-    assertEquals("/_api/v2/consumer/spots?lang=en&filter[tags]=tag1,tag2", request1.getPath());
+    assertEquals("/_api/v2/consumer/spots?lang=en&filter[tags]=[%27tag1%27,%27tag2%27]", request1.getPath());
   }
 
   @Test

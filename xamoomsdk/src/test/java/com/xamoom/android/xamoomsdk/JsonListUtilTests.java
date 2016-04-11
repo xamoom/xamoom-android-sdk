@@ -1,6 +1,6 @@
 package com.xamoom.android.xamoomsdk;
 
-import com.xamoom.android.xamoomsdk.Utils.ListUtil;
+import com.xamoom.android.xamoomsdk.Utils.JsonListUtil;
 
 import org.junit.Test;
 
@@ -9,16 +9,16 @@ import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 
-public class ListUtilTests {
+public class JsonListUtilTests {
   @Test
   public void testListUtilWithArray() throws Exception {
     List<String> stringList = new ArrayList<>();
     stringList.add("String1");
     stringList.add("String2");
 
-    String output = ListUtil.joinStringList(stringList, ",");
+    String output = JsonListUtil.joinStringList(stringList, ",");
 
-    assertEquals(output, "String1,String2");
+    assertEquals(output, "['String1','String2']");
   }
 
   @Test
@@ -26,14 +26,14 @@ public class ListUtilTests {
     List<String> stringList = new ArrayList<>();
     stringList.add("String1");
 
-    String output = ListUtil.joinStringList(stringList, ",");
+    String output = JsonListUtil.joinStringList(stringList, ",");
 
-    assertEquals(output, "String1");
+    assertEquals(output, "['String1']");
   }
 
   @Test
   public void testListUtilWithNullList() throws Exception {
-    String output = ListUtil.joinStringList(null, ",");
+    String output = JsonListUtil.joinStringList(null, ",");
 
     assertEquals(output, "");
   }

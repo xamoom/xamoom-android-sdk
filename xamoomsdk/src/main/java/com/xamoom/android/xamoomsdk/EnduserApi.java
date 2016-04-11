@@ -15,7 +15,7 @@ import com.xamoom.android.xamoomsdk.Resource.Spot;
 import com.xamoom.android.xamoomsdk.Resource.Style;
 import com.xamoom.android.xamoomsdk.Resource.System;
 import com.xamoom.android.xamoomsdk.Resource.SystemSetting;
-import com.xamoom.android.xamoomsdk.Utils.ListUtil;
+import com.xamoom.android.xamoomsdk.Utils.JsonListUtil;
 import com.xamoom.android.xamoomsdk.Utils.UrlUtil;
 
 import java.io.IOException;
@@ -189,7 +189,7 @@ public class EnduserApi {
     Map<String, String> params = UrlUtil.addContentSortingParameter(UrlUtil.getUrlParameter(language),
         sortFlags);
     params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
-    params.put("filter[tags]", ListUtil.joinStringList(tags, ","));
+    params.put("filter[tags]", JsonListUtil.joinStringList(tags, ","));
 
     Call<ResponseBody> call = enduserApiInterface.getContents(params);
     callHandler.enqueListCall(call, callback);
@@ -271,7 +271,7 @@ public class EnduserApi {
         spotFlags);
     params = UrlUtil.addSpotSortingParameter(params, sortFlags);
     params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
-    params.put("filter[tags]", ListUtil.joinStringList(tags, ","));
+    params.put("filter[tags]", JsonListUtil.joinStringList(tags, ","));
 
     Call<ResponseBody> call = enduserApiInterface.getSpots(params);
     callHandler.enqueListCall(call, callback);

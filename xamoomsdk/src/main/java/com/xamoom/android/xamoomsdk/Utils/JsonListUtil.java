@@ -3,10 +3,10 @@ package com.xamoom.android.xamoomsdk.Utils;
 import java.util.List;
 
 /**
- * ListUtil to join lists of string.
+ * JsonListUtil to join lists of string.
  * (Because TextUtil gets mocked in tests)
  */
-public class ListUtil {
+public class JsonListUtil {
   /**
    * Will return joined list with seperator.
    *
@@ -14,7 +14,7 @@ public class ListUtil {
    * @param seperator String to seperate them.
    * @return Joined list.
    */
-  public static String joinStringList(List<String> list, String seperator) {
+  public static String listToJsonArray(List<String> list, String seperator) {
     if (list == null || seperator == null) {
       return "";
     }
