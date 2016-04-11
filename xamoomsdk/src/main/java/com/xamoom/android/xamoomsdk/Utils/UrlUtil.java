@@ -55,7 +55,7 @@ public class UrlUtil {
       sortParams.add("-name");
     }
 
-    params.put("sort", JsonListUtil.joinStringList(sortParams, ","));
+    params.put("sort", JsonListUtil.listToJsonArray(sortParams, ","));
     return params;
   }
 
@@ -100,7 +100,7 @@ public class UrlUtil {
       sortParams.add("-distance");
     }
 
-    params.put("sort", JsonListUtil.joinStringList(sortParams, ","));
+    params.put("sort", JsonListUtil.listToJsonArray(sortParams, ","));
     return params;
   }
 

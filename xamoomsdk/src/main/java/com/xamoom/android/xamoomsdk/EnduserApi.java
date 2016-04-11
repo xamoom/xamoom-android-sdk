@@ -189,7 +189,7 @@ public class EnduserApi {
     Map<String, String> params = UrlUtil.addContentSortingParameter(UrlUtil.getUrlParameter(language),
         sortFlags);
     params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
-    params.put("filter[tags]", JsonListUtil.joinStringList(tags, ","));
+    params.put("filter[tags]", JsonListUtil.listToJsonArray(tags, ","));
 
     Call<ResponseBody> call = enduserApiInterface.getContents(params);
     callHandler.enqueListCall(call, callback);
@@ -271,7 +271,7 @@ public class EnduserApi {
         spotFlags);
     params = UrlUtil.addSpotSortingParameter(params, sortFlags);
     params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
-    params.put("filter[tags]", JsonListUtil.joinStringList(tags, ","));
+    params.put("filter[tags]", JsonListUtil.listToJsonArray(tags, ","));
 
     Call<ResponseBody> call = enduserApiInterface.getSpots(params);
     callHandler.enqueListCall(call, callback);
