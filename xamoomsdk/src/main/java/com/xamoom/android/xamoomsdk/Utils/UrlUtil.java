@@ -6,6 +6,7 @@ import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
 import com.xamoom.android.xamoomsdk.Enums.ContentSortFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotSortFlags;
+import com.xamoom.android.xamoomsdk.Resource.Spot;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -73,6 +74,10 @@ public class UrlUtil {
 
     if (spotFlags.contains(SpotFlags.INCLUDE_MARKERS)) {
       params.put("include_markers", "true");
+    }
+
+    if (spotFlags.contains(SpotFlags.HAS_LOCATION)) {
+      params.put("has-location", "true");
     }
 
     return params;

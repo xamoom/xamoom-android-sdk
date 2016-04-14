@@ -20,5 +20,9 @@ public enum SpotFlags {
   /**
    * Will included assigned markers.
    */
-  INCLUDE_MARKERS
+  INCLUDE_MARKERS,
+  /**
+   * Will only return spots with a location
+   */
+  HAS_LOCATION
 }
