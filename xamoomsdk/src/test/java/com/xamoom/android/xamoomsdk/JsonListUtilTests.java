@@ -16,7 +16,7 @@ public class JsonListUtilTests {
     stringList.add("String1");
     stringList.add("String2");
 
-    String output = JsonListUtil.joinStringList(stringList, ",");
+    String output = JsonListUtil.listToJsonArray(stringList, ",");
 
     assertEquals(output, "['String1','String2']");
   }
@@ -26,14 +26,14 @@ public class JsonListUtilTests {
     List<String> stringList = new ArrayList<>();
     stringList.add("String1");
 
-    String output = JsonListUtil.joinStringList(stringList, ",");
+    String output = JsonListUtil.listToJsonArray(stringList, ",");
 
     assertEquals(output, "['String1']");
   }
 
   @Test
   public void testListUtilWithNullList() throws Exception {
-    String output = JsonListUtil.joinStringList(null, ",");
+    String output = JsonListUtil.listToJsonArray(null, ",");
 
     assertEquals(output, "");
   }
