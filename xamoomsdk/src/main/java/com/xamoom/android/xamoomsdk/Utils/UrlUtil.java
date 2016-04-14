@@ -1,5 +1,7 @@
 package com.xamoom.android.xamoomsdk.Utils;
 
+import android.text.TextUtils;
+
 import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
 import com.xamoom.android.xamoomsdk.Enums.ContentSortFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
@@ -55,7 +57,7 @@ public class UrlUtil {
       sortParams.add("-name");
     }
 
-    params.put("sort", JsonListUtil.listToJsonArray(sortParams, ","));
+    params.put("sort", JsonListUtil.joinList(sortParams, ","));
     return params;
   }
 
@@ -100,7 +102,7 @@ public class UrlUtil {
       sortParams.add("-distance");
     }
 
-    params.put("sort", JsonListUtil.listToJsonArray(sortParams, ","));
+    params.put("sort", JsonListUtil.joinList(sortParams, ","));
     return params;
   }
 

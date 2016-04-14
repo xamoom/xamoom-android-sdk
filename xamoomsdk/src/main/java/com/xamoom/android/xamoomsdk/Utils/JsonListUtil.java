@@ -8,7 +8,7 @@ import java.util.List;
  */
 public class JsonListUtil {
   /**
-   * Will return joined list with seperator.
+   * Will return a json-array of strings.
    *
    * @param list List of Strings.
    * @param seperator String to seperate them.
@@ -32,6 +32,23 @@ public class JsonListUtil {
       }
     }
     sb.append("]");
+    return sb.toString();
+  }
+
+  public static String joinList(List<String> list, String seperator) {
+    if (list == null || seperator == null) {
+      return "";
+    }
+
+    StringBuilder sb = new StringBuilder();
+    int counter = 0;
+    for (String item : list) {
+      counter++;
+      sb.append(item);
+      if (counter != list.size()) {
+        sb.append(seperator);
+      }
+    }
     return sb.toString();
   }
 }
