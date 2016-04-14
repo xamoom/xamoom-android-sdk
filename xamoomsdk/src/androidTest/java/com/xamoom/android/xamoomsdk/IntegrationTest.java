@@ -74,11 +74,11 @@ public class IntegrationTest extends InstrumentationTestCase {
       public void finished(Content result) {
         assertNotNull(result);
         assertEquals(result.getId(), "e9c917086aca465eb454e38c0146428b");
-        assertEquals(result.getCategory(), 0);
+        assertEquals(result.getCategory(), 76);
         assertEquals(result.getDescription(), "Test");
         assertEquals(result.getLanguage(), "de");
         assertEquals(result.getTags(), checkTags);
-        assertEquals(result.getPublicImageUrl(), "https://storage.googleapis.com/xamoom-files-dev/mobile/e7f670906b464ea58352d90d3c4674fa.jpg?v=2c4043bffd9384096b1e89c62be25c5ee1e3c0af83a59dee83498a9738f0954900db1e36c86e8f2893bcb4608780925eb82ecd109b8325cd3ac940087e1e655d");
+        assertEquals(result.getPublicImageUrl(), "https://storage.googleapis.com/xamoom-files-dev/mobile/e7f670906b464ea58352d90d3c4674fa.jpg?v=dc8c0f42a508b67a3f95b2f84db798fe43181c51df9bb3797f4f39f4adab64800a7df9fc2d8938d9303708afae9ce5e24e6eea065b95e60cfe94d422a3cdffbc");
         assertEquals(result.getTitle(), "DO NOT TOUCH | APP | Testsite 1");
 
         assertEquals(result.getSystem().getId(), "5755996320301056");
@@ -100,54 +100,6 @@ public class IntegrationTest extends InstrumentationTestCase {
 
     signal.await();
   }
-  /*
-  @Test
-  public void testGetContentLocationIdentifier() throws Exception {
-    final Semaphore semaphore = new Semaphore(1);
-
-    api.getContentByLocationIdentifier(InstrumentationRegistry.getContext().getString(R.string.qrMarker), new APICallback<Content, List<Error>>() {
-      @Override
-      public void finished(Content result) {
-        assertEquals(result.getId(), InstrumentationRegistry.getContext().getString(R.string.contentID));
-        assertEquals(result.getTitle(), "DO NOT TOUCH | APP | Testsite 1");
-        semaphore.release();
-      }
-
-      @Override
-      public void error(List<Error> error) {
-      }
-    });
-    semaphore.acquire();
-  }
-
-  @Test
-  public void testGetSpotsWithTags() throws Exception {
-    final List<String> tags = new ArrayList<>();
-    tags.add("tag1");
-    tags.add("Spot1");
-    tags.add("donottouchspot");
-
-    final CountDownLatch signal = new CountDownLatch(1);
-    final List<Spot>[] checkSpots = new List[]{null};
 
 
-    api.getSpotsByTags(tags, EnumSet.of(SpotFlags.INCLUDE_CONTENT, SpotFlags.INCLUDE_MARKERS), null, new APIListCallback<List<Spot>, List<Error>>() {
-      @Override
-      public void finished(List<Spot> result, String cursor, boolean hasMore) {
-        checkSpots[0] = result;
-
-        signal.countDown();
-      }
-
-      @Override
-      public void error(List<Error> error) {
-
-      }
-    });
-
-    signal.await();
-
-    assertEquals(checkSpots[0].size(), 100);
-  }
-  */
 }
