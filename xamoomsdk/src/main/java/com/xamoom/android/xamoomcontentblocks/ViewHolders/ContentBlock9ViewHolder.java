@@ -108,8 +108,9 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
     setupGoogleMapInfoWindow();
 
     EnumSet<SpotFlags> spotOptions = null;
+    spotOptions = EnumSet.of(SpotFlags.HAS_LOCATION);
     if (showContentLinks) {
-      spotOptions = EnumSet.of(SpotFlags.INCLUDE_CONTENT);
+      spotOptions = EnumSet.of(SpotFlags.INCLUDE_CONTENT, SpotFlags.HAS_LOCATION);
     }
 
     mEnduserApi.getSpotsByTags(mContentBlock.getSpotMapTags(), spotOptions, null, new APIListCallback<List<Spot>, List<at.rags.morpheus.Error>>() {
