@@ -15,7 +15,6 @@ import org.mockito.Captor;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -103,7 +102,7 @@ public class EnduserApiTests {
 
     final Semaphore semaphore = new Semaphore(0);
 
-    mEnduserApi.getContent("123456", new APICallback<Content, List<at.rags.morpheus.Error>>() {
+    mEnduserApi.getContent("123456", new APICallback<Content, List<Error>>() {
       @Override
       public void finished(Content result) {
         checkContent[0] = result;

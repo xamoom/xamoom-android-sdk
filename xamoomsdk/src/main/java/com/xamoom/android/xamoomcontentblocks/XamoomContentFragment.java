@@ -8,19 +8,16 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ProgressBar;
 
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
-import com.xamoom.android.xamoomsdk.Resource.Menu;
 import com.xamoom.android.xamoomsdk.Resource.Style;
 
 import java.util.ArrayList;
@@ -64,6 +61,7 @@ public class XamoomContentFragment extends Fragment {
 
   private boolean displayAllStoreLinks = false;
   private boolean showSpotMapContentLinks = false;
+  private boolean addHeader = true;
   private boolean isAnimated = false;
 
   private OnXamoomContentFragmentInteractionListener mListener;
@@ -108,9 +106,9 @@ public class XamoomContentFragment extends Fragment {
                            Bundle savedInstanceState) {
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.fragment_xamoom_content, container, false);
-    mRecyclerView = (RecyclerView) view.findViewById(R.id.contentBlocksRecycler);
+    mRecyclerView = (RecyclerView) view.findViewById(R.id.contentblock_recycler_view);
 
-    if (mContent != null) {
+    if (mContent != null && addHeader) {
       addContentTitleAndImage();
     }
 
@@ -140,8 +138,8 @@ public class XamoomContentFragment extends Fragment {
   public void onDestroy() {
     mRecyclerView.setAdapter(null);
     mRecyclerView.setLayoutManager(null);
-    mRecyclerView = null;
     mContentBlockAdapter = null;
+    mRecyclerView = null;
     mContent = null;
     mContentBlocks = null;
     mEnduserApi = null;
@@ -325,5 +323,9 @@ public class XamoomContentFragment extends Fragment {
 
   public void setEnduserApi(EnduserApi enduserApi) {
     mEnduserApi = enduserApi;
+  }
+
+  public void setAddHeader(boolean addHeader) {
+    this.addHeader = addHeader;
   }
 }
