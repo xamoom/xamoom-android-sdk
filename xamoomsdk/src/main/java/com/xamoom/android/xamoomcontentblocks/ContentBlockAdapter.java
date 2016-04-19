@@ -21,6 +21,7 @@ import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentHeaderViewHolde
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
+import com.xamoom.android.xamoomsdk.Resource.Style;
 
 import java.util.List;
 
@@ -32,26 +33,40 @@ import java.util.List;
 public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
   private Fragment mFragment;
   private List<ContentBlock> mContentBlocks;
-  private String mLinkColor;
+  private Style mStyle;
   private String mYoutubeApiKey;
   private EnduserApi mEnduserApi;
   private boolean showContentLinks;
+
+  private String mLinkColor = "00F";
+  private String mBackgroundColor = "000";
+  private String mFontColor = "FFF";
 
   /**
    * Constructor for the Adapter.
    * @param fragment Fragment with the recyclerView in it.
    * @param contentBlocks ContentBlocks to display.
-   * @param linkColor LinkColor as hex (e.g. "00F"), will be blue if null
+   * @param style The style from your xamoom system.
    * @param youtubeApiKey Youtube api key from Google Developer Console.
    */
   public ContentBlockAdapter(Fragment fragment, List<ContentBlock> contentBlocks,
-                             String linkColor, EnduserApi enduserApi, boolean showSpotMapContentLinks, String youtubeApiKey) {
+                             Style style, EnduserApi enduserApi, boolean showSpotMapContentLinks, String youtubeApiKey) {
     mFragment = fragment;
     mContentBlocks = contentBlocks;
-    mLinkColor = linkColor;
+    mStyle = style;
     mEnduserApi = enduserApi;
     showContentLinks = showSpotMapContentLinks;
     mYoutubeApiKey = youtubeApiKey;
+
+    if (mStyle != null) {
+      configureColors();
+    }
+  }
+
+  private void configureColors() {
+    if (mStyle.getHighlightFontColor() != null) {
+      mLinkColor = mStyle.getHighlightFontColor().substring(1);
+    }
   }
 
   @Override
@@ -178,6 +193,30 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     mContentBlocks = null;
     mEnduserApi = null;
     super.onDetachedFromRecyclerView(recyclerView);
+  }
+
+  public String getFontColor() {
+    return mFontColor;
+  }
+
+  public void setFontColor(String fontColor) {
+    mFontColor = fontColor;
+  }
+
+  public String getBackgroundColor() {
+    return mBackgroundColor;
+  }
+
+  public void setBackgroundColor(String backgroundColor) {
+    mBackgroundColor = backgroundColor;
+  }
+
+  public String getLinkColor() {
+    return mLinkColor;
+  }
+
+  public void setLinkColor(String linkColor) {
+    mLinkColor = linkColor;
   }
 }
 

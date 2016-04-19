@@ -45,7 +45,6 @@ import java.util.List;
  *
  */
 public class XamoomContentFragment extends Fragment {
-  private static final String LINK_COLOR_KEY = "0000";
   private static final String YOUTUBE_API_KEY = "0001";
 
   private RecyclerView mRecyclerView;
@@ -53,15 +52,13 @@ public class XamoomContentFragment extends Fragment {
 
   private Content mContent;
 
-  private List<ContentBlock> mContentBlocks;
+  private List<ContentBlock> mContentBlocks = new LinkedList<>();
   private Style mStyle;
-  private String mLinkColor;
   private String mYoutubeApiKey;
   private EnduserApi mEnduserApi;
 
   private boolean displayAllStoreLinks = false;
   private boolean showSpotMapContentLinks = false;
-  private boolean addHeader = true;
   private boolean isAnimated = false;
 
   private OnXamoomContentFragmentInteractionListener mListener;
@@ -74,29 +71,22 @@ public class XamoomContentFragment extends Fragment {
    * @return XamoomContentFragment Returns an Instance of XamoomContentFragment
    */
   public static XamoomContentFragment newInstance(@Nullable String linkColor,
-                                                 @NonNull String youtubeApiKey) {
+                                                  @NonNull String youtubeApiKey) {
     XamoomContentFragment fragment = new XamoomContentFragment();
     Bundle args = new Bundle();
 
-    if(linkColor == null) {
-      linkColor = "00F";
-    }
-
-    args.putString(LINK_COLOR_KEY, linkColor);
     args.putString(YOUTUBE_API_KEY, youtubeApiKey);
     fragment.setArguments(args);
     return fragment;
   }
 
   public XamoomContentFragment() {
-    // Required empty public constructor
   }
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     if (getArguments() != null) {
-      mLinkColor = getArguments().getString(LINK_COLOR_KEY);
       mYoutubeApiKey = getArguments().getString(YOUTUBE_API_KEY);
     }
   }
@@ -104,14 +94,8 @@ public class XamoomContentFragment extends Fragment {
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
-    // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.fragment_xamoom_content, container, false);
     mRecyclerView = (RecyclerView) view.findViewById(R.id.contentblock_recycler_view);
-
-    if (mContent != null && addHeader) {
-      addContentTitleAndImage();
-    }
-
     return view;
   }
 
@@ -122,16 +106,6 @@ public class XamoomContentFragment extends Fragment {
     if(!isAnimated) {
       setupRecyclerView();
     }
-  }
-
-  @Override
-  public void onStop() {
-    super.onStop();
-  }
-
-  @Override
-  public void onDestroyView() {
-    super.onDestroyView();
   }
 
   @Override
@@ -157,13 +131,17 @@ public class XamoomContentFragment extends Fragment {
    * Setup the recyclerview.
    */
   private void setupRecyclerView() {
-    if(mContent == null || mContentBlockAdapter != null)
+    if(mContent == null || mContentBlockAdapter != null) {
       return;
+    }
 
     mRecyclerView.setLayoutManager(
         new LinearLayoutManager(this.getActivity().getApplicationContext()));
 
-    mContentBlockAdapter = new ContentBlockAdapter(this, mContentBlocks, mLinkColor, mEnduserApi,
+    String linkColor;
+    if (mStyle != null )
+    mContentBlockAdapter = new ContentBlockAdapter(this, mContentBlocks,
+        mStyle.getHighlightFontColor().substring(1), mEnduserApi,
         showSpotMapContentLinks, mYoutubeApiKey);
     mRecyclerView.setAdapter(mContentBlockAdapter);
   }
@@ -176,27 +154,24 @@ public class XamoomContentFragment extends Fragment {
     if (nextAnim != 0) {
       isAnimated = true;
       Animation anim = AnimationUtils.loadAnimation(getActivity(), nextAnim);
-      anim.setAnimationListener(new Animation.AnimationListener() {
-        @Override
-        public void onAnimationStart(Animation animation) {
-        }
-
-        @Override
-        public void onAnimationRepeat(Animation animation) {
-        }
-
-        @Override
-        public void onAnimationEnd(Animation animation) {
-          //if there is an animation, the recyclerview will be setup here
-          setupRecyclerView();
-        }
-      });
-
-      return anim;
+      anim.setAnimationListener(animationListener);
     }
 
     return super.onCreateAnimation(transit, enter, nextAnim);
   }
+
+  public Animation.AnimationListener animationListener = new Animation.AnimationListener() {
+    @Override
+    public void onAnimationStart(Animation animation) {}
+
+    @Override
+    public void onAnimationEnd(Animation animation) {
+      setupRecyclerView();
+    }
+
+    @Override
+    public void onAnimationRepeat(Animation animation) {}
+  };
 
   /**
    * There should always be the contents text, description and image
@@ -209,9 +184,6 @@ public class XamoomContentFragment extends Fragment {
    * stores (to promote your app), you have to set {@link #displayAllStoreLinks} to true.
    */
   private void addContentTitleAndImage() {
-    mContentBlocks = new LinkedList<>();
-    mContentBlocks.addAll(mContent.getContentBlocks());
-
     ContentBlock contentBlock0 = new ContentBlock();
     contentBlock0.setTitle(mContent.getTitle());
     contentBlock0.setBlockType(-1);
@@ -228,9 +200,6 @@ public class XamoomContentFragment extends Fragment {
       contentBlock3.setScaleX(0);
       mContentBlocks.add(1, contentBlock3);
     }
-
-    if(!displayAllStoreLinks)
-      mContentBlocks = removeStoreLinks(mContentBlocks);
   }
 
   /**
@@ -304,9 +273,34 @@ public class XamoomContentFragment extends Fragment {
     return displayAllStoreLinks;
   }
 
+  public RecyclerView getRecyclerView() {
+    return mRecyclerView;
+  }
+
+  public List<ContentBlock> getContentBlocks() {
+    return mContentBlocks;
+  }
+
+  public Style getStyle() {
+    return mStyle;
+  }
+
   // setters
   public void setContent(Content content) {
+    setContent(content, true);
+  }
+
+  public void setContent(Content content, boolean addHeader) {
     this.mContent = content;
+    mContentBlocks.addAll(mContent.getContentBlocks());
+
+    if (addHeader) {
+      addContentTitleAndImage();
+    }
+
+    if(!displayAllStoreLinks) {
+      mContentBlocks = removeStoreLinks(mContentBlocks);
+    }
   }
 
   public void setStyle(Style mStyle) {
@@ -325,7 +319,4 @@ public class XamoomContentFragment extends Fragment {
     mEnduserApi = enduserApi;
   }
 
-  public void setAddHeader(boolean addHeader) {
-    this.addHeader = addHeader;
-  }
 }
