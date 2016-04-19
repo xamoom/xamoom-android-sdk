@@ -32,7 +32,7 @@ import java.util.List;
  * In your app you can display the contentBlocks like you want, we decided to display them
  * like on our website (https://www.xm.gl).
  *
- * To get started with the XamoomContentFragment create a new Instance via {@link #newInstance(String, String)}.
+ * To get started with the XamoomContentFragment create a new Instance via {@link #newInstance(String)}.
  * You also have to adapt {@link com.xamoom.android.xamoomcontentblocks.XamoomContentFragment.OnXamoomContentFragmentInteractionListener}.
  *
  * There are two ways to use this class.
@@ -45,13 +45,11 @@ import java.util.List;
  *
  */
 public class XamoomContentFragment extends Fragment {
-  private static final String YOUTUBE_API_KEY = "0001";
+  private static final String YOUTUBE_API_KEY = "0000";
 
   private RecyclerView mRecyclerView;
   private ContentBlockAdapter mContentBlockAdapter;
-
   private Content mContent;
-
   private List<ContentBlock> mContentBlocks = new LinkedList<>();
   private Style mStyle;
   private String mYoutubeApiKey;
@@ -67,11 +65,9 @@ public class XamoomContentFragment extends Fragment {
    * Use this factory method to create a new instance.
    * You can set a special linkcolor as hex. (e.g. "00F")
    *
-   * @param linkColor LinkColor as hex (e.g. "00F"), will be blue if null
    * @return XamoomContentFragment Returns an Instance of XamoomContentFragment
    */
-  public static XamoomContentFragment newInstance(@Nullable String linkColor,
-                                                  @NonNull String youtubeApiKey) {
+  public static XamoomContentFragment newInstance(@NonNull String youtubeApiKey) {
     XamoomContentFragment fragment = new XamoomContentFragment();
     Bundle args = new Bundle();
 
@@ -138,10 +134,7 @@ public class XamoomContentFragment extends Fragment {
     mRecyclerView.setLayoutManager(
         new LinearLayoutManager(this.getActivity().getApplicationContext()));
 
-    String linkColor;
-    if (mStyle != null )
-    mContentBlockAdapter = new ContentBlockAdapter(this, mContentBlocks,
-        mStyle.getHighlightFontColor().substring(1), mEnduserApi,
+    mContentBlockAdapter = new ContentBlockAdapter(this, mContentBlocks, mStyle, mEnduserApi,
         showSpotMapContentLinks, mYoutubeApiKey);
     mRecyclerView.setAdapter(mContentBlockAdapter);
   }
@@ -292,7 +285,9 @@ public class XamoomContentFragment extends Fragment {
 
   public void setContent(Content content, boolean addHeader) {
     this.mContent = content;
-    mContentBlocks.addAll(mContent.getContentBlocks());
+    if (mContent.getContentBlocks() != null) {
+      mContentBlocks.addAll(mContent.getContentBlocks());
+    }
 
     if (addHeader) {
       addContentTitleAndImage();
