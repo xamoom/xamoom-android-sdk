@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 import com.squareup.picasso.Picasso;
-import com.xamoom.android.xamoomcontentblocks.MarkerCallback;
+import com.xamoom.android.xamoomcontentblocks.Helper.MarkerCallback;
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.Spot;
 

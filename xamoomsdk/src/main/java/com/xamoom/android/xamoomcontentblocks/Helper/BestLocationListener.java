@@ -1,4 +1,4 @@
-package com.xamoom.android.xamoomcontentblocks;
+package com.xamoom.android.xamoomcontentblocks.Helper;
 
 import android.location.Location;
 import android.os.Bundle;

@@ -47,9 +47,6 @@ import static org.mockito.Mockito.verify;
 import static org.robolectric.shadows.support.v4.SupportFragmentTestUtil.startFragment;
 import static org.robolectric.shadows.support.v4.SupportFragmentTestUtil.startVisibleFragment;
 
-/**
- * Created by raphaelseher on 20/04/16.
- */
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21, manifest = "AndroidManifest.xml")
 public class ContentBlockAdapterTest {

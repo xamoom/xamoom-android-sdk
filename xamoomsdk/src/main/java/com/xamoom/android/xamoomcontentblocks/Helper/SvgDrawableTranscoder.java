@@ -1,4 +1,4 @@
-package com.xamoom.android.xamoomcontentblocks;
+package com.xamoom.android.xamoomcontentblocks.Helper;
 
 import android.graphics.Picture;
 import android.graphics.drawable.PictureDrawable;

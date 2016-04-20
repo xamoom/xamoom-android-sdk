@@ -1,4 +1,4 @@
-package com.xamoom.android.xamoomcontentblocks;
+package com.xamoom.android.xamoomcontentblocks.Helper;
 
 import android.annotation.TargetApi;
 import android.graphics.drawable.PictureDrawable;

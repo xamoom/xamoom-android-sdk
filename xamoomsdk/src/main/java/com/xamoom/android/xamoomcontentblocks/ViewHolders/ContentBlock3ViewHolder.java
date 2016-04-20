@@ -24,9 +24,9 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.caverock.androidsvg.SVG;
-import com.xamoom.android.xamoomcontentblocks.SvgDecoder;
-import com.xamoom.android.xamoomcontentblocks.SvgDrawableTranscoder;
-import com.xamoom.android.xamoomcontentblocks.SvgSoftwareLayerSetter;
+import com.xamoom.android.xamoomcontentblocks.Helper.SvgDecoder;
+import com.xamoom.android.xamoomcontentblocks.Helper.SvgDrawableTranscoder;
+import com.xamoom.android.xamoomcontentblocks.Helper.SvgSoftwareLayerSetter;
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 

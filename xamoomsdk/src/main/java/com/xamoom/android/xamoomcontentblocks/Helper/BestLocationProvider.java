@@ -1,4 +1,4 @@
-package com.xamoom.android.xamoomcontentblocks;
+package com.xamoom.android.xamoomcontentblocks.Helper;
 
 import android.Manifest;
 import android.content.Context;
