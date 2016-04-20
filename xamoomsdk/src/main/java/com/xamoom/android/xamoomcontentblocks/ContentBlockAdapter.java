@@ -63,9 +63,21 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
   }
 
+  /**
+   * Will set mLinkColor, mBackgroundColor and mFontColor with
+   * the values from mStyle.
+   */
   private void configureColors() {
     if (mStyle.getHighlightFontColor() != null) {
       mLinkColor = mStyle.getHighlightFontColor().substring(1);
+    }
+
+    if (mStyle.getBackgroundColor() != null) {
+      mBackgroundColor = mStyle.getBackgroundColor().substring(1);
+    }
+
+    if (mStyle.getForegroundFontColor() != null) {
+      mFontColor = mStyle.getForegroundFontColor().substring(1);
     }
   }
 
@@ -199,24 +211,24 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     return mFontColor;
   }
 
-  public void setFontColor(String fontColor) {
-    mFontColor = fontColor;
-  }
-
   public String getBackgroundColor() {
     return mBackgroundColor;
-  }
-
-  public void setBackgroundColor(String backgroundColor) {
-    mBackgroundColor = backgroundColor;
   }
 
   public String getLinkColor() {
     return mLinkColor;
   }
 
-  public void setLinkColor(String linkColor) {
-    mLinkColor = linkColor;
+  public Fragment getFragment() {
+    return mFragment;
+  }
+
+  public EnduserApi getEnduserApi() {
+    return mEnduserApi;
+  }
+
+  public List<ContentBlock> getContentBlocks() {
+    return mContentBlocks;
   }
 }
 

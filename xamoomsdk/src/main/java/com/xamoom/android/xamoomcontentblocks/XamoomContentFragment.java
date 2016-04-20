@@ -98,7 +98,7 @@ public class XamoomContentFragment extends Fragment {
   @Override
   public void onStart() {
     super.onStart();
-    //if there is no animation, the recyclerview will be setup here
+
     if(!isAnimated) {
       setupRecyclerView();
     }
