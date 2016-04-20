@@ -1,6 +1,8 @@
 package com.xamoom.android.xamoomcontentblocks;
 
+import android.graphics.Bitmap;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.LruCache;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,6 +43,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   private String mLinkColor = "00F";
   private String mBackgroundColor = "000";
   private String mFontColor = "FFF";
+  private LruCache<String, Bitmap> mBitmapCache = new LruCache<>(8*1024*1024);
 
   /**
    * Constructor for the Adapter.
@@ -94,6 +97,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   @Override
   public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     switch (viewType) {
+      /*
       case -1:
         View view0 = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.content_header_layout, parent, false);
@@ -106,10 +110,12 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         View view1 = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.content_block_1_layout, parent, false);
         return new ContentBlock1ViewHolder(view1, mFragment);
+      */
       case 2:
         View view2 = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.content_block_2_layout, parent, false);
-        return new ContentBlock2ViewHolder(view2, mFragment, mYoutubeApiKey);
+        return new ContentBlock2ViewHolder(view2, mFragment.getContext(), mYoutubeApiKey, mBitmapCache);
+      /*
       case 3:
         View view3 = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.content_block_3_layout, parent, false);
@@ -138,6 +144,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         View view9 = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.content_block_9_layout, parent, false);
         return new ContentBlock9ViewHolder(view9, mFragment, mEnduserApi);
+        */
       default:
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.empty_layout, parent, false);
         return new ViewHolder(v);
@@ -149,6 +156,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     ContentBlock cb = mContentBlocks.get(position);
 
     switch (cb.getBlockType()) {
+      /*
       case -1:
         ContentHeaderViewHolder newHeaderHolder = (ContentHeaderViewHolder) holder;
         newHeaderHolder.setLinkColor(mLinkColor);
@@ -163,10 +171,12 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         ContentBlock1ViewHolder newHolder1 = (ContentBlock1ViewHolder) holder;
         newHolder1.setupContentBlock(cb);
         break;
+        */
       case 2:
         ContentBlock2ViewHolder newHolder2 = (ContentBlock2ViewHolder) holder;
         newHolder2.setupContentBlock(cb);
         break;
+      /*
       case 3:
         ContentBlock3ViewHolder newHolder3 = (ContentBlock3ViewHolder) holder;
         newHolder3.setupContentBlock(cb);
@@ -196,6 +206,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         newHolder9.showContentLinks = showContentLinks;
         newHolder9.setupContentBlock(cb);
         break;
+        */
     }
   }
 
@@ -204,6 +215,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     mFragment = null;
     mContentBlocks = null;
     mEnduserApi = null;
+    mBitmapCache = null;
     super.onDetachedFromRecyclerView(recyclerView);
   }
 
