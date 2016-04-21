@@ -1,5 +1,6 @@
 package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.PictureDrawable;
@@ -36,135 +37,134 @@ import java.io.InputStream;
  * ImageBlock
  */
 public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
+  private Context mContext;
+  public TextView mTitleTextView;
+  private ProgressBar mImageProgressBar;
+  public ImageView mImageView;
+  private GenericRequestBuilder<Uri, InputStream, SVG, PictureDrawable> requestBuilder;
 
-    private Fragment mFragment;
-    public TextView mTitleTextView;
-    private ProgressBar mImageProgressBar;
-    public ImageView mImageView;
-    private GenericRequestBuilder<Uri, InputStream, SVG, PictureDrawable> requestBuilder;
+  public ContentBlock3ViewHolder(View itemView, Context context) {
+    super(itemView);
+    mContext = context;
+    mTitleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
+    mImageView = (ImageView) itemView.findViewById(R.id.imageImageView);
+    mImageProgressBar = (ProgressBar) itemView.findViewById(R.id.imageProgressBar);
 
-    public ContentBlock3ViewHolder(View itemView, Fragment fragment) {
-        super(itemView);
-        mFragment = fragment;
-        mTitleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
-        mImageView = (ImageView) itemView.findViewById(R.id.imageImageView);
-        mImageProgressBar = (ProgressBar) itemView.findViewById(R.id.imageProgressBar);
+    SvgDrawableTranscoder svgDrawableTranscoder =  new SvgDrawableTranscoder();
+    svgDrawableTranscoder.setmDeviceWidth(mContext.getResources().getDisplayMetrics().widthPixels);
 
-        SvgDrawableTranscoder svgDrawableTranscoder =  new SvgDrawableTranscoder();
-        svgDrawableTranscoder.setmDeviceWidth(mFragment.getActivity().getResources().getDisplayMetrics().widthPixels);
+    requestBuilder = Glide.with(mContext)
+        .using(Glide.buildStreamModelLoader(Uri.class, mContext), InputStream.class)
+        .from(Uri.class)
+        .as(SVG.class)
+        .transcode(svgDrawableTranscoder, PictureDrawable.class)
+        .sourceEncoder(new StreamEncoder())
+        .cacheDecoder(new FileToStreamDecoder<>(new SvgDecoder()))
+        .decoder(new SvgDecoder())
+        .listener(new SvgSoftwareLayerSetter<Uri>());
+  }
 
-        requestBuilder = Glide.with(mFragment)
-                .using(Glide.buildStreamModelLoader(Uri.class, mFragment.getActivity()), InputStream.class)
-                .from(Uri.class)
-                .as(SVG.class)
-                .transcode(svgDrawableTranscoder, PictureDrawable.class)
-                .sourceEncoder(new StreamEncoder())
-                .cacheDecoder(new FileToStreamDecoder<>(new SvgDecoder()))
-                .decoder(new SvgDecoder())
-                .listener(new SvgSoftwareLayerSetter<Uri>());
+  public void setupContentBlock(final ContentBlock contentBlock) {
+    mTitleTextView.setVisibility(View.VISIBLE);
+    if(contentBlock.getTitle() != null)
+      mTitleTextView.setText(contentBlock.getTitle());
+    else {
+      mTitleTextView.setVisibility(View.GONE);
+      LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mImageView.getLayoutParams();
+      params.setMargins(0,0,0,0);
+      mImageView.setLayoutParams(params);
     }
 
-    public void setupContentBlock(final ContentBlock contentBlock) {
-        mTitleTextView.setVisibility(View.VISIBLE);
-        if(contentBlock.getTitle() != null)
-            mTitleTextView.setText(contentBlock.getTitle());
-        else {
-            mTitleTextView.setVisibility(View.GONE);
-            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mImageView.getLayoutParams();
-            params.setMargins(0,0,0,0);
-            mImageView.setLayoutParams(params);
-        }
+    setImageViewContentDescription(contentBlock);
 
-        setImageViewContentDescription(contentBlock);
+    if(contentBlock.getFileId() != null) {
+      final double scaleX;
+      //checking scale and divide it by 100.0f
+      if(contentBlock.getScaleX() != 0) {
+        scaleX = contentBlock.getScaleX()/100.0f;
+      } else {
+        scaleX = 100.0f/100;
+      }
 
-        if(contentBlock.getFileId() != null) {
-            final double scaleX;
-            //checking scale and divide it by 100.0f
-            if(contentBlock.getScaleX() != 0) {
-                scaleX = contentBlock.getScaleX()/100.0f;
-            } else {
-                scaleX = 100.0f/100;
-            }
+      if (contentBlock.getFileId().contains(".svg")) {
+        Uri uri = Uri.parse(contentBlock.getFileId());
+        requestBuilder
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
+            //.placeholder(R.drawable.placeholder)
+            .load(uri)
+            .into(mImageView);
+        mImageProgressBar.setVisibility(View.GONE);
 
-            if (contentBlock.getFileId().contains(".svg")) {
-                Uri uri = Uri.parse(contentBlock.getFileId());
-                requestBuilder
-                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                //.placeholder(R.drawable.placeholder)
-                        .load(uri)
-                        .into(mImageView);
+      } else {
+        //making the scaleX to a factor scaleX
+        Glide.with(mContext)
+            .load(contentBlock.getFileId())
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
+            .dontAnimate()
+            .into(new GlideDrawableImageViewTarget(mImageView) {
+              public void onResourceReady(GlideDrawable drawable, GlideAnimation anim) {
+                super.onResourceReady(drawable, anim);
                 mImageProgressBar.setVisibility(View.GONE);
-
-            } else {
-                //making the scaleX to a factor scaleX
-                Glide.with(mFragment)
-                        .load(contentBlock.getFileId())
-                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                        .dontAnimate()
-                        .into(new GlideDrawableImageViewTarget(mImageView) {
-                            public void onResourceReady(GlideDrawable drawable, GlideAnimation anim) {
-                                super.onResourceReady(drawable, anim);
-                                mImageProgressBar.setVisibility(View.GONE);
-                            }
-                        });
-            }
-            resizeImageViewWithScaling(mImageView, mFragment, scaleX);
-        }
-
-        if(contentBlock.getLinkUrl() != null && !contentBlock.getLinkUrl().equals("")) {
-            mImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(contentBlock.getLinkUrl()));
-                    mFragment.getActivity().startActivity(intent);
-                }
+              }
             });
+      }
+      resizeImageViewWithScaling(mImageView, scaleX);
+    }
+
+    if(contentBlock.getLinkUrl() != null && !contentBlock.getLinkUrl().equals("")) {
+      mImageView.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(contentBlock.getLinkUrl()));
+          mContext.startActivity(intent);
+        }
+      });
+    }
+
+    mImageView.setOnLongClickListener(new View.OnLongClickListener() {
+      @Override
+      public boolean onLongClick(View v) {
+        if (contentBlock.getFileId().contains(".svg") || contentBlock.getFileId().contains(".gif")) {
+          Toast.makeText(mContext, mContext.getString(R.string.cannot_save_image), Toast.LENGTH_SHORT).show();
+          return false;
+        }
+        try {
+          Glide.with(mContext)
+              .load(contentBlock.getFileId())
+              .asBitmap()
+              .into(new SimpleTarget<Bitmap>() {
+                @Override
+                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                  MediaStore.Images.Media.insertImage(mContext.getContentResolver(), resource, contentBlock.getTitle(), "");
+                  Toast.makeText(mContext, mContext.getString(R.string.image_saved_text), Toast.LENGTH_SHORT).show();
+                }
+              });
+        } catch (Exception e) {
+          e.printStackTrace();
         }
 
-        mImageView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (contentBlock.getFileId().contains(".svg") || contentBlock.getFileId().contains(".gif")) {
-                    Toast.makeText(mFragment.getActivity(), mFragment.getString(R.string.cannot_save_image), Toast.LENGTH_SHORT).show();
-                    return false;
-                }
-                try {
-                    Glide.with(mFragment)
-                            .load(contentBlock.getFileId())
-                            .asBitmap()
-                            .into(new SimpleTarget<Bitmap>() {
-                                @Override
-                                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                                    MediaStore.Images.Media.insertImage(mFragment.getActivity().getContentResolver(), resource, contentBlock.getTitle(), "");
-                                    Toast.makeText(mFragment.getActivity(), mFragment.getString(R.string.image_saved_text), Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        return false;
+      }
+    });
+  }
 
-                return false;
-            }
-        });
+  public void setImageViewContentDescription(ContentBlock contentBlock) {
+    if (contentBlock.getAltText() != null && !contentBlock.getAltText().equalsIgnoreCase("")) {
+      mImageView.setContentDescription(contentBlock.getAltText());
+    } else if (contentBlock.getTitle() != null && !contentBlock.getTitle().equalsIgnoreCase("")) {
+      mImageView.setContentDescription(contentBlock.getTitle());
     }
+  }
 
-    public void setImageViewContentDescription(ContentBlock contentBlock) {
-        if (contentBlock.getAltText() != null && !contentBlock.getAltText().equalsIgnoreCase("")) {
-            mImageView.setContentDescription(contentBlock.getAltText());
-        } else if (contentBlock.getTitle() != null && !contentBlock.getTitle().equalsIgnoreCase("")) {
-            mImageView.setContentDescription(contentBlock.getTitle());
-        }
-    }
+  public void resizeImageViewWithScaling(ImageView imageView, double scaleX) {
+    int deviceWidth = mContext.getResources().getDisplayMetrics().widthPixels;
+    double margin = 0;
 
-    public void resizeImageViewWithScaling(ImageView imageView, Fragment fragment, double scaleX) {
-        int deviceWidth = mFragment.getResources().getDisplayMetrics().widthPixels;
-        double margin = 0;// TODO mFragment.getView().getLayoutParams().width;
-
-        //calculate the diff between imageSize and scaledImageSize
-        double deviceWidthWithMargins =  (deviceWidth - (margin * 2));
-        double diff = deviceWidthWithMargins - (deviceWidthWithMargins*scaleX);
-        //set left and right margin to the half of the difference
-        //so the imageView is doing all the resizing
-        mImageView.setPadding((int)(diff/2),0,(int)(diff/2),0);
-    }
+    //calculate the diff between imageSize and scaledImageSize
+    double deviceWidthWithMargins =  (deviceWidth - (margin * 2));
+    double diff = deviceWidthWithMargins - (deviceWidthWithMargins*scaleX);
+    //set left and right margin to the half of the difference
+    //so the imageView is doing all the resizing
+    mImageView.setPadding((int)(diff/2),0,(int)(diff/2),0);
+  }
 }
