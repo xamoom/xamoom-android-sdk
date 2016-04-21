@@ -62,6 +62,8 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
     mVideoPlayImageView = (ImageView) itemView.findViewById(R.id.video_play_image_view);
     mProgressBar = (ProgressBar) itemView.findViewById(R.id.video_progress_bar);
 
+    itemView.setOnClickListener(this);
+
     WebSettings webSettings = mVideoWebView.getSettings();
     webSettings.setJavaScriptEnabled(true);
   }
