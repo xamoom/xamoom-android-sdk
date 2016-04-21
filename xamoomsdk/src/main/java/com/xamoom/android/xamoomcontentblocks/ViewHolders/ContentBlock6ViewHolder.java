@@ -38,10 +38,12 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
   private ImageView mContentThumbnailImageView;
   private ProgressBar mProgressBar;
   private EnduserApi mEnduserApi;
-  private LruCache<String, Content> mContentCache;
   private Content mContent;
+  private LruCache<String, Content> mContentCache;
 
-  public ContentBlock6ViewHolder(View itemView, Context context, EnduserApi enduserApi, LruCache<String, Content> contentCache, XamoomContentFragment.OnXamoomContentFragmentInteractionListener listener) {
+  public ContentBlock6ViewHolder(View itemView, Context context, EnduserApi enduserApi,
+                                 LruCache<String, Content> contentCache,
+                                 XamoomContentFragment.OnXamoomContentFragmentInteractionListener listener) {
     super(itemView);
     mListener = listener;
     mContext = context;

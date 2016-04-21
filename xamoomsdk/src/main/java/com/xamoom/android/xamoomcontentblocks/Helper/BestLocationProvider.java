@@ -15,330 +15,342 @@ import java.util.Date;
 
 public class BestLocationProvider {
 
-	public enum LocationType {
-		GPS,
-		CELL,
-		UNKNOWN
-	}
+  public enum LocationType {
+    GPS,
+    CELL,
+    UNKNOWN
+  }
 
-	private static final String TAG = "BestLocationProvider";
-	private static final int TOO_OLD_LOCATION_DELTA = 1000 * 60 * 2;
+  private static final String TAG = "BestLocationProvider";
+  private static final int TOO_OLD_LOCATION_DELTA = 1000 * 60 * 2;
 
-	private Context mContext;
-	private LocationManager mLocationMgrCell;
-	private LocationManager mLocationMgrGPS;
-	private LocationListener mLocationListener;
-	private Location mLocation;
+  private Context mContext;
+  private LocationManager mLocationMgrCell;
+  private LocationManager mLocationMgrGPS;
+  private LocationListener mLocationListener;
+  private Location mLocation;
 
-	private Timeout mGPSTimeout;
-	private Timeout mCellTimeout;
+  private Timeout mGPSTimeout;
+  private Timeout mCellTimeout;
 
-	private BestLocationListener mListener;
+  private BestLocationListener mListener;
 
-	//config
-	private final boolean mUseGPSLocation;
-	private final boolean mUseCellLocation;
-	private final long mMaxGPSLocationUpdateTimespan;
-	private final long mMaxCellLocationUpdateTimespan;
-	private final long mMinTime;
-	private final float mMinDistance;
+  //config
+  private final boolean mUseGPSLocation;
+  private final boolean mUseCellLocation;
+  private final long mMaxGPSLocationUpdateTimespan;
+  private final long mMaxCellLocationUpdateTimespan;
+  private final long mMinTime;
+  private final float mMinDistance;
 
-	public BestLocationProvider(Context context, boolean useGPSLocation, boolean useCellLocation,
-			long maxGPSLocationUpdateTimespan, long maxCellLocationUpdateTimespan, long minTime, float minDistance){
-		this.mContext = context;
-		this.mUseGPSLocation = useGPSLocation;
-		this.mUseCellLocation = useCellLocation;
-		this.mMaxGPSLocationUpdateTimespan = maxGPSLocationUpdateTimespan;
-		this.mMaxCellLocationUpdateTimespan = maxCellLocationUpdateTimespan;
-		this.mMinTime = minTime;
-		this.mMinDistance = minDistance;
+  public BestLocationProvider(Context context, boolean useGPSLocation, boolean useCellLocation,
+                              long maxGPSLocationUpdateTimespan, long maxCellLocationUpdateTimespan, long minTime, float minDistance){
+    this.mContext = context;
+    this.mUseGPSLocation = useGPSLocation;
+    this.mUseCellLocation = useCellLocation;
+    this.mMaxGPSLocationUpdateTimespan = maxGPSLocationUpdateTimespan;
+    this.mMaxCellLocationUpdateTimespan = maxCellLocationUpdateTimespan;
+    this.mMinTime = minTime;
+    this.mMinDistance = minDistance;
 
-		initLocationListener();
-		initLocationManager();
-	}
+    initLocationListener();
+    initLocationManager();
+  }
 
-	public void startLocationUpdatesWithListener(BestLocationListener listener) {
-		this.mListener = listener;
+  public void destroy() {
+    stopLocationUpdates();
+    mContext = null;
+    mListener = null;
+    mLocationMgrCell = null;
+    mLocationMgrGPS = null;
+    mLocationListener = null;
+    mLocation = null;
+    mGPSTimeout = null;
+    mCellTimeout = null;
+  }
 
-		Location lastKnownLocationCell = null;
-		Location lastKnownLocationGPS = null;
+  public void startLocationUpdatesWithListener(BestLocationListener listener) {
+    this.mListener = listener;
 
-		if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-			if (mContext.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && mContext.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-				Log.e(TAG, "No location permission granted");
-				return;
-			}
-		}
+    Location lastKnownLocationCell = null;
+    Location lastKnownLocationGPS = null;
 
-		if (mLocationMgrCell != null) {
+    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      if (mContext.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && mContext.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        Log.e(TAG, "No location permission granted");
+        return;
+      }
+    }
 
-			mLocationMgrCell.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, mMinTime, mMinDistance, mLocationListener);
+    if (mLocationMgrCell != null) {
 
-			if (this.mMaxCellLocationUpdateTimespan > 0) {
-				mCellTimeout = new Timeout();
-				mCellTimeout.setTimeout(this.mMaxCellLocationUpdateTimespan);
-				mCellTimeout.setLocationType(LocationType.CELL);
-				mCellTimeout.execute();
-			}
+      mLocationMgrCell.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, mMinTime, mMinDistance, mLocationListener);
 
-			lastKnownLocationCell = mLocationMgrCell.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-		}
+      if (this.mMaxCellLocationUpdateTimespan > 0) {
+        mCellTimeout = new Timeout();
+        mCellTimeout.setTimeout(this.mMaxCellLocationUpdateTimespan);
+        mCellTimeout.setLocationType(LocationType.CELL);
+        mCellTimeout.execute();
+      }
 
-		if (mLocationMgrGPS != null) {
-			mLocationMgrGPS.requestLocationUpdates(LocationManager.GPS_PROVIDER, mMinTime, mMinDistance, mLocationListener);
+      lastKnownLocationCell = mLocationMgrCell.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+    }
 
-			if (this.mMaxGPSLocationUpdateTimespan > 0) {
-				mGPSTimeout = new Timeout();
-				mGPSTimeout.setTimeout(this.mMaxGPSLocationUpdateTimespan);
-				mGPSTimeout.setLocationType(LocationType.GPS);
-				mGPSTimeout.execute();
-			}
+    if (mLocationMgrGPS != null) {
+      mLocationMgrGPS.requestLocationUpdates(LocationManager.GPS_PROVIDER, mMinTime, mMinDistance, mLocationListener);
 
-			lastKnownLocationGPS = mLocationMgrGPS.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-		}
+      if (this.mMaxGPSLocationUpdateTimespan > 0) {
+        mGPSTimeout = new Timeout();
+        mGPSTimeout.setTimeout(this.mMaxGPSLocationUpdateTimespan);
+        mGPSTimeout.setLocationType(LocationType.GPS);
+        mGPSTimeout.execute();
+      }
 
-		if (lastKnownLocationCell != null && isBetterLocation(lastKnownLocationCell, mLocation)) {
-			updateLocation(lastKnownLocationCell, LocationType.CELL, false);
-		}
+      lastKnownLocationGPS = mLocationMgrGPS.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+    }
 
-		if (lastKnownLocationGPS != null && isBetterLocation(lastKnownLocationGPS, mLocation)) {
-			updateLocation(lastKnownLocationGPS, LocationType.GPS, false);
-		}
-	}
+    if (lastKnownLocationCell != null && isBetterLocation(lastKnownLocationCell, mLocation)) {
+      updateLocation(lastKnownLocationCell, LocationType.CELL, false);
+    }
 
-	public void stopLocationUpdates() {
-		if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-			if (mContext.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && mContext.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-				Log.e(TAG, "No location permission granted");
-				return;
-			}
-		}
+    if (lastKnownLocationGPS != null && isBetterLocation(lastKnownLocationGPS, mLocation)) {
+      updateLocation(lastKnownLocationGPS, LocationType.GPS, false);
+    }
+  }
 
-		if (mLocationMgrCell != null) {
-			mLocationMgrCell.removeUpdates(mLocationListener);
-		}
+  public void stopLocationUpdates() {
+    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      if (mContext.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && mContext.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        Log.e(TAG, "No location permission granted");
+        return;
+      }
+    }
 
-		if(mLocationMgrGPS != null){
-			mLocationMgrGPS.removeUpdates(mLocationListener);
-		}
+    if (mLocationMgrCell != null) {
+      mLocationMgrCell.removeUpdates(mLocationListener);
+    }
 
-		//remove timeout threads
-		if(mGPSTimeout != null){
-			try { mGPSTimeout.cancel(true); } catch(Exception e) { }
-			mGPSTimeout = null;
-		}
+    if(mLocationMgrGPS != null){
+      mLocationMgrGPS.removeUpdates(mLocationListener);
+    }
 
-		if(mCellTimeout != null){
-			try { mCellTimeout.cancel(true); } catch(Exception e) { }
-			mCellTimeout = null;
-		}
-	}
+    //remove timeout threads
+    if(mGPSTimeout != null){
+      try { mGPSTimeout.cancel(true); } catch(Exception e) { }
+      mGPSTimeout = null;
+    }
 
-	private void restartTimeout(LocationType type){
+    if(mCellTimeout != null){
+      try { mCellTimeout.cancel(true); } catch(Exception e) { }
+      mCellTimeout = null;
+    }
+  }
 
-		if(type == LocationType.GPS){
-			if(mGPSTimeout != null){
-				try { mGPSTimeout.cancel(true); } catch(Exception e) { }
-				mGPSTimeout = new Timeout();
-				mGPSTimeout.setTimeout(this.mMaxGPSLocationUpdateTimespan);
-				mGPSTimeout.setLocationType(LocationType.GPS);
-				mGPSTimeout.execute();
-			}
-		}
+  private void restartTimeout(LocationType type){
 
-		if(type == LocationType.CELL){
-			if(mCellTimeout != null){
-				try { mCellTimeout.cancel(true); } catch(Exception e) { }
-				mCellTimeout = new Timeout();
-				mCellTimeout.setTimeout(this.mMaxCellLocationUpdateTimespan);
-				mCellTimeout.setLocationType(LocationType.CELL);
-				mCellTimeout.execute();
-			}
-		}
-	}
+    if(type == LocationType.GPS){
+      if(mGPSTimeout != null){
+        try { mGPSTimeout.cancel(true); } catch(Exception e) { }
+        mGPSTimeout = new Timeout();
+        mGPSTimeout.setTimeout(this.mMaxGPSLocationUpdateTimespan);
+        mGPSTimeout.setLocationType(LocationType.GPS);
+        mGPSTimeout.execute();
+      }
+    }
 
-	private void updateLocation(Location location, LocationType type, boolean isFresh){
-		mLocation = location;
-		mListener.onLocationUpdate(location, type, isFresh);
-	}
+    if(type == LocationType.CELL){
+      if(mCellTimeout != null){
+        try { mCellTimeout.cancel(true); } catch(Exception e) { }
+        mCellTimeout = new Timeout();
+        mCellTimeout.setTimeout(this.mMaxCellLocationUpdateTimespan);
+        mCellTimeout.setLocationType(LocationType.CELL);
+        mCellTimeout.execute();
+      }
+    }
+  }
 
-	private void initLocationManager(){
-		if(mUseCellLocation){
-			mLocationMgrCell = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
-			if(!mLocationMgrCell.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
-				mLocationMgrCell = null;
-			}
-		}
+  private void updateLocation(Location location, LocationType type, boolean isFresh){
+    mLocation = location;
+    mListener.onLocationUpdate(location, type, isFresh);
+  }
 
-		if(mUseGPSLocation){
-			mLocationMgrGPS = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
-			if(!mLocationMgrGPS.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-				mLocationMgrGPS = null;
-			}
-		}
-	}
+  private void initLocationManager(){
+    if(mUseCellLocation){
+      mLocationMgrCell = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
+      if(!mLocationMgrCell.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+        mLocationMgrCell = null;
+      }
+    }
 
-	private void initLocationListener(){
-		mLocationListener = new LocationListener() {
-		    public void onLocationChanged(Location location) {
-		      Log.i(TAG, "onLocationChanged: " + locationToString(location));
+    if(mUseGPSLocation){
+      mLocationMgrGPS = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
+      if(!mLocationMgrGPS.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+        mLocationMgrGPS = null;
+      }
+    }
+  }
 
-		      if(isBetterLocation(location, mLocation)){
-		    	  updateLocation(location, providerToLocationType(location.getProvider()), true);
+  private void initLocationListener(){
+    mLocationListener = new LocationListener() {
+      public void onLocationChanged(Location location) {
+        Log.i(TAG, "onLocationChanged: " + locationToString(location));
 
-		    	  if(providerToLocationType(location.getProvider()) == LocationType.CELL){
-		    		  if(mCellTimeout != null){
-		    			  mCellTimeout.resetTimeout();
-		    		  }
-		    	  }
+        if(isBetterLocation(location, mLocation)){
+          updateLocation(location, providerToLocationType(location.getProvider()), true);
 
-		    	  if(providerToLocationType(location.getProvider()) == LocationType.GPS){
-		    		  if(mGPSTimeout != null){
-		    			  mGPSTimeout.resetTimeout();
-		    		  }
-		    	  }
+          if(providerToLocationType(location.getProvider()) == LocationType.CELL){
+            if(mCellTimeout != null){
+              mCellTimeout.resetTimeout();
+            }
+          }
 
-		    	  Log.d(TAG, "onLocationChanged NEW BEST LOCATION: " + locationToString(mLocation));
-		      }
-		    }
+          if(providerToLocationType(location.getProvider()) == LocationType.GPS){
+            if(mGPSTimeout != null){
+              mGPSTimeout.resetTimeout();
+            }
+          }
 
-		    public void onStatusChanged(String provider, int status, Bundle extras) {
-		    	mListener.onStatusChanged(provider, status, extras);
-		    }
+          Log.d(TAG, "onLocationChanged NEW BEST LOCATION: " + locationToString(mLocation));
+        }
+      }
 
-		    public void onProviderEnabled(String provider) {
-		    	mListener.onProviderEnabled(provider);
-		    }
+      public void onStatusChanged(String provider, int status, Bundle extras) {
+        mListener.onStatusChanged(provider, status, extras);
+      }
 
-		    public void onProviderDisabled(String provider) {
-		    	mListener.onProviderDisabled(provider);
-		    }
-		};
-	}
+      public void onProviderEnabled(String provider) {
+        mListener.onProviderEnabled(provider);
+      }
 
-	private LocationType providerToLocationType(String provider){
-		if(provider.equals("gps")){
-			return LocationType.GPS;
-		} else if(provider.equals("network")){
-			return LocationType.CELL;
-		} else {
-			Log.w(TAG, "providerToLocationType Unknown Provider: " + provider);
-			return LocationType.UNKNOWN;
-		}
-	}
+      public void onProviderDisabled(String provider) {
+        mListener.onProviderDisabled(provider);
+      }
+    };
+  }
 
-	public String locationToString(Location l){
-		StringBuffer sb = new StringBuffer();
+  private LocationType providerToLocationType(String provider){
+    if(provider.equals("gps")){
+      return LocationType.GPS;
+    } else if(provider.equals("network")){
+      return LocationType.CELL;
+    } else {
+      Log.w(TAG, "providerToLocationType Unknown Provider: " + provider);
+      return LocationType.UNKNOWN;
+    }
+  }
 
-		sb.append("PROVIDER: ");
-		sb.append(l.getProvider());
-		sb.append(" - LAT: ");
-		sb.append(l.getLatitude());
-		sb.append(" - LON: ");
-		sb.append(l.getLongitude());
-		sb.append(" - BEARING: ");
-		sb.append(l.getBearing());
-		sb.append(" - ALT: ");
-		sb.append(l.getAltitude());
-		sb.append(" - SPEED: ");
-		sb.append(l.getSpeed());
-		sb.append(" - TIME: ");
-		sb.append(l.getTime());
-		sb.append(" - ACC: ");
-		sb.append(l.getAccuracy());
+  public String locationToString(Location l){
+    StringBuffer sb = new StringBuffer();
 
-		return sb.toString();
-	}
+    sb.append("PROVIDER: ");
+    sb.append(l.getProvider());
+    sb.append(" - LAT: ");
+    sb.append(l.getLatitude());
+    sb.append(" - LON: ");
+    sb.append(l.getLongitude());
+    sb.append(" - BEARING: ");
+    sb.append(l.getBearing());
+    sb.append(" - ALT: ");
+    sb.append(l.getAltitude());
+    sb.append(" - SPEED: ");
+    sb.append(l.getSpeed());
+    sb.append(" - TIME: ");
+    sb.append(l.getTime());
+    sb.append(" - ACC: ");
+    sb.append(l.getAccuracy());
+
+    return sb.toString();
+  }
 
 
-	protected boolean isBetterLocation(Location location, Location currentBestLocation) {
-	    if (currentBestLocation == null) {
-	        // A new location is always better than no location
-	        return true;
-	    }
+  protected boolean isBetterLocation(Location location, Location currentBestLocation) {
+    if (currentBestLocation == null) {
+      // A new location is always better than no location
+      return true;
+    }
 
-	    // Check whether the new location fix is newer or older
-	    long timeDelta = location.getTime() - currentBestLocation.getTime();
-	    boolean isSignificantlyNewer = timeDelta > TOO_OLD_LOCATION_DELTA;
-	    boolean isSignificantlyOlder = timeDelta < -TOO_OLD_LOCATION_DELTA;
-	    boolean isNewer = timeDelta > 0;
+    // Check whether the new location fix is newer or older
+    long timeDelta = location.getTime() - currentBestLocation.getTime();
+    boolean isSignificantlyNewer = timeDelta > TOO_OLD_LOCATION_DELTA;
+    boolean isSignificantlyOlder = timeDelta < -TOO_OLD_LOCATION_DELTA;
+    boolean isNewer = timeDelta > 0;
 
-	    // If it's been more than two minutes since the current location, use the new location
-	    // because the user has likely moved
-	    if (isSignificantlyNewer) {
-	        return true;
-	    // If the new location is more than two minutes older, it must be worse
-	    } else if (isSignificantlyOlder) {
-	        return false;
-	    }
+    // If it's been more than two minutes since the current location, use the new location
+    // because the user has likely moved
+    if (isSignificantlyNewer) {
+      return true;
+      // If the new location is more than two minutes older, it must be worse
+    } else if (isSignificantlyOlder) {
+      return false;
+    }
 
-	    // Check whether the new location fix is more or less accurate
-	    int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
-	    boolean isLessAccurate = accuracyDelta > 0;
-	    boolean isMoreAccurate = accuracyDelta < 0;
-	    boolean isSignificantlyLessAccurate = accuracyDelta > 200;
+    // Check whether the new location fix is more or less accurate
+    int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
+    boolean isLessAccurate = accuracyDelta > 0;
+    boolean isMoreAccurate = accuracyDelta < 0;
+    boolean isSignificantlyLessAccurate = accuracyDelta > 200;
 
-	    // Check if the old and new location are from the same provider
-	    boolean isFromSameProvider = isSameProvider(location.getProvider(),
-	            currentBestLocation.getProvider());
+    // Check if the old and new location are from the same provider
+    boolean isFromSameProvider = isSameProvider(location.getProvider(),
+        currentBestLocation.getProvider());
 
-	    // Determine location quality using a combination of timeliness and accuracy
-	    if (isMoreAccurate) {
-	        return true;
-	    } else if (isNewer && !isLessAccurate) {
-	        return true;
-	    } else if (isNewer && !isSignificantlyLessAccurate && isFromSameProvider) {
-	        return true;
-	    }
-	    return false;
-	}
+    // Determine location quality using a combination of timeliness and accuracy
+    if (isMoreAccurate) {
+      return true;
+    } else if (isNewer && !isLessAccurate) {
+      return true;
+    } else if (isNewer && !isSignificantlyLessAccurate && isFromSameProvider) {
+      return true;
+    }
+    return false;
+  }
 
-	/** Checks whether two providers are the same */
-	private boolean isSameProvider(String provider1, String provider2) {
-	    if (provider1 == null) {
-	      return provider2 == null;
-	    }
-	    return provider1.equals(provider2);
-	}
+  /** Checks whether two providers are the same */
+  private boolean isSameProvider(String provider1, String provider2) {
+    if (provider1 == null) {
+      return provider2 == null;
+    }
+    return provider1.equals(provider2);
+  }
 
-	//timeout threads
-	private class Timeout extends AsyncTask<Void, Void, Void> {
+  //timeout threads
+  private class Timeout extends AsyncTask<Void, Void, Void> {
 
-		private LocationType mLocationType;
-		private long mTimeout;
-		private long mStartTime;
+    private LocationType mLocationType;
+    private long mTimeout;
+    private long mStartTime;
 
-		public void setLocationType(LocationType locationtype){
-			mLocationType = locationtype;
-		}
+    public void setLocationType(LocationType locationtype){
+      mLocationType = locationtype;
+    }
 
-		public void setTimeout(long timeout){
-			mTimeout = timeout;
-		}
+    public void setTimeout(long timeout){
+      mTimeout = timeout;
+    }
 
-		public void resetTimeout(){
-			mStartTime = new Date().getTime();
-		}
+    public void resetTimeout(){
+      mStartTime = new Date().getTime();
+    }
 
-		@Override
-		protected Void doInBackground(Void... params) {
-			resetTimeout();
+    @Override
+    protected Void doInBackground(Void... params) {
+      resetTimeout();
 
-			try {
-				while(new Date().getTime() < mStartTime + mTimeout){
-					Thread.sleep(1000);
-				}
-	        	} catch (InterruptedException e) {
-				Log.e(TAG, "Timeout: Exception in doInBackground: " + e.getMessage());
-			}
-			return null;
-		}
+      try {
+        while(new Date().getTime() < mStartTime + mTimeout){
+          Thread.sleep(1000);
+        }
+      } catch (InterruptedException e) {
+        Log.e(TAG, "Timeout: Exception in doInBackground: " + e.getMessage());
+      }
+      return null;
+    }
 
-		@Override
-		protected void onPostExecute(Void result) {
-			mListener.onLocationUpdateTimeoutExceeded(mLocationType);
-			restartTimeout(mLocationType);
-		}
-	}
+    @Override
+    protected void onPostExecute(Void result) {
+      mListener.onLocationUpdateTimeoutExceeded(mLocationType);
+      restartTimeout(mLocationType);
+    }
+  }
 
 }

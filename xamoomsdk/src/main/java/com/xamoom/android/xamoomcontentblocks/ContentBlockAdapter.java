@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.xamoom.android.xamoomcontentblocks.Helper.BestLocationProvider;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock0ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock1ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock2ViewHolder;
@@ -40,6 +41,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   private Style mStyle;
   private String mYoutubeApiKey;
   private EnduserApi mEnduserApi;
+  private BestLocationProvider mBestLocationProvider;
   private boolean showContentLinks;
 
   private String mLinkColor = "00F";
@@ -66,6 +68,9 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     mEnduserApi = enduserApi;
     showContentLinks = showSpotMapContentLinks;
     mYoutubeApiKey = youtubeApiKey;
+
+    mBestLocationProvider = new BestLocationProvider(fragment.getContext(), false, true,
+        1000, 1000, 5, 10);
 
     if (mStyle != null) {
       configureColors();
@@ -147,7 +152,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
       case 9:
         View view9 = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.content_block_9_layout, parent, false);
-        return new ContentBlock9ViewHolder(view9, mFragment, mEnduserApi);
+        return new ContentBlock9ViewHolder(view9, mFragment, mEnduserApi, mBestLocationProvider);
       default:
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.empty_layout, parent, false);
         return new ViewHolder(v);
@@ -216,6 +221,8 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     mContentBlocks = null;
     mEnduserApi = null;
     mBitmapCache = null;
+    mBestLocationProvider.destroy();
+    mBestLocationProvider = null;
     super.onDetachedFromRecyclerView(recyclerView);
   }
 
