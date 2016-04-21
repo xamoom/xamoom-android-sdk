@@ -1,8 +1,11 @@
 package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.LruCache;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,26 +30,29 @@ import at.rags.morpheus.Error;
 /**
  * ContentBlock
  */
-public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder {
-  private Fragment mFragment;
+public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+  private XamoomContentFragment.OnXamoomContentFragmentInteractionListener mListener;
+  private Context mContext;
   private TextView mTitleTextView;
   private TextView mDescriptionTextView;
-  private LinearLayout mRootLayout;
   private ImageView mContentThumbnailImageView;
   private ProgressBar mProgressBar;
   private EnduserApi mEnduserApi;
+  private LruCache<String, Content> mContentCache;
+  private Content mContent;
 
-  private static HashMap<String,Content> mSavedContentContentBlock = new HashMap<>();
-
-  public ContentBlock6ViewHolder(View itemView, Fragment fragment, EnduserApi enduserApi) {
+  public ContentBlock6ViewHolder(View itemView, Context context, EnduserApi enduserApi, LruCache<String, Content> contentCache, XamoomContentFragment.OnXamoomContentFragmentInteractionListener listener) {
     super(itemView);
-    mFragment = fragment;
+    mListener = listener;
+    mContext = context;
     mTitleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
     mDescriptionTextView = (TextView) itemView.findViewById(R.id.descriptionTextView);
-    mRootLayout = (LinearLayout) itemView.findViewById(R.id.contentBlockLinearLayout);
     mContentThumbnailImageView = (ImageView) itemView.findViewById(R.id.contentThumbnailImageView);
     mProgressBar = (ProgressBar) itemView.findViewById(R.id.contentProgressBar);
     mEnduserApi = enduserApi;
+    mContentCache = contentCache;
+
+    itemView.setOnClickListener(this);
   }
 
   public void setupContentBlock(ContentBlock contentBlock) {
@@ -56,64 +62,52 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder {
 
     mProgressBar.setVisibility(View.VISIBLE);
 
-    if(mSavedContentContentBlock.containsKey(contentBlock.getContentId())) {
-      final Content result = mSavedContentContentBlock.get(contentBlock.getContentId());
-      mTitleTextView.setText(result.getTitle());
-      mDescriptionTextView.setText(result.getDescription());
+    mContent = mContentCache.get(contentBlock.getContentId());
 
-      if (mFragment.isAdded()) {
-        Glide.with(mFragment)
-            .load(result.getPublicImageUrl())
-            .diskCacheStrategy(DiskCacheStrategy.ALL)
-            .crossFade()
-            .centerCrop()
-            .into(mContentThumbnailImageView);
+    if (mContent != null) {
+      displayContent(mContent);
+      mProgressBar.setVisibility(View.GONE);
+    } else {
+      loadContent(contentBlock.getContentId());
+    }
+  }
+
+  private void loadContent(final String contentId) {
+    mEnduserApi.getContent(contentId, new APICallback<Content, List<at.rags.morpheus.Error>>() {
+      @Override
+      public void finished(Content result) {
+        mProgressBar.setVisibility(View.GONE);
+        mContent = result;
+        mContentCache.put(contentId, result);
+        displayContent(result);
       }
 
-      mProgressBar.setVisibility(View.GONE);
-
-      mRootLayout.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          XamoomContentFragment xamoomContentFragment = (XamoomContentFragment) mFragment;
-          xamoomContentFragment.contentBlockClick(result);
+      @Override
+      public void error(List<Error> error) {
+        mProgressBar.setVisibility(View.GONE);
+        if (error != null && error.get(0) != null) {
+          Log.e("XamoomContentBlocks", error.get(0).getCode() + " Error Title" + error.get(0).getTitle() + " Detail: " + error.get(0).getDetail());
         }
-      });
-    } else {
-      mEnduserApi.getContent(contentBlock.getContentId(), new APICallback<Content, List<at.rags.morpheus.Error>>() {
-        @Override
-        public void finished(final Content result) {
-          //save result
-          mSavedContentContentBlock.put(result.getId(), result);
+      }
+    });
+  }
 
-          mTitleTextView.setText(result.getTitle());
-          mDescriptionTextView.setText(result.getDescription());
+  private void displayContent(Content content) {
+    mTitleTextView.setText(content.getTitle());
+    mDescriptionTextView.setText(content.getDescription());
 
-          if (mFragment.isAdded()) {
-            Glide.with(mFragment)
-                .load(result.getPublicImageUrl())
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .crossFade()
-                .centerCrop()
-                .into(mContentThumbnailImageView);
-          }
+    Glide.with(mContext)
+        .load(content.getPublicImageUrl())
+        .diskCacheStrategy(DiskCacheStrategy.ALL)
+        .crossFade()
+        .centerCrop()
+        .into(mContentThumbnailImageView);
+  }
 
-          mProgressBar.setVisibility(View.GONE);
-
-          mRootLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-              XamoomContentFragment xamoomContentFragment = (XamoomContentFragment) mFragment;
-              xamoomContentFragment.contentBlockClick(result);
-            }
-          });
-        }
-
-        @Override
-        public void error(List<Error> error) {
-
-        }
-      });
+  @Override
+  public void onClick(View v) {
+    if (mContent != null) {
+      mListener.clickedContentBlock(mContent);
     }
   }
 }

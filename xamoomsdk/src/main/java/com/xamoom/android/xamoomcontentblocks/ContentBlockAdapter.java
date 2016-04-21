@@ -22,6 +22,7 @@ import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock9ViewHolde
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentHeaderViewHolder;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.R;
+import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Resource.Style;
 
@@ -33,6 +34,7 @@ import java.util.List;
  * @author Raphael Seher
  */
 public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+  private XamoomContentFragment.OnXamoomContentFragmentInteractionListener mListener;
   private Fragment mFragment;
   private List<ContentBlock> mContentBlocks;
   private Style mStyle;
@@ -44,6 +46,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   private String mBackgroundColor = "000";
   private String mFontColor = "FFF";
   private LruCache<String, Bitmap> mBitmapCache = new LruCache<>(8*1024*1024);
+  private LruCache<String, Content> mContentCache = new LruCache<>(2*1024*1024);
 
   /**
    * Constructor for the Adapter.
@@ -51,9 +54,12 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
    * @param contentBlocks ContentBlocks to display.
    * @param style The style from your xamoom system.
    * @param youtubeApiKey Youtube api key from Google Developer Console.
+   * @param listener FragmentListener for click events.
    */
   public ContentBlockAdapter(Fragment fragment, List<ContentBlock> contentBlocks,
-                             Style style, EnduserApi enduserApi, boolean showSpotMapContentLinks, String youtubeApiKey) {
+                             Style style, EnduserApi enduserApi, boolean showSpotMapContentLinks,
+                             String youtubeApiKey, XamoomContentFragment.OnXamoomContentFragmentInteractionListener listener) {
+    mListener = listener;
     mFragment = fragment;
     mContentBlocks = contentBlocks;
     mStyle = style;
@@ -128,7 +134,8 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
       case 6:
         View view6 = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.content_block_6_layout, parent, false);
-        return new ContentBlock6ViewHolder(view6, mFragment, mEnduserApi);
+        return new ContentBlock6ViewHolder(view6, mFragment.getContext(), mEnduserApi,
+            mContentCache, mListener);
       case 7:
         View view7 = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.content_block_7_layout, parent, false);
