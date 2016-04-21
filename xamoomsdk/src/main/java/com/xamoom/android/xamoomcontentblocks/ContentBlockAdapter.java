@@ -97,7 +97,6 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   @Override
   public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     switch (viewType) {
-      /*
       case -1:
         View view0 = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.content_header_layout, parent, false);
@@ -110,16 +109,14 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         View view1 = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.content_block_1_layout, parent, false);
         return new ContentBlock1ViewHolder(view1, mFragment);
-      */
       case 2:
         View view2 = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.content_block_2_layout, parent, false);
         return new ContentBlock2ViewHolder(view2, mFragment.getContext(), mYoutubeApiKey, mBitmapCache);
-      /*
       case 3:
         View view3 = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.content_block_3_layout, parent, false);
-        return new ContentBlock3ViewHolder(view3, mFragment);
+        return new ContentBlock3ViewHolder(view3, mFragment.getContext());
       case 4:
         View view4 = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.content_block_4_layout, parent, false);
@@ -144,7 +141,6 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         View view9 = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.content_block_9_layout, parent, false);
         return new ContentBlock9ViewHolder(view9, mFragment, mEnduserApi);
-        */
       default:
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.empty_layout, parent, false);
         return new ViewHolder(v);
@@ -156,7 +152,6 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     ContentBlock cb = mContentBlocks.get(position);
 
     switch (cb.getBlockType()) {
-      /*
       case -1:
         ContentHeaderViewHolder newHeaderHolder = (ContentHeaderViewHolder) holder;
         newHeaderHolder.setLinkColor(mLinkColor);
@@ -171,12 +166,11 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         ContentBlock1ViewHolder newHolder1 = (ContentBlock1ViewHolder) holder;
         newHolder1.setupContentBlock(cb);
         break;
-        */
+
       case 2:
         ContentBlock2ViewHolder newHolder2 = (ContentBlock2ViewHolder) holder;
         newHolder2.setupContentBlock(cb);
         break;
-      /*
       case 3:
         ContentBlock3ViewHolder newHolder3 = (ContentBlock3ViewHolder) holder;
         newHolder3.setupContentBlock(cb);
@@ -206,7 +200,6 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         newHolder9.showContentLinks = showContentLinks;
         newHolder9.setupContentBlock(cb);
         break;
-        */
     }
   }
 
