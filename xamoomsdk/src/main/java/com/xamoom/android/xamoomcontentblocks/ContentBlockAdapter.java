@@ -69,8 +69,10 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     showContentLinks = showSpotMapContentLinks;
     mYoutubeApiKey = youtubeApiKey;
 
-    mBestLocationProvider = new BestLocationProvider(fragment.getContext(), false, true,
-        1000, 1000, 5, 10);
+    if (fragment != null && fragment.getContext() != null) {
+      mBestLocationProvider = new BestLocationProvider(fragment.getContext(), false, true,
+          1000, 1000, 5, 10);
+    }
 
     if (mStyle != null) {
       configureColors();
@@ -221,8 +223,10 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     mContentBlocks = null;
     mEnduserApi = null;
     mBitmapCache = null;
-    mBestLocationProvider.destroy();
-    mBestLocationProvider = null;
+    if (mBestLocationProvider != null) {
+      mBestLocationProvider.destroy();
+      mBestLocationProvider = null;
+    }
     super.onDetachedFromRecyclerView(recyclerView);
   }
 
