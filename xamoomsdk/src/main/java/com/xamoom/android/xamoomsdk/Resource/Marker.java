@@ -1,12 +1,15 @@
 package com.xamoom.android.xamoomsdk.Resource;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import at.rags.morpheus.Annotations.SerializeName;
 import at.rags.morpheus.Resource;
 
 /**
  * xamoom Marker model.
  */
-public class Marker extends Resource {
+public class Marker extends Resource implements Parcelable {
   private String qr;
   private String nfc;
   @SerializeName("ibacon-region-uid")
@@ -17,6 +20,30 @@ public class Marker extends Resource {
   private String beaconMinor;
   @SerializeName("eddystone-url")
   private String eddystoneUrl;
+
+  public Marker() {
+  }
+
+  protected Marker(Parcel in) {
+    qr = in.readString();
+    nfc = in.readString();
+    beaconUUID = in.readString();
+    beaconMajor = in.readString();
+    beaconMinor = in.readString();
+    eddystoneUrl = in.readString();
+  }
+
+  public static final Creator<Marker> CREATOR = new Creator<Marker>() {
+    @Override
+    public Marker createFromParcel(Parcel in) {
+      return new Marker(in);
+    }
+
+    @Override
+    public Marker[] newArray(int size) {
+      return new Marker[size];
+    }
+  };
 
   public String getQr() {
     return qr;
@@ -64,5 +91,20 @@ public class Marker extends Resource {
 
   public void setEddystoneUrl(String eddystoneUrl) {
     this.eddystoneUrl = eddystoneUrl;
+  }
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeString(qr);
+    dest.writeString(nfc);
+    dest.writeString(beaconUUID);
+    dest.writeString(beaconMajor);
+    dest.writeString(beaconMinor);
+    dest.writeString(eddystoneUrl);
   }
 }

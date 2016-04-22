@@ -1,5 +1,8 @@
 package com.xamoom.android.xamoomsdk.Resource;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
 import at.rags.morpheus.Annotations.SerializeName;
@@ -8,7 +11,7 @@ import at.rags.morpheus.Resource;
 /**
  *  xamoom ContentBlock model.
  */
-public class ContentBlock extends Resource {
+public class ContentBlock extends Resource implements Parcelable {
   @SerializeName("block-type")
   private int blockType;
   @SerializeName("is-public")
@@ -38,6 +41,40 @@ public class ContentBlock extends Resource {
   private boolean showContentOnSpotmap;
   @SerializeName("alt-text")
   private String altText;
+
+  public ContentBlock() {
+  }
+
+  protected ContentBlock(Parcel in) {
+    blockType = in.readInt();
+    publicStatus = in.readByte() != 0;
+    title = in.readString();
+    text = in.readString();
+    artists = in.readString();
+    fileId = in.readString();
+    soundcloudUrl = in.readString();
+    linkType = in.readInt();
+    linkUrl = in.readString();
+    contentId = in.readString();
+    downloadType = in.readInt();
+    spotMapTags = in.createStringArrayList();
+    scaleX = in.readDouble();
+    videoUrl = in.readString();
+    showContentOnSpotmap = in.readByte() != 0;
+    altText = in.readString();
+  }
+
+  public static final Creator<ContentBlock> CREATOR = new Creator<ContentBlock>() {
+    @Override
+    public ContentBlock createFromParcel(Parcel in) {
+      return new ContentBlock(in);
+    }
+
+    @Override
+    public ContentBlock[] newArray(int size) {
+      return new ContentBlock[size];
+    }
+  };
 
   public int getBlockType() {
     return blockType;
@@ -165,5 +202,30 @@ public class ContentBlock extends Resource {
 
   public void setAltText(String altText) {
     this.altText = altText;
+  }
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeInt(blockType);
+    dest.writeByte((byte) (publicStatus ? 1 : 0));
+    dest.writeString(title);
+    dest.writeString(text);
+    dest.writeString(artists);
+    dest.writeString(fileId);
+    dest.writeString(soundcloudUrl);
+    dest.writeInt(linkType);
+    dest.writeString(linkUrl);
+    dest.writeString(contentId);
+    dest.writeInt(downloadType);
+    dest.writeStringList(spotMapTags);
+    dest.writeDouble(scaleX);
+    dest.writeString(videoUrl);
+    dest.writeByte((byte) (showContentOnSpotmap ? 1 : 0));
+    dest.writeString(altText);
   }
 }

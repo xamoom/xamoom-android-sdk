@@ -1,5 +1,9 @@
 package com.xamoom.android.xamoomsdk.Resource;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,12 +14,12 @@ import at.rags.morpheus.Resource;
 /**
  * xamoom Spot model.
  */
-public class Spot extends Resource {
+public class Spot extends Resource implements Parcelable {
   private String name;
   @SerializeName("image")
   private String publicImageUrl;
   private String description;
-  private Map<String, Double> location;
+  private HashMap<String, Double> location;
   private List<String> tags;
   @Relationship("markers")
   private List<Marker> markers;
@@ -23,6 +27,32 @@ public class Spot extends Resource {
   private System system;
   @Relationship("content")
   private Content content;
+
+  public Spot() {
+  }
+
+  protected Spot(Parcel in) {
+    name = in.readString();
+    publicImageUrl = in.readString();
+    description = in.readString();
+    location = (HashMap<String, Double>) in.readSerializable();
+    tags = in.createStringArrayList();
+    markers = in.createTypedArrayList(Marker.CREATOR);
+    system = in.readParcelable(System.class.getClassLoader());
+    content = in.readParcelable(Content.class.getClassLoader());
+  }
+
+  public static final Creator<Spot> CREATOR = new Creator<Spot>() {
+    @Override
+    public Spot createFromParcel(Parcel in) {
+      return new Spot(in);
+    }
+
+    @Override
+    public Spot[] newArray(int size) {
+      return new Spot[size];
+    }
+  };
 
   public String getName() {
     return name;
@@ -84,7 +114,7 @@ public class Spot extends Resource {
     return location;
   }
 
-  public void setLocation(Map<String, Double> location) {
+  public void setLocation(HashMap<String, Double> location) {
     this.location = location;
   }
 
@@ -94,5 +124,22 @@ public class Spot extends Resource {
 
   public double getLon() {
     return location.get("lon");
+  }
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeString(name);
+    dest.writeString(publicImageUrl);
+    dest.writeString(description);
+    dest.writeSerializable(location);
+    dest.writeStringList(tags);
+    dest.writeTypedList(markers);
+    dest.writeParcelable(system, flags);
+    dest.writeParcelable(content, flags);
   }
 }

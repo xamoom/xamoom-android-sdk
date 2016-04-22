@@ -44,6 +44,8 @@ dependencies {
 	testCompile "org.robolectric:robolectric:3.0"
 	testCompile "org.robolectric:shadows-support-v4:3.0"
 	androidTestCompile 'com.android.support.test:runner:0.4'
+	compile files('libs/androidsvg-1.2.1.jar')
+	compile files('libs/YouTubeAndroidPlayerApi.jar')
 	compile 'com.android.support:support-v4:23.3.0'
 	compile 'com.google.android.gms:play-services-maps:8.4.0'
 	compile 'com.squareup.retrofit2:retrofit:2.0.0'
@@ -52,8 +54,7 @@ dependencies {
 	compile 'com.android.support:recyclerview-v7:23.3.0'
 	compile 'com.github.bumptech.glide:glide:3.6.0'
 	compile 'com.squareup.picasso:picasso:2.5.2'
-	compile files('libs/androidsvg-1.2.1.jar')
-	compile files('libs/YouTubeAndroidPlayerApi.jar')
+	compile 'com.android.support:appcompat-v7:23.3.0'
 }
 
 ext {

@@ -1,12 +1,16 @@
 package com.xamoom.android.xamoomsdk.Resource;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import at.rags.morpheus.Annotations.SerializeName;
 import at.rags.morpheus.Resource;
+
 
 /**
  *  xamoom Style model.
  */
-public class Style extends Resource {
+public class Style extends Resource implements Parcelable {
   @SerializeName("background-color")
   private String backgroundColor;
   @SerializeName("highlight-color")
@@ -18,6 +22,30 @@ public class Style extends Resource {
   @SerializeName("map-pin")
   private String customMarker;
   private String icon;
+
+  public Style() {
+  }
+
+  protected Style(Parcel in) {
+    backgroundColor = in.readString();
+    highlightFontColor = in.readString();
+    foregroundFontColor = in.readString();
+    chromeHeaderColor = in.readString();
+    customMarker = in.readString();
+    icon = in.readString();
+  }
+
+  public static final Creator<Style> CREATOR = new Creator<Style>() {
+    @Override
+    public Style createFromParcel(Parcel in) {
+      return new Style(in);
+    }
+
+    @Override
+    public Style[] newArray(int size) {
+      return new Style[size];
+    }
+  };
 
   public String getBackgroundColor() {
     return backgroundColor;
@@ -65,5 +93,20 @@ public class Style extends Resource {
 
   public void setIcon(String icon) {
     this.icon = icon;
+  }
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeString(backgroundColor);
+    dest.writeString(highlightFontColor);
+    dest.writeString(foregroundFontColor);
+    dest.writeString(chromeHeaderColor);
+    dest.writeString(customMarker);
+    dest.writeString(icon);
   }
 }
