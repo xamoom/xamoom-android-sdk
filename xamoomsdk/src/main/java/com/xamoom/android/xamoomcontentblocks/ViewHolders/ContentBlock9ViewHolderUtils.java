@@ -1,5 +1,6 @@
 package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -8,13 +9,50 @@ import android.util.Base64;
 
 import com.caverock.androidsvg.SVG;
 import com.caverock.androidsvg.SVGParseException;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
+import com.xamoom.android.xamoomsdk.R;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by raphaelseher on 16.11.15.
  */
 public class ContentBlock9ViewHolderUtils {
+
+  public static CameraUpdate zoomToDisplayAllMarker(Set<Marker> markers, int padding) {
+    LatLngBounds.Builder builder = new LatLngBounds.Builder();
+    for (Marker marker :markers) {
+      builder.include(marker.getPosition());
+    }
+
+    LatLngBounds bounds = builder.build();
+    CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+
+    return cu;
+  }
+
+  /**
+   * Returns the icon for mapMarker.
+   *
+   * @param customMarker base64 custom marker (mappin) from xamoom
+   * @return icon Bitmap of custom marker
+   */
+  public static Bitmap getIcon(String customMarker, Context context) {
+    Bitmap icon;
+    if (customMarker != null) {
+      String iconString = customMarker;
+      icon = ContentBlock9ViewHolderUtils.getIconFromBase64(iconString, context);
+    } else {
+      icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_default_map_marker);
+    }
+
+    return icon;
+  }
 
   /**
    * Decodes a base64 string to an icon for mapMarkers.
@@ -24,16 +62,13 @@ public class ContentBlock9ViewHolderUtils {
    * @param base64String Base64 string that will be resized. Must start with "data:image/"
    * @return icon as BitMap, or null if there was a problem
    */
-  public static Bitmap getIconFromBase64(String base64String, Fragment fragment) {
+  public static Bitmap getIconFromBase64(String base64String, Context context) {
     Bitmap icon = null;
     byte[] data1;
     String decodedString1 = "";
     float newImageWidth = 25.0f;
 
-    if (fragment.isAdded()) {
-      //image will be resized depending on the density of the screen
-      newImageWidth = newImageWidth * fragment.getResources().getDisplayMetrics().density;
-    }
+    newImageWidth = newImageWidth * context.getResources().getDisplayMetrics().density;
 
     if (base64String == null)
       return null;

@@ -3,11 +3,13 @@ package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.ActivityManagerCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -32,6 +34,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.xamoom.android.xamoomcontentblocks.Helper.BestLocationListener;
 import com.xamoom.android.xamoomcontentblocks.Helper.BestLocationProvider;
+import com.xamoom.android.xamoomcontentblocks.MapActivity;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.APIListCallback;
@@ -42,8 +45,10 @@ import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Resource.Spot;
 import com.xamoom.android.xamoomsdk.Resource.Style;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Map;
 
 import at.rags.morpheus.Error;
 
@@ -60,11 +65,7 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
   private SupportMapFragment mMapFragment;
   private ContentBlock mContentBlock;
   private GoogleMap mGoogleMap;
-  private LinearLayout mRootLayout;
-  private BestLocationProvider mBestLocationProvider;
-  private Location mUserLocation;
   private ArrayMap<Marker, Spot> mMarkerArray;
-  private ContentBlock9InfoWindowAdapter mInfoWindowAdapter;
   private String mBase64Icon;
   private List<Spot> mSpotList;
 
@@ -72,15 +73,13 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
   private int mUniqueFrameId;
   public boolean showContentLinks;
 
-  public ContentBlock9ViewHolder(View itemView, Fragment fragment, EnduserApi enduserApi, BestLocationProvider bestLocationProvider) {
+  public ContentBlock9ViewHolder(View itemView, Fragment fragment, EnduserApi enduserApi) {
     super(itemView);
     mFragment = fragment;
     mContext = fragment.getContext();
     mEnduserApi = enduserApi;
     mTitleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
-    mRootLayout = (LinearLayout) itemView.findViewById(R.id.rootLayout);
     mMarkerArray = new ArrayMap<>();
-    mBestLocationProvider = bestLocationProvider;
 
     GoogleMapOptions options = new GoogleMapOptions().liteMode(true);
     mMapFragment = SupportMapFragment.newInstance(options);
@@ -113,7 +112,7 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
   }
 
   @Override
-  public void onMapReady(final GoogleMap googleMap) {
+  public void onMapReady(GoogleMap googleMap) {
     mGoogleMap = googleMap;
 
     EnumSet<SpotFlags> spotOptions = null;
@@ -137,6 +136,21 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
         Log.e(TAG, "Error:" + error);
       }
     });
+
+    mGoogleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+      @Override
+      public void onMapClick(LatLng latLng) {
+        openMapActivity(null);
+      }
+    });
+
+    mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+      @Override
+      public boolean onMarkerClick(Marker marker) {
+        openMapActivity(marker);
+        return true;
+      }
+    });
   }
 
   private void getStyle(String systemId) {
@@ -158,7 +172,8 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
   private void addMarkerToMap(List<Spot> spotList) {
     for (Spot s : spotList) {
       Marker marker = mGoogleMap.addMarker(new MarkerOptions()
-          .icon(BitmapDescriptorFactory.fromBitmap(getIcon(mBase64Icon)))
+          .icon(BitmapDescriptorFactory.fromBitmap(ContentBlock9ViewHolderUtils.getIcon(mBase64Icon,
+              mContext)))
           .anchor(0.0f, 1.0f) // Anchors the marker on the bottom left
           .title(s.getName())
           .position(new LatLng(s.getLat(), s.getLon())));
@@ -166,37 +181,18 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
       mMarkerArray.put(marker, s);
     }
 
-    zoomToDisplayAllMarker();
+    mGoogleMap.animateCamera(ContentBlock9ViewHolderUtils.zoomToDisplayAllMarker(mMarkerArray.keySet(), 20));
   }
 
-  /**
-   * Returns the icon for mapMarker.
-   *
-   * @param customMarker base64 custom marker (mappin) from xamoom
-   * @return icon Bitmap of custom marker
-   */
-  private Bitmap getIcon(String customMarker) {
-    Bitmap icon;
-    if (customMarker != null) {
-      String iconString = customMarker;
-      icon = ContentBlock9ViewHolderUtils.getIconFromBase64(iconString, mFragment);
-    } else {
-      icon = BitmapFactory.decodeResource(mFragment.getResources(), R.drawable.ic_default_map_marker);
+  private void openMapActivity(Marker activeMarker) {
+    Intent intent = new Intent(mContext, MapActivity.class);
+    intent.putParcelableArrayListExtra(MapActivity.SPOTS_PARAM, (ArrayList<? extends Parcelable>) mSpotList);
+    if (mBase64Icon != null) {
+      intent.putExtra(MapActivity.ICON_PARAM, mBase64Icon);
     }
-
-    return icon;
-  }
-
-  private void zoomToDisplayAllMarker() {
-    LatLngBounds.Builder builder = new LatLngBounds.Builder();
-    for (Marker marker : mMarkerArray.keySet()) {
-      builder.include(marker.getPosition());
+    if (activeMarker != null) {
+      intent.putExtra("test", mMarkerArray.get(activeMarker).getId());
     }
-
-    LatLngBounds bounds = builder.build();
-    CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 20);
-
-    mGoogleMap.moveCamera(cu);
+    mContext.startActivity(intent);
   }
-
 }

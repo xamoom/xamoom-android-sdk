@@ -41,7 +41,6 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   private Style mStyle;
   private String mYoutubeApiKey;
   private EnduserApi mEnduserApi;
-  private BestLocationProvider mBestLocationProvider;
   private boolean showContentLinks;
 
   private String mLinkColor = "00F";
@@ -68,11 +67,6 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     mEnduserApi = enduserApi;
     showContentLinks = showSpotMapContentLinks;
     mYoutubeApiKey = youtubeApiKey;
-
-    if (fragment != null && fragment.getContext() != null) {
-      mBestLocationProvider = new BestLocationProvider(fragment.getContext(), false, true,
-          1000, 1000, 5, 10);
-    }
 
     if (mStyle != null) {
       configureColors();
@@ -154,7 +148,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
       case 9:
         View view9 = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.content_block_9_layout, parent, false);
-        return new ContentBlock9ViewHolder(view9, mFragment, mEnduserApi, mBestLocationProvider);
+        return new ContentBlock9ViewHolder(view9, mFragment, mEnduserApi);
       default:
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.empty_layout, parent, false);
         return new ViewHolder(v);
@@ -223,10 +217,6 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     mContentBlocks = null;
     mEnduserApi = null;
     mBitmapCache = null;
-    if (mBestLocationProvider != null) {
-      mBestLocationProvider.destroy();
-      mBestLocationProvider = null;
-    }
     super.onDetachedFromRecyclerView(recyclerView);
   }
 
