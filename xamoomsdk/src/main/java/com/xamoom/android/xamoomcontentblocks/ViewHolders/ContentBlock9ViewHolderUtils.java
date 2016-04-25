@@ -11,6 +11,7 @@ import com.caverock.androidsvg.SVG;
 import com.caverock.androidsvg.SVGParseException;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.xamoom.android.xamoomsdk.R;
@@ -24,6 +25,12 @@ import java.util.Set;
  */
 public class ContentBlock9ViewHolderUtils {
 
+  /**
+   *
+   * @param markers
+   * @param padding
+   * @return
+   */
   public static CameraUpdate zoomToDisplayAllMarker(Set<Marker> markers, int padding) {
     LatLngBounds.Builder builder = new LatLngBounds.Builder();
     for (Marker marker :markers) {

@@ -3,6 +3,8 @@ package com.xamoom.android.xamoomsdk.Resource;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import at.rags.morpheus.Annotations.SerializeName;
 import at.rags.morpheus.Resource;
 
@@ -10,9 +12,9 @@ import at.rags.morpheus.Resource;
  *  xamoom SystemSetting model.
  */
 public class SystemSetting extends Resource implements Parcelable {
-  @SerializeName("app-id-google-play")
+  @SerializedName("app-id-google-play")
   private String googlePlayAppId;
-  @SerializeName("app-id-itunes")
+  @SerializedName("app-id-itunes")
   private String itunesAppId;
 
   public SystemSetting() {

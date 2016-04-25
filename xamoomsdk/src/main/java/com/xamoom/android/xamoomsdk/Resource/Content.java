@@ -3,6 +3,8 @@ package com.xamoom.android.xamoomsdk.Resource;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 import at.rags.morpheus.Annotations.Relationship;
@@ -14,13 +16,13 @@ import at.rags.morpheus.Resource;
  *  xamoom Content model.
  */
 public class Content extends Resource implements Parcelable {
-  @SerializeName("display-name")
+  @SerializedName("display-name")
   private String title;
   private String description;
   private String language;
   private int category;
   private List<String> tags;
-  @SerializeName("cover-image-url")
+  @SerializedName("cover-image-url")
   private String publicImageUrl;
   @Relationship("blocks")
   private List<ContentBlock> contentBlocks;

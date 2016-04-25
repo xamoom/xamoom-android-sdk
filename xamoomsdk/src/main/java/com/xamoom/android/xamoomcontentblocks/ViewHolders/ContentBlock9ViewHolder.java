@@ -176,7 +176,7 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
               mContext)))
           .anchor(0.0f, 1.0f) // Anchors the marker on the bottom left
           .title(s.getName())
-          .position(new LatLng(s.getLat(), s.getLon())));
+          .position(new LatLng(s.getLocation().getLatitude(), s.getLocation().getLongitude())));
 
       mMarkerArray.put(marker, s);
     }

@@ -3,6 +3,8 @@ package com.xamoom.android.xamoomsdk.Resource;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import at.rags.morpheus.Annotations.SerializeName;
 import at.rags.morpheus.Resource;
 
@@ -12,13 +14,13 @@ import at.rags.morpheus.Resource;
 public class Marker extends Resource implements Parcelable {
   private String qr;
   private String nfc;
-  @SerializeName("ibacon-region-uid")
+  @SerializedName("ibacon-region-uid")
   private String beaconUUID;
-  @SerializeName("ibacon-major")
+  @SerializedName("ibacon-major")
   private String beaconMajor;
-  @SerializeName("ibacon-minor")
+  @SerializedName("ibacon-minor")
   private String beaconMinor;
-  @SerializeName("eddystone-url")
+  @SerializedName("eddystone-url")
   private String eddystoneUrl;
 
   public Marker() {

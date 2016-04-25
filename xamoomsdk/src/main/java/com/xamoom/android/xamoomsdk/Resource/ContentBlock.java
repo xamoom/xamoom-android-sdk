@@ -3,6 +3,8 @@ package com.xamoom.android.xamoomsdk.Resource;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 import at.rags.morpheus.Annotations.SerializeName;
@@ -12,34 +14,34 @@ import at.rags.morpheus.Resource;
  *  xamoom ContentBlock model.
  */
 public class ContentBlock extends Resource implements Parcelable {
-  @SerializeName("block-type")
+  @SerializedName("block-type")
   private int blockType;
-  @SerializeName("is-public")
+  @SerializedName("is-public")
   private boolean publicStatus;
   private String title;
   private String text;
   private String artists;
-  @SerializeName("file-id")
+  @SerializedName("file-id")
   private String fileId;
-  @SerializeName("soundcloud-url")
+  @SerializedName("soundcloud-url")
   private String soundcloudUrl;
-  @SerializeName("link-type")
+  @SerializedName("link-type")
   private int linkType;
-  @SerializeName("link-url")
+  @SerializedName("link-url")
   private String linkUrl;
-  @SerializeName("content-id")
+  @SerializedName("content-id")
   private String contentId;
-  @SerializeName("download-type")
+  @SerializedName("download-type")
   private int downloadType;
-  @SerializeName("spot-map-tags")
+  @SerializedName("spot-map-tags")
   private List<String> spotMapTags;
-  @SerializeName("scale-x")
+  @SerializedName("scale-x")
   private double scaleX;
-  @SerializeName("video-url")
+  @SerializedName("video-url")
   private String videoUrl;
-  @SerializeName("should-show-content-on-spotmap")
+  @SerializedName("should-show-content-on-spotmap")
   private boolean showContentOnSpotmap;
-  @SerializeName("alt-text")
+  @SerializedName("alt-text")
   private String altText;
 
   public ContentBlock() {

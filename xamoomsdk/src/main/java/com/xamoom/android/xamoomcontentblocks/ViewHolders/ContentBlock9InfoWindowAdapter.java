@@ -67,8 +67,8 @@ public class ContentBlock9InfoWindowAdapter implements GoogleMap.InfoWindowAdapt
     float distance = 0;
     if (mUserLocation != null) {
       Location spotLocation = new Location("xamoom-api");
-      spotLocation.setLatitude(spot.getLat());
-      spotLocation.setLongitude(spot.getLon());
+      spotLocation.setLatitude(spot.getLocation().getLatitude());
+      spotLocation.setLongitude(spot.getLocation().getLongitude());
       distance = spotLocation.distanceTo(mUserLocation);
 
       mDistanceTextView.setText(String.format("%.0f %s", distance, mFragment.getString(R.string.meterLabel)));

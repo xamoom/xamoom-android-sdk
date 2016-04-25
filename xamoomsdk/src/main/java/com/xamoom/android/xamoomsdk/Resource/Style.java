@@ -3,6 +3,8 @@ package com.xamoom.android.xamoomsdk.Resource;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import at.rags.morpheus.Annotations.SerializeName;
 import at.rags.morpheus.Resource;
 
@@ -11,15 +13,15 @@ import at.rags.morpheus.Resource;
  *  xamoom Style model.
  */
 public class Style extends Resource implements Parcelable {
-  @SerializeName("background-color")
+  @SerializedName("background-color")
   private String backgroundColor;
-  @SerializeName("highlight-color")
+  @SerializedName("highlight-color")
   private String highlightFontColor;
-  @SerializeName("foreground-color")
+  @SerializedName("foreground-color")
   private String foregroundFontColor;
-  @SerializeName("chrome-header-color")
+  @SerializedName("chrome-header-color")
   private String chromeHeaderColor;
-  @SerializeName("map-pin")
+  @SerializedName("map-pin")
   private String customMarker;
   private String icon;
 
