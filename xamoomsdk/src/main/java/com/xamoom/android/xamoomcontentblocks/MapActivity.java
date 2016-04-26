@@ -1,13 +1,17 @@
 package com.xamoom.android.xamoomcontentblocks;
 
+import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.util.ArrayMap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -35,10 +39,14 @@ import at.rags.morpheus.Logger;
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
   public static final String SPOTS_PARAM = "0000";
   public static final String ICON_PARAM = "0001";
+  public static final String MAP_CONTENT_CLICK_ACTION = "com.xamoom.android.xamoomcontentblocks.map_content_click_action";
+  public static final String MAP_CONTENT_CLICK_ID = "0003";
 
   private GoogleMap mGoogleMap;
   private BottomSheetBehavior mBottomSheetBehavior;
   private TextView mSpotTitleTextView;
+  private TextView mSpotExcerptTextView;
+  private Button mSpotContentButton;
   private ImageView mSpotImageView;
   private FloatingActionButton mFloatingActionButton;
   private List<Spot> mSpotList;
@@ -57,8 +65,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         .findFragmentById(R.id.map);
 
     mSpotTitleTextView = (TextView) findViewById(R.id.spot_title_text_view);
+    mSpotExcerptTextView = (TextView) findViewById(R.id.spot_excerpt_text_view);
     mSpotImageView = (ImageView) findViewById(R.id.spot_image_view);
+    mSpotContentButton = (Button) findViewById(R.id.spot_content_button);
     mFloatingActionButton = (FloatingActionButton) findViewById(R.id.spot_fab);
+    mFloatingActionButton.setBackgroundTintList(ColorStateList.valueOf(getResources()
+        .getColor(R.color.googlemaps_linkblock_background_color)));
 
     View bottomSheet = findViewById(R.id.bottom_sheet);
     mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
@@ -100,7 +112,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
       @Override
       public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-        Log.v("TEST", "Slide offset: " + slideOffset);
         if (mActiveMarker != null) {
           zoomToMarker(mActiveMarker, true);
         }
@@ -148,21 +159,40 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     mActiveMarker.showInfoWindow();
     zoomToMarker(mActiveMarker, false);
     mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-
     mFloatingActionButton.show();
 
     Spot spot = mMarkerSpotMap.get(marker);
+
     mSpotTitleTextView.setText(spot.getName());
+    mSpotExcerptTextView.setText(spot.getDescription());
     Glide.with(this)
         .load(spot.getPublicImageUrl())
         .into(mSpotImageView);
+
+    if (spot.getContent() != null && spot.getContent().getId() != null) {
+      mSpotContentButton.setVisibility(View.VISIBLE);
+      final String contentId = spot.getContent().getId();
+      mSpotContentButton.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          Intent intent = new Intent();
+          intent.setAction(MAP_CONTENT_CLICK_ACTION);
+          intent.putExtra(MAP_CONTENT_CLICK_ID, contentId);
+          LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+        }
+      });
+    } else {
+      mSpotContentButton.setVisibility(View.GONE);
+    }
   }
 
   @Override
   public void onMapReady(GoogleMap googleMap) {
     mGoogleMap = googleMap;
     mGoogleMap.getUiSettings().setMapToolbarEnabled(false);
-    addMarkerToMap(mSpotList);
+    if (mSpotList != null) {
+      addMarkerToMap(mSpotList);
+    }
 
     mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
       @Override

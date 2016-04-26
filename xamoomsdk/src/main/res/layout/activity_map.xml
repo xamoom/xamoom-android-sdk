@@ -13,34 +13,48 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"/>
 
-    <android.support.v4.widget.NestedScrollView
+    <LinearLayout
         android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"
-        android:layout_height="350dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:clipToPadding="true"
         android:background="@android:color/white"
         app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/spot_title_text_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:textSize="24sp"
+            android:textColor="@android:color/black"/>
 
-            <TextView
-                android:id="@+id/spot_title_text_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="16dp"
-                android:textColor="@android:color/black"
-                android:text="Test"/>
+        <TextView
+            android:id="@+id/spot_excerpt_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="16dp"
+            android:textSize="16sp"
+            android:textColor="@android:color/black"
+            />
 
-            <ImageView
-                android:id="@+id/spot_image_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+        <Button
+            android:id="@+id/spot_content_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:text="@string/open"
+            android:visibility="gone"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"/>
 
-        </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
+        <ImageView
+            android:id="@+id/spot_image_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/spot_fab"
@@ -48,7 +62,9 @@
         android:layout_height="wrap_content"
         app:layout_anchor="@id/bottom_sheet"
         app:layout_anchorGravity="right|end"
-        android:src="@android:drawable/ic_dialog_email"
+        android:src="@drawable/ic_navigation"
+        app:rippleColor="@color/facebook_linkblock_background_color"
+        android:layout_marginEnd="16dp"
         />
 
 </android.support.design.widget.CoordinatorLayout>

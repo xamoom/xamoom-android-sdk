@@ -33,6 +33,7 @@ public class Content extends Resource implements Parcelable {
   }
 
   protected Content(Parcel in) {
+    this.setId(in.readString());
     title = in.readString();
     description = in.readString();
     language = in.readString();
@@ -126,6 +127,7 @@ public class Content extends Resource implements Parcelable {
 
   @Override
   public void writeToParcel(Parcel dest, int flags) {
+    dest.writeString(this.getId());
     dest.writeString(title);
     dest.writeString(description);
     dest.writeString(language);

@@ -246,15 +246,10 @@ public class XamoomContentFragment extends Fragment {
    */
   public interface OnXamoomContentFragmentInteractionListener {
     void clickedContentBlock(Content content);
-    void clickedSpotMapContentLink(String contentId);
   }
 
   public void contentBlockClick(Content content) {
     mListener.clickedContentBlock(content);
-  }
-
-  public void spotMapContentLinkClick(String contentId) {
-    mListener.clickedSpotMapContentLink(contentId);
   }
 
   // getters

@@ -2,12 +2,17 @@ package com.xamoom.android.xamoomsdkexample;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,6 +20,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.xamoom.android.xamoomcontentblocks.MapActivity;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.APIListCallback;
@@ -27,6 +33,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Map;
 
 import at.rags.morpheus.Error;
 import okhttp3.Interceptor;
@@ -54,7 +61,6 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
 
     setupEnduserApi();
 
-
     //getContent();
     //getContentOption();
     /*
@@ -67,6 +73,28 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
     getSystemSetting();
     getStyle();
     */
+  }
+
+  @Override
+  protected void onStart() {
+    super.onStart();
+    LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(mMapClickReciever, new IntentFilter(MapActivity.MAP_CONTENT_CLICK_ACTION));
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+  }
+
+  @Override
+  protected void onStop() {
+    super.onStop();
+  }
+
+  @Override
+  protected void onDestroy() {
+    LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(mMapClickReciever);
+    super.onDestroy();
   }
 
   @Override
@@ -166,6 +194,7 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
             xamoomFragment.setEnduserApi(mEnduserApi);
             xamoomFragment.setDisplayAllStoreLinks(true);
             xamoomFragment.setContent(result);
+            xamoomFragment.setShowSpotMapContentLinks(true);
             getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, xamoomFragment, "XamoomFragment").commit(); //replace with xamoomFragment
           }
 
@@ -308,11 +337,14 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
     Log.v(TAG, "Click Content: " + content);
   }
 
-  @Override
-  public void clickedSpotMapContentLink(String contentId) {
-    Log.v(TAG, "Click Spot: " + contentId);
-
-  }
+  private BroadcastReceiver mMapClickReciever = new BroadcastReceiver() {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+      if(intent.getAction() != null && intent.getAction().equals(MapActivity.MAP_CONTENT_CLICK_ACTION)) {
+        Log.v(TAG, "Click Spot Content: " + intent.getExtras().getString(MapActivity.MAP_CONTENT_CLICK_ID));
+      }
+    }
+  };
 
   @Override
   public void onRequestPermissionsResult(int requestCode,

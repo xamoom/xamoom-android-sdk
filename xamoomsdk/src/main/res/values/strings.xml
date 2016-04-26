@@ -7,4 +7,5 @@
     <string name="meterLabel">meter</string>
     <string name="noLocation">Searching for location.</string>
     <string name="header_picture_alt_text">Headerimage</string>
+    <string name="open">Open</string>
 </resources>
