@@ -13,9 +13,4 @@ public class ContentFragmentActivity extends FragmentActivity implements XamoomC
   public void clickedContentBlock(Content content) {
 
   }
-
-  @Override
-  public void clickedSpotMapContentLink(String contentId) {
-
-  }
 }
