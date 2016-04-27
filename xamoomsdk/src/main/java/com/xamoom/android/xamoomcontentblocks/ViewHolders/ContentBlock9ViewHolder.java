@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -45,15 +47,13 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
   private Context mContext;
   private EnduserApi mEnduserApi;
   private TextView mTitleTextView;
-  private SupportMapFragment mMapFragment;
+  private MapView mMapView;
   private ContentBlock mContentBlock;
   private GoogleMap mGoogleMap;
   private ArrayMap<Marker, Spot> mMarkerArray;
   private String mBase64Icon;
   private ArrayList<Spot> mSpotList;
 
-  private static int mFrameId = 169147;
-  private int mUniqueFrameId;
   public boolean showContentLinks;
 
   public ContentBlock9ViewHolder(View itemView, Fragment fragment, EnduserApi enduserApi) {
@@ -63,20 +63,8 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
     mEnduserApi = enduserApi;
     mTitleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
     mMarkerArray = new ArrayMap<>();
-
-    GoogleMapOptions options = new GoogleMapOptions().liteMode(true);
-    mMapFragment = SupportMapFragment.newInstance(options);
-
-    FrameLayout parentFrameLayout = (FrameLayout) itemView.findViewById(R.id.map);
-    mUniqueFrameId = mFrameId;
-    mFrameId++;
-
-    FrameLayout uniqueFrameLayout = new FrameLayout(mContext);
-    uniqueFrameLayout.setId(mUniqueFrameId);
-    parentFrameLayout.addView(uniqueFrameLayout);
-
-    mFragment.getChildFragmentManager().beginTransaction()
-        .replace(uniqueFrameLayout.getId(), mMapFragment).commit();
+    mMapView = (MapView) itemView.findViewById(R.id.mapImageView);
+    mMapView.onCreate(null);
   }
 
   public void setupContentBlock(ContentBlock contentBlock) {
@@ -90,7 +78,7 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
     mContentBlock = contentBlock;
 
     if (mGoogleMap == null) {
-      mMapFragment.getMapAsync(this);
+      mMapView.getMapAsync(this);
     }
   }
 
@@ -107,11 +95,9 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
     mEnduserApi.getSpotsByTags(mContentBlock.getSpotMapTags(), spotOptions, null, new APIListCallback<List<Spot>, List<at.rags.morpheus.Error>>() {
       @Override
       public void finished(List<Spot> result, String cursor, boolean hasMore) {
-        if (mMapFragment.isAdded()) {
-          mSpotList = (ArrayList<Spot>) result;
-          getStyle(result.get(0).getSystem().getId());
-          addMarkerToMap(result);
-        }
+        mSpotList = (ArrayList<Spot>) result;
+        getStyle(result.get(0).getSystem().getId());
+        addMarkerToMap(result);
       }
 
       @Override
@@ -174,7 +160,7 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
       spotId = spot.getId();
     }
 
-    mFragment.getChildFragmentManager().beginTransaction()
+    mFragment.getFragmentManager().beginTransaction()
         .add(R.id.xamoom_content_frame_layout, XamoomMapFragment.newInstance(mSpotList, spotId, mBase64Icon))
         .addToBackStack(null)
         .commit();

@@ -95,6 +95,11 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
   }
 
   @Override
+  protected void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+  }
+
+  @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     // Inflate the menu; this adds items to the action bar if it is present.
     getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -120,10 +125,7 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
   }
 
 
-  @Override
-  public void onBackPressed() {
-    super.onBackPressed();
-  }
+
 
   private void checkPermission() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -198,7 +200,10 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
             xamoomFragment.setDisplayAllStoreLinks(true);
             xamoomFragment.setContent(result);
             xamoomFragment.setShowSpotMapContentLinks(true);
-            getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, xamoomFragment, "XamoomFragment").commit(); //replace with xamoomFragment
+            getSupportFragmentManager().beginTransaction()
+                .replace(R.id.main_frame, xamoomFragment, "XamoomFragment")
+                .addToBackStack(null)
+                .commit(); //replace with xamoomFragment
           }
 
           @Override
