@@ -19,7 +19,7 @@ import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
  */
 public class ContentBlock0ViewHolder extends RecyclerView.ViewHolder {
 
-  public TextView mTitleTextView;
+  private TextView mTitleTextView;
   private WebView mWebView;
   private String mLinkColor = "00F";
 

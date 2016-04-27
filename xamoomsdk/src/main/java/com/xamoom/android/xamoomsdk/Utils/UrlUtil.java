@@ -1,12 +1,9 @@
 package com.xamoom.android.xamoomsdk.Utils;
 
-import android.text.TextUtils;
-
 import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
 import com.xamoom.android.xamoomsdk.Enums.ContentSortFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotSortFlags;
-import com.xamoom.android.xamoomsdk.Resource.Spot;
 
 import java.util.ArrayList;
 import java.util.EnumSet;

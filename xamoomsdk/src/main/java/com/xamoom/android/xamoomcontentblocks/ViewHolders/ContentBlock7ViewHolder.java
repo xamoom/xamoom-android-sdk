@@ -23,14 +23,6 @@ public class ContentBlock7ViewHolder extends RecyclerView.ViewHolder {
 
   private TextView mTitleTextView;
   private WebView mSoundCloudWebview;
-  private String mSoundCloudHTML = "<body style=\"margin: 0; padding: 0\">" +
-      "<iframe width='100%%' height='100%%' scrolling='no'" +
-      " frameborder='no' src='https://w.soundcloud.com/player/?url=%s&auto_play=false" +
-      "&hide_related=true&show_comments=false&show_comments=false" +
-      "&show_user=false&show_reposts=false&sharing=false&download=false&buying=false" +
-      "&visual=true'></iframe>" +
-      "<script src=\"https://w.soundcloud.com/player/api.js\" type=\"text/javascript\"></script>" +
-      "</body>";
   private boolean isSetup = false;
 
   private static HashMap<String, WebView> mWebCache = new HashMap<>();
@@ -69,7 +61,15 @@ public class ContentBlock7ViewHolder extends RecyclerView.ViewHolder {
     }
 
     if(!isSetup) {
-      String html = String.format(mSoundCloudHTML, cb7.getSoundcloudUrl());
+      String soundCloudHTML = "<body style=\"margin: 0; padding: 0\">" +
+          "<iframe width='100%%' height='100%%' scrolling='no'" +
+          " frameborder='no' src='https://w.soundcloud.com/player/?url=%s&auto_play=false" +
+          "&hide_related=true&show_comments=false&show_comments=false" +
+          "&show_user=false&show_reposts=false&sharing=false&download=false&buying=false" +
+          "&visual=true'></iframe>" +
+          "<script src=\"https://w.soundcloud.com/player/api.js\" type=\"text/javascript\"></script>" +
+          "</body>";
+      String html = String.format(soundCloudHTML, cb7.getSoundcloudUrl());
       mSoundCloudWebview.loadData(html, "text/html", "utf-8");
       isSetup = true;
 

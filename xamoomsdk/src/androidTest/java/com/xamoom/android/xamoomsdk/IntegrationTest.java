@@ -1,13 +1,11 @@
 package com.xamoom.android.xamoomsdk;
+
 import android.support.test.InstrumentationRegistry;
+import android.support.test.runner.AndroidJUnit4;
 import android.test.InstrumentationTestCase;
 import android.test.suitebuilder.annotation.LargeTest;
 
-import android.support.test.runner.AndroidJUnit4;
-
-import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
 import com.xamoom.android.xamoomsdk.Resource.Content;
-import com.xamoom.android.xamoomsdk.Resource.Spot;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,12 +13,9 @@ import org.junit.runner.RunWith;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Semaphore;
 
-import at.rags.morpheus.*;
 import at.rags.morpheus.Error;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;

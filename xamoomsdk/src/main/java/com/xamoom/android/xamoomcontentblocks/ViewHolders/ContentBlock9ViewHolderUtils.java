@@ -4,20 +4,17 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.support.v4.app.Fragment;
 import android.util.Base64;
 
 import com.caverock.androidsvg.SVG;
 import com.caverock.androidsvg.SVGParseException;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.xamoom.android.xamoomsdk.R;
 
 import java.io.UnsupportedEncodingException;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -26,7 +23,7 @@ import java.util.Set;
 public class ContentBlock9ViewHolderUtils {
 
   /**
-   *
+   * TODO
    * @param markers
    * @param padding
    * @return
@@ -38,9 +35,7 @@ public class ContentBlock9ViewHolderUtils {
     }
 
     LatLngBounds bounds = builder.build();
-    CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-
-    return cu;
+    return CameraUpdateFactory.newLatLngBounds(bounds, padding);
   }
 
   /**
@@ -52,8 +47,7 @@ public class ContentBlock9ViewHolderUtils {
   public static Bitmap getIcon(String customMarker, Context context) {
     Bitmap icon;
     if (customMarker != null) {
-      String iconString = customMarker;
-      icon = ContentBlock9ViewHolderUtils.getIconFromBase64(iconString, context);
+      icon = ContentBlock9ViewHolderUtils.getIconFromBase64(customMarker, context);
     } else {
       icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_default_map_marker);
     }
@@ -69,10 +63,10 @@ public class ContentBlock9ViewHolderUtils {
    * @param base64String Base64 string that will be resized. Must start with "data:image/"
    * @return icon as BitMap, or null if there was a problem
    */
-  public static Bitmap getIconFromBase64(String base64String, Context context) {
+  private static Bitmap getIconFromBase64(String base64String, Context context) {
     Bitmap icon = null;
     byte[] data1;
-    String decodedString1 = "";
+    String decodedString1 = null;
     float newImageWidth = 25.0f;
 
     newImageWidth = newImageWidth * context.getResources().getDisplayMetrics().density;
@@ -88,8 +82,7 @@ public class ContentBlock9ViewHolderUtils {
 
       if (base64String.contains("data:image/svg+xml")) {
         //svg stuff
-        SVG svg = null;
-        svg = SVG.getFromString(decodedString1);
+        SVG svg = SVG.getFromString(decodedString1);
 
         if (svg != null) {
           //resize svg

@@ -5,13 +5,9 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import at.rags.morpheus.Annotations.Relationship;
-import at.rags.morpheus.Annotations.SerializeName;
-import at.rags.morpheus.Logger;
 import at.rags.morpheus.Resource;
 
 /**

@@ -5,14 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.util.ArrayMap;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,9 +38,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XamoomMapFragment extends Fragment implements OnMapReadyCallback {
-  public static final String SPOTS_PARAM = "0000";
-  public static final String SPOT_ID_PARAM = "0001";
-  public static final String ICON_PARAM = "0002";
+  private static final String SPOTS_PARAM = "0000";
+  private static final String SPOT_ID_PARAM = "0001";
+  private static final String ICON_PARAM = "0002";
 
   private GoogleMap mGoogleMap;
   private BottomSheetBehavior mBottomSheetBehavior;

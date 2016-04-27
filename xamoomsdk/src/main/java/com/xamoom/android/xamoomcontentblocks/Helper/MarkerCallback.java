@@ -12,7 +12,7 @@ import com.squareup.picasso.Callback;
  * so that it gets redrawn and the image will be shown.
  */
 public class MarkerCallback implements Callback {
-  Marker marker = null;
+  private Marker marker = null;
 
   public MarkerCallback(Marker marker) {
     this.marker = marker;

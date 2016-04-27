@@ -11,7 +11,7 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_gravity="top|end"
-        android:contentDescription="Close map"
+        android:contentDescription="@string/close_map"
         android:background="@drawable/x"
         android:layout_margin="8dp"/>
 

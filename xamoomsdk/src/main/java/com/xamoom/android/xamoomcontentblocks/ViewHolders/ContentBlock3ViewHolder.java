@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.PictureDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -38,9 +37,9 @@ import java.io.InputStream;
  */
 public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
   private Context mContext;
-  public TextView mTitleTextView;
+  private TextView mTitleTextView;
   private ProgressBar mImageProgressBar;
-  public ImageView mImageView;
+  private ImageView mImageView;
   private GenericRequestBuilder<Uri, InputStream, SVG, PictureDrawable> requestBuilder;
 
   public ContentBlock3ViewHolder(View itemView, Context context) {
@@ -148,7 +147,7 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
     });
   }
 
-  public void setImageViewContentDescription(ContentBlock contentBlock) {
+  private void setImageViewContentDescription(ContentBlock contentBlock) {
     if (contentBlock.getAltText() != null && !contentBlock.getAltText().equalsIgnoreCase("")) {
       mImageView.setContentDescription(contentBlock.getAltText());
     } else if (contentBlock.getTitle() != null && !contentBlock.getTitle().equalsIgnoreCase("")) {
@@ -156,7 +155,7 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
     }
   }
 
-  public void resizeImageViewWithScaling(ImageView imageView, double scaleX) {
+  private void resizeImageViewWithScaling(ImageView imageView, double scaleX) {
     int deviceWidth = mContext.getResources().getDisplayMetrics().widthPixels;
     double margin = 0;
 

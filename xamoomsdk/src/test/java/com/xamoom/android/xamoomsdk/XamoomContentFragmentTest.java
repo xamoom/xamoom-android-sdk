@@ -1,19 +1,13 @@
 package com.xamoom.android.xamoomsdk;
 
-import android.animation.StateListAnimator;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.test.suitebuilder.annotation.MediumTest;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 
-import com.xamoom.android.xamoomcontentblocks.ContentBlockAdapter;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.Helper.ContentFragmentActivity;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 
-import org.apache.tools.ant.types.resources.comparators.Content;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -23,9 +17,9 @@ import org.robolectric.annotation.Config;
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.objectweb.asm.util.CheckClassAdapter.verify;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)

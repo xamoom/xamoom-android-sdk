@@ -1,22 +1,16 @@
 package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMapOptions;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -86,8 +80,7 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
   public void onMapReady(GoogleMap googleMap) {
     mGoogleMap = googleMap;
 
-    EnumSet<SpotFlags> spotOptions = null;
-    spotOptions = EnumSet.of(SpotFlags.HAS_LOCATION);
+    EnumSet<SpotFlags> spotOptions = EnumSet.of(SpotFlags.HAS_LOCATION);
     if (showContentLinks) {
       spotOptions = EnumSet.of(SpotFlags.INCLUDE_CONTENT, SpotFlags.HAS_LOCATION);
     }

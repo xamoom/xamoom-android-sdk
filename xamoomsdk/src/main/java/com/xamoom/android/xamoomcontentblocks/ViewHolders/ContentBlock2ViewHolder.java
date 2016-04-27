@@ -33,9 +33,8 @@ import java.util.regex.Pattern;
  * VideoBlock
  */
 public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-  final static String youtubeRegex = "(?:youtube(?:-nocookie)?\\.com\\/(?:[^\\/\\n\\s]+\\/\\S+\\/|(?:v|e(?:mbed)?)\\/|\\S*?[?&]v=)|youtu\\.be\\/)([a-zA-Z0-9_-]{11})";
-  final static String vimeoRegex = "^.*(?:vimeo.com)\\/(?:channels\\/|groups\\/[^\\/]*\\/videos\\/|album\\/\\d+\\/video\\/|video\\/|)(\\d+)(?:$|\\/|\\?)";
+  private final static String youtubeRegex = "(?:youtube(?:-nocookie)?\\.com\\/(?:[^\\/\\n\\s]+\\/\\S+\\/|(?:v|e(?:mbed)?)\\/|\\S*?[?&]v=)|youtu\\.be\\/)([a-zA-Z0-9_-]{11})";
+  private final static String vimeoRegex = "^.*(?:vimeo.com)\\/(?:channels\\/|groups\\/[^\\/]*\\/videos\\/|album\\/\\d+\\/video\\/|video\\/|)(\\d+)(?:$|\\/|\\?)";
 
   private Context mContext;
   private TextView mTitleTextView;
@@ -57,7 +56,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
     mTitleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
     mVideoWebView = (WebView) itemView.findViewById(R.id.videoWebView);
     mVideoWebView.setWebViewClient(new WebViewClient());
-    mWebViewOverlay = (View) itemView.findViewById(R.id.webViewOverlay);
+    mWebViewOverlay = itemView.findViewById(R.id.webViewOverlay);
     mYouTubeThumbnailView = (YouTubeThumbnailView) itemView.findViewById(R.id.youtube_thumbnail_view);
     mVideoPlayImageView = (ImageView) itemView.findViewById(R.id.video_play_image_view);
     mProgressBar = (ProgressBar) itemView.findViewById(R.id.video_progress_bar);
@@ -113,7 +112,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
     mIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(contentBlock.getVideoUrl()));
   }
 
-  public void setupHTMLPlayer(final ContentBlock contentBlock) {
+  private void setupHTMLPlayer(final ContentBlock contentBlock) {
     if (mBitmapCache.get(contentBlock.getVideoUrl()) != null) {
       mYouTubeThumbnailView.setImageBitmap(mBitmapCache.get(contentBlock.getVideoUrl()));
       mProgressBar.setVisibility(View.GONE);
@@ -126,7 +125,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
     mIntent.setDataAndType(Uri.parse(contentBlock.getVideoUrl()), "video/mp4");
   }
 
-  public void setupYoutube(ContentBlock contentBlock) {
+  private void setupYoutube(ContentBlock contentBlock) {
     final String youtubeVideoId = getYoutubeVideoId(contentBlock.getVideoUrl());
 
     mYouTubeThumbnailView.initialize(mYoutubeApiKey, new YouTubeThumbnailView.OnInitializedListener() {
@@ -158,7 +157,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
     mIntent = YouTubeIntents.createPlayVideoIntent(mContext, youtubeVideoId);
   }
 
-  public String getYoutubeVideoId(String videoUrl) {
+  private String getYoutubeVideoId(String videoUrl) {
     if (videoUrl == null || videoUrl.trim().length() <= 0) {
       return null;
     }

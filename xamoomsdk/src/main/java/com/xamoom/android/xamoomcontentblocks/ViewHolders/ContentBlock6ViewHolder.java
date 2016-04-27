@@ -2,13 +2,11 @@ package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
 import android.support.v4.util.LruCache;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -21,7 +19,6 @@ import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 
-import java.util.HashMap;
 import java.util.List;
 
 import at.rags.morpheus.Error;

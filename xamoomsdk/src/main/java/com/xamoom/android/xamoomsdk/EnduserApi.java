@@ -49,7 +49,6 @@ public class EnduserApi {
 
   private EnduserApiInterface enduserApiInterface;
   private CallHandler callHandler;
-  private Morpheus morpheus;
   private String language;
   private String systemLanguage;
 
@@ -85,7 +84,7 @@ public class EnduserApi {
   }
 
   private void initMorpheus() {
-    morpheus = new Morpheus();
+    Morpheus morpheus = new Morpheus();
     callHandler = new CallHandler(morpheus);
 
     Deserializer.registerResourceClass("contents", Content.class);
