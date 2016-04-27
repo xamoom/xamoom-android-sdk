@@ -1,41 +1,25 @@
 package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.location.Location;
-import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v4.app.ActivityManagerCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.xamoom.android.xamoomcontentblocks.Helper.BestLocationListener;
-import com.xamoom.android.xamoomcontentblocks.Helper.BestLocationProvider;
-import com.xamoom.android.xamoomcontentblocks.MapActivity;
-import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
+import com.xamoom.android.xamoomcontentblocks.XamoomMapFragment;
 import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.APIListCallback;
 import com.xamoom.android.xamoomsdk.EnduserApi;
@@ -48,7 +32,6 @@ import com.xamoom.android.xamoomsdk.Resource.Style;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Map;
 
 import at.rags.morpheus.Error;
 
@@ -67,7 +50,7 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
   private GoogleMap mGoogleMap;
   private ArrayMap<Marker, Spot> mMarkerArray;
   private String mBase64Icon;
-  private List<Spot> mSpotList;
+  private ArrayList<Spot> mSpotList;
 
   private static int mFrameId = 169147;
   private int mUniqueFrameId;
@@ -125,7 +108,7 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
       @Override
       public void finished(List<Spot> result, String cursor, boolean hasMore) {
         if (mMapFragment.isAdded()) {
-          mSpotList = result;
+          mSpotList = (ArrayList<Spot>) result;
           getStyle(result.get(0).getSystem().getId());
           addMarkerToMap(result);
         }
@@ -140,14 +123,14 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
     mGoogleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
       @Override
       public void onMapClick(LatLng latLng) {
-        openMapActivity(null);
+        openMapFragment(null);
       }
     });
 
     mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
       @Override
       public boolean onMarkerClick(Marker marker) {
-        openMapActivity(marker);
+        openMapFragment(marker);
         return true;
       }
     });
@@ -184,15 +167,16 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
     mGoogleMap.animateCamera(ContentBlock9ViewHolderUtils.zoomToDisplayAllMarker(mMarkerArray.keySet(), 20));
   }
 
-  private void openMapActivity(Marker activeMarker) {
-    Intent intent = new Intent(mContext, MapActivity.class);
-    intent.putParcelableArrayListExtra(MapActivity.SPOTS_PARAM, (ArrayList<? extends Parcelable>) mSpotList);
-    if (mBase64Icon != null) {
-      intent.putExtra(MapActivity.ICON_PARAM, mBase64Icon);
-    }
+  private void openMapFragment(Marker activeMarker) {
+    String spotId = null;
     if (activeMarker != null) {
-      intent.putExtra("test", mMarkerArray.get(activeMarker).getId());
+      Spot spot = mMarkerArray.get(activeMarker);
+      spotId = spot.getId();
     }
-    mContext.startActivity(intent);
+
+    mFragment.getChildFragmentManager().beginTransaction()
+        .add(R.id.xamoom_content_frame_layout, XamoomMapFragment.newInstance(mSpotList, spotId, mBase64Icon))
+        .addToBackStack(null)
+        .commit();
   }
 }

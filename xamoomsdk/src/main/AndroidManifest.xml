@@ -16,7 +16,7 @@
             android:value="@integer/google_play_services_version"/>
 
         <activity
-            android:name="com.xamoom.android.xamoomcontentblocks.MapActivity"
+            android:name="com.xamoom.android.xamoomcontentblocks.XamoomMapFragment"
             android:theme="@style/MapActivityTheme">
         </activity>
     </application>

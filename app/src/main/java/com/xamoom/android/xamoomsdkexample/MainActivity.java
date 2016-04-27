@@ -20,7 +20,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.xamoom.android.xamoomcontentblocks.MapActivity;
+import com.xamoom.android.xamoomcontentblocks.XamoomMapFragment;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.APIListCallback;
@@ -33,7 +33,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Map;
 
 import at.rags.morpheus.Error;
 import okhttp3.Interceptor;
@@ -78,7 +77,6 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
   @Override
   protected void onStart() {
     super.onStart();
-    LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(mMapClickReciever, new IntentFilter(MapActivity.MAP_CONTENT_CLICK_ACTION));
   }
 
   @Override
@@ -93,7 +91,6 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
 
   @Override
   protected void onDestroy() {
-    LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(mMapClickReciever);
     super.onDestroy();
   }
 
@@ -120,6 +117,12 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
     }
 
     return super.onOptionsItemSelected(item);
+  }
+
+
+  @Override
+  public void onBackPressed() {
+    super.onBackPressed();
   }
 
   private void checkPermission() {
@@ -334,17 +337,32 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
 
   @Override
   public void clickedContentBlock(Content content) {
-    Log.v(TAG, "Click Content: " + content);
+    XamoomContentFragment xamoomFragment = XamoomContentFragment.newInstance("AIzaSyBNZUh3-dj4YYY9-csOtQeHG_MpoE8x69Q"); //create new instance
+    xamoomFragment.setEnduserApi(mEnduserApi);
+    xamoomFragment.setDisplayAllStoreLinks(true);
+    xamoomFragment.setContent(content);
+    xamoomFragment.setShowSpotMapContentLinks(true);
+    getSupportFragmentManager().beginTransaction()
+        .replace(R.id.main_frame, xamoomFragment, "XamoomFragment")
+        .addToBackStack(null)
+        .commit(); //replace with xamoomFragment
   }
 
-  private BroadcastReceiver mMapClickReciever = new BroadcastReceiver() {
-    @Override
-    public void onReceive(Context context, Intent intent) {
-      if(intent.getAction() != null && intent.getAction().equals(MapActivity.MAP_CONTENT_CLICK_ACTION)) {
-        Log.v(TAG, "Click Spot Content: " + intent.getExtras().getString(MapActivity.MAP_CONTENT_CLICK_ID));
+  @Override
+  public void clickedSpotMapContentLink(String contentId) {
+    Log.v(TAG, "Click Map Content: " + contentId);
+    mEnduserApi.getContent(contentId, new APICallback<Content, List<Error>>() {
+      @Override
+      public void finished(Content result) {
+        clickedContentBlock(result);
       }
-    }
-  };
+
+      @Override
+      public void error(List<Error> error) {
+
+      }
+    });
+  }
 
   @Override
   public void onRequestPermissionsResult(int requestCode,

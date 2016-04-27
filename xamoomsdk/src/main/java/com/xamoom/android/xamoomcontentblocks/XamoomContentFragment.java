@@ -117,12 +117,6 @@ public class XamoomContentFragment extends Fragment {
     super.onDestroy();
   }
 
-  @Override
-  public void onDetach() {
-    super.onDetach();
-    mListener = null;
-  }
-
   /**
    * Setup the recyclerview.
    */
@@ -236,6 +230,12 @@ public class XamoomContentFragment extends Fragment {
     }
   }
 
+  @Override
+  public void onDetach() {
+    super.onDetach();
+    mListener = null;
+  }
+
   /**
    * Implement OnXamoomContentFragmentInteractionListener and override
    * <code>clickedContentBlock(String)</code>.
@@ -246,6 +246,7 @@ public class XamoomContentFragment extends Fragment {
    */
   public interface OnXamoomContentFragmentInteractionListener {
     void clickedContentBlock(Content content);
+    void clickedSpotMapContentLink(String contentId);
   }
 
   public void contentBlockClick(Content content) {
