@@ -29,7 +29,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.xamoom.android.xamoomcontentblocks.Helper.BestLocationProvider;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock9ViewHolderUtils;
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.Spot;
@@ -54,7 +53,6 @@ public class XamoomMapFragment extends Fragment implements OnMapReadyCallback {
   private ArrayMap<Marker, Spot> mMarkerSpotMap = new ArrayMap<>();
   private Marker mActiveMarker;
   private String mBase64Icon;
-  private BestLocationProvider mBestLocationProvider;
   private String mSpotId;
 
   private XamoomContentFragment.OnXamoomContentFragmentInteractionListener mListener;

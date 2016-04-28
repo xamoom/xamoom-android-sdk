@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
 
     //getContent();
     //getContentOption();
-    /*
     getContentLocationIdentifier();
     getContentsLocation();
     getSpotsWithLocation();
@@ -71,7 +70,6 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
     getMenu();
     getSystemSetting();
     getStyle();
-    */
   }
 
   @Override
@@ -124,9 +122,6 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
     return super.onOptionsItemSelected(item);
   }
 
-
-
-
   private void checkPermission() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       if (this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -173,6 +168,7 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
         .build();
 
     mEnduserApi = new EnduserApi(retrofit);
+    EnduserApi.setSharedInstance(mEnduserApi);
   }
 
   public void getContent() {
@@ -190,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
   }
 
   public void getContentOption() {
-    mEnduserApi.getContent("e5be72be162d44b189893a406aff5227", EnumSet.of(ContentFlags.PREVIEW, ContentFlags.PRIVATE),
+    EnduserApi.getSharedInstance().getContent("e5be72be162d44b189893a406aff5227", EnumSet.of(ContentFlags.PREVIEW, ContentFlags.PRIVATE),
         new APICallback<Content, List<Error>>() {
           @Override
           public void finished(Content result) {
@@ -202,7 +198,6 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
             xamoomFragment.setShowSpotMapContentLinks(true);
             getSupportFragmentManager().beginTransaction()
                 .replace(R.id.main_frame, xamoomFragment, "XamoomFragment")
-                .addToBackStack(null)
                 .commit(); //replace with xamoomFragment
           }
 

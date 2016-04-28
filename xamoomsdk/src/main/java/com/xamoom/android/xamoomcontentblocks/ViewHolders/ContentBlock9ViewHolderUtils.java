@@ -23,10 +23,11 @@ import java.util.Set;
 public class ContentBlock9ViewHolderUtils {
 
   /**
-   * TODO
-   * @param markers
-   * @param padding
-   * @return
+   * Returns camera update for all markers on map with specific padding.
+   *
+   * @param markers Set of markers.
+   * @param padding Padding for LatLngBounds.
+   * @return Camera update to see all markers on map.
    */
   public static CameraUpdate zoomToDisplayAllMarker(Set<Marker> markers, int padding) {
     LatLngBounds.Builder builder = new LatLngBounds.Builder();

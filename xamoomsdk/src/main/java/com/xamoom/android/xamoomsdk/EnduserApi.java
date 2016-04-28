@@ -47,6 +47,8 @@ public class EnduserApi {
   private static final String TAG = EnduserApi.class.getSimpleName();
   private static final String API_URL = "https://xamoom-cloud.appspot.com/";
 
+  private static EnduserApi sharedInstance;
+
   private EnduserApiInterface enduserApiInterface;
   private CallHandler callHandler;
   private String language;
@@ -240,7 +242,7 @@ public class EnduserApi {
    * Get list of spots with tags.
    * Or operation used when searching with tags.
    *
-   * @param tags List<String> with tag names
+   * @param tags List with tag names
    * @param spotFlags {@link SpotFlags}.
    * @param sortFlags {@link SpotSortFlags}
    * @param callback {@link APIListCallback}
@@ -255,7 +257,7 @@ public class EnduserApi {
    * Get list of spots with with tags.
    * Or operation used when searching with tags.
    *
-   * @param tags List<String> with tag names.
+   * @param tags List with tag names.
    * @param pageSize Size for pages. (max 100)
    * @param cursor Cursor of last search.
    * @param spotFlags {@link SpotFlags}.
@@ -342,6 +344,36 @@ public class EnduserApi {
 
   public CallHandler getCallHandler() {
     return callHandler;
+  }
+
+  /**
+   * Use this to get your instance. It will create a new one with your api key, when
+   * there is no isntance.
+   *
+   * @param apikey Your xamoom api key.
+   * @return EnduserApi instance.
+   */
+  public static EnduserApi getSharedInstance(String apikey) {
+    if (EnduserApi.sharedInstance == null) {
+      EnduserApi.sharedInstance = new EnduserApi(apikey);
+    }
+    return EnduserApi.sharedInstance;
+  }
+
+  /**
+   * This will you return your current sharedInstance. Even if it is null.
+   * @return EnduserApi instance.
+   */
+  public static EnduserApi getSharedInstance() {
+    return EnduserApi.sharedInstance;
+  }
+
+  /**
+   * Set your the sharedInstance with your Instance of EnduserApi.
+   * @param sharedInstance SharedInstance to save.
+   */
+  public static void setSharedInstance(EnduserApi sharedInstance) {
+    EnduserApi.sharedInstance = sharedInstance;
   }
 }
 
