@@ -73,10 +73,6 @@ public class UrlUtil {
       params.put("include_markers", "true");
     }
 
-    if (spotFlags.contains(SpotFlags.HAS_LOCATION)) {
-      params.put("has-location", "true");
-    }
-
     return params;
   }
 

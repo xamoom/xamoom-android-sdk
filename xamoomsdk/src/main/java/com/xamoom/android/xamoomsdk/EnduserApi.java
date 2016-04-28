@@ -272,6 +272,9 @@ public class EnduserApi {
         spotFlags);
     params = UrlUtil.addSpotSortingParameter(params, sortFlags);
     params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
+    if (spotFlags != null && spotFlags.contains(SpotFlags.HAS_LOCATION)) {
+      params.put("filter[has-location]", "true");
+    }
     params.put("filter[tags]", JsonListUtil.listToJsonArray(tags, ","));
 
     Call<ResponseBody> call = enduserApiInterface.getSpots(params);
