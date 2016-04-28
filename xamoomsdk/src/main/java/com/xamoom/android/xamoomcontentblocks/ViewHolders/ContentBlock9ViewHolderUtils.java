@@ -30,6 +30,10 @@ public class ContentBlock9ViewHolderUtils {
    * @return Camera update to see all markers on map.
    */
   public static CameraUpdate zoomToDisplayAllMarker(Set<Marker> markers, int padding) {
+    if (markers.size() == 0) {
+      return null;
+    }
+    
     LatLngBounds.Builder builder = new LatLngBounds.Builder();
     for (Marker marker :markers) {
       builder.include(marker.getPosition());

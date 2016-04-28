@@ -162,7 +162,7 @@ public class XamoomMapFragment extends Fragment implements OnMapReadyCallback {
       }
     }
 
-    if (mSpotId == null) {
+    if (mSpotId == null && mMarkerSpotMap.keySet().size() > 0) {
       mGoogleMap.moveCamera(ContentBlock9ViewHolderUtils.zoomToDisplayAllMarker(mMarkerSpotMap.keySet(), 200));
     }
   }
