@@ -92,7 +92,7 @@ mEnduserApi.getContentByBeacon(MAJOR, MINOR, new APICallback<Content, List<Error
 
 ### Documentation
 
-Every call is also on our [documentation](http://xamoom.github.io/xamoom-android-sdk/docs/com/xamoom/android/XamoomEndUserApi.html)
+Here you can find the full java   [documentation](http://xamoom.github.io/xamoom-android-sdk/docs/com/xamoom/android/xamoomsdk/EnduserApi.html).
 
 # Requirements
 
