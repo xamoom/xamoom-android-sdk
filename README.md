@@ -5,7 +5,7 @@
 
 With the xamoom-android-sdk we created a simple SDK to let you create apps based on our system.
 
-More informations about xamoom and how xamoom works? Visit our Github page [xamoom Github Wiki](https://github.com/xamoom/xamoom.github.io/wiki)
+More informations about xamoom and how xamoom works? Visit our Github page [xamoom Github Wiki](https://github.com/xamoom/xamoom.github.io/wiki).
 
 # Getting Started
 
@@ -19,15 +19,24 @@ More informations about xamoom and how xamoom works? Visit our Github page [xamo
 
 Add in your Gradle in dependencies
 
-    compile 'com.xamoom.android:xamoomsdk:1.9.4'
+    compile 'com.xamoom.android:xamoomsdk:2.0.0'
 
 # Usage
 
 ## Setup XamoomEnduserApi
 
-Add internet permission to your manifest.
+Add internet permission to your manifest and your google play services with
+a geo api key.
 
     <uses-permission android:name="android.permission.INTERNET"/>
+
+    <meta-data
+        android:name="com.google.android.gms.version"
+        android:value="@integer/google_play_services_version" />
+
+    <meta-data
+        android:name="com.google.android.geo.API_KEY"
+        android:value="YOUR_API:KEY" />
 
 ## Make your first call
 
@@ -53,10 +62,14 @@ mEnduserApi.getContent(CONTENT_ID, new APICallback<Content, List<Error>>() {
 Use the XamoomContentFragment to show your content.
 
 ```java
-XamoomContentFragment xamoomFragment = XamoomContentFragment.newInstance(LINK_COLOR, YOUTUBE_API_KEY); 
+XamoomContentFragment xamoomFragment = XamoomContentFragment.newInstance("YOUTUBE_API_KEY"); //create new instance
 xamoomFragment.setEnduserApi(mEnduserApi);
+xamoomFragment.setDisplayAllStoreLinks(true);
 xamoomFragment.setContent(result);
-getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, xamoomFragment, "XamoomFragment").commit();
+xamoomFragment.setShowSpotMapContentLinks(true);
+getSupportFragmentManager().beginTransaction()
+    .replace(R.id.main_frame, xamoomFragment, "XamoomFragment")
+    .commit();
 ```
 
 ## Beacons
@@ -77,11 +90,7 @@ mEnduserApi.getContentByBeacon(MAJOR, MINOR, new APICallback<Content, List<Error
     });
 ```
 
-## API Calls (not up to date)
-
-You find every API call in the wiki: [API Calls](https://github.com/xamoom/xamoom-android-sdk/wiki/API-Calls).
-
-### Documentation (not up to date)
+### Documentation
 
 Every call is also on our [documentation](http://xamoom.github.io/xamoom-android-sdk/docs/com/xamoom/android/XamoomEndUserApi.html)
 
