@@ -1,11 +1,16 @@
 package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.PictureDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.v13.app.FragmentCompat;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -42,12 +47,16 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
   private ImageView mImageView;
   private GenericRequestBuilder<Uri, InputStream, SVG, PictureDrawable> requestBuilder;
 
-  public ContentBlock3ViewHolder(View itemView, Context context) {
+  private OnContentBlock3ViewHolderInteractionListener mListener;
+
+  public ContentBlock3ViewHolder(View itemView, Context context,
+                                 OnContentBlock3ViewHolderInteractionListener listener) {
     super(itemView);
     mContext = context;
     mTitleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
     mImageView = (ImageView) itemView.findViewById(R.id.imageImageView);
     mImageProgressBar = (ProgressBar) itemView.findViewById(R.id.imageProgressBar);
+    mListener = listener;
 
     SvgDrawableTranscoder svgDrawableTranscoder =  new SvgDrawableTranscoder();
     svgDrawableTranscoder.setmDeviceWidth(mContext.getResources().getDisplayMetrics().widthPixels);
@@ -89,7 +98,6 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
         Uri uri = Uri.parse(contentBlock.getFileId());
         requestBuilder
             .diskCacheStrategy(DiskCacheStrategy.NONE)
-            //.placeholder(R.drawable.placeholder)
             .load(uri)
             .into(mImageView);
         mImageProgressBar.setVisibility(View.GONE);
@@ -128,16 +136,20 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
           return false;
         }
         try {
-          Glide.with(mContext)
-              .load(contentBlock.getFileId())
-              .asBitmap()
-              .into(new SimpleTarget<Bitmap>() {
-                @Override
-                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                  MediaStore.Images.Media.insertImage(mContext.getContentResolver(), resource, contentBlock.getTitle(), "");
-                  Toast.makeText(mContext, mContext.getString(R.string.image_saved_text), Toast.LENGTH_SHORT).show();
-                }
-              });
+          if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            Glide.with(mContext)
+                .load(contentBlock.getFileId())
+                .asBitmap()
+                .into(new SimpleTarget<Bitmap>() {
+                  @Override
+                  public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                    MediaStore.Images.Media.insertImage(mContext.getContentResolver(), resource, contentBlock.getTitle(), "");
+                    Toast.makeText(mContext, mContext.getString(R.string.image_saved_text), Toast.LENGTH_SHORT).show();
+                  }
+                });
+          } else {
+            mListener.needExternalStoragePermission();
+          }
         } catch (Exception e) {
           e.printStackTrace();
         }
@@ -165,5 +177,9 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
     //set left and right margin to the half of the difference
     //so the imageView is doing all the resizing
     mImageView.setPadding((int)(diff/2),0,(int)(diff/2),0);
+  }
+
+  public interface OnContentBlock3ViewHolderInteractionListener {
+    void needExternalStoragePermission();
   }
 }

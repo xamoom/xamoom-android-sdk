@@ -1,9 +1,11 @@
 package com.xamoom.android.xamoomcontentblocks;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v13.app.FragmentCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
+import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.Content;
@@ -43,8 +46,9 @@ import java.util.List;
  * @version 0.1
  *
  */
-public class XamoomContentFragment extends Fragment {
+public class XamoomContentFragment extends Fragment implements ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener {
   private static final String YOUTUBE_API_KEY = "0000";
+  private static final int WRITE_STORAGE_PERMISSION = 0;
 
   private RecyclerView mRecyclerView;
   private ContentBlockAdapter mContentBlockAdapter;
@@ -128,7 +132,7 @@ public class XamoomContentFragment extends Fragment {
         new LinearLayoutManager(this.getActivity().getApplicationContext()));
 
     mContentBlockAdapter = new ContentBlockAdapter(this, mContentBlocks, mStyle, mEnduserApi,
-        showSpotMapContentLinks, mYoutubeApiKey, mListener);
+        showSpotMapContentLinks, mYoutubeApiKey, mListener, this);
     mRecyclerView.setAdapter(mContentBlockAdapter);
   }
 
@@ -233,6 +237,16 @@ public class XamoomContentFragment extends Fragment {
   public void onDetach() {
     super.onDetach();
     mListener = null;
+  }
+
+  @Override
+  public void needExternalStoragePermission() {
+   requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_STORAGE_PERMISSION);
+  }
+
+  @Override
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
   }
 
   /**

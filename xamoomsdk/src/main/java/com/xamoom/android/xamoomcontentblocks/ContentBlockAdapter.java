@@ -33,7 +33,8 @@ import java.util.List;
  * @author Raphael Seher
  */
 public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-  private XamoomContentFragment.OnXamoomContentFragmentInteractionListener mListener;
+  private XamoomContentFragment.OnXamoomContentFragmentInteractionListener mOnXamoomContentFragmentInteractionListener;
+  private ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener mOnContentBlock3ViewHolderInteractionListener;
   private Fragment mFragment;
   private List<ContentBlock> mContentBlocks;
   private Style mStyle;
@@ -53,12 +54,14 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
    * @param contentBlocks ContentBlocks to display.
    * @param style The style from your xamoom system.
    * @param youtubeApiKey Youtube api key from Google Developer Console.
-   * @param listener FragmentListener for click events.
+   * @param onXamoomContentFragmentInteractionListener FragmentListener for click events.
    */
   public ContentBlockAdapter(Fragment fragment, List<ContentBlock> contentBlocks,
                              Style style, EnduserApi enduserApi, boolean showSpotMapContentLinks,
-                             String youtubeApiKey, XamoomContentFragment.OnXamoomContentFragmentInteractionListener listener) {
-    mListener = listener;
+                             String youtubeApiKey, XamoomContentFragment.OnXamoomContentFragmentInteractionListener onXamoomContentFragmentInteractionListener,
+                             ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener contentBlock3ViewHolderInteractionListener) {
+    mOnXamoomContentFragmentInteractionListener = onXamoomContentFragmentInteractionListener;
+    mOnContentBlock3ViewHolderInteractionListener = contentBlock3ViewHolderInteractionListener;
     mFragment = fragment;
     mContentBlocks = contentBlocks;
     mStyle = style;
@@ -121,7 +124,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
       case 3:
         View view3 = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.content_block_3_layout, parent, false);
-        return new ContentBlock3ViewHolder(view3, mFragment.getContext());
+        return new ContentBlock3ViewHolder(view3, mFragment.getContext(), mOnContentBlock3ViewHolderInteractionListener);
       case 4:
         View view4 = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.content_block_4_layout, parent, false);
@@ -134,7 +137,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         View view6 = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.content_block_6_layout, parent, false);
         return new ContentBlock6ViewHolder(view6, mFragment.getContext(), mEnduserApi,
-            mContentCache, mListener);
+            mContentCache, mOnXamoomContentFragmentInteractionListener);
       case 7:
         View view7 = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.content_block_7_layout, parent, false);
@@ -215,6 +218,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     mContentBlocks = null;
     mEnduserApi = null;
     mBitmapCache = null;
+    mOnContentBlock3ViewHolderInteractionListener = null;
     super.onDetachedFromRecyclerView(recyclerView);
   }
 
