@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:paddingStart="@dimen/standard_contentblock_padding"
+              android:paddingEnd="@dimen/standard_contentblock_padding"
+              android:layout_marginBottom="@dimen/contentblock_to_contentblock_margin">
+
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/contentHeader_title_size"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        />
+
+    <WebView
+        android:id="@+id/webView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/contentblock_children_margin"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        />
+
+</LinearLayout>

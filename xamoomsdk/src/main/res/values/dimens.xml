@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="standard_contentblock_padding">16dp</dimen>
+    <dimen name="no_contentblock_padding">0dp</dimen>
+    <dimen name="contentblock_to_contentblock_margin">8dp</dimen>
+    <dimen name="contentblock_children_margin">4dp</dimen>
+    <dimen name="contentblock_title_size">22sp</dimen>
+    <dimen name="contentHeader_title_size">26sp</dimen>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+</resources>

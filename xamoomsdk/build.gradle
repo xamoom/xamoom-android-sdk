@@ -1,0 +1,83 @@
+apply plugin: 'com.android.library'
+
+version = "2.0.0"
+group = "com.xamoom.android"
+
+android {
+	compileSdkVersion 23
+	buildToolsVersion "23.0.3"
+
+	defaultConfig {
+		minSdkVersion 18
+		targetSdkVersion 23
+		versionCode 1
+		versionName "2.0.0"
+		multiDexEnabled true
+	}
+	buildTypes {
+		release {
+			minifyEnabled false
+			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+		}
+	}
+
+	sourceSets {
+		defaultConfig {
+			testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+		}
+	}
+
+	testOptions {
+		unitTests.returnDefaultValues = true
+	}
+
+	lintOptions {
+		abortOnError false
+	}
+}
+
+dependencies {
+	compile fileTree(include: ['*.jar'], dir: 'libs')
+	testCompile 'junit:junit:4.12'
+	testCompile 'org.mockito:mockito-core:1.10.10'
+	testCompile 'com.squareup.okhttp3:mockwebserver:3.2.0'
+	testCompile "org.robolectric:robolectric:3.0"
+	testCompile "org.robolectric:shadows-support-v4:3.0"
+	androidTestCompile 'com.android.support.test:runner:0.4'
+	compile files('libs/androidsvg-1.2.1.jar')
+	compile files('libs/YouTubeAndroidPlayerApi.jar')
+	compile 'com.android.support:support-v4:23.3.0'
+	compile 'com.google.android.gms:play-services-maps:8.4.0'
+	compile 'com.squareup.retrofit2:retrofit:2.0.0'
+	compile 'com.squareup.okhttp3:logging-interceptor:3.0.1'
+	compile 'com.xamoom.android:morpheus:0.4.0'
+	compile 'com.android.support:recyclerview-v7:23.3.0'
+	compile 'com.github.bumptech.glide:glide:3.6.0'
+	compile 'com.android.support:appcompat-v7:23.3.0'
+	compile 'com.android.support:design:23.3.0'
+}
+
+ext {
+	bintrayRepo = 'maven'
+	bintrayName = 'xamoomsdk'
+	publishedGroupId = 'com.xamoom.android'
+	libraryName = 'xamoomsdk'
+	artifact = 'xamoomsdk'
+
+	libraryDescription = 'xamoomsdk is a framework for the xamoom-cloud api. So you can write your own applications for the xamoom-cloud.'
+
+	siteUrl = 'https://github.com/xamoom/xamoom-android-sdk'
+	gitUrl = 'https://github.com/xamoom/xamoom-android-sdk.git'
+
+	libraryVersion = '2.0.0'
+	developerId = 'xamoom-raphael'
+	developerName = 'Raphael Seher'
+	developerEmail = 'raphael@xamoom.com'
+
+	licenseName = 'The Apache Software License, Version 2.0'
+	licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+	allLicenses = ["Apache-2.0"]
+}
+
+//apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+//apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'

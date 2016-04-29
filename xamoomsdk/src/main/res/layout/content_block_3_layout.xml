@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginStart="@dimen/no_contentblock_padding"
+              android:layout_marginEnd="@dimen/no_contentblock_padding"
+              android:layout_marginBottom="@dimen/contentblock_to_contentblock_margin" >
+
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/contentblock_title_size"
+        android:textColor="@color/black"
+        android:layout_marginStart="@dimen/standard_contentblock_padding"
+        android:layout_marginEnd="@dimen/standard_contentblock_padding"
+        />
+
+    <ProgressBar
+        android:id="@+id/imageProgressBar"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        />
+
+    <ImageView
+        android:id="@+id/imageImageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:layout_gravity="center|center_horizontal"
+        android:layout_marginTop="@dimen/contentblock_children_margin"/>
+</LinearLayout>

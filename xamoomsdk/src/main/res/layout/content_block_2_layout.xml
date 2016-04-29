@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginStart="@dimen/no_contentblock_padding"
+              android:layout_marginEnd="@dimen/no_contentblock_padding"
+              android:layout_marginBottom="@dimen/contentblock_to_contentblock_margin">
+
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/contentblock_title_size"
+        android:textColor="@color/black"
+        android:layout_marginStart="@dimen/standard_contentblock_padding"
+        android:layout_marginEnd="@dimen/standard_contentblock_padding"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <WebView
+            android:id="@+id/videoWebView"
+            android:layout_width="match_parent"
+            android:layout_height="260dp"/>
+
+        <View
+            android:id="@+id/webViewOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="260dp"
+            android:layout_alignParentTop="true"/>
+
+        <com.google.android.youtube.player.YouTubeThumbnailView
+            android:id="@+id/youtube_thumbnail_view"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"/>
+
+        <ImageView
+            android:id="@+id/video_play_image_view"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_videoplay"/>
+
+        <ProgressBar
+            android:id="@+id/video_progress_bar"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_centerInParent="true"/>
+
+    </RelativeLayout>
+
+</LinearLayout>
