@@ -100,7 +100,7 @@ public class ContentBlockAdapterTest {
 
 
     ContentBlockAdapter adapter = new ContentBlockAdapter(new Fragment(), new ArrayList<ContentBlock>()
-        ,style, new EnduserApi("apikey"), false, "apikey", null);
+        ,style, new EnduserApi("apikey"), false, "apikey", null, null);
 
     assertNotNull(adapter);
     assertEquals(adapter.getLinkColor(), "FFF000");
@@ -110,7 +110,7 @@ public class ContentBlockAdapterTest {
 
   @Test
   public void testGetItemViewType() {
-    ContentBlockAdapter adapter = new ContentBlockAdapter(null, contentBlockList, null, null, false, null, null);
+    ContentBlockAdapter adapter = new ContentBlockAdapter(null, contentBlockList, null, null, false, null, null, null);
 
     assertEquals(adapter.getItemViewType(0), 0);
     assertEquals(adapter.getItemViewType(1), 1);
@@ -118,7 +118,7 @@ public class ContentBlockAdapterTest {
 
   @Test
   public void testGetItemCount() {
-    ContentBlockAdapter adapter = new ContentBlockAdapter(null, contentBlockList, null, null, false, null, null);
+    ContentBlockAdapter adapter = new ContentBlockAdapter(null, contentBlockList, null, null, false, null, null, null);
 
     assertEquals(adapter.getItemCount(), 11);
   }
@@ -129,7 +129,7 @@ public class ContentBlockAdapterTest {
     startVisibleFragment(fragment);
 
     ContentBlockAdapter adapter = new ContentBlockAdapter(fragment, contentBlockList, null,
-        new EnduserApi("api"), false, "apikey", null);
+        new EnduserApi("api"), false, "apikey", null, null);
 
     List<RecyclerView.ViewHolder> viewHolderList = new ArrayList<>();
     for (int i = -1; i < 9; i++) {
@@ -158,7 +158,7 @@ public class ContentBlockAdapterTest {
     Fragment fragment = new Fragment();
     startVisibleFragment(fragment);
     ContentBlockAdapter adapter = new ContentBlockAdapter(fragment, contentBlockList, null,
-        new EnduserApi("api"), false, "apikey", null);
+        new EnduserApi("api"), false, "apikey", null, null);
 
     ContentHeaderViewHolder viewHolder = mock(ContentHeaderViewHolder.class);
 
@@ -172,7 +172,7 @@ public class ContentBlockAdapterTest {
     Fragment fragment = new Fragment();
     startVisibleFragment(fragment);
     ContentBlockAdapter adapter = new ContentBlockAdapter(fragment, contentBlockList, null,
-        new EnduserApi("api"), false, "apikey", null);
+        new EnduserApi("api"), false, "apikey", null, null);
 
     ContentBlock0ViewHolder viewHolder = mock(ContentBlock0ViewHolder.class);
 
@@ -186,7 +186,7 @@ public class ContentBlockAdapterTest {
     Fragment fragment = new Fragment();
     startVisibleFragment(fragment);
     ContentBlockAdapter adapter = new ContentBlockAdapter(fragment, contentBlockList, null,
-        new EnduserApi("api"), false, "apikey", null);
+        new EnduserApi("api"), false, "apikey", null, null);
 
     ContentBlock1ViewHolder viewHolder = mock(ContentBlock1ViewHolder.class);
 
@@ -200,7 +200,7 @@ public class ContentBlockAdapterTest {
     Fragment fragment = new Fragment();
     startVisibleFragment(fragment);
     ContentBlockAdapter adapter = new ContentBlockAdapter(fragment, contentBlockList, null,
-        new EnduserApi("api"), false, "apikey", null);
+        new EnduserApi("api"), false, "apikey", null, null);
 
     ContentBlock2ViewHolder viewHolder = mock(ContentBlock2ViewHolder.class);
 
@@ -214,7 +214,7 @@ public class ContentBlockAdapterTest {
     Fragment fragment = new Fragment();
     startVisibleFragment(fragment);
     ContentBlockAdapter adapter = new ContentBlockAdapter(fragment, contentBlockList, null,
-        new EnduserApi("api"), false, "apikey", null);
+        new EnduserApi("api"), false, "apikey", null, null);
 
     ContentBlock3ViewHolder viewHolder = mock(ContentBlock3ViewHolder.class);
 
@@ -228,7 +228,7 @@ public class ContentBlockAdapterTest {
     Fragment fragment = new Fragment();
     startVisibleFragment(fragment);
     ContentBlockAdapter adapter = new ContentBlockAdapter(fragment, contentBlockList, null,
-        new EnduserApi("api"), false, "apikey", null);
+        new EnduserApi("api"), false, "apikey", null, null);
 
     ContentBlock4ViewHolder viewHolder = mock(ContentBlock4ViewHolder.class);
 
@@ -242,7 +242,7 @@ public class ContentBlockAdapterTest {
     Fragment fragment = new Fragment();
     startVisibleFragment(fragment);
     ContentBlockAdapter adapter = new ContentBlockAdapter(fragment, contentBlockList, null,
-        new EnduserApi("api"), false, "apikey", null);
+        new EnduserApi("api"), false, "apikey", null, null);
 
     ContentBlock5ViewHolder viewHolder = mock(ContentBlock5ViewHolder.class);
 
@@ -256,7 +256,7 @@ public class ContentBlockAdapterTest {
     Fragment fragment = new Fragment();
     startVisibleFragment(fragment);
     ContentBlockAdapter adapter = new ContentBlockAdapter(fragment, contentBlockList, null,
-        new EnduserApi("api"), false, "apikey", null);
+        new EnduserApi("api"), false, "apikey", null, null);
 
     ContentBlock6ViewHolder viewHolder = mock(ContentBlock6ViewHolder.class);
 
@@ -270,7 +270,7 @@ public class ContentBlockAdapterTest {
     Fragment fragment = new Fragment();
     startVisibleFragment(fragment);
     ContentBlockAdapter adapter = new ContentBlockAdapter(fragment, contentBlockList, null,
-        new EnduserApi("api"), false, "apikey", null);
+        new EnduserApi("api"), false, "apikey", null, null);
 
     ContentBlock7ViewHolder viewHolder = mock(ContentBlock7ViewHolder.class);
 
@@ -284,7 +284,7 @@ public class ContentBlockAdapterTest {
     Fragment fragment = new Fragment();
     startVisibleFragment(fragment);
     ContentBlockAdapter adapter = new ContentBlockAdapter(fragment, contentBlockList, null,
-        new EnduserApi("api"), false, "apikey", null);
+        new EnduserApi("api"), false, "apikey", null, null);
 
     ContentBlock8ViewHolder viewHolder = mock(ContentBlock8ViewHolder.class);
 
@@ -298,7 +298,7 @@ public class ContentBlockAdapterTest {
     Fragment fragment = new Fragment();
     startVisibleFragment(fragment);
     ContentBlockAdapter adapter = new ContentBlockAdapter(fragment, contentBlockList, null,
-        new EnduserApi("api"), false, "apikey", null);
+        new EnduserApi("api"), false, "apikey", null, null);
 
     ContentBlock9ViewHolder viewHolder = mock(ContentBlock9ViewHolder.class);
 
@@ -312,7 +312,7 @@ public class ContentBlockAdapterTest {
     Fragment fragment = new Fragment();
 
     ContentBlockAdapter adapter = new ContentBlockAdapter(fragment, contentBlockList, null,
-        new EnduserApi("api"), false, "apikey", null);
+        new EnduserApi("api"), false, "apikey", null, null);
 
     adapter.onDetachedFromRecyclerView(new RecyclerView(RuntimeEnvironment.application));
 
