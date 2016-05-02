@@ -5,11 +5,11 @@
     <item
         android:id="@+id/action_close"
         android:orderInCategory="100"
-        android:title="Close Fragment"
+        android:title="@string/close_fragment"
         app:showAsAction="never"/>
     <item
         android:id="@+id/action_open"
         android:orderInCategory="100"
-        android:title="Open Fragment"
+        android:title="@string/open_fragment"
         app:showAsAction="never"/>
 </menu>
