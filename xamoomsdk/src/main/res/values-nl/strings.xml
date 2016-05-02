@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cannot_save_image">SVG\'s en GIF\'s kunnen niet worden opgeslagen</string>
+    <string name="close_map">Sluit kaart</string>
+    <string name="distanceLabel">Afstand</string>
+    <string name="header_picture_alt_text">Omslagfoto</string>
+    <string name="image_saved_text">Afbeelding opgeslagen</string>
+    <string name="meterLabel">meter</string>
+    <string name="noLocation">Zoekt naar locatie</string>
+    <string name="open">Openen</string>
+</resources>
