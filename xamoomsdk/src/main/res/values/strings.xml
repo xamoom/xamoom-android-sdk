@@ -5,7 +5,7 @@
     <string name="cannot_save_image">Cannot save SVGs and GIFs</string>
     <string name="distanceLabel">Distance</string>
     <string name="meterLabel">meter</string>
-    <string name="noLocation">Searching for location.</string>
+    <string name="noLocation">Searching for location</string>
     <string name="header_picture_alt_text">Headerimage</string>
     <string name="open">Open</string>
     <string name="close_map">Close map</string>
