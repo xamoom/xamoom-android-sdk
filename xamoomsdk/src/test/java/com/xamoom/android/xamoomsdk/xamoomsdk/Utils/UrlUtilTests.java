@@ -13,8 +13,26 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.TestCase.assertNotNull;
 
 public class UrlUtilTests {
+
+  @Test
+  public void testConstructor() {
+    assertNotNull(new UrlUtil());
+  }
+
+  @Test
+  public void testAddContentParameterWithNull() {
+    Map<String, String> checkParams = new HashMap<>();
+    checkParams.put("lang", "en");
+
+    Map<String, String> params = UrlUtil.addContentParameter(UrlUtil.getUrlParameter("en"),
+        null);
+
+    assertEquals(params, checkParams);
+  }
+
   @Test
   public void testAddContentParameter() throws Exception {
     Map<String, String> checkParams = new HashMap<>();
@@ -41,6 +59,17 @@ public class UrlUtilTests {
   }
 
   @Test
+  public void testAddContentSortingParameterWithNull() throws Exception {
+    Map<String, String> checkParams = new HashMap<>();
+    checkParams.put("lang", "en");
+
+    Map<String, String> params = UrlUtil.addContentSortingParameter(UrlUtil.getUrlParameter("en"),
+        null);
+
+    assertEquals(params, checkParams);
+  }
+
+  @Test
   public void testAddSpotParameter() throws Exception {
     Map<String, String> checkParams = new HashMap<>();
     checkParams.put("lang", "en");
@@ -54,6 +83,17 @@ public class UrlUtilTests {
   }
 
   @Test
+  public void testAddSpotParameterWithNull() throws Exception {
+    Map<String, String> checkParams = new HashMap<>();
+    checkParams.put("lang", "en");
+
+    Map<String, String> params = UrlUtil.addSpotParameter(UrlUtil.getUrlParameter("en"),
+        null);
+
+    assertEquals(params, checkParams);
+  }
+
+  @Test
   public void testAddSpotSortingParameter() throws Exception {
     Map<String, String> checkParams = new HashMap<>();
     checkParams.put("lang", "en");
@@ -61,6 +101,17 @@ public class UrlUtilTests {
 
     Map<String, String> params = UrlUtil.addSpotSortingParameter(UrlUtil.getUrlParameter("en"),
         EnumSet.of(SpotSortFlags.NAME, SpotSortFlags.NAME_DESC, SpotSortFlags.DISTANCE, SpotSortFlags.DISTANCE_DESC));
+
+    assertEquals(params, checkParams);
+  }
+
+  @Test
+  public void testAddSpotSortingParameterWithNull() throws Exception {
+    Map<String, String> checkParams = new HashMap<>();
+    checkParams.put("lang", "en");
+
+    Map<String, String> params = UrlUtil.addSpotSortingParameter(UrlUtil.getUrlParameter("en"),
+        null);
 
     assertEquals(params, checkParams);
   }
