@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v13.app.FragmentCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
+import com.xamoom.android.xamoomcontentblocks.Adapters.ContentBlockAdapter;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.R;
@@ -80,6 +80,8 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   }
 
   public XamoomContentFragment() {
+    mContentBlockAdapter = new ContentBlockAdapter(this, mContentBlocks, mStyle, mEnduserApi,
+        showSpotMapContentLinks, mYoutubeApiKey, mListener, this);
   }
 
   @Override
@@ -95,6 +97,9 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
                            Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_xamoom_content, container, false);
     mRecyclerView = (RecyclerView) view.findViewById(R.id.contentblock_recycler_view);
+
+    setupRecyclerView();
+
     return view;
   }
 
@@ -103,7 +108,9 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
     super.onStart();
 
     if(!isAnimated) {
-      setupRecyclerView();
+      if (mContentBlockAdapter != null) {
+        mContentBlockAdapter.notifyDataSetChanged();
+      }
     }
   }
 
@@ -130,9 +137,6 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
 
     mRecyclerView.setLayoutManager(
         new LinearLayoutManager(this.getActivity().getApplicationContext()));
-
-    mContentBlockAdapter = new ContentBlockAdapter(this, mContentBlocks, mStyle, mEnduserApi,
-        showSpotMapContentLinks, mYoutubeApiKey, mListener, this);
     mRecyclerView.setAdapter(mContentBlockAdapter);
   }
 
@@ -156,7 +160,9 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
 
     @Override
     public void onAnimationEnd(Animation animation) {
-      setupRecyclerView();
+      if (mContentBlockAdapter != null) {
+        mContentBlockAdapter.notifyDataSetChanged();
+      }
     }
 
     @Override
@@ -267,6 +273,12 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   }
 
   // getters
+
+
+  public ContentBlockAdapter getContentBlockAdapter() {
+    return mContentBlockAdapter;
+  }
+
   public boolean isShowSpotMapContentLinks() {
     return showSpotMapContentLinks;
   }
