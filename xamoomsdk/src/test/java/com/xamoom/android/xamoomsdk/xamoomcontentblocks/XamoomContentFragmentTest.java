@@ -1,10 +1,11 @@
-package com.xamoom.android.xamoomsdk;
+package com.xamoom.android.xamoomsdk.xamoomcontentblocks;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
+import com.xamoom.android.xamoomsdk.BuildConfig;
 import com.xamoom.android.xamoomsdk.Helper.ContentFragmentActivity;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 

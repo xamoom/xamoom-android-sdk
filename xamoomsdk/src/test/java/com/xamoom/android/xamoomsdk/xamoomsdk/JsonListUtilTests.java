@@ -1,4 +1,4 @@
-package com.xamoom.android.xamoomsdk;
+package com.xamoom.android.xamoomsdk.xamoomsdk;
 
 import com.xamoom.android.xamoomsdk.Utils.JsonListUtil;
 

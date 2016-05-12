@@ -1,7 +1,10 @@
-package com.xamoom.android.xamoomsdk;
+package com.xamoom.android.xamoomsdk.xamoomsdk;
 
 import android.location.Location;
 
+import com.xamoom.android.xamoomsdk.APICallback;
+import com.xamoom.android.xamoomsdk.APIListCallback;
+import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.Menu;

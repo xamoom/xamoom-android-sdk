@@ -1,10 +1,10 @@
-package com.xamoom.android.xamoomsdk;
+package com.xamoom.android.xamoomsdk.xamoomcontentblocks;
 
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
-import com.xamoom.android.xamoomcontentblocks.ContentBlockAdapter;
+import com.xamoom.android.xamoomcontentblocks.Adapters.ContentBlockAdapter;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock0ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock1ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock2ViewHolder;
@@ -16,6 +16,8 @@ import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock7ViewHolde
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock8ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock9ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentHeaderViewHolder;
+import com.xamoom.android.xamoomsdk.BuildConfig;
+import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Resource.Style;
 
