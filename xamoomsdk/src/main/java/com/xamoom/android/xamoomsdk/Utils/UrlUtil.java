@@ -10,9 +10,6 @@ import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-/**
- * Created by raphaelseher on 04/04/16.
- */
 public class UrlUtil {
   public static Map<String, String> getUrlParameter(String language) {
     Map<String, String> params = new LinkedHashMap<>();
