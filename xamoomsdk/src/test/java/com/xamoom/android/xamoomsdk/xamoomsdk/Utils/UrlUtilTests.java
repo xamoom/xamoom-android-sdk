@@ -1,4 +1,4 @@
-package com.xamoom.android.xamoomsdk.xamoomsdk;
+package com.xamoom.android.xamoomsdk.xamoomsdk.Utils;
 
 import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
 import com.xamoom.android.xamoomsdk.Enums.ContentSortFlags;
