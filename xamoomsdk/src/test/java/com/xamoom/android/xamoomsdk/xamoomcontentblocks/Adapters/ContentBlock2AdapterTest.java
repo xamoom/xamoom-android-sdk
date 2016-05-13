@@ -1,15 +1,19 @@
 package com.xamoom.android.xamoomsdk.xamoomcontentblocks.Adapters;
 
 import android.app.Activity;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.xamoom.android.xamoomcontentblocks.Adapters.ContentBlock0Adapter;
-import com.xamoom.android.xamoomcontentblocks.Adapters.ContentBlock1Adapter;
-import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock0ViewHolder;
-import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock1ViewHolder;
+import com.xamoom.android.xamoomcontentblocks.Adapters.ContentBlock2Adapter;
+import com.xamoom.android.xamoomcontentblocks.Adapters.ContentBlock2Adapter;
+import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock2ViewHolder;
+import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.BuildConfig;
+import com.xamoom.android.xamoomsdk.Helper.ContentFragmentActivity;
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Resource.Style;
@@ -32,9 +36,22 @@ import static junit.framework.Assert.assertTrue;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21, manifest = "AndroidManifest.xml")
-public class ContentBlock1AdapterTest {
+public class ContentBlock2AdapterTest {
 
   Activity activity;
+
+  private void addFragmentToActivity(Fragment fragment) {
+    ContentFragmentActivity activity = Robolectric.buildActivity( ContentFragmentActivity.class )
+        .create()
+        .start()
+        .resume()
+        .get();
+
+    FragmentManager fragmentManager = activity.getSupportFragmentManager();
+    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+    fragmentTransaction.add(fragment, null);
+    fragmentTransaction.commit();
+  }
 
   @Before
   public void setup() {
@@ -44,19 +61,19 @@ public class ContentBlock1AdapterTest {
 
   @Test
   public void testConstructor() {
-    assertNotNull(new ContentBlock1Adapter());
+    assertNotNull(new ContentBlock2Adapter());
   }
 
   @Test
   public void testIsForViewType() {
     List<ContentBlock> contentBlocks = new ArrayList();
     ContentBlock contentBlock = new ContentBlock();
-    contentBlock.setBlockType(1);
+    contentBlock.setBlockType(2);
     contentBlocks.add(contentBlock);
 
-    ContentBlock1Adapter contentBlock1Adapter = new ContentBlock1Adapter();
+    ContentBlock2Adapter ContentBlock2Adapter = new ContentBlock2Adapter();
 
-    assertTrue(contentBlock1Adapter.isForViewType(contentBlocks, 0));
+    assertTrue(ContentBlock2Adapter.isForViewType(contentBlocks, 0));
   }
 
   @Test
@@ -66,13 +83,16 @@ public class ContentBlock1AdapterTest {
     contentBlock.setBlockType(1);
     contentBlocks.add(contentBlock);
 
-    ContentBlock1Adapter adapter = new ContentBlock1Adapter();
-    ViewGroup recycleView = (ViewGroup) View.inflate(activity, R.layout.content_block_1_layout, null);
+    ContentBlock2Adapter adapter = new ContentBlock2Adapter();
+    ViewGroup recycleView = (ViewGroup) View.inflate(activity, R.layout.content_block_2_layout, null);
 
-    RecyclerView.ViewHolder vh = adapter.onCreateViewHolder(recycleView, null, null, null, null, null, false, null, null);
+    XamoomContentFragment fragment = XamoomContentFragment.newInstance("");
+    addFragmentToActivity(fragment);
+
+    RecyclerView.ViewHolder vh = adapter.onCreateViewHolder(recycleView, fragment, null, null, null, null, false, null, null);
 
     assertNotNull(vh);
-    assertEquals(vh.getClass(), ContentBlock1ViewHolder.class);
+    assertEquals(vh.getClass(), ContentBlock2ViewHolder.class);
   }
 
   @Test
@@ -83,8 +103,8 @@ public class ContentBlock1AdapterTest {
     contentBlocks.add(contentBlock);
     Style style = new Style();
     style.setForegroundFontColor("#000000");
-    ContentBlock1ViewHolder mockViewholder = Mockito.mock(ContentBlock1ViewHolder.class);
-    ContentBlock1Adapter adapter = new ContentBlock1Adapter();
+    ContentBlock2ViewHolder mockViewholder = Mockito.mock(ContentBlock2ViewHolder.class);
+    ContentBlock2Adapter adapter = new ContentBlock2Adapter();
 
     adapter.onBindViewHolder(contentBlocks, 0, mockViewholder, style);
 

@@ -59,34 +59,13 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     showContentLinks = showSpotMapContentLinks;
     mYoutubeApiKey = youtubeApiKey;
 
-    if (mStyle != null) {
-      configureColors();
-    }
-
     setupAdapters();
-  }
-
-  /**
-   * Will set mLinkColor, mBackgroundColor and mFontColor with
-   * the values from mStyle.
-   */
-  private void configureColors() {
-    if (mStyle.getHighlightFontColor() != null) {
-      mLinkColor = mStyle.getHighlightFontColor().substring(1);
-    }
-
-    if (mStyle.getBackgroundColor() != null) {
-      mBackgroundColor = mStyle.getBackgroundColor().substring(1);
-    }
-
-    if (mStyle.getForegroundFontColor() != null) {
-      mFontColor = mStyle.getForegroundFontColor().substring(1);
-    }
   }
 
   private void setupAdapters() {
     mDelegatesManager.addDelegate(0, new ContentBlock0Adapter());
     mDelegatesManager.addDelegate(1, new ContentBlock1Adapter());
+    mDelegatesManager.addDelegate(2, new ContentBlock2Adapter());
   }
 
   @Override
@@ -231,18 +210,6 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     return mDelegatesManager;
   }
 
-  public String getFontColor() {
-    return mFontColor;
-  }
-
-  public String getBackgroundColor() {
-    return mBackgroundColor;
-  }
-
-  public String getLinkColor() {
-    return mLinkColor;
-  }
-
   public Fragment getFragment() {
     return mFragment;
   }
@@ -257,6 +224,10 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
   public void setContentBlocks(List<ContentBlock> contentBlocks) {
     mContentBlocks = contentBlocks;
+  }
+
+  public void setYoutubeApiKey(String youtubeApiKey) {
+    mYoutubeApiKey = youtubeApiKey;
   }
 }
 

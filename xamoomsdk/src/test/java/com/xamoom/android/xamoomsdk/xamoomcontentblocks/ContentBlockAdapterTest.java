@@ -105,9 +105,6 @@ public class ContentBlockAdapterTest {
         ,style, new EnduserApi("apikey"), false, "apikey", null, null);
 
     assertNotNull(adapter);
-    assertEquals(adapter.getLinkColor(), "FFF000");
-    assertEquals(adapter.getFontColor(), "FFFFFF");
-    assertEquals(adapter.getBackgroundColor(), "000000");
   }
 
   @Test

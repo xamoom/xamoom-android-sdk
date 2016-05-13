@@ -24,6 +24,7 @@ import com.google.android.youtube.player.YouTubeThumbnailLoader;
 import com.google.android.youtube.player.YouTubeThumbnailView;
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
+import com.xamoom.android.xamoomsdk.Resource.Style;
 
 import java.util.HashMap;
 import java.util.regex.Matcher;
@@ -37,6 +38,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
   private final static String vimeoRegex = "^.*(?:vimeo.com)\\/(?:channels\\/|groups\\/[^\\/]*\\/videos\\/|album\\/\\d+\\/video\\/|video\\/|)(\\d+)(?:$|\\/|\\?)";
 
   private Context mContext;
+  private Style mStyle;
   private TextView mTitleTextView;
   private WebView mVideoWebView;
   private View mWebViewOverlay;
@@ -226,5 +228,9 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
       }
       return bitmap;
     }
+  }
+
+  public void setStyle(Style style) {
+    mStyle = style;
   }
 }

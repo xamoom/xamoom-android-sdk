@@ -89,6 +89,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
     super.onCreate(savedInstanceState);
     if (getArguments() != null) {
       mYoutubeApiKey = getArguments().getString(YOUTUBE_API_KEY);
+      mContentBlockAdapter.setYoutubeApiKey(mYoutubeApiKey);
     }
   }
 
