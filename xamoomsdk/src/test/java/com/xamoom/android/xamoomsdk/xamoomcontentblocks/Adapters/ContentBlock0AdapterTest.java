@@ -12,10 +12,13 @@ import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock0ViewHolde
 import com.xamoom.android.xamoomsdk.BuildConfig;
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
+import com.xamoom.android.xamoomsdk.Resource.Style;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Matchers;
+import org.mockito.Mockito;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
@@ -70,5 +73,22 @@ public class ContentBlock0AdapterTest {
 
     assertNotNull(vh);
     assertEquals(vh.getClass(), ContentBlock0ViewHolder.class);
+  }
+
+  @Test
+  public void testOnBindViewHolder() {
+    List<ContentBlock> contentBlocks = new ArrayList();
+    ContentBlock contentBlock = new ContentBlock();
+    contentBlock.setBlockType(0);
+    contentBlocks.add(contentBlock);
+    Style style = new Style();
+    style.setForegroundFontColor("#000000");
+    ContentBlock0ViewHolder mockViewholder = Mockito.mock(ContentBlock0ViewHolder.class);
+    ContentBlock0Adapter adapter = new ContentBlock0Adapter();
+
+    adapter.onBindViewHolder(contentBlocks, 0, mockViewholder, null);
+
+    Mockito.verify(mockViewholder).setupContentBlock(Matchers.eq(contentBlock));
+    //TODO check for style set
   }
 }
