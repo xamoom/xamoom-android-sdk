@@ -13,15 +13,17 @@ import android.widget.TextView;
 
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
+import com.xamoom.android.xamoomsdk.Resource.Style;
 
 /**
  * Displays the text ContentBlock.
  */
 public class ContentBlock0ViewHolder extends RecyclerView.ViewHolder {
+  private static final String FALLBACK_LINK_COLOR = "00F";
 
   private TextView mTitleTextView;
   private WebView mWebView;
-  private String mLinkColor = "00F";
+  private Style mStyle;
 
   public ContentBlock0ViewHolder(View itemView) {
     super(itemView);
@@ -59,8 +61,13 @@ public class ContentBlock0ViewHolder extends RecyclerView.ViewHolder {
       mWebView.setLayoutParams(params);
     }
 
+    String linkColor = FALLBACK_LINK_COLOR;
+    if (mStyle != null && mStyle.getHighlightFontColor() != null) {
+      linkColor = mStyle.getHighlightFontColor();
+    }
+
     if((contentBlock.getText() != null) && !(contentBlock.getText().equalsIgnoreCase("<p><br></p>"))) {
-      String style = "<style type=\"text/css\">html, body {margin: 0; padding: 0dp;} a {color: #"+mLinkColor+"}</style>";
+      String style = "<style type=\"text/css\">html, body {margin: 0; padding: 0dp;} a {color: #"+linkColor+"}</style>";
       String htmlAsString = String.format("%s%s", style, contentBlock.getText());
       mWebView.loadDataWithBaseURL(null, htmlAsString, "text/html", "UTF-8", null);
     } else {
@@ -68,7 +75,7 @@ public class ContentBlock0ViewHolder extends RecyclerView.ViewHolder {
     }
   }
 
-  public void setLinkColor(String mLinkColor) {
-    this.mLinkColor = mLinkColor;
+  public void setStyle(Style style) {
+    mStyle = style;
   }
 }
