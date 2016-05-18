@@ -34,6 +34,7 @@ import com.xamoom.android.xamoomcontentblocks.Helper.SvgDrawableTranscoder;
 import com.xamoom.android.xamoomcontentblocks.Helper.SvgSoftwareLayerSetter;
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
+import com.xamoom.android.xamoomsdk.Resource.Style;
 
 import java.io.InputStream;
 
@@ -45,6 +46,7 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
   private TextView mTitleTextView;
   private ProgressBar mImageProgressBar;
   private ImageView mImageView;
+  private Style mStyle;
   private GenericRequestBuilder<Uri, InputStream, SVG, PictureDrawable> requestBuilder;
 
   private OnContentBlock3ViewHolderInteractionListener mListener;
@@ -181,5 +183,9 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
 
   public interface OnContentBlock3ViewHolderInteractionListener {
     void needExternalStoragePermission();
+  }
+
+  public void setStyle(Style style) {
+    mStyle = style;
   }
 }
