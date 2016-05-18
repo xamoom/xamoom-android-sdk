@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
+import com.xamoom.android.xamoomsdk.Resource.Style;
 
 /**
  * EbookBlock
@@ -20,6 +21,7 @@ public class ContentBlock5ViewHolder extends RecyclerView.ViewHolder {
   private LinearLayout mRootLayout;
   private TextView mTitleTextView;
   private TextView mContentTextView;
+  private Style mStyle;
 
   public ContentBlock5ViewHolder(View itemView, Fragment fragment) {
     super(itemView);
@@ -48,5 +50,9 @@ public class ContentBlock5ViewHolder extends RecyclerView.ViewHolder {
         mFragment.getActivity().startActivity(i);
       }
     });
+  }
+
+  public void setStyle(Style style) {
+    mStyle = style;
   }
 }
