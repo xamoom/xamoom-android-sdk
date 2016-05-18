@@ -56,13 +56,11 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   private List<ContentBlock> mContentBlocks = new LinkedList<>();
   private Style mStyle;
   private String mYoutubeApiKey;
-  private EnduserApi mEnduserApi;
+  private EnduserApi mEnduserApi = new EnduserApi("");
 
   private boolean displayAllStoreLinks = false;
   private boolean showSpotMapContentLinks = false;
   private boolean isAnimated = false;
-
-  private OnXamoomContentFragmentInteractionListener mListener;
 
   /**
    * Use this factory method to create a new instance.
@@ -81,7 +79,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
 
   public XamoomContentFragment() {
     mContentBlockAdapter = new ContentBlockAdapter(this, mContentBlocks, mStyle, mEnduserApi,
-        showSpotMapContentLinks, mYoutubeApiKey, mListener, this);
+        showSpotMapContentLinks, mYoutubeApiKey, this);
   }
 
   @Override
@@ -232,7 +230,8 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
       activity= (Activity)context;
 
       try {
-        mListener = (OnXamoomContentFragmentInteractionListener) activity;
+        OnXamoomContentFragmentInteractionListener listener = (OnXamoomContentFragmentInteractionListener) activity;
+        mContentBlockAdapter.setOnXamoomContentFragmentInteractionListener(listener);
       } catch (ClassCastException e) {
         throw new ClassCastException(activity.toString()
             + " must implement OnXamoomContentFragmentInteractionListener");
@@ -243,7 +242,6 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   @Override
   public void onDetach() {
     super.onDetach();
-    mListener = null;
   }
 
   @Override
@@ -267,10 +265,6 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   public interface OnXamoomContentFragmentInteractionListener {
     void clickedContentBlock(Content content);
     void clickedSpotMapContentLink(String contentId);
-  }
-
-  public void contentBlockClick(Content content) {
-    mListener.clickedContentBlock(content);
   }
 
   // getters

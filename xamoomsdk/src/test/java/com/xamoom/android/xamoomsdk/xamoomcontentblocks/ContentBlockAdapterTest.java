@@ -2,20 +2,8 @@ package com.xamoom.android.xamoomsdk.xamoomcontentblocks;
 
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.view.ViewGroup;
 
 import com.xamoom.android.xamoomcontentblocks.Adapters.ContentBlockAdapter;
-import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock0ViewHolder;
-import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock1ViewHolder;
-import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock2ViewHolder;
-import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
-import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock4ViewHolder;
-import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock5ViewHolder;
-import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock6ViewHolder;
-import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock7ViewHolder;
-import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock8ViewHolder;
-import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock9ViewHolder;
-import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentHeaderViewHolder;
 import com.xamoom.android.xamoomsdk.BuildConfig;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
@@ -34,7 +22,6 @@ import java.util.List;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
-import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.robolectric.shadows.support.v4.SupportFragmentTestUtil.startVisibleFragment;
@@ -102,14 +89,14 @@ public class ContentBlockAdapterTest {
 
 
     ContentBlockAdapter adapter = new ContentBlockAdapter(new Fragment(), new ArrayList<ContentBlock>()
-        ,style, new EnduserApi("apikey"), false, "apikey", null, null);
+        ,style, new EnduserApi("apikey"), false, "apikey", null);
 
     assertNotNull(adapter);
   }
 
   @Test
   public void testGetItemViewType() {
-    ContentBlockAdapter adapter = new ContentBlockAdapter(null, contentBlockList, null, null, false, null, null, null);
+    ContentBlockAdapter adapter = new ContentBlockAdapter(null, contentBlockList, null, null, false, null, null);
 
     assertEquals(adapter.getItemViewType(0), 0);
     assertEquals(adapter.getItemViewType(1), 1);
@@ -117,7 +104,7 @@ public class ContentBlockAdapterTest {
 
   @Test
   public void testGetItemCount() {
-    ContentBlockAdapter adapter = new ContentBlockAdapter(null, contentBlockList, null, null, false, null, null, null);
+    ContentBlockAdapter adapter = new ContentBlockAdapter(null, contentBlockList, null, null, false, null, null);
 
     assertEquals(adapter.getItemCount(), 11);
   }
@@ -127,7 +114,7 @@ public class ContentBlockAdapterTest {
     Fragment fragment = new Fragment();
 
     ContentBlockAdapter adapter = new ContentBlockAdapter(fragment, contentBlockList, null,
-        new EnduserApi("api"), false, "apikey", null, null);
+        new EnduserApi("api"), false, "apikey", null);
 
     adapter.onDetachedFromRecyclerView(new RecyclerView(RuntimeEnvironment.application));
 

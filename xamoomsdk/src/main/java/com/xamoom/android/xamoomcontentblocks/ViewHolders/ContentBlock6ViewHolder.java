@@ -18,6 +18,7 @@ import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
+import com.xamoom.android.xamoomsdk.Resource.Style;
 
 import java.util.List;
 
@@ -36,6 +37,7 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
   private ProgressBar mProgressBar;
   private EnduserApi mEnduserApi;
   private Content mContent;
+  private Style mStyle;
   private LruCache<String, Content> mContentCache;
 
   public ContentBlock6ViewHolder(View itemView, Context context, EnduserApi enduserApi,
@@ -108,5 +110,9 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
     if (mContent != null) {
       mListener.clickedContentBlock(mContent);
     }
+  }
+
+  public void setStyle(Style style) {
+    mStyle = style;
   }
 }

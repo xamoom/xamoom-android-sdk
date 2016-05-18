@@ -44,13 +44,11 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
    * @param contentBlocks ContentBlocks to display.
    * @param style The style from your xamoom system.
    * @param youtubeApiKey Youtube api key from Google Developer Console.
-   * @param onXamoomContentFragmentInteractionListener FragmentListener for click events.
    */
   public ContentBlockAdapter(Fragment fragment, List<ContentBlock> contentBlocks,
                              Style style, EnduserApi enduserApi, boolean showSpotMapContentLinks,
-                             String youtubeApiKey, XamoomContentFragment.OnXamoomContentFragmentInteractionListener onXamoomContentFragmentInteractionListener,
+                             String youtubeApiKey,
                              ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener contentBlock3ViewHolderInteractionListener) {
-    mOnXamoomContentFragmentInteractionListener = onXamoomContentFragmentInteractionListener;
     mOnContentBlock3ViewHolderInteractionListener = contentBlock3ViewHolderInteractionListener;
     mFragment = fragment;
     mContentBlocks = contentBlocks;
@@ -69,6 +67,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     mDelegatesManager.addDelegate(3, new ContentBlock3Adapter());
     mDelegatesManager.addDelegate(4, new ContentBlock4Adapter());
     mDelegatesManager.addDelegate(5, new ContentBlock5Adapter());
+    mDelegatesManager.addDelegate(6, new ContentBlock6Adapter());
   }
 
   @Override
@@ -206,6 +205,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     mEnduserApi = null;
     mBitmapCache = null;
     mOnContentBlock3ViewHolderInteractionListener = null;
+    mOnXamoomContentFragmentInteractionListener = null;
     super.onDetachedFromRecyclerView(recyclerView);
   }
 
@@ -231,6 +231,10 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
   public void setYoutubeApiKey(String youtubeApiKey) {
     mYoutubeApiKey = youtubeApiKey;
+  }
+
+  public void setOnXamoomContentFragmentInteractionListener(XamoomContentFragment.OnXamoomContentFragmentInteractionListener onXamoomContentFragmentInteractionListener) {
+    mOnXamoomContentFragmentInteractionListener = onXamoomContentFragmentInteractionListener;
   }
 }
 
