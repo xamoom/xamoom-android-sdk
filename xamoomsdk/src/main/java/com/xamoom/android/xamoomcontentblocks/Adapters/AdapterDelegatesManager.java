@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.util.LruCache;
 import android.support.v4.util.SparseArrayCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.ViewGroup;
 
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
@@ -15,6 +16,7 @@ import com.xamoom.android.xamoomsdk.Resource.Style;
 import java.util.ArrayList;
 
 public class AdapterDelegatesManager<T> {
+  private static final String TAG = AdapterDelegate.class.getSimpleName();
   private static final int FALLBACK_VIEWTYPE = -2;
 
   private SparseArrayCompat<AdapterDelegate> adapterDelegates = new SparseArrayCompat<>();
@@ -45,6 +47,7 @@ public class AdapterDelegatesManager<T> {
           onXamoomContentFragmentInteractionListener) {
 
     AdapterDelegate<T> delegate = adapterDelegates.get(viewType);
+    Log.d(TAG, "Tried to load viewtype " + viewType + " adapter");
     RecyclerView.ViewHolder vh = delegate.onCreateViewHolder(parent, fragment, enduserApi,
         youtubeApiKey, bitmapCache, contentCache, showContentLinks,
         onContentBlock3ViewHolderInteractionListener, onXamoomContentFragmentInteractionListener);

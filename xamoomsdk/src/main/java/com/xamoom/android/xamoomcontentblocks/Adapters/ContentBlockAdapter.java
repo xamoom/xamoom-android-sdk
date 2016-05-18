@@ -67,6 +67,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     mDelegatesManager.addDelegate(1, new ContentBlock1Adapter());
     mDelegatesManager.addDelegate(2, new ContentBlock2Adapter());
     mDelegatesManager.addDelegate(3, new ContentBlock3Adapter());
+    mDelegatesManager.addDelegate(4, new ContentBlock4Adapter());
   }
 
   @Override

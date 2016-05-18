@@ -9,9 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.xamoom.android.xamoomcontentblocks.Adapters.ContentBlock2Adapter;
-import com.xamoom.android.xamoomcontentblocks.Adapters.ContentBlock3Adapter;
-import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock2ViewHolder;
-import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
+import com.xamoom.android.xamoomcontentblocks.Adapters.ContentBlock4Adapter;
+import com.xamoom.android.xamoomcontentblocks.Adapters.ContentBlock4Adapter;
+import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock4ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.BuildConfig;
 import com.xamoom.android.xamoomsdk.Helper.ContentFragmentActivity;
@@ -37,7 +37,7 @@ import static junit.framework.Assert.assertTrue;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21, manifest = "AndroidManifest.xml")
-public class ContentBlock3AdapterTest {
+public class ContentBlock4AdapterTest {
 
   Activity activity;
 
@@ -62,30 +62,30 @@ public class ContentBlock3AdapterTest {
 
   @Test
   public void testConstructor() {
-    assertNotNull(new ContentBlock3Adapter());
+    assertNotNull(new ContentBlock4Adapter());
   }
 
   @Test
   public void testIsForViewType() {
     List<ContentBlock> contentBlocks = new ArrayList();
     ContentBlock contentBlock = new ContentBlock();
-    contentBlock.setBlockType(3);
+    contentBlock.setBlockType(4);
     contentBlocks.add(contentBlock);
 
-    ContentBlock3Adapter ContentBlock3Adapter = new ContentBlock3Adapter();
+    ContentBlock4Adapter ContentBlock4Adapter = new ContentBlock4Adapter();
 
-    assertTrue(ContentBlock3Adapter.isForViewType(contentBlocks, 0));
+    assertTrue(ContentBlock4Adapter.isForViewType(contentBlocks, 0));
   }
 
   @Test
   public void testOnCreateViewHolder() {
     List<ContentBlock> contentBlocks = new ArrayList();
     ContentBlock contentBlock = new ContentBlock();
-    contentBlock.setBlockType(3);
+    contentBlock.setBlockType(4);
     contentBlocks.add(contentBlock);
 
-    ContentBlock3Adapter adapter = new ContentBlock3Adapter();
-    ViewGroup recycleView = (ViewGroup) View.inflate(activity, R.layout.content_block_3_layout, null);
+    ContentBlock4Adapter adapter = new ContentBlock4Adapter();
+    ViewGroup recycleView = (ViewGroup) View.inflate(activity, R.layout.content_block_4_layout, null);
 
     XamoomContentFragment fragment = XamoomContentFragment.newInstance("");
     addFragmentToActivity(fragment);
@@ -93,19 +93,19 @@ public class ContentBlock3AdapterTest {
     RecyclerView.ViewHolder vh = adapter.onCreateViewHolder(recycleView, fragment, null, null, null, null, false, null, null);
 
     assertNotNull(vh);
-    assertEquals(vh.getClass(), ContentBlock3ViewHolder.class);
+    assertEquals(vh.getClass(), ContentBlock4ViewHolder.class);
   }
 
   @Test
   public void testOnBindViewHolder() {
     List<ContentBlock> contentBlocks = new ArrayList();
     ContentBlock contentBlock = new ContentBlock();
-    contentBlock.setBlockType(3);
+    contentBlock.setBlockType(4);
     contentBlocks.add(contentBlock);
     Style style = new Style();
     style.setForegroundFontColor("#000000");
-    ContentBlock3ViewHolder mockViewholder = Mockito.mock(ContentBlock3ViewHolder.class);
-    ContentBlock3Adapter adapter = new ContentBlock3Adapter();
+    ContentBlock4ViewHolder mockViewholder = Mockito.mock(ContentBlock4ViewHolder.class);
+    ContentBlock4Adapter adapter = new ContentBlock4Adapter();
 
     adapter.onBindViewHolder(contentBlocks, 0, mockViewholder, style);
 
