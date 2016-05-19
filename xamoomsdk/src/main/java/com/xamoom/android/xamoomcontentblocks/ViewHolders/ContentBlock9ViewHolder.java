@@ -47,6 +47,7 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
   private ArrayMap<Marker, Spot> mMarkerArray;
   private String mBase64Icon;
   private ArrayList<Spot> mSpotList;
+  private Style mStyle;
 
   public boolean showContentLinks;
 
@@ -58,10 +59,11 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
     mTitleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
     mMarkerArray = new ArrayMap<>();
     mMapView = (MapView) itemView.findViewById(R.id.mapImageView);
-    mMapView.onCreate(null);
   }
 
   public void setupContentBlock(ContentBlock contentBlock) {
+    mMapView.onCreate(null);
+
     mTitleTextView.setVisibility(View.VISIBLE);
     if (contentBlock.getTitle() != null) {
       mTitleTextView.setText(contentBlock.getTitle());
@@ -157,5 +159,9 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
         .add(R.id.xamoom_content_frame_layout, XamoomMapFragment.newInstance(mSpotList, spotId, mBase64Icon))
         .addToBackStack(null)
         .commit();
+  }
+
+  public void setStyle(Style style) {
+    mStyle = style;
   }
 }
