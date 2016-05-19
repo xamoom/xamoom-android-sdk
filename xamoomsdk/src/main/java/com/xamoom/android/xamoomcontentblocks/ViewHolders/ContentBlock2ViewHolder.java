@@ -77,6 +77,8 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
     mVideoPlayImageView.setVisibility(View.GONE);
     mProgressBar.setVisibility(View.GONE);
 
+    mYouTubeThumbnailView.setImageBitmap(null);
+
     if(contentBlock.getTitle() != null) {
       mTitleTextView.setVisibility(View.VISIBLE);
       mTitleTextView.setText(contentBlock.getTitle());
