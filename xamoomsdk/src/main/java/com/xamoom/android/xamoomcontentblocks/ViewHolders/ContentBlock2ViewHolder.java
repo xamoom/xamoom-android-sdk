@@ -202,7 +202,9 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
     protected void onPostExecute(Bitmap bitmap) {
       super.onPostExecute(bitmap);
       mYouTubeThumbnailView.setImageBitmap(bitmap);
-      mBitmapCache.put(videoUrl, bitmap);
+      if (videoUrl != null && bitmap != null) {
+        mBitmapCache.put(videoUrl, bitmap);
+      }
       mProgressBar.setVisibility(View.GONE);
     }
 
