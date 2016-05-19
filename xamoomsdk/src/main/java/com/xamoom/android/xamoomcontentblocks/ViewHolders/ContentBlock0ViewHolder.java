@@ -52,7 +52,7 @@ public class ContentBlock0ViewHolder extends RecyclerView.ViewHolder {
     mTitleTextView.setVisibility(View.VISIBLE);
     mWebView.setVisibility(View.VISIBLE);
 
-    if(contentBlock.getTitle() != null) {
+    if(contentBlock.getTitle() != null && !contentBlock.getTitle().equalsIgnoreCase("")) {
       mTitleTextView.setText(contentBlock.getTitle());
     } else {
       mTitleTextView.setVisibility(View.GONE);
@@ -68,11 +68,16 @@ public class ContentBlock0ViewHolder extends RecyclerView.ViewHolder {
 
     if((contentBlock.getText() != null) && !(contentBlock.getText().equalsIgnoreCase("<p><br></p>"))) {
       String style = "<style type=\"text/css\">html, body {margin: 0; padding: 0dp;} a {color: #"+linkColor+"}</style>";
-      String htmlAsString = String.format("%s%s", style, contentBlock.getText());
+      String htmlAsString = String.format("%s%s", style, cleanHtml(contentBlock.getText()));
       mWebView.loadDataWithBaseURL(null, htmlAsString, "text/html", "UTF-8", null);
     } else {
       mWebView.setVisibility(View.GONE);
     }
+  }
+
+  private String cleanHtml(String text) {
+    text = text.replace("<br></p>", "</p>");
+    return text.replace("<p></p>", "");
   }
 
   public void setStyle(Style style) {
