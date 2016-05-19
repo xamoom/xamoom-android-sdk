@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
+import com.xamoom.android.xamoomsdk.Resource.Style;
 
 import java.util.HashMap;
 
@@ -24,6 +25,7 @@ public class ContentBlock7ViewHolder extends RecyclerView.ViewHolder {
   private TextView mTitleTextView;
   private WebView mSoundCloudWebview;
   private boolean isSetup = false;
+  private Style mStyle;
 
   private static HashMap<String, WebView> mWebCache = new HashMap<>();
 
@@ -85,5 +87,9 @@ public class ContentBlock7ViewHolder extends RecyclerView.ViewHolder {
         }
       });
     }
+  }
+
+  public void setStyle(Style style) {
+    mStyle = style;
   }
 }
