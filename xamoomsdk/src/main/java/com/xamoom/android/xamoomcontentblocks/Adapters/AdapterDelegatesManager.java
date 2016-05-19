@@ -20,6 +20,7 @@ public class AdapterDelegatesManager<T> {
   private static final int FALLBACK_VIEWTYPE = -2;
 
   private SparseArrayCompat<AdapterDelegate> adapterDelegates = new SparseArrayCompat<>();
+  private AdapterDelegate fallbackAdapter;
 
   public AdapterDelegatesManager<T> addDelegate(int viewType, @NonNull AdapterDelegate<T> delegate) {
     adapterDelegates.put(viewType, delegate);
@@ -47,21 +48,42 @@ public class AdapterDelegatesManager<T> {
           onXamoomContentFragmentInteractionListener) {
 
     AdapterDelegate<T> delegate = adapterDelegates.get(viewType);
+
+    if (delegate == null && fallbackAdapter != null) {
+      if (fallbackAdapter != null) {
+        delegate = fallbackAdapter;
+      } else {
+        throw new NullPointerException("No adapter registered for viewType " + viewType);
+      }
+    }
+
     RecyclerView.ViewHolder vh = delegate.onCreateViewHolder(parent, fragment, enduserApi,
         youtubeApiKey, bitmapCache, contentCache, showContentLinks,
         onContentBlock3ViewHolderInteractionListener, onXamoomContentFragmentInteractionListener);
-    return vh;
 
-    //TODO: check if vh is null
+    return vh;
   }
 
   public void onBindViewHolder(@NonNull T items, int position,
                                @NonNull RecyclerView.ViewHolder viewHolder, Style style) {
     AdapterDelegate<T> delegate = adapterDelegates.get(viewHolder.getItemViewType());
+
+    if (delegate == null && fallbackAdapter != null) {
+      if (fallbackAdapter != null) {
+        delegate = fallbackAdapter;
+      } else {
+        throw new NullPointerException("No adapter registered for viewType " + viewHolder.getItemViewType());
+      }
+    }
+
     delegate.onBindViewHolder(items, position, viewHolder, style);
   }
 
   public SparseArrayCompat<AdapterDelegate> getAdapterDelegates() {
     return adapterDelegates;
+  }
+
+  public void setFallbackAdapter(AdapterDelegate fallbackAdapter) {
+    this.fallbackAdapter = fallbackAdapter;
   }
 }

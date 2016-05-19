@@ -23,6 +23,7 @@ import com.xamoom.android.xamoomsdk.Resource.Style;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.mockito.internal.matchers.Null;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -98,6 +99,32 @@ public class AdapterDelegatesManagerTest {
   }
 
   @Test
+  public void testOnCreateViewHolderFallback() {
+    AdapterDelegatesManager<List<ContentBlock>> manager= new AdapterDelegatesManager();
+    ContentBlock0Adapter mockAdapter = Mockito.mock(ContentBlock0Adapter.class);
+    ContentBlock0ViewHolder mockViewHolder = Mockito.mock(ContentBlock0ViewHolder.class);
+    manager.setFallbackAdapter(mockAdapter);
+
+    when(mockAdapter.onCreateViewHolder(any(ViewGroup.class), any(Fragment.class),
+        any(EnduserApi.class), anyString(), any(LruCache.class),
+        any(LruCache.class), eq(false), any(ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener.class),
+        any(XamoomContentFragment.OnXamoomContentFragmentInteractionListener.class)))
+        .thenReturn(mockViewHolder);
+
+    RecyclerView.ViewHolder vh = manager.onCreateViewHolder(null, 0, null, null, "", null, null, false, null, null);
+
+    assertNotNull(vh);
+    assertEquals(vh, mockViewHolder);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testOnCreateException() {
+    AdapterDelegatesManager<List<ContentBlock>> manager= new AdapterDelegatesManager();
+
+    RecyclerView.ViewHolder vh = manager.onCreateViewHolder(null, 0, null, null, "", null, null, false, null, null);
+  }
+
+  @Test
   public void testGetItemViewType() {
     AdapterDelegatesManager<List<ContentBlock>> manager= new AdapterDelegatesManager();
     manager.addDelegate(0, new ContentBlock0Adapter());
@@ -134,7 +161,20 @@ public class AdapterDelegatesManagerTest {
     ContentBlock0ViewHolder mockViewHolder = Mockito.mock(ContentBlock0ViewHolder.class);
     manager.addDelegate(0, mockAdapter);
 
-    ContentBlock0ViewHolder mockViewholder = Mockito.mock(ContentBlock0ViewHolder.class);
+    List<ContentBlock> items = new LinkedList<>();
+    ContentBlock contentBlock = new ContentBlock();
+    contentBlock.setBlockType(0);
+    items.add(contentBlock);
+
+    manager.onBindViewHolder(items, 0, mockViewHolder, null);
+
+    verify(mockAdapter).onBindViewHolder(anyList(), eq(0), any(RecyclerView.ViewHolder.class), any(Style.class));
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testOnBindViewHolderException() {
+    AdapterDelegatesManager<List<ContentBlock>> manager= new AdapterDelegatesManager();
+    ContentBlock0ViewHolder mockViewHolder = Mockito.mock(ContentBlock0ViewHolder.class);
 
     List<ContentBlock> items = new LinkedList<>();
     ContentBlock contentBlock = new ContentBlock();
@@ -142,6 +182,22 @@ public class AdapterDelegatesManagerTest {
     items.add(contentBlock);
 
     manager.onBindViewHolder(items, 0, mockViewHolder, null);
+  }
+
+  @Test
+  public void testOnBindViewHolderFallback() {
+    AdapterDelegatesManager<List<ContentBlock>> manager= new AdapterDelegatesManager();
+    ContentBlock0Adapter mockAdapter = Mockito.mock(ContentBlock0Adapter.class);
+    manager.setFallbackAdapter(mockAdapter);
+    ContentBlock0ViewHolder mockViewHolder = Mockito.mock(ContentBlock0ViewHolder.class);
+
+    List<ContentBlock> items = new LinkedList<>();
+    ContentBlock contentBlock = new ContentBlock();
+    contentBlock.setBlockType(1);
+    items.add(contentBlock);
+
+    manager.onBindViewHolder(items, 0, mockViewHolder, null);
+
 
     verify(mockAdapter).onBindViewHolder(anyList(), eq(0), any(RecyclerView.ViewHolder.class), any(Style.class));
   }
