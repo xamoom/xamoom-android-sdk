@@ -47,7 +47,6 @@ public class AdapterDelegatesManager<T> {
           onXamoomContentFragmentInteractionListener) {
 
     AdapterDelegate<T> delegate = adapterDelegates.get(viewType);
-    Log.d(TAG, "Tried to load viewtype " + viewType + " adapter");
     RecyclerView.ViewHolder vh = delegate.onCreateViewHolder(parent, fragment, enduserApi,
         youtubeApiKey, bitmapCache, contentCache, showContentLinks,
         onContentBlock3ViewHolderInteractionListener, onXamoomContentFragmentInteractionListener);

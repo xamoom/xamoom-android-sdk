@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 
 import com.xamoom.android.xamoomcontentblocks.Adapters.ContentBlockAdapter;
 import com.xamoom.android.xamoomsdk.BuildConfig;
-import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Resource.Style;
 
@@ -89,14 +88,14 @@ public class ContentBlockAdapterTest {
 
 
     ContentBlockAdapter adapter = new ContentBlockAdapter(new Fragment(), new ArrayList<ContentBlock>()
-        ,style, new EnduserApi("apikey"), false, "apikey", null);
+        ,style, false, "apikey", null);
 
     assertNotNull(adapter);
   }
 
   @Test
   public void testGetItemViewType() {
-    ContentBlockAdapter adapter = new ContentBlockAdapter(null, contentBlockList, null, null, false, null, null);
+    ContentBlockAdapter adapter = new ContentBlockAdapter(null, contentBlockList, null, false, null, null);
 
     assertEquals(adapter.getItemViewType(0), 0);
     assertEquals(adapter.getItemViewType(1), 1);
@@ -104,7 +103,7 @@ public class ContentBlockAdapterTest {
 
   @Test
   public void testGetItemCount() {
-    ContentBlockAdapter adapter = new ContentBlockAdapter(null, contentBlockList, null, null, false, null, null);
+    ContentBlockAdapter adapter = new ContentBlockAdapter(null, contentBlockList, null, false, null, null);
 
     assertEquals(adapter.getItemCount(), 11);
   }
@@ -114,7 +113,7 @@ public class ContentBlockAdapterTest {
     Fragment fragment = new Fragment();
 
     ContentBlockAdapter adapter = new ContentBlockAdapter(fragment, contentBlockList, null,
-        new EnduserApi("api"), false, "apikey", null);
+        false, "apikey", null);
 
     adapter.onDetachedFromRecyclerView(new RecyclerView(RuntimeEnvironment.application));
 
