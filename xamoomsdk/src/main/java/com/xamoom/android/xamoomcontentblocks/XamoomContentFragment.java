@@ -56,7 +56,6 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   private List<ContentBlock> mContentBlocks = new LinkedList<>();
   private Style mStyle;
   private String mYoutubeApiKey;
-  private EnduserApi mEnduserApi = new EnduserApi("");
 
   private boolean displayAllStoreLinks = false;
   private boolean showSpotMapContentLinks = false;
@@ -78,7 +77,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   }
 
   public XamoomContentFragment() {
-    mContentBlockAdapter = new ContentBlockAdapter(this, mContentBlocks, mStyle, mEnduserApi,
+    mContentBlockAdapter = new ContentBlockAdapter(this, mContentBlocks, mStyle,
         showSpotMapContentLinks, mYoutubeApiKey, this);
   }
 
@@ -121,7 +120,6 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
     mRecyclerView = null;
     mContent = null;
     mContentBlocks = null;
-    mEnduserApi = null;
 
     super.onDestroy();
   }
@@ -327,7 +325,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   }
 
   public void setEnduserApi(EnduserApi enduserApi) {
-    mEnduserApi = enduserApi;
+    mContentBlockAdapter.setEnduserApi(enduserApi);
   }
 
 }

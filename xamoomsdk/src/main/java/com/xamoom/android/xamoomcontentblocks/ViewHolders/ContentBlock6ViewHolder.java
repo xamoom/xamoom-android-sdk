@@ -64,7 +64,6 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
     mProgressBar.setVisibility(View.VISIBLE);
 
     mContent = mContentCache.get(contentBlock.getContentId());
-
     if (mContent != null) {
       displayContent(mContent);
       mProgressBar.setVisibility(View.GONE);
@@ -74,6 +73,10 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
   }
 
   private void loadContent(final String contentId) {
+    if (mEnduserApi == null) {
+      throw new NullPointerException("EnduserApi is null.");
+    }
+
     mEnduserApi.getContent(contentId, new APICallback<Content, List<at.rags.morpheus.Error>>() {
       @Override
       public void finished(Content result) {
@@ -87,7 +90,10 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
       public void error(List<Error> error) {
         mProgressBar.setVisibility(View.GONE);
         if (error != null && error.get(0) != null) {
-          Log.e("XamoomContentBlocks", error.get(0).getCode() + " Error Title" + error.get(0).getTitle() + " Detail: " + error.get(0).getDetail());
+          Log.e("XamoomContentBlocks", error.get(0).getCode() +
+              "\n Error Title: " + error.get(0).getTitle() +
+              "\n Detail: " + error.get(0).getDetail() +
+              "\n ContentId: " + contentId);
         }
       }
     });

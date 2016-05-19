@@ -46,14 +46,13 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
    * @param youtubeApiKey Youtube api key from Google Developer Console.
    */
   public ContentBlockAdapter(Fragment fragment, List<ContentBlock> contentBlocks,
-                             Style style, EnduserApi enduserApi, boolean showSpotMapContentLinks,
+                             Style style, boolean showSpotMapContentLinks,
                              String youtubeApiKey,
                              ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener contentBlock3ViewHolderInteractionListener) {
     mOnContentBlock3ViewHolderInteractionListener = contentBlock3ViewHolderInteractionListener;
     mFragment = fragment;
     mContentBlocks = contentBlocks;
     mStyle = style;
-    mEnduserApi = enduserApi;
     showContentLinks = showSpotMapContentLinks;
     mYoutubeApiKey = youtubeApiKey;
 
@@ -69,6 +68,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     mDelegatesManager.addDelegate(5, new ContentBlock5Adapter());
     mDelegatesManager.addDelegate(6, new ContentBlock6Adapter());
     mDelegatesManager.addDelegate(7, new ContentBlock7Adapter());
+    mDelegatesManager.addDelegate(8, new ContentBlock8Adapter());
   }
 
   @Override
@@ -236,6 +236,10 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
   public void setOnXamoomContentFragmentInteractionListener(XamoomContentFragment.OnXamoomContentFragmentInteractionListener onXamoomContentFragmentInteractionListener) {
     mOnXamoomContentFragmentInteractionListener = onXamoomContentFragmentInteractionListener;
+  }
+
+  public void setEnduserApi(EnduserApi enduserApi) {
+    mEnduserApi = enduserApi;
   }
 }
 
