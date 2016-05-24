@@ -19,7 +19,7 @@ More informations about xamoom and how xamoom works? Visit our Github page [xamo
 
 Add in your Gradle in dependencies
 
-    compile 'com.xamoom.android:xamoomsdk:2.0.1'
+    compile 'com.xamoom.android:xamoomsdk:2.1.0'
 
 # Usage
 
@@ -36,7 +36,7 @@ a geo api key.
 
     <meta-data
         android:name="com.google.android.geo.API_KEY"
-        android:value="YOUR_API:KEY" />
+        android:value="YOUR_API_KEY" />
 
 ## Make your first call
 
