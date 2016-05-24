@@ -194,8 +194,11 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
             XamoomContentFragment xamoomFragment = XamoomContentFragment.newInstance("AIzaSyBNZUh3-dj4YYY9-csOtQeHG_MpoE8x69Q"); //create new instance
             xamoomFragment.setEnduserApi(mEnduserApi);
             xamoomFragment.setDisplayAllStoreLinks(true);
-            xamoomFragment.setContent(result);
+            xamoomFragment.setContent(result, false);
             xamoomFragment.setShowSpotMapContentLinks(true);
+
+            //xamoomFragment.getContentBlockAdapter().getDelegatesManager().addDelegate(0, new CustomContentBlock0Adapter());
+
             getSupportFragmentManager().beginTransaction()
                 .replace(R.id.main_frame, xamoomFragment, "XamoomFragment")
                 .commit(); //replace with xamoomFragment
