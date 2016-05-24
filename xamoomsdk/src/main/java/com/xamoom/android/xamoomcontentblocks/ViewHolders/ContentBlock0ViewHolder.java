@@ -24,6 +24,7 @@ public class ContentBlock0ViewHolder extends RecyclerView.ViewHolder {
   private TextView mTitleTextView;
   private WebView mWebView;
   private Style mStyle;
+  private float mTextSize = 22.0f;
 
   public ContentBlock0ViewHolder(View itemView) {
     super(itemView);
@@ -53,6 +54,7 @@ public class ContentBlock0ViewHolder extends RecyclerView.ViewHolder {
     mWebView.setVisibility(View.VISIBLE);
 
     if(contentBlock.getTitle() != null && !contentBlock.getTitle().equalsIgnoreCase("")) {
+      mTitleTextView.setTextSize(mTextSize);
       mTitleTextView.setText(contentBlock.getTitle());
     } else {
       mTitleTextView.setVisibility(View.GONE);
@@ -82,5 +84,9 @@ public class ContentBlock0ViewHolder extends RecyclerView.ViewHolder {
 
   public void setStyle(Style style) {
     mStyle = style;
+  }
+
+  public void setTextSize(float textSize) {
+    mTextSize = textSize;
   }
 }
