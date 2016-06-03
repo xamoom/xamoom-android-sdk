@@ -1,6 +1,7 @@
 package com.xamoom.android.xamoomsdk;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import at.rags.morpheus.Error;
@@ -24,7 +25,7 @@ public class CallHandler <T extends Resource> {
 
   public void enqueCall(Call<ResponseBody> call, final APICallback<T, List<Error>> callback) {
     if (call == null) {
-      return;
+      throw new NullPointerException("call is null");
     }
 
     call.enqueue(new Callback<ResponseBody>() {
@@ -48,7 +49,11 @@ public class CallHandler <T extends Resource> {
 
       @Override
       public void onFailure(Call<ResponseBody> call, Throwable t) {
-        callback.error(null);
+        Error error = new Error();
+        error.setDetail(t.getMessage());
+        List<Error> errors = new ArrayList<Error>();
+        errors.add(error);
+        callback.error(errors);
       }
     });
   }
@@ -82,7 +87,11 @@ public class CallHandler <T extends Resource> {
 
       @Override
       public void onFailure(Call<ResponseBody> call, Throwable t) {
-        callback.error(null);
+        Error error = new Error();
+        error.setDetail(t.getMessage());
+        List<Error> errors = new ArrayList<Error>();
+        errors.add(error);
+        callback.error(errors);
       }
     });
   }
