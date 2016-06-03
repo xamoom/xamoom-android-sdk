@@ -61,7 +61,7 @@ public class CallHandler <T extends Resource> {
   public void enqueListCall(Call<ResponseBody> call, final APIListCallback<List<T>,
       List<Error>> callback) {
     if (call == null) {
-      return;
+      throw new NullPointerException("call is null");
     }
 
     call.enqueue(new Callback<ResponseBody>() {
