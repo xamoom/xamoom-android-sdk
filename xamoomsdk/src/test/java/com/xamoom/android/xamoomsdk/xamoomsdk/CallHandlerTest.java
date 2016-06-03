@@ -38,4 +38,9 @@ public class CallHandlerTest {
     mCallHandler.enqueCall(null, null);
   }
 
+  @Test(expected = NullPointerException.class)
+  public void testEnqueListCallWithNull() {
+    mCallHandler.enqueListCall(null, null);
+  }
+
 }
