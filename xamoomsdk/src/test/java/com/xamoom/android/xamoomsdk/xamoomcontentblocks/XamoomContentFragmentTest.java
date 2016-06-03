@@ -100,6 +100,27 @@ public class XamoomContentFragmentTest {
   }
 
   @Test
+  public void testAddContentWithEmptyTitleOrImage() {
+    com.xamoom.android.xamoomsdk.Resource.Content content = new com.xamoom.android.xamoomsdk.Resource.Content();
+    content.setTitle("");
+    content.setDescription("");
+    List<ContentBlock> blocks = new ArrayList<>();
+    ContentBlock block = new ContentBlock();
+    block.setBlockType(1);
+    block.setTitle("Test Block");
+    block.setText("Some text");
+    blocks.add(block);
+    content.setContentBlocks(blocks);
+
+    XamoomContentFragment fragment = XamoomContentFragment.newInstance("api");
+    fragment.setContent(content);
+
+    List<ContentBlock> contentBlocks = fragment.getContentBlocks();
+    assertEquals(contentBlocks.get(0).getTitle(), "Test Block");
+    assertEquals(contentBlocks.get(0).getText(), "Some text");
+  }
+
+  @Test
   public void testDoNotAddHeader() {
     com.xamoom.android.xamoomsdk.Resource.Content content = new com.xamoom.android.xamoomsdk.Resource.Content();
     content.setTitle("Test Content");
