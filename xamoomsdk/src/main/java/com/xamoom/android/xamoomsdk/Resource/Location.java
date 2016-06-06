@@ -34,14 +34,6 @@ public class Location implements Parcelable {
     }
   };
 
-  public double getLatitude() {
-    return mLatitude;
-  }
-
-  public double getLongitude() {
-    return mLongitude;
-  }
-
   @Override
   public int describeContents() {
     return 0;
@@ -51,5 +43,21 @@ public class Location implements Parcelable {
   public void writeToParcel(Parcel dest, int flags) {
     dest.writeDouble(mLatitude);
     dest.writeDouble(mLongitude);
+  }
+
+  public double getLatitude() {
+    return mLatitude;
+  }
+
+  public double getLongitude() {
+    return mLongitude;
+  }
+
+  public void setLatitude(double latitude) {
+    mLatitude = latitude;
+  }
+
+  public void setLongitude(double longitude) {
+    mLongitude = longitude;
   }
 }
