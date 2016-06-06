@@ -25,5 +25,5 @@
         map:liteMode="true"
         map:mapType="normal"
         map:cameraZoom="15" />
-    
+
 </LinearLayout>

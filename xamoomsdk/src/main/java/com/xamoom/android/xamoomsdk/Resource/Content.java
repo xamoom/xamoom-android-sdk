@@ -136,4 +136,5 @@ public class Content extends Resource implements Parcelable {
     dest.writeTypedList(contentBlocks);
     dest.writeParcelable(system, flags);
   }
+
 }
