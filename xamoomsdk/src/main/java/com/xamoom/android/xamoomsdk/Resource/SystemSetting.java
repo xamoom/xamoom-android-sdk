@@ -20,6 +20,7 @@ public class SystemSetting extends Resource implements Parcelable {
   }
 
   protected SystemSetting(Parcel in) {
+    this.setId(in.readString());
     googlePlayAppId = in.readString();
     itunesAppId = in.readString();
   }
@@ -59,6 +60,7 @@ public class SystemSetting extends Resource implements Parcelable {
 
   @Override
   public void writeToParcel(Parcel dest, int flags) {
+    dest.writeString(this.getId());
     dest.writeString(googlePlayAppId);
     dest.writeString(itunesAppId);
   }

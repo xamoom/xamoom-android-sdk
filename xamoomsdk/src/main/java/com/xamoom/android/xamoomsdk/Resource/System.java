@@ -26,6 +26,7 @@ public class System extends Resource implements Parcelable {
   }
 
   protected System(Parcel in) {
+    this.setId(in.readString());
     name = in.readString();
     url = in.readString();
     style = in.readParcelable(Style.class.getClassLoader());
@@ -61,7 +62,7 @@ public class System extends Resource implements Parcelable {
     this.url = url;
   }
 
-  public Object getStyle() {
+  public Style getStyle() {
     return style;
   }
 
@@ -69,7 +70,7 @@ public class System extends Resource implements Parcelable {
     this.style = style;
   }
 
-  public Object getSystemSetting() {
+  public SystemSetting getSystemSetting() {
     return systemSetting;
   }
 
@@ -92,6 +93,7 @@ public class System extends Resource implements Parcelable {
 
   @Override
   public void writeToParcel(Parcel dest, int flags) {
+    dest.writeString(this.getId());
     dest.writeString(name);
     dest.writeString(url);
     dest.writeParcelable(style, flags);
