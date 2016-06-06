@@ -3,6 +3,8 @@ package com.xamoom.android.xamoomsdk.Resource;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 import at.rags.morpheus.Annotations.Relationship;
@@ -19,6 +21,8 @@ public class Menu extends Resource implements Parcelable {
   }
 
   protected Menu(Parcel in) {
+    this.setId(in.readString());
+    items = in.createTypedArrayList(Content.CREATOR);
   }
 
   public static final Creator<Menu> CREATOR = new Creator<Menu>() {
@@ -48,5 +52,7 @@ public class Menu extends Resource implements Parcelable {
 
   @Override
   public void writeToParcel(Parcel dest, int flags) {
+    dest.writeString(this.getId());
+    dest.writeTypedList(items);
   }
 }
