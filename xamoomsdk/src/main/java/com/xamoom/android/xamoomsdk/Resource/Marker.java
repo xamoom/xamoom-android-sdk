@@ -26,6 +26,7 @@ public class Marker extends Resource implements Parcelable {
   }
 
   protected Marker(Parcel in) {
+    this.setId(in.readString());
     qr = in.readString();
     nfc = in.readString();
     beaconUUID = in.readString();
@@ -101,6 +102,7 @@ public class Marker extends Resource implements Parcelable {
 
   @Override
   public void writeToParcel(Parcel dest, int flags) {
+    dest.writeString(this.getId());
     dest.writeString(qr);
     dest.writeString(nfc);
     dest.writeString(beaconUUID);

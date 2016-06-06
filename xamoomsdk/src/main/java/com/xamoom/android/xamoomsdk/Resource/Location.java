@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by raphaelseher on 25/04/16.
+ * location model.
  */
 public class Location implements Parcelable {
   @SerializedName("lat")
