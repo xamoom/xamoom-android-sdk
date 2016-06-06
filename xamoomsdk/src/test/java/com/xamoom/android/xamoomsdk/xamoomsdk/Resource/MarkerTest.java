@@ -54,6 +54,7 @@ public class MarkerTest {
     assertEquals(mMarker.getBeaconUUID(), createdFromParcel.getBeaconUUID());
     assertEquals(mMarker.getBeaconMajor(), createdFromParcel.getBeaconMajor());
     assertEquals(mMarker.getBeaconMinor(), createdFromParcel.getBeaconMinor());
+    assertEquals(mMarker.getEddystoneUrl(), createdFromParcel.getEddystoneUrl());
   }
 
 }
