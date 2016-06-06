@@ -28,6 +28,7 @@ public class Style extends Resource implements Parcelable {
   }
 
   protected Style(Parcel in) {
+    this.setId(in.readString());
     backgroundColor = in.readString();
     highlightFontColor = in.readString();
     foregroundFontColor = in.readString();
@@ -103,6 +104,7 @@ public class Style extends Resource implements Parcelable {
 
   @Override
   public void writeToParcel(Parcel dest, int flags) {
+    dest.writeString(this.getId());
     dest.writeString(backgroundColor);
     dest.writeString(highlightFontColor);
     dest.writeString(foregroundFontColor);
