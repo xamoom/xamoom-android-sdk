@@ -35,15 +35,17 @@ public class ContentBlock8ViewHolder extends RecyclerView.ViewHolder {
   }
 
   public void setupContentBlock(final ContentBlock contentBlock) {
-    if(contentBlock.getTitle() != null)
+    if(contentBlock.getTitle() != null && !contentBlock.getTitle().equalsIgnoreCase("")) {
       mTitleTextView.setText(contentBlock.getTitle());
-    else
+    } else {
       mTitleTextView.setText(null);
+    }
 
-    if(contentBlock.getText() != null)
+    if(contentBlock.getText() != null && !contentBlock.getText().equalsIgnoreCase("")) {
       mContentTextView.setText(contentBlock.getText());
-    else
+    } else {
       mContentTextView.setText(null);
+    }
 
     mRootLayout.setOnClickListener(new View.OnClickListener() {
       @Override

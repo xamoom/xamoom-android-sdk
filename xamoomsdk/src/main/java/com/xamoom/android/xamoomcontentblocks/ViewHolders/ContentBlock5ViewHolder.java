@@ -31,14 +31,15 @@ public class ContentBlock5ViewHolder extends RecyclerView.ViewHolder {
     mContentTextView = (TextView) itemView.findViewById(R.id.contentTextView);
   }
 
-  public void setupContentBlock(final ContentBlock cb5) {
-    if(cb5.getTitle() != null)
-      mTitleTextView.setText(cb5.getTitle());
-    else
+  public void setupContentBlock(final ContentBlock contentBlock) {
+    if(contentBlock.getTitle() != null && !contentBlock.getTitle().equalsIgnoreCase("")) {
+      mTitleTextView.setText(contentBlock.getTitle());
+    } else {
       mTitleTextView.setText(null);
+    }
 
-    if(cb5.getArtists() != null) {
-      mContentTextView.setText(cb5.getArtists());
+    if(contentBlock.getArtists() != null && !contentBlock.getArtists().equalsIgnoreCase("")) {
+      mContentTextView.setText(contentBlock.getArtists());
     } else {
       mContentTextView.setText(null);
     }
@@ -46,7 +47,7 @@ public class ContentBlock5ViewHolder extends RecyclerView.ViewHolder {
     mRootLayout.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(cb5.getFileId()));
+        Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(contentBlock.getFileId()));
         mFragment.getActivity().startActivity(i);
       }
     });

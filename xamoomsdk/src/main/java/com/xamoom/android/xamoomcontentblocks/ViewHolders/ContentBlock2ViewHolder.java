@@ -15,6 +15,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -79,7 +80,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
 
     mYouTubeThumbnailView.setImageBitmap(null);
 
-    if(contentBlock.getTitle() != null) {
+    if(contentBlock.getTitle() != null && !contentBlock.getTitle().equalsIgnoreCase("")) {
       mTitleTextView.setVisibility(View.VISIBLE);
       mTitleTextView.setText(contentBlock.getTitle());
     }

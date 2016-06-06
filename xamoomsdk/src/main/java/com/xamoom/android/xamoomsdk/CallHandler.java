@@ -51,6 +51,7 @@ public class CallHandler <T extends Resource> {
       public void onFailure(Call<ResponseBody> call, Throwable t) {
         Error error = new Error();
         error.setDetail(t.getMessage());
+        error.setCode("10000");
         List<Error> errors = new ArrayList<Error>();
         errors.add(error);
         callback.error(errors);
@@ -89,6 +90,7 @@ public class CallHandler <T extends Resource> {
       public void onFailure(Call<ResponseBody> call, Throwable t) {
         Error error = new Error();
         error.setDetail(t.getMessage());
+        error.setCode("10000");
         List<Error> errors = new ArrayList<Error>();
         errors.add(error);
         callback.error(errors);

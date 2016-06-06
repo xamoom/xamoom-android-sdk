@@ -65,7 +65,7 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
     mMapView.onCreate(null);
 
     mTitleTextView.setVisibility(View.VISIBLE);
-    if (contentBlock.getTitle() != null) {
+    if (contentBlock.getTitle() != null && !contentBlock.getTitle().equalsIgnoreCase("")) {
       mTitleTextView.setText(contentBlock.getTitle());
     } else {
       mTitleTextView.setVisibility(View.GONE);

@@ -76,7 +76,7 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
 
   public void setupContentBlock(final ContentBlock contentBlock) {
     mTitleTextView.setVisibility(View.VISIBLE);
-    if(contentBlock.getTitle() != null)
+    if(contentBlock.getTitle() != null && !contentBlock.getTitle().equalsIgnoreCase(""))
       mTitleTextView.setText(contentBlock.getTitle());
     else {
       mTitleTextView.setVisibility(View.GONE);

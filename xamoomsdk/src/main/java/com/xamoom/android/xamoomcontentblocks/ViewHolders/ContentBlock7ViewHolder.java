@@ -50,16 +50,13 @@ public class ContentBlock7ViewHolder extends RecyclerView.ViewHolder {
     }
   }
 
-  public void setupContentBlock(final ContentBlock cb7) {
+  public void setupContentBlock(final ContentBlock contentBlock) {
     mTitleTextView.setVisibility(View.VISIBLE);
 
-    if(cb7.getTitle() != null)
-      mTitleTextView.setText(cb7.getTitle());
+    if(contentBlock.getTitle() != null && !contentBlock.getTitle().equalsIgnoreCase(""))
+      mTitleTextView.setText(contentBlock.getTitle());
     else {
       mTitleTextView.setVisibility(View.GONE);
-      LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mSoundCloudWebview.getLayoutParams();
-      params.setMargins(0,0,0,0);
-      mSoundCloudWebview.setLayoutParams(params);
     }
 
     if(!isSetup) {
@@ -71,7 +68,7 @@ public class ContentBlock7ViewHolder extends RecyclerView.ViewHolder {
           "&visual=true'></iframe>" +
           "<script src=\"https://w.soundcloud.com/player/api.js\" type=\"text/javascript\"></script>" +
           "</body>";
-      String html = String.format(soundCloudHTML, cb7.getSoundcloudUrl());
+      String html = String.format(soundCloudHTML, contentBlock.getSoundcloudUrl());
       mSoundCloudWebview.loadData(html, "text/html", "utf-8");
       isSetup = true;
 
