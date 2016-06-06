@@ -47,6 +47,7 @@ public class ContentBlock extends Resource implements Parcelable {
   }
 
   protected ContentBlock(Parcel in) {
+    this.setId(in.readString());
     blockType = in.readInt();
     publicStatus = in.readByte() != 0;
     title = in.readString();
@@ -212,6 +213,7 @@ public class ContentBlock extends Resource implements Parcelable {
 
   @Override
   public void writeToParcel(Parcel dest, int flags) {
+    dest.writeString(this.getId());
     dest.writeInt(blockType);
     dest.writeByte((byte) (publicStatus ? 1 : 0));
     dest.writeString(title);
