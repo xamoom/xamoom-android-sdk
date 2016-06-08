@@ -1,6 +1,7 @@
 package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
@@ -25,7 +26,7 @@ public class ContentBlock7ViewHolder extends RecyclerView.ViewHolder {
   private TextView mTitleTextView;
   private WebView mSoundCloudWebview;
   private boolean isSetup = false;
-  private Style mStyle;
+  private int mTextColor = Color.BLACK;
 
   private static HashMap<String, WebView> mWebCache = new HashMap<>();
 
@@ -52,6 +53,7 @@ public class ContentBlock7ViewHolder extends RecyclerView.ViewHolder {
 
   public void setupContentBlock(final ContentBlock contentBlock) {
     mTitleTextView.setVisibility(View.VISIBLE);
+    mTitleTextView.setTextColor(mTextColor);
 
     if(contentBlock.getTitle() != null && !contentBlock.getTitle().equalsIgnoreCase(""))
       mTitleTextView.setText(contentBlock.getTitle());
@@ -87,6 +89,8 @@ public class ContentBlock7ViewHolder extends RecyclerView.ViewHolder {
   }
 
   public void setStyle(Style style) {
-    mStyle = style;
+    if (style != null && style.getForegroundFontColor() != null) {
+      mTextColor = Color.parseColor(style.getForegroundFontColor());
+    }
   }
 }

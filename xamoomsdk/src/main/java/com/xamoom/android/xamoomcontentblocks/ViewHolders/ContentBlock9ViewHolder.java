@@ -1,6 +1,7 @@
 package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.RecyclerView;
@@ -47,7 +48,7 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
   private ArrayMap<Marker, Spot> mMarkerArray;
   private String mBase64Icon;
   private ArrayList<Spot> mSpotList;
-  private Style mStyle;
+  private int mTextColor;
 
   public boolean showContentLinks;
 
@@ -67,6 +68,7 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
     mTitleTextView.setVisibility(View.VISIBLE);
     if (contentBlock.getTitle() != null && !contentBlock.getTitle().equalsIgnoreCase("")) {
       mTitleTextView.setText(contentBlock.getTitle());
+      mTitleTextView.setTextColor(mTextColor);
     } else {
       mTitleTextView.setVisibility(View.GONE);
     }
@@ -162,6 +164,8 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
   }
 
   public void setStyle(Style style) {
-    mStyle = style;
+    if (style != null && style.getForegroundFontColor() != null) {
+      mTextColor = Color.parseColor(style.getForegroundFontColor());
+    }
   }
 }

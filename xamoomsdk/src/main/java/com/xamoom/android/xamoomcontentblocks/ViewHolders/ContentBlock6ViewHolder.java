@@ -2,6 +2,7 @@ package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v4.util.LruCache;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -37,7 +38,7 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
   private ProgressBar mProgressBar;
   private EnduserApi mEnduserApi;
   private Content mContent;
-  private Style mStyle;
+  private int mTextColor = Color.BLACK;
   private LruCache<String, Content> mContentCache;
 
   public ContentBlock6ViewHolder(View itemView, Context context, EnduserApi enduserApi,
@@ -102,6 +103,8 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
   private void displayContent(Content content) {
     mTitleTextView.setText(content.getTitle());
     mDescriptionTextView.setText(content.getDescription());
+    mTitleTextView.setTextColor(mTextColor);
+    mDescriptionTextView.setTextColor(mTextColor);
 
     Glide.with(mContext)
         .load(content.getPublicImageUrl())
@@ -119,6 +122,8 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
   }
 
   public void setStyle(Style style) {
-    mStyle = style;
+    if (style != null && style.getForegroundFontColor() != null) {
+      mTextColor = Color.parseColor(style.getForegroundFontColor());
+    }
   }
 }
