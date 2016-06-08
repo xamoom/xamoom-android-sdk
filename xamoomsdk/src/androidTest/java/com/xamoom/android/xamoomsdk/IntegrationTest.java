@@ -9,13 +9,18 @@ import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotSortFlags;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.Marker;
+import com.xamoom.android.xamoomsdk.Resource.Menu;
 import com.xamoom.android.xamoomsdk.Resource.Spot;
+import com.xamoom.android.xamoomsdk.Resource.Style;
+import com.xamoom.android.xamoomsdk.Resource.System;
+import com.xamoom.android.xamoomsdk.Resource.SystemSetting;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -212,5 +217,176 @@ public class IntegrationTest extends InstrumentationTestCase {
     signal.await();
   }
 
+  @Test
+  public void testSpotsWithTag() throws InterruptedException {
+    final CountDownLatch signal = new CountDownLatch(1);
+    final ArrayList<String> tags = new ArrayList<>();
+    tags.add("Spot1");
+    //tags.add("tag1");
+    //tags.add("donottouchspot");
 
+    api.getSpotsByTags(tags, EnumSet.of(SpotFlags.INCLUDE_CONTENT, SpotFlags.INCLUDE_MARKERS),
+        null, new APIListCallback<List<Spot>, List<Error>>() {
+      @Override
+      public void finished(List<Spot> result, String cursor, boolean hasMore) {
+        assertFalse(hasMore);
+        assertEquals(cursor, "");
+
+        Spot spot = result.get(1);
+        assertEquals(spot.getName(), "DO NOT TOUCH | APP | Spot 1");
+        assertEquals(spot.getDescription(), "Test");
+        assertNotNull(spot.getPublicImageUrl());
+        assertEquals(spot.getLocation().getLatitude(), 46.61506789671181);
+        assertEquals(spot.getLocation().getLongitude(), 14.2622709274292);
+
+        ArrayList<String> checktags = new ArrayList<>();
+        checktags.add("Spot1");
+        checktags.add("tag1");
+        checktags.add("donottouchspot");
+
+        assertEquals(spot.getTags(), checktags);
+        assertEquals(spot.getSystem().getId(), "5755996320301056");
+        assertEquals(spot.getContent().getId(), "e9c917086aca465eb454e38c0146428b");
+
+        Marker marker = spot.getMarkers().get(0);
+        assertEquals(marker.getNfc(), "nbt7qa4on0sy");
+        assertEquals(marker.getQr(), "7qpqr");
+        assertEquals(marker.getBeaconUUID(), "de2b94ae-ed98-11e4-3432-78616d6f6f6d");
+        assertEquals(marker.getBeaconMajor(), "54222");
+        assertEquals(marker.getBeaconMinor(), "24265");
+        assertEquals(marker.getEddystoneUrl(), "dev.xm.gl/2134hs");
+
+        signal.countDown();
+      }
+
+      @Override
+      public void error(List<Error> error) {
+        fail();
+        signal.countDown();
+      }
+    });
+
+    signal.await();
+  }
+
+  @Test
+  public void testSystem() throws InterruptedException {
+    final CountDownLatch signal = new CountDownLatch(1);
+
+    api.getSystem(new APICallback<System, List<Error>>() {
+      @Override
+      public void finished(System result) {
+        assertEquals(result.getName(), "Dev xamoom testing environment");
+        assertEquals(result.getUrl(), "http://testpavol.at");
+        assertEquals(result.getSystemSetting().getId(), "5755996320301056");
+        assertEquals(result.getMenu().getId(), "5755996320301056");
+        assertEquals(result.getStyle().getId(), "5755996320301056");
+
+        signal.countDown();
+      }
+
+      @Override
+      public void error(List<Error> error) {
+        fail();
+        signal.countDown();
+      }
+    });
+
+    signal.await();
+  }
+
+  @Test
+  public void testSystemGerman() throws InterruptedException {
+    final CountDownLatch signal = new CountDownLatch(1);
+
+    api.setLanguage("de");
+    api.getSystem(new APICallback<System, List<Error>>() {
+      @Override
+      public void finished(System result) {
+        assertEquals(result.getName(), "Dev xamoom testing UMGEBUNG");
+
+        signal.countDown();
+      }
+
+      @Override
+      public void error(List<Error> error) {
+        fail();
+        signal.countDown();
+      }
+    });
+
+    signal.await();
+  }
+
+  @Test
+  public void testSystemSettings() throws InterruptedException {
+    final CountDownLatch signal = new CountDownLatch(1);
+
+    api.getSystemSetting("5755996320301056", new APICallback<SystemSetting, List<Error>>() {
+      @Override
+      public void finished(SystemSetting result) {
+        assertEquals(result.getId(), "5755996320301056");
+        assertEquals(result.getItunesAppId(), "998504165");
+        assertEquals(result.getGooglePlayAppId(), "com.skype.raider");
+        signal.countDown();
+      }
+
+      @Override
+      public void error(List<Error> error) {
+        fail();
+        signal.countDown();
+      }
+    });
+
+    signal.await();
+  }
+
+  @Test
+  public void testMenu() throws InterruptedException {
+    final CountDownLatch signal = new CountDownLatch(1);
+
+    api.getMenu("5755996320301056", new APICallback<Menu, List<Error>>() {
+      @Override
+      public void finished(Menu result) {
+        assertEquals(result.getId(), "5755996320301056");
+        assertTrue(result.getItems().size() > 0);
+        signal.countDown();
+      }
+
+      @Override
+      public void error(List<Error> error) {
+        fail();
+        signal.countDown();
+      }
+    });
+
+    signal.await();
+  }
+
+  @Test
+  public void testStyle() throws InterruptedException {
+    final CountDownLatch signal = new CountDownLatch(1);
+
+    api.getStyle("5755996320301056", new APICallback<Style, List<Error>>() {
+      @Override
+      public void finished(Style result) {
+        assertEquals(result.getId(), "5755996320301056");
+        assertNotNull(result.getChromeHeaderColor());
+        assertNotNull(result.getBackgroundColor());
+        assertNotNull(result.getForegroundFontColor());
+        assertNotNull(result.getHighlightFontColor());
+        assertNotNull(result.getIcon());
+        assertNotNull(result.getCustomMarker());
+        signal.countDown();
+      }
+
+      @Override
+      public void error(List<Error> error) {
+        fail();
+        signal.countDown();
+      }
+    });
+
+    signal.await();
+  }
 }
