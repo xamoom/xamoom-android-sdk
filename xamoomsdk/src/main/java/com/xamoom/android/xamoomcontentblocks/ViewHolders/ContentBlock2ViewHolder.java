@@ -32,7 +32,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * VideoBlock
+ * VideoBlock.
  */
 public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
   private final static String youtubeRegex = "(?:youtube(?:-nocookie)?\\.com\\/(?:[^\\/\\n\\s]+\\/\\S+\\/|(?:v|e(?:mbed)?)\\/|\\S*?[?&]v=)|youtu\\.be\\/)([a-zA-Z0-9_-]{11})";
@@ -49,6 +49,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
   private Intent mIntent;
   private String mYoutubeApiKey;
   private LruCache<String, Bitmap> mBitmapCache;
+  private int mTextColor = Color.BLACK;
 
   public ContentBlock2ViewHolder(View itemView, Context context, String youtubeApiKey, LruCache<String, Bitmap> bitmapCache) {
     super(itemView);
@@ -83,6 +84,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
     if(contentBlock.getTitle() != null && !contentBlock.getTitle().equalsIgnoreCase("")) {
       mTitleTextView.setVisibility(View.VISIBLE);
       mTitleTextView.setText(contentBlock.getTitle());
+      mTitleTextView.setTextColor(mTextColor);
     }
 
     if(getYoutubeVideoId(contentBlock.getVideoUrl()) != null) {
@@ -237,5 +239,9 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
 
   public void setStyle(Style style) {
     mStyle = style;
+
+    if (style != null && style.getForegroundFontColor() != null) {
+      mTextColor = Color.parseColor(style.getForegroundFontColor());
+    }
   }
 }
