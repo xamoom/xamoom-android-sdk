@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
   private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
 
   private EnduserApi mEnduserApi;
+  private Style mStyle;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -196,9 +197,8 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
             xamoomFragment.setDisplayAllStoreLinks(true);
             xamoomFragment.setContent(result, false);
             xamoomFragment.setShowSpotMapContentLinks(true);
-
+            xamoomFragment.setStyle(mStyle);
             //xamoomFragment.getContentBlockAdapter().getDelegatesManager().addDelegate(0, new CustomContentBlock0Adapter());
-
             getSupportFragmentManager().beginTransaction()
                 .replace(R.id.main_frame, xamoomFragment, "XamoomFragment")
                 .commit(); //replace with xamoomFragment
@@ -329,6 +329,7 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
       @Override
       public void finished(Style result) {
         Log.v(TAG, "getStyle: " + result);
+        mStyle = result;
       }
 
       @Override
@@ -345,6 +346,7 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
     xamoomFragment.setDisplayAllStoreLinks(true);
     xamoomFragment.setContent(content);
     xamoomFragment.setShowSpotMapContentLinks(true);
+    xamoomFragment.setStyle(mStyle);
     getSupportFragmentManager().beginTransaction()
         .replace(R.id.main_frame, xamoomFragment, "XamoomFragment")
         .addToBackStack(null)
