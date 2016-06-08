@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.PictureDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -46,7 +47,7 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
   private TextView mTitleTextView;
   private ProgressBar mImageProgressBar;
   private ImageView mImageView;
-  private Style mStyle;
+  private int mTextColor = Color.BLACK;
   private GenericRequestBuilder<Uri, InputStream, SVG, PictureDrawable> requestBuilder;
 
   private OnContentBlock3ViewHolderInteractionListener mListener;
@@ -76,9 +77,10 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
 
   public void setupContentBlock(final ContentBlock contentBlock) {
     mTitleTextView.setVisibility(View.VISIBLE);
-    if(contentBlock.getTitle() != null && !contentBlock.getTitle().equalsIgnoreCase(""))
+    if(contentBlock.getTitle() != null && !contentBlock.getTitle().equalsIgnoreCase("")) {
       mTitleTextView.setText(contentBlock.getTitle());
-    else {
+      mTitleTextView.setTextColor(mTextColor);
+    } else {
       mTitleTextView.setVisibility(View.GONE);
       LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mImageView.getLayoutParams();
       params.setMargins(0,0,0,0);
@@ -186,6 +188,8 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
   }
 
   public void setStyle(Style style) {
-    mStyle = style;
+    if (style != null && style.getForegroundFontColor() != null) {
+      mTextColor = Color.parseColor(style.getForegroundFontColor());
+    }
   }
 }
