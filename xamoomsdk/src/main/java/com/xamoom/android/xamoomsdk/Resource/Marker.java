@@ -13,11 +13,11 @@ import at.rags.morpheus.Resource;
 public class Marker extends Resource implements Parcelable {
   private String qr;
   private String nfc;
-  @SerializedName("ibacon-region-uid")
+  @SerializedName("ibeacon-region-uid")
   private String beaconUUID;
-  @SerializedName("ibacon-major")
+  @SerializedName("ibeacon-major")
   private String beaconMajor;
-  @SerializedName("ibacon-minor")
+  @SerializedName("ibeacon-minor")
   private String beaconMinor;
   @SerializedName("eddystone-url")
   private String eddystoneUrl;
