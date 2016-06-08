@@ -3,7 +3,9 @@ package com.xamoom.android.xamoomcontentblocks;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -54,8 +56,8 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   private ContentBlockAdapter mContentBlockAdapter;
   private Content mContent;
   private List<ContentBlock> mContentBlocks = new LinkedList<>();
-  private Style mStyle;
   private String mYoutubeApiKey;
+  private int mBackgroundColor;
 
   private boolean displayAllStoreLinks = false;
   private boolean showSpotMapContentLinks = false;
@@ -77,7 +79,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   }
 
   public XamoomContentFragment() {
-    mContentBlockAdapter = new ContentBlockAdapter(this, mContentBlocks, mStyle,
+    mContentBlockAdapter = new ContentBlockAdapter(this, mContentBlocks,
         showSpotMapContentLinks, mYoutubeApiKey, this);
   }
 
@@ -135,6 +137,9 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
     mRecyclerView.setLayoutManager(
         new LinearLayoutManager(this.getActivity().getApplicationContext()));
     mRecyclerView.setAdapter(mContentBlockAdapter);
+    if (mBackgroundColor != 0) {
+      mRecyclerView.setBackgroundColor(mBackgroundColor);
+    }
   }
 
   /**
@@ -291,10 +296,6 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
     return mContentBlocks;
   }
 
-  public Style getStyle() {
-    return mStyle;
-  }
-
   // setters
   public void setContent(Content content) {
     setContent(content, true);
@@ -315,8 +316,12 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
     }
   }
 
-  public void setStyle(Style mStyle) {
-    this.mStyle = mStyle;
+  public void setStyle(Style style) {
+    mContentBlockAdapter.setStyle(style);
+
+    if (style != null && style.getBackgroundColor() != null) {
+      mBackgroundColor = Color.parseColor(style.getBackgroundColor());
+    }
   }
 
   public void setDisplayAllStoreLinks(boolean displayAllStoreLinks) {

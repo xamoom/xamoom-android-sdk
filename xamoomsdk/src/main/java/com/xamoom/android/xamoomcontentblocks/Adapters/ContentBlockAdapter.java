@@ -42,17 +42,14 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
    * Constructor for the Adapter.
    * @param fragment Fragment with the recyclerView in it.
    * @param contentBlocks ContentBlocks to display.
-   * @param style The style from your xamoom system.
    * @param youtubeApiKey Youtube api key from Google Developer Console.
    */
   public ContentBlockAdapter(Fragment fragment, List<ContentBlock> contentBlocks,
-                             Style style, boolean showSpotMapContentLinks,
-                             String youtubeApiKey,
+                             boolean showSpotMapContentLinks, String youtubeApiKey,
                              ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener contentBlock3ViewHolderInteractionListener) {
     mOnContentBlock3ViewHolderInteractionListener = contentBlock3ViewHolderInteractionListener;
     mFragment = fragment;
     mContentBlocks = contentBlocks;
-    mStyle = style;
     showContentLinks = showSpotMapContentLinks;
     mYoutubeApiKey = youtubeApiKey;
 
@@ -137,5 +134,9 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
   public void setEnduserApi(EnduserApi enduserApi) {
     mEnduserApi = enduserApi;
+  }
+
+  public void setStyle(Style style) {
+    mStyle = style;
   }
 }
