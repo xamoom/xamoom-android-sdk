@@ -23,7 +23,6 @@ public class ContentBlock8ViewHolder extends RecyclerView.ViewHolder {
   private TextView mContentTextView;
   private ImageView mIconImageView;
   private LinearLayout mRootLayout;
-  private Style mStyle;
 
   public ContentBlock8ViewHolder(View itemView, Fragment fragment) {
     super(itemView);
@@ -75,9 +74,5 @@ public class ContentBlock8ViewHolder extends RecyclerView.ViewHolder {
         mContentTextView.setTextColor(Color.parseColor("#333333"));
         break;
     }
-  }
-
-  public void setStyle(Style style) {
-    mStyle = style;
   }
 }

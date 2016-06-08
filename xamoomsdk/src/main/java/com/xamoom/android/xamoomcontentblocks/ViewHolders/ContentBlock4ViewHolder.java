@@ -24,7 +24,6 @@ public class ContentBlock4ViewHolder extends RecyclerView.ViewHolder {
   private TextView mTitleTextView;
   private TextView mContentTextView;
   private ImageView mIcon;
-  private Style mStyle;
 
   public ContentBlock4ViewHolder(View itemView, Fragment fragment) {
     super(itemView);
@@ -173,9 +172,5 @@ public class ContentBlock4ViewHolder extends RecyclerView.ViewHolder {
         mContentTextView.setTextColor(Color.parseColor("#333333"));
         break;
     }
-  }
-
-  public void setStyle(Style style) {
-    mStyle = style;
   }
 }

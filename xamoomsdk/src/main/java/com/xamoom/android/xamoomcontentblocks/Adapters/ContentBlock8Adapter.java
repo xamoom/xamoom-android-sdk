@@ -40,7 +40,6 @@ public class ContentBlock8Adapter implements AdapterDelegate<List<ContentBlock>>
   public void onBindViewHolder(@NonNull List<ContentBlock> items, int position, @NonNull RecyclerView.ViewHolder holder, Style style) {
     ContentBlock cb = items.get(position);
     ContentBlock8ViewHolder newHolder = (ContentBlock8ViewHolder) holder;
-    newHolder.setStyle(style);
     newHolder.setupContentBlock(cb);
   }
 }

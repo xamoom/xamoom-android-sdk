@@ -24,7 +24,6 @@ import java.util.concurrent.TimeUnit;
  */
 public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
   private Fragment mFragment;
-  private Style mStyle;
   private TextView mTitleTextView;
   private TextView mArtistTextView;
   private TextView mRemainingSongTimeTextView;
@@ -153,9 +152,5 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
       mMediaPlayer.stop();
     mPlayPauseButton.setBackgroundResource(R.drawable.ic_play);
     mSongProgressBar.setProgress(0);
-  }
-
-  public void setStyle(Style style) {
-    mStyle = style;
   }
 }

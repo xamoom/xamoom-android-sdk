@@ -21,7 +21,6 @@ public class ContentBlock5ViewHolder extends RecyclerView.ViewHolder {
   private LinearLayout mRootLayout;
   private TextView mTitleTextView;
   private TextView mContentTextView;
-  private Style mStyle;
 
   public ContentBlock5ViewHolder(View itemView, Fragment fragment) {
     super(itemView);
@@ -51,9 +50,5 @@ public class ContentBlock5ViewHolder extends RecyclerView.ViewHolder {
         mFragment.getActivity().startActivity(i);
       }
     });
-  }
-
-  public void setStyle(Style style) {
-    mStyle = style;
   }
 }
