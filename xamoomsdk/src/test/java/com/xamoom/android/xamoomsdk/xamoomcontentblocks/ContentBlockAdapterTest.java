@@ -84,21 +84,15 @@ public class ContentBlockAdapterTest {
 
   @Test
   public void testConstructor() {
-    Style style = new Style();
-    style.setBackgroundColor("#000000");
-    style.setForegroundFontColor("#FFFFFF");
-    style.setHighlightFontColor("#FFF000");
-
-
     ContentBlockAdapter adapter = new ContentBlockAdapter(new Fragment(), new ArrayList<ContentBlock>()
-        ,style, false, "apikey", null);
+        , false, "apikey", null);
 
     assertNotNull(adapter);
   }
 
   @Test
   public void testGetItemViewType() {
-    ContentBlockAdapter adapter = new ContentBlockAdapter(null, contentBlockList, null, false, null, null);
+    ContentBlockAdapter adapter = new ContentBlockAdapter(null, contentBlockList, false, null, null);
 
     assertEquals(adapter.getItemViewType(0), 0);
     assertEquals(adapter.getItemViewType(1), 1);
@@ -106,7 +100,7 @@ public class ContentBlockAdapterTest {
 
   @Test
   public void testGetItemCount() {
-    ContentBlockAdapter adapter = new ContentBlockAdapter(null, contentBlockList, null, false, null, null);
+    ContentBlockAdapter adapter = new ContentBlockAdapter(null, contentBlockList, false, null, null);
 
     assertEquals(adapter.getItemCount(), 11);
   }
@@ -115,7 +109,7 @@ public class ContentBlockAdapterTest {
   public void testOnDetachedFromRecyclerView() {
     Fragment fragment = new Fragment();
 
-    ContentBlockAdapter adapter = new ContentBlockAdapter(fragment, contentBlockList, null,
+    ContentBlockAdapter adapter = new ContentBlockAdapter(fragment, contentBlockList,
         false, "apikey", null);
 
     adapter.onDetachedFromRecyclerView(new RecyclerView(RuntimeEnvironment.application));

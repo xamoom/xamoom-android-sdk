@@ -109,6 +109,5 @@ public class ContentBlock2AdapterTest {
     adapter.onBindViewHolder(contentBlocks, 0, mockViewholder, style);
 
     Mockito.verify(mockViewholder).setupContentBlock(Matchers.eq(contentBlock));
-    Mockito.verify(mockViewholder).setStyle(Matchers.eq(style));
   }
 }
