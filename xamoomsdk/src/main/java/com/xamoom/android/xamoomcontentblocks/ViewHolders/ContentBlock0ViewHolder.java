@@ -19,15 +19,12 @@ import com.xamoom.android.xamoomsdk.Resource.Style;
  * Displays the text ContentBlock.
  */
 public class ContentBlock0ViewHolder extends RecyclerView.ViewHolder {
-  private static final String FALLBACK_LINK_COLOR = "#0000FF";
-  private static final String FALLBACK_TEXT_COLOR = "#000000";
-
   private TextView mTitleTextView;
   private WebView mWebView;
   private Style mStyle;
   private float mTextSize = 22.0f;
-  private String mLinkColor;
-  private String mTextColor;
+  private String mLinkColor = "#0000FF";
+  private String mTextColor = "#000000";
 
   public ContentBlock0ViewHolder(View itemView) {
     super(itemView);
@@ -53,8 +50,6 @@ public class ContentBlock0ViewHolder extends RecyclerView.ViewHolder {
   }
 
   public void setupContentBlock(ContentBlock contentBlock){
-    colorsFromStyle(mStyle);
-
     mTitleTextView.setVisibility(View.VISIBLE);
     mWebView.setVisibility(View.VISIBLE);
 
@@ -88,12 +83,8 @@ public class ContentBlock0ViewHolder extends RecyclerView.ViewHolder {
 
   public void setStyle(Style style) {
     mStyle = style;
-  }
 
-  private void colorsFromStyle(Style style) {
     if (style == null) {
-      mLinkColor = FALLBACK_LINK_COLOR;
-      mTextColor = FALLBACK_TEXT_COLOR;
       return;
     }
 
