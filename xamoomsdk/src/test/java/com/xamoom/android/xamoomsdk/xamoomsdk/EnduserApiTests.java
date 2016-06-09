@@ -19,6 +19,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.internal.matchers.Null;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.IOException;
@@ -95,6 +96,33 @@ public class EnduserApiTests {
 
     assertNotNull(enduserApi.getEnduserApiInterface());
     assertEquals(enduserApi.getSystemLanguage(), "en");
+  }
+
+  @Test
+  public void testSharedInstanceApiKey() {
+    EnduserApi api = EnduserApi.getSharedInstance("key");
+
+    assertNotNull(api);
+  }
+
+  @Test
+  public void testSetSharedInstance() {
+    EnduserApi enduserApi = new EnduserApi("test");
+
+    EnduserApi.setSharedInstance(enduserApi);
+    EnduserApi checkEnduserApi = EnduserApi.getSharedInstance();
+
+    assertEquals(enduserApi, checkEnduserApi);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testSharedInstanceNull() {
+    EnduserApi enduserApi = EnduserApi.getSharedInstance();
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testSharedInstanceWithNullApikey() {
+    EnduserApi enduserApi = EnduserApi.getSharedInstance(null);
   }
 
   @Test

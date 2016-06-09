@@ -1,6 +1,7 @@
 package com.xamoom.android.xamoomsdk;
 
 import android.location.Location;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
@@ -356,7 +357,11 @@ public class EnduserApi {
    * @param apikey Your xamoom api key.
    * @return EnduserApi instance.
    */
-  public static EnduserApi getSharedInstance(String apikey) {
+  public static EnduserApi getSharedInstance(@NonNull String apikey) {
+    if (apikey == null) {
+      throw new NullPointerException("Apikey should not be null.");
+    }
+
     if (EnduserApi.sharedInstance == null) {
       EnduserApi.sharedInstance = new EnduserApi(apikey);
     }
@@ -368,6 +373,10 @@ public class EnduserApi {
    * @return EnduserApi instance.
    */
   public static EnduserApi getSharedInstance() {
+    if (EnduserApi.sharedInstance == null) {
+      throw new NullPointerException("Instance is null. Please use getSharedInstance(apikey) " +
+          "or setSharedInstance");
+    }
     return EnduserApi.sharedInstance;
   }
 
