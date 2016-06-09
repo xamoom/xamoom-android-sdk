@@ -117,6 +117,7 @@ public class EnduserApiTests {
 
   @Test(expected = NullPointerException.class)
   public void testSharedInstanceNull() {
+    EnduserApi.setSharedInstance(null);
     EnduserApi enduserApi = EnduserApi.getSharedInstance();
   }
 
