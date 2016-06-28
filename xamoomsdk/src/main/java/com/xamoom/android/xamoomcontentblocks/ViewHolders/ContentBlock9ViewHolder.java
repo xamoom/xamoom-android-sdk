@@ -75,9 +75,7 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
 
     mContentBlock = contentBlock;
 
-    if (mGoogleMap == null) {
-      mMapView.getMapAsync(this);
-    }
+    mMapView.getMapAsync(this);
   }
 
   @Override
