@@ -16,11 +16,13 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.EnduserApi;
+import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Resource.Style;
 
+import java.util.EnumSet;
 import java.util.List;
 
 import at.rags.morpheus.Error;
@@ -78,7 +80,7 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
       throw new NullPointerException("EnduserApi is null.");
     }
 
-    mEnduserApi.getContent(contentId, new APICallback<Content, List<at.rags.morpheus.Error>>() {
+    mEnduserApi.getContent(contentId, EnumSet.of(ContentFlags.PREVIEW),new APICallback<Content, List<at.rags.morpheus.Error>>() {
       @Override
       public void finished(Content result) {
         mProgressBar.setVisibility(View.GONE);
