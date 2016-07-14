@@ -38,8 +38,10 @@ public class ContentBlock7ViewHolder extends RecyclerView.ViewHolder {
     webSettings.setJavaScriptEnabled(true);
     mSoundCloudWebview.setWebViewClient(new WebViewClient() {
       public boolean shouldOverrideUrlLoading(WebView view, String url) {
-        view.getContext().startActivity(
-            new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+        if (url.contains("http://") || url.contains("https://")) {
+          view.getContext().startActivity(
+              new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+        }
         return true;
       }
     });
