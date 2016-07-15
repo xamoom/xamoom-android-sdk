@@ -464,6 +464,53 @@ public class EnduserApiTests {
   }
 
   @Test
+  public void testSearchContent() throws Exception {
+    mMockWebServer.enqueue(new MockResponse().setBody(""));
+
+    final List<Content> checkContents = new ArrayList<>();
+
+    Content content = new Content();
+    content.setTitle("Test");
+    ArrayList<Resource> contents = new ArrayList<Resource>();
+    contents.add(content);
+
+    HashMap<String, Object> meta = new HashMap<>();
+    meta.put("cursor", "1");
+    meta.put("has-more", true);
+
+    JsonApiObject jsonApiObject = new JsonApiObject();
+    jsonApiObject.setResources(contents);
+    jsonApiObject.setMeta(meta);
+
+    List<String> tags = new ArrayList<>();
+    tags.add("tag1");
+    tags.add("tag2");
+
+    when(mMockMorpheus.parse(anyString())).thenReturn(jsonApiObject);
+
+    final Semaphore semaphore = new Semaphore(0);
+
+    mEnduserApi.searchContentByName("do not touch", 10, null, null, new APIListCallback<List<Content>, List<Error>>() {
+      @Override
+      public void finished(List<Content> result, String cursor, boolean hasMore) {
+        checkContents.addAll(result);
+        semaphore.release();
+      }
+
+      @Override
+      public void error(List<Error> error) {
+        semaphore.release();
+      }
+    });
+
+    semaphore.acquire();
+
+    assertTrue(checkContents.get(0).getTitle().equals("Test"));
+    RecordedRequest request1 = mMockWebServer.takeRequest();
+    assertEquals("/_api/v2/consumer/contents?lang=en&page[size]=10&filter[name]=do%20not%20touch", request1.getPath());
+  }
+
+  @Test
   public void testGetSpotsWithLocationSuccess() throws Exception {
     mMockWebServer.enqueue(new MockResponse().setBody(""));
 

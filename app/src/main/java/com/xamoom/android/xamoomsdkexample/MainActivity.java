@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
     //getContentOption();
     getContentLocationIdentifier();
     getContentsLocation();
+    searchContent();
     getSpotsWithLocation();
     getSpotsWithTags();
     getSystem();
@@ -249,6 +250,20 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
         Log.v(TAG, "getContentsLocation: " + result.get(0));
         Log.v(TAG, "getContentsLocation: " + cursor);
         Log.v(TAG, "getContentsLocation: " + hasMore);
+      }
+
+      @Override
+      public void error(List<Error> error) {
+
+      }
+    });
+  }
+
+  private void searchContent() {
+    mEnduserApi.searchContentByName("do not touch", 10, null, null, new APIListCallback<List<Content>, List<Error>>() {
+      @Override
+      public void finished(List<Content> result, String cursor, boolean hasMore) {
+        Log.v(TAG, "searchContent: " + result.get(0));
       }
 
       @Override

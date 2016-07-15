@@ -221,6 +221,18 @@ public class EnduserApi {
     callHandler.enqueListCall(call, callback);
   }
 
+  public void searchContentByName(String name, int pageSize, @Nullable String cursor,
+                                  EnumSet<ContentSortFlags> sortFlags,
+                                  APIListCallback<List<Content>, List<Error>> callback) {
+    Map<String, String> params = UrlUtil.addContentSortingParameter(UrlUtil.getUrlParameter(language),
+        sortFlags);
+    params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
+    params.put("filter[name]", name);
+
+    Call<ResponseBody> call = enduserApiInterface.getContents(params);
+    callHandler.enqueListCall(call, callback);
+  }
+
   /**
    * Get list of spots inside radius of a location.
    *
