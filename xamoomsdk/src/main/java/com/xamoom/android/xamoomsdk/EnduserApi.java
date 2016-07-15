@@ -239,9 +239,9 @@ public class EnduserApi {
    * @param sortFlags {@link ContentSortFlags} to sort results.
    * @param callback {@link APIListCallback}.
    */
-  public void searchContentByName(String name, int pageSize, @Nullable String cursor,
-                                  EnumSet<ContentSortFlags> sortFlags,
-                                  APIListCallback<List<Content>, List<Error>> callback) {
+  public void searchContentsByName(String name, int pageSize, @Nullable String cursor,
+                                   EnumSet<ContentSortFlags> sortFlags,
+                                   APIListCallback<List<Content>, List<Error>> callback) {
     Map<String, String> params = UrlUtil.addContentSortingParameter(UrlUtil.getUrlParameter(language),
         sortFlags);
     params = UrlUtil.addPagingToUrl(params, pageSize, cursor);

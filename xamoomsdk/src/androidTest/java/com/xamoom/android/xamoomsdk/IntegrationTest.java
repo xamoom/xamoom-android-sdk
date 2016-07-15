@@ -6,7 +6,6 @@ import android.test.InstrumentationTestCase;
 import android.test.suitebuilder.annotation.LargeTest;
 
 import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
-import com.xamoom.android.xamoomsdk.Enums.SpotSortFlags;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.Marker;
 import com.xamoom.android.xamoomsdk.Resource.Menu;
@@ -20,7 +19,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
-import java.io.InterruptedIOException;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -221,7 +219,7 @@ public class IntegrationTest extends InstrumentationTestCase {
   public void testSearchContent() throws InterruptedException {
     final CountDownLatch signal = new CountDownLatch(1);
 
-    api.searchContentByName("do not touch", 10, null, null, new APIListCallback<List<Content>, List<Error>>() {
+    api.searchContentsByName("do not touch", 10, null, null, new APIListCallback<List<Content>, List<Error>>() {
       @Override
       public void finished(List<Content> result, String cursor, boolean hasMore) {
         assertEquals(result.get(0).getTitle(), "DO NOT TOUCH | APP | Testsite 1");

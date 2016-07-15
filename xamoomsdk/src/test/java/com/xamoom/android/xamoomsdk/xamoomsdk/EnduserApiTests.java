@@ -20,7 +20,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.internal.matchers.Null;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.IOException;
@@ -491,7 +490,7 @@ public class EnduserApiTests {
 
     final Semaphore semaphore = new Semaphore(0);
 
-    mEnduserApi.searchContentByName("do not touch", 10, null, null, new APIListCallback<List<Content>, List<Error>>() {
+    mEnduserApi.searchContentsByName("do not touch", 10, null, null, new APIListCallback<List<Content>, List<Error>>() {
       @Override
       public void finished(List<Content> result, String cursor, boolean hasMore) {
         checkContents.addAll(result);
