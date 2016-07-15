@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -22,6 +23,7 @@ import java.util.HashMap;
  * SoundcloudBlock
  */
 public class ContentBlock7ViewHolder extends RecyclerView.ViewHolder {
+  private static final String TAG = ContentBlock7ViewHolder.class.getSimpleName();
 
   private TextView mTitleTextView;
   private WebView mSoundCloudWebview;
@@ -38,9 +40,11 @@ public class ContentBlock7ViewHolder extends RecyclerView.ViewHolder {
     webSettings.setJavaScriptEnabled(true);
     mSoundCloudWebview.setWebViewClient(new WebViewClient() {
       public boolean shouldOverrideUrlLoading(WebView view, String url) {
-        if (url.contains("http://") || url.contains("https://")) {
+        try {
           view.getContext().startActivity(
               new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+        } catch (Exception e) {
+          Log.e(TAG, e.toString());
         }
         return true;
       }
