@@ -218,6 +218,48 @@ public class IntegrationTest extends InstrumentationTestCase {
   }
 
   @Test
+  public void testSearchContent() throws InterruptedException {
+    final CountDownLatch signal = new CountDownLatch(1);
+
+    api.searchContentByName("do not touch", 10, null, null, new APIListCallback<List<Content>, List<Error>>() {
+      @Override
+      public void finished(List<Content> result, String cursor, boolean hasMore) {
+        assertEquals(result.get(0).getTitle(), "DO NOT TOUCH | APP | Testsite 1");
+        signal.countDown();
+      }
+
+      @Override
+      public void error(List<Error> error) {
+        fail();
+        signal.countDown();
+      }
+    });
+
+    signal.await();
+  }
+
+  @Test
+  public void testSpot() throws InterruptedException {
+    final CountDownLatch signal = new CountDownLatch(1);
+
+    api.getSpot("5755996320301056|5744440375246848", new APICallback<Spot, List<Error>>() {
+      @Override
+      public void finished(Spot result) {
+        assertEquals(result.getName(), "DO NOT TOUCH | APP | Spot 1");
+        signal.countDown();
+      }
+
+      @Override
+      public void error(List<Error> error) {
+        fail();
+        signal.countDown();
+      }
+    });
+
+    signal.await();
+  }
+
+  @Test
   public void testSpotsWithTag() throws InterruptedException {
     final CountDownLatch signal = new CountDownLatch(1);
     final ArrayList<String> tags = new ArrayList<>();
