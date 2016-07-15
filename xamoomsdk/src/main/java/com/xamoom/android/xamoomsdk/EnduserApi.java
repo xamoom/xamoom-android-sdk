@@ -174,6 +174,19 @@ public class EnduserApi {
   }
 
   /**
+   * Get content for a specific beacon.
+   *
+   * @param major Beacon major ID.
+   * @param minor Beacon minor ID.
+   * @param contentFlags Different flags {@link ContentFlags}.
+   * @param callback {@link APICallback}.
+   */
+  public void getContentByBeacon(int major, int minor, EnumSet<ContentFlags> contentFlags,
+                                 APICallback<Content, List<Error>> callback) {
+    getContentByLocationIdentifier(String.format("%s|%s", major, minor), contentFlags, callback);
+  }
+
+  /**
    * Get list of contents with your location. Geofence radius is 40m.
    *
    * @param location Users location.
