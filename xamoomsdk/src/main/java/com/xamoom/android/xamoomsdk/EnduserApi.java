@@ -190,7 +190,7 @@ public class EnduserApi {
    * Get list of contents with your location. Geofence radius is 40m.
    *
    * @param location Users location.
-   * @param pageSize PageSize for returned contents (max 100)
+   * @param pageSize PageSize for returned contents (max 100).
    * @param cursor Cursor for paging.
    * @param sortFlags {@link ContentSortFlags} to sort results.
    * @param callback {@link APIListCallback}.
@@ -209,6 +209,15 @@ public class EnduserApi {
     callHandler.enqueListCall(call, callback);
   }
 
+  /**
+   * Get list of contents with a specific tag.
+   *
+   * @param tags List of strings.
+   * @param pageSize PageSize for returned contents (max 100).
+   * @param cursor Cursor for paging.
+   * @param sortFlags {@link ContentSortFlags} to sort results.
+   * @param callback {@link APIListCallback}.
+   */
   public void getContentsByTags(List<String> tags, int pageSize, @Nullable String cursor,
                                 EnumSet<ContentSortFlags> sortFlags,
                                 APIListCallback<List<Content>, List<Error>> callback) {
@@ -221,6 +230,15 @@ public class EnduserApi {
     callHandler.enqueListCall(call, callback);
   }
 
+  /**
+   * Get list of contents with full-text name search.
+   *
+   * @param name Name to search for.
+   * @param pageSize PageSize for returned contents (max 100).
+   * @param cursor Cursor for paging.
+   * @param sortFlags {@link ContentSortFlags} to sort results.
+   * @param callback {@link APIListCallback}.
+   */
   public void searchContentByName(String name, int pageSize, @Nullable String cursor,
                                   EnumSet<ContentSortFlags> sortFlags,
                                   APIListCallback<List<Content>, List<Error>> callback) {
@@ -231,6 +249,19 @@ public class EnduserApi {
 
     Call<ResponseBody> call = enduserApiInterface.getContents(params);
     callHandler.enqueListCall(call, callback);
+  }
+
+  /**
+   * Get spot with specific id.
+   *
+   * @param spotId Id of the spot.
+   * @param callback {@link APICallback}.
+   */
+  public void getSpot(String spotId, APICallback<Spot, List<Error>> callback) {
+    Map<String, String> params = UrlUtil.getUrlParameter(this.language);
+
+    Call<ResponseBody> call = enduserApiInterface.getSpot(spotId, params);
+    callHandler.enqueCall(call, callback);
   }
 
   /**

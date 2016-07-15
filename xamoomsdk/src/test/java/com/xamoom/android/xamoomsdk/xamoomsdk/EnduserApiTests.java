@@ -511,6 +511,42 @@ public class EnduserApiTests {
   }
 
   @Test
+  public void testGetSpot() throws Exception {
+    mMockWebServer.enqueue(new MockResponse().setBody(""));
+    final Spot[] checkSpot = {null};
+
+    Spot spot = new Spot();
+    spot.setName("Test Spot");
+
+    JsonApiObject jsonApiObject = new JsonApiObject();
+    jsonApiObject.setResource(spot);
+
+    when(mMockMorpheus.parse(anyString())).thenReturn(jsonApiObject);
+
+    final Semaphore semaphore = new Semaphore(0);
+
+    mEnduserApi.getSpot("1234", new APICallback<Spot, List<Error>>() {
+      @Override
+      public void finished(Spot result) {
+        checkSpot[0] = result;
+        semaphore.release();
+      }
+
+      @Override
+      public void error(List<Error> error) {
+        semaphore.release();
+      }
+    });
+
+    semaphore.acquire();
+
+    assertTrue(checkSpot[0].getName().equals("Test Spot"));
+    RecordedRequest request1 = mMockWebServer.takeRequest();
+    assertEquals("/_api/v2/consumer/spots/1234?lang=en",
+        request1.getPath());
+  }
+
+  @Test
   public void testGetSpotsWithLocationSuccess() throws Exception {
     mMockWebServer.enqueue(new MockResponse().setBody(""));
 
