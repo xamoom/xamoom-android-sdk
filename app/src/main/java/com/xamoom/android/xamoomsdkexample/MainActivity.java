@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
     getSpot();
     getSpotsWithLocation();
     getSpotsWithTags();
+    searchSpots();
     getSystem();
     getMenu();
     getSystemSetting();
@@ -318,6 +319,21 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
       }
     });
   }
+
+  private void searchSpots() {
+    mEnduserApi.searchSpotsByName("do not touch", 10, null, null, null, new APIListCallback<List<Spot>, List<Error>>() {
+      @Override
+      public void finished(List<Spot> result, String cursor, boolean hasMore) {
+        Log.v(TAG, "searchSpots: " + result);
+      }
+
+      @Override
+      public void error(List<Error> error) {
+
+      }
+    });
+  }
+
 
   public void getSystem() {
     mEnduserApi.getSystem(new APICallback<com.xamoom.android.xamoomsdk.Resource.System, List<Error>>() {

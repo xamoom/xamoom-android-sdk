@@ -42,6 +42,7 @@ import retrofit2.Retrofit;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -730,6 +731,59 @@ public class EnduserApiTests {
     assertTrue(checkSpots.get(0).getName().equals("Test"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
     assertEquals("/_api/v2/consumer/spots?lang=en&filter[has-location]=true&filter[tags]=[%27tag1%27,%27tag2%27]", request1.getPath());
+  }
+
+  @Test
+  public void testSearchSpotsWithTagsSpotFlagsSuccess() throws Exception {
+    mMockWebServer.enqueue(new MockResponse().setBody(""));
+
+    final List<Spot> checkSpots = new ArrayList<>();
+
+    Spot spot = new Spot();
+    spot.setName("Test");
+    ArrayList<Resource> spots = new ArrayList<>();
+    spots.add(spot);
+
+    List<String> tags = new ArrayList<>();
+    tags.add("tag1");
+    tags.add("tag2");
+
+    HashMap<String, Object> meta = new HashMap<>();
+    meta.put("cursor", "1");
+    meta.put("has-more", true);
+
+    JsonApiObject jsonApiObject = new JsonApiObject();
+    jsonApiObject.setResources(spots);
+    jsonApiObject.setMeta(meta);
+
+    Location location = mock(Location.class);
+    when(location.getLatitude()).thenReturn(1.0);
+    when(location.getLongitude()).thenReturn(2.0);
+
+    when(mMockMorpheus.parse(anyString())).thenReturn(jsonApiObject);
+
+    final Semaphore semaphore = new Semaphore(0);
+
+    mEnduserApi.searchSpotsByName("do not touch", 10, null, null, null,
+        new APIListCallback<List<Spot>, List<Error>>() {
+          @Override
+          public void finished(List<Spot> result, String cursor, boolean hasMore) {
+            checkSpots.add(result.get(0));
+            semaphore.release();
+          }
+
+          @Override
+          public void error(List<Error> error) {
+            fail();
+            semaphore.release();
+          }
+        });
+
+    semaphore.acquire();
+
+    assertTrue(checkSpots.get(0).getName().equals("Test"));
+    RecordedRequest request1 = mMockWebServer.takeRequest();
+    assertEquals("/_api/v2/consumer/spots?lang=en&page[size]=10&filter[name]=do%20not%20touch", request1.getPath());
   }
 
   @Test
