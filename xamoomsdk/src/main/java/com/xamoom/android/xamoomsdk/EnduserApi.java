@@ -112,11 +112,8 @@ public class EnduserApi {
    * @param contentID ContentID from xamoom-cloud.
    * @param callback {@link APICallback}.
    */
-  public void getContent(final String contentID, APICallback<Content, List<Error>> callback) {
-    Map<String, String> params = UrlUtil.getUrlParameter(language);
-
-    Call<ResponseBody> call = enduserApiInterface.getContent(contentID, params);
-    callHandler.enqueCall(call, callback);
+  public void getContent(String contentID, APICallback<Content, List<Error>> callback) {
+    getContent(contentID, null, callback);
   }
 
   /**
@@ -143,8 +140,22 @@ public class EnduserApi {
    */
   public void getContentByLocationIdentifier(String locationIdentifier, APICallback<Content,
       List<Error>> callback) {
+    getContentByLocationIdentifier(locationIdentifier, null, callback);
+  }
+
+  /**
+   *  Get a content for a specific LocationIdentifier with flags.
+   *
+   * @param locationIdentifier LocationIdentifier from QR or NFC.
+   * @param contentFlags Different flags {@link ContentFlags}.
+   * @param callback {@link APICallback}.
+   */
+  public void getContentByLocationIdentifier(String locationIdentifier,
+                                             EnumSet<ContentFlags> contentFlags,
+                                             APICallback<Content, List<Error>> callback) {
     Map<String, String> params = UrlUtil.getUrlParameter(language);
     params.put("filter[location-identifier]", locationIdentifier);
+    params = UrlUtil.addContentParameter(params, contentFlags);
 
     Call<ResponseBody> call = enduserApiInterface.getContents(params);
     callHandler.enqueCall(call, callback);

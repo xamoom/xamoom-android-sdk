@@ -224,6 +224,19 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
 
           }
         });
+
+    mEnduserApi.getContentByLocationIdentifier("8wv7o",
+        EnumSet.of(ContentFlags.PREVIEW), new APICallback<Content, List<Error>>() {
+          @Override
+          public void finished(Content result) {
+            Log.v(TAG, "getContentByLocationIdentifier: " + result);
+          }
+
+          @Override
+          public void error(List<Error> error) {
+
+          }
+        });
   }
 
   public void getContentsLocation() {

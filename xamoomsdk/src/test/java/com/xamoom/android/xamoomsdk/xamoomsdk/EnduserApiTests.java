@@ -258,6 +258,44 @@ public class EnduserApiTests {
   }
 
   @Test
+  public void testGetContentWithLocationIdentifierFlagsSuccess() throws Exception {
+    mMockWebServer.enqueue(new MockResponse().setBody(""));
+
+    final Content[] checkContent = {null};
+
+    Content content = new Content();
+    content.setTitle("Test");
+
+    JsonApiObject jsonApiObject = new JsonApiObject();
+    jsonApiObject.setResource(content);
+
+    when(mMockMorpheus.parse(anyString())).thenReturn(jsonApiObject);
+
+    final Semaphore semaphore = new Semaphore(0);
+
+    mEnduserApi.getContentByLocationIdentifier("1234", EnumSet.of(ContentFlags.PREVIEW,
+        ContentFlags.PRIVATE), new APICallback<Content, List<Error>>() {
+      @Override
+      public void finished(Content result) {
+        checkContent[0] = result;
+        semaphore.release();
+      }
+
+      @Override
+      public void error(List<Error> error) {
+        semaphore.release();
+      }
+    });
+
+    semaphore.acquire();
+
+    assertTrue(checkContent[0].getTitle().equals("Test"));
+    RecordedRequest request1 = mMockWebServer.takeRequest();
+    assertEquals("/_api/v2/consumer/contents?lang=en&filter[location-identifier]=1234&preview=true&public-only=true",
+        request1.getPath());
+  }
+
+  @Test
   public void testGetContentWithBeaconSuccess() throws Exception {
     mMockWebServer.enqueue(new MockResponse().setBody(""));
 
