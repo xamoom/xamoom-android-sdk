@@ -258,7 +258,12 @@ public class EnduserApi {
    * @param callback {@link APICallback}.
    */
   public void getSpot(String spotId, APICallback<Spot, List<Error>> callback) {
+    getSpot(spotId, null, callback);
+  }
+
+  public void getSpot(String spotId, EnumSet<SpotFlags> spotFlags, APICallback<Spot, List<Error>> callback) {
     Map<String, String> params = UrlUtil.getUrlParameter(this.language);
+    params = UrlUtil.addSpotParameter(params, spotFlags);
 
     Call<ResponseBody> call = enduserApiInterface.getSpot(spotId, params);
     callHandler.enqueCall(call, callback);
@@ -340,9 +345,6 @@ public class EnduserApi {
         spotFlags);
     params = UrlUtil.addSpotSortingParameter(params, sortFlags);
     params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
-    if (spotFlags != null && spotFlags.contains(SpotFlags.HAS_LOCATION)) {
-      params.put("filter[has-location]", "true");
-    }
     params.put("filter[tags]", JsonListUtil.listToJsonArray(tags, ","));
 
     Call<ResponseBody> call = enduserApiInterface.getSpots(params);
