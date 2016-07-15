@@ -75,6 +75,7 @@ public class UrlUtilTests {
     checkParams.put("lang", "en");
     checkParams.put("include_content", "true");
     checkParams.put("include_markers", "true");
+    checkParams.put("filter[has-location]", "true");
 
     Map<String, String> params = UrlUtil.addSpotParameter(UrlUtil.getUrlParameter("en"),
         EnumSet.of(SpotFlags.INCLUDE_CONTENT, SpotFlags.INCLUDE_MARKERS, SpotFlags.HAS_LOCATION));
