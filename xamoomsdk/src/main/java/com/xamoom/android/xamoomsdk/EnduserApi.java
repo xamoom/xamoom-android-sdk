@@ -1,6 +1,8 @@
 package com.xamoom.android.xamoomsdk;
 
 import android.location.Location;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -44,25 +46,52 @@ import retrofit2.Retrofit;
  * Change the requested language by  setting {@link #language}. The users language is saved
  * in {@link #systemLanguage}.
  */
-public class EnduserApi {
+public class EnduserApi implements Parcelable {
   private static final String TAG = EnduserApi.class.getSimpleName();
   private static final String API_URL = "https://xamoom-cloud.appspot.com/";
 
   private static EnduserApi sharedInstance;
 
+  private String apiKey;
   private EnduserApiInterface enduserApiInterface;
   private CallHandler callHandler;
   private String language;
   private String systemLanguage;
 
   public EnduserApi(final String apikey) {
+    this.apiKey = apikey;
+    initRetrofit(apiKey);
+    initMorpheus();
+    initVars();
+  }
+
+  public EnduserApi(Retrofit retrofit) {
+    enduserApiInterface = retrofit.create(EnduserApiInterface.class);
+
+    initMorpheus();
+    initVars();
+  }
+
+  protected EnduserApi(Parcel in) {
+    apiKey = in.readString();
+    initRetrofit(apiKey);
+    initMorpheus();
+    initVars();
+    language = in.readString();
+  }
+
+  private void initRetrofit(final String apiKey) {
+    if (apiKey == null) {
+      throw new NullPointerException("apiKey is null.");
+    }
+
     OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
     builder.addInterceptor(new Interceptor() {
       @Override
       public okhttp3.Response intercept(Chain chain) throws IOException {
         Request request = chain.request().newBuilder()
             .addHeader("Content-Type", "application/vnd.api+json")
-            .addHeader("APIKEY", apikey)
+            .addHeader("APIKEY", apiKey)
             .build();
         return chain.proceed(request);
       }
@@ -74,16 +103,6 @@ public class EnduserApi {
         .client(httpClient)
         .build();
     enduserApiInterface = retrofit.create(EnduserApiInterface.class);
-
-    initMorpheus();
-    initVars();
-  }
-
-  public EnduserApi(Retrofit retrofit) {
-    enduserApiInterface = retrofit.create(EnduserApiInterface.class);
-
-    initMorpheus();
-    initVars();
   }
 
   private void initMorpheus() {
@@ -420,6 +439,30 @@ public class EnduserApi {
     Map<String, String> params = UrlUtil.getUrlParameter(language);
     Call<ResponseBody> call = enduserApiInterface.getStyle(systemId, params);
     callHandler.enqueCall(call, callback);
+  }
+
+  //parcelable
+  public static final Creator<EnduserApi> CREATOR = new Creator<EnduserApi>() {
+    @Override
+    public EnduserApi createFromParcel(Parcel in) {
+      return new EnduserApi(in);
+    }
+
+    @Override
+    public EnduserApi[] newArray(int size) {
+      return new EnduserApi[size];
+    }
+  };
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeString(apiKey);
+    dest.writeString(language);
   }
 
   //getters & setters
