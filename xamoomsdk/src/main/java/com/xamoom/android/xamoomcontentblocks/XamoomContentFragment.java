@@ -50,12 +50,17 @@ import java.util.List;
  */
 public class XamoomContentFragment extends Fragment implements ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener {
   private static final String YOUTUBE_API_KEY = "0000";
+  private static final String SHOW_SPOT_MAP_CONTENT_LINKS = "0001";
+  private static final String CONTENT_BLOCKS = "0002";
+  private static final String CONTENT = "0003";
+  private static final String ENDUSER_API = "0004";
   private static final int WRITE_STORAGE_PERMISSION = 0;
 
+  private EnduserApi mEnduserApi;
   private RecyclerView mRecyclerView;
   private ContentBlockAdapter mContentBlockAdapter;
   private Content mContent;
-  private List<ContentBlock> mContentBlocks = new LinkedList<>();
+  private ArrayList<ContentBlock> mContentBlocks = new ArrayList<>();
   private String mYoutubeApiKey;
   private int mBackgroundColor;
 
@@ -75,6 +80,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
 
     args.putString(YOUTUBE_API_KEY, youtubeApiKey);
     fragment.setArguments(args);
+
     return fragment;
   }
 
@@ -89,6 +95,17 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
     if (getArguments() != null) {
       mYoutubeApiKey = getArguments().getString(YOUTUBE_API_KEY);
       mContentBlockAdapter.setYoutubeApiKey(mYoutubeApiKey);
+    }
+
+    if (savedInstanceState != null) {
+      mYoutubeApiKey = savedInstanceState.getString(YOUTUBE_API_KEY);
+      mContentBlockAdapter.setYoutubeApiKey(mYoutubeApiKey);
+      showSpotMapContentLinks = savedInstanceState.getBoolean(SHOW_SPOT_MAP_CONTENT_LINKS);
+      mContent = savedInstanceState.getParcelable(CONTENT);
+      mContentBlocks = savedInstanceState.getParcelableArrayList(CONTENT_BLOCKS);
+      mContentBlockAdapter.setContentBlocks(mContentBlocks);
+      mEnduserApi = savedInstanceState.getParcelable(ENDUSER_API);
+      mContentBlockAdapter.setEnduserApi(mEnduserApi);
     }
   }
 
@@ -112,6 +129,16 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
         mContentBlockAdapter.notifyDataSetChanged();
       }
     }
+  }
+
+  @Override
+  public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putString(YOUTUBE_API_KEY, mYoutubeApiKey);
+    outState.putBoolean(SHOW_SPOT_MAP_CONTENT_LINKS, showSpotMapContentLinks);
+    outState.putParcelable(CONTENT, mContent);
+    outState.putParcelableArrayList(CONTENT_BLOCKS, mContentBlocks);
+    outState.putParcelable(ENDUSER_API, mEnduserApi);
   }
 
   @Override
@@ -212,7 +239,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
    * @param contentBlocks ContentBlocks List to manipulate
    * @return Manipulated contetnBlocks List
    */
-  private List<ContentBlock> removeStoreLinks(List<ContentBlock> contentBlocks) {
+  private ArrayList<ContentBlock> removeStoreLinks(ArrayList<ContentBlock> contentBlocks) {
     ArrayList<ContentBlock> cbToRemove = new ArrayList<>();
 
     for (ContentBlock contentBlock : contentBlocks) {
@@ -333,7 +360,11 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   }
 
   public void setEnduserApi(EnduserApi enduserApi) {
+    mEnduserApi = enduserApi;
     mContentBlockAdapter.setEnduserApi(enduserApi);
   }
 
+  public EnduserApi getEnduserApi() {
+    return mEnduserApi;
+  }
 }

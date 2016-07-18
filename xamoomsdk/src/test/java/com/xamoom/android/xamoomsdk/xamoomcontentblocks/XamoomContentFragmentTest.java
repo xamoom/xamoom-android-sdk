@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.BuildConfig;
+import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.Helper.ContentFragmentActivity;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 
@@ -26,8 +27,10 @@ import static junit.framework.Assert.assertNull;
 @Config(constants = BuildConfig.class, sdk = 21)
 public class XamoomContentFragmentTest {
 
+  private ContentFragmentActivity activity;
+
   private void addFragmentToActivity(Fragment fragment) {
-    ContentFragmentActivity activity = Robolectric.buildActivity( ContentFragmentActivity.class )
+    activity = Robolectric.buildActivity( ContentFragmentActivity.class )
         .create()
         .start()
         .resume()
@@ -70,6 +73,33 @@ public class XamoomContentFragmentTest {
     assertNotNull(fragment.getRecyclerView());
     assertNotNull(fragment.getRecyclerView().getLayoutManager());
     assertNotNull(fragment.getRecyclerView().getAdapter());
+  }
+
+  @Test
+  public void testOnSaveInstance() {
+    com.xamoom.android.xamoomsdk.Resource.Content content = new com.xamoom.android.xamoomsdk.Resource.Content();
+    content.setTitle("Test Content");
+    List<ContentBlock> blocks = new ArrayList<>();
+    ContentBlock block1 = new ContentBlock();
+    block1.setBlockType(1);
+    block1.setTitle("Test Block");
+    blocks.add(block1);
+    content.setContentBlocks(blocks);
+
+    XamoomContentFragment fragment = XamoomContentFragment.newInstance("api");
+    fragment.setEnduserApi(new EnduserApi("api"));
+    fragment.setContent(content);
+
+    addFragmentToActivity(fragment);
+
+    activity.recreate();
+
+    XamoomContentFragment recreatedFragment = (XamoomContentFragment)activity.getSupportFragmentManager().getFragments().get(0);
+
+    assertNotNull(recreatedFragment.getContentBlockAdapter());
+    assertNotNull(recreatedFragment.getContentBlocks());
+    assertNotNull(recreatedFragment.getRecyclerView());
+    assertNotNull(recreatedFragment.getEnduserApi());
   }
 
   @Test
@@ -221,5 +251,6 @@ public class XamoomContentFragmentTest {
     assertNotNull(fragment.getRecyclerView().getLayoutManager());
     assertNotNull(fragment.getRecyclerView().getAdapter());
   }
+
 
 }
