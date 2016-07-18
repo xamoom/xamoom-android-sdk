@@ -311,20 +311,6 @@ public class EnduserApi {
     callHandler.enqueListCall(call, callback);
   }
 
-  public void searchSpotsByName(String name, int pageSize, @Nullable String cursor,
-                         @Nullable EnumSet<SpotFlags> spotFlags,
-                         @Nullable EnumSet<SpotSortFlags> sortFlags,
-                         APIListCallback<List<Spot>, List<Error>> callback) {
-    Map<String, String> params = UrlUtil.addSpotParameter(UrlUtil.getUrlParameter(language),
-        spotFlags);
-    params = UrlUtil.addSpotSortingParameter(params, sortFlags);
-    params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
-    params.put("filter[name]", name);
-
-    Call<ResponseBody> call = enduserApiInterface.getSpots(params);
-    callHandler.enqueListCall(call, callback);
-  }
-
   /**
    * Get list of spots with tags.
    * Or operation used when searching with tags.
@@ -360,6 +346,30 @@ public class EnduserApi {
     params = UrlUtil.addSpotSortingParameter(params, sortFlags);
     params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
     params.put("filter[tags]", JsonListUtil.listToJsonArray(tags, ","));
+
+    Call<ResponseBody> call = enduserApiInterface.getSpots(params);
+    callHandler.enqueListCall(call, callback);
+  }
+
+  /**
+   * Get list of spots with full-text name search.
+   *
+   * @param name Name to searchfor.
+   * @param pageSize Size for pages. (max 100)
+   * @param cursor Cursor of last search.
+   * @param spotFlags {@link SpotFlags}.
+   * @param sortFlags {@link SpotSortFlags}
+   * @param callback {@link APIListCallback}
+   */
+  public void searchSpotsByName(String name, int pageSize, @Nullable String cursor,
+                                @Nullable EnumSet<SpotFlags> spotFlags,
+                                @Nullable EnumSet<SpotSortFlags> sortFlags,
+                                APIListCallback<List<Spot>, List<Error>> callback) {
+    Map<String, String> params = UrlUtil.addSpotParameter(UrlUtil.getUrlParameter(language),
+        spotFlags);
+    params = UrlUtil.addSpotSortingParameter(params, sortFlags);
+    params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
+    params.put("filter[name]", name);
 
     Call<ResponseBody> call = enduserApiInterface.getSpots(params);
     callHandler.enqueListCall(call, callback);
