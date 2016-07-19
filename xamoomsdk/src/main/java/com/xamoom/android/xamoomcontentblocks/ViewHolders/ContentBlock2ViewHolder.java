@@ -1,26 +1,32 @@
 package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.util.LruCache;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.youtube.player.YouTubeInitializationResult;
-import com.google.android.youtube.player.YouTubeIntents;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 import com.google.android.youtube.player.YouTubeThumbnailLoader;
 import com.google.android.youtube.player.YouTubeThumbnailView;
 import com.xamoom.android.xamoomsdk.R;
@@ -35,14 +41,20 @@ import java.util.regex.Pattern;
  * VideoBlock.
  */
 public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+  private final static String RESET_YOUTUBE = "ContentBlock2ViewHolder.RESET_YOUTUBE";
   private final static String youtubeRegex = "(?:youtube(?:-nocookie)?\\.com\\/(?:[^\\/\\n\\s]+\\/\\S+\\/|(?:v|e(?:mbed)?)\\/|\\S*?[?&]v=)|youtu\\.be\\/)([a-zA-Z0-9_-]{11})";
   private final static String vimeoRegex = "^.*(?:vimeo.com)\\/(?:channels\\/|groups\\/[^\\/]*\\/videos\\/|album\\/\\d+\\/video\\/|video\\/|)(\\d+)(?:$|\\/|\\?)";
 
+  private static int staticId = 1;
+  private int frameId;
+
   private Context mContext;
+  private Fragment mFragment;
   private Style mStyle;
   private TextView mTitleTextView;
   private WebView mVideoWebView;
   private View mWebViewOverlay;
+  private FrameLayout mFramelayout;
   private YouTubeThumbnailView mYouTubeThumbnailView;
   private ImageView mVideoPlayImageView;
   private ProgressBar mProgressBar;
@@ -51,17 +63,21 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
   private LruCache<String, Bitmap> mBitmapCache;
   private int mTextColor = Color.BLACK;
 
-  public ContentBlock2ViewHolder(View itemView, Context context, String youtubeApiKey, LruCache<String, Bitmap> bitmapCache) {
+  public ContentBlock2ViewHolder(View itemView, Fragment fragment, String youtubeApiKey,
+                                 LruCache<String, Bitmap> bitmapCache) {
     super(itemView);
+
     mYoutubeApiKey = youtubeApiKey;
-    mContext = context;
+    mContext = fragment.getContext();
+    mFragment = fragment;
     mBitmapCache = bitmapCache;
 
     mTitleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
+    mFramelayout = (FrameLayout) itemView.findViewById(R.id.youtube_frame_layout);
+    mYouTubeThumbnailView = (YouTubeThumbnailView) itemView.findViewById(R.id.youtube_thumbnail_view);
     mVideoWebView = (WebView) itemView.findViewById(R.id.videoWebView);
     mVideoWebView.setWebViewClient(new WebViewClient());
     mWebViewOverlay = itemView.findViewById(R.id.webViewOverlay);
-    mYouTubeThumbnailView = (YouTubeThumbnailView) itemView.findViewById(R.id.youtube_thumbnail_view);
     mVideoPlayImageView = (ImageView) itemView.findViewById(R.id.video_play_image_view);
     mProgressBar = (ProgressBar) itemView.findViewById(R.id.video_progress_bar);
 
@@ -73,12 +89,10 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
 
   public void setupContentBlock(ContentBlock contentBlock) {
     mTitleTextView.setVisibility(View.GONE);
-    mYouTubeThumbnailView.setVisibility(View.GONE);
     mVideoWebView.setVisibility(View.GONE);
     mWebViewOverlay.setVisibility(View.GONE);
     mVideoPlayImageView.setVisibility(View.GONE);
     mProgressBar.setVisibility(View.GONE);
-
     mYouTubeThumbnailView.setImageBitmap(null);
 
     if(contentBlock.getTitle() != null && !contentBlock.getTitle().equalsIgnoreCase("")) {
@@ -88,7 +102,6 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
     }
 
     if(getYoutubeVideoId(contentBlock.getVideoUrl()) != null) {
-      mYouTubeThumbnailView.setVisibility(View.VISIBLE);
       mVideoPlayImageView.setVisibility(View.VISIBLE);
       mProgressBar.setVisibility(View.VISIBLE);
       setupYoutube(contentBlock);
@@ -98,7 +111,6 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
       setupVimeo(contentBlock);
     } else {
       mProgressBar.setVisibility(View.VISIBLE);
-      mYouTubeThumbnailView.setVisibility(View.VISIBLE);
       mVideoPlayImageView.setVisibility(View.VISIBLE);
       setupHTMLPlayer(contentBlock);
     }
@@ -121,12 +133,10 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
 
   private void setupHTMLPlayer(final ContentBlock contentBlock) {
     if (mBitmapCache.get(contentBlock.getVideoUrl()) != null) {
-      mYouTubeThumbnailView.setImageBitmap(mBitmapCache.get(contentBlock.getVideoUrl()));
       mProgressBar.setVisibility(View.GONE);
     } else {
       new VideoThumbnailAsync().execute(contentBlock.getVideoUrl());
     }
-
 
     mIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(contentBlock.getVideoUrl()));
     mIntent.setDataAndType(Uri.parse(contentBlock.getVideoUrl()), "video/mp4");
@@ -161,7 +171,65 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
       }
     });
 
-    mIntent = YouTubeIntents.createPlayVideoIntent(mContext, youtubeVideoId);
+    mYouTubeThumbnailView.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        sendResetYoutubeBroadcast();
+        LocalBroadcastManager.getInstance(mContext).registerReceiver(mResetYoutubeBroadCastReciever,
+            new IntentFilter(RESET_YOUTUBE));
+
+        mVideoPlayImageView.setVisibility(View.GONE);
+
+        final FrameLayout frame = new FrameLayout(mContext);
+        frameId = staticId;
+        frame.setId(frameId);
+        //staticId++;
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
+            FrameLayout.LayoutParams.MATCH_PARENT);
+        frame.setLayoutParams(layoutParams);
+
+        mFramelayout.addView(frame);
+
+        final YouTubePlayerSupportFragment youTubePlayerSupportFragment = YouTubePlayerSupportFragment.newInstance();
+        mFragment.getChildFragmentManager()
+            .beginTransaction()
+            .replace(frame.getId(), youTubePlayerSupportFragment)
+            .commit();
+
+        youTubePlayerSupportFragment.initialize(mYoutubeApiKey, new YouTubePlayer.OnInitializedListener() {
+          @Override
+          public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
+            youTubePlayer.loadVideo(youtubeVideoId);
+            mProgressBar.setVisibility(View.GONE);
+          }
+
+          @Override
+          public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
+            mProgressBar.setVisibility(View.GONE);
+            Log.e("tag", youTubeInitializationResult.toString());
+          }
+        });
+      }
+    });
+  }
+
+  public BroadcastReceiver mResetYoutubeBroadCastReciever = new BroadcastReceiver() {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+      resetYoutube();
+      LocalBroadcastManager.getInstance(mContext).unregisterReceiver(mResetYoutubeBroadCastReciever);
+      mVideoPlayImageView.setVisibility(View.VISIBLE );
+
+    }
+  };
+
+  public void sendResetYoutubeBroadcast() {
+    Intent intent = new Intent(RESET_YOUTUBE);
+    LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
+  }
+
+  public void resetYoutube() {
+    mFramelayout.removeAllViews();
   }
 
   private String getYoutubeVideoId(String videoUrl) {
@@ -206,7 +274,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
     @Override
     protected void onPostExecute(Bitmap bitmap) {
       super.onPostExecute(bitmap);
-      mYouTubeThumbnailView.setImageBitmap(bitmap);
+      //mYouTubeThumbnailView.setImageBitmap(bitmap);
       if (videoUrl != null && bitmap != null) {
         mBitmapCache.put(videoUrl, bitmap);
       }
@@ -235,6 +303,10 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
       }
       return bitmap;
     }
+  }
+
+  public void unregisterBroadcast() {
+    LocalBroadcastManager.getInstance(mContext).unregisterReceiver(mResetYoutubeBroadCastReciever);
   }
 
   public void setStyle(Style style) {

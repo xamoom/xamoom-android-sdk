@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock1ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock2ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
@@ -37,7 +36,7 @@ public class ContentBlock2Adapter implements AdapterDelegate<List<ContentBlock>>
       XamoomContentFragment.OnXamoomContentFragmentInteractionListener onXamoomContentFragmentInteractionListener) {
     View view = LayoutInflater.from(parent.getContext())
         .inflate(R.layout.content_block_2_layout, parent, false);
-    return new ContentBlock2ViewHolder(view, fragment.getContext(), youtubeApiKey, bitmapCache);
+    return new ContentBlock2ViewHolder(view, fragment, youtubeApiKey, bitmapCache);
   }
 
   @Override

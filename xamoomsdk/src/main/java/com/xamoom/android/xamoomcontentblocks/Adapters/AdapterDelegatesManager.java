@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.ViewGroup;
 
+import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock2ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.EnduserApi;
@@ -86,4 +87,5 @@ public class AdapterDelegatesManager<T> {
   public void setFallbackAdapter(AdapterDelegate fallbackAdapter) {
     this.fallbackAdapter = fallbackAdapter;
   }
+
 }

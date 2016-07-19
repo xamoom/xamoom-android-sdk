@@ -5,9 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.xamoom.android.xamoomcontentblocks.Adapters.ContentBlock0Adapter;
 import com.xamoom.android.xamoomcontentblocks.Adapters.ContentBlock1Adapter;
-import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock0ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock1ViewHolder;
 import com.xamoom.android.xamoomsdk.BuildConfig;
 import com.xamoom.android.xamoomsdk.R;

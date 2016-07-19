@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
-import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock8ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock9ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.EnduserApi;

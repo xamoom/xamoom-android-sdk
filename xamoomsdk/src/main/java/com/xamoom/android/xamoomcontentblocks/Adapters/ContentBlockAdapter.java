@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock2ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.EnduserApi;
@@ -94,6 +95,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
   @Override
   public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+    cleanViewHolders(recyclerView);
     mFragment = null;
     mContentBlocks = null;
     mDelegatesManager = null;
@@ -102,6 +104,16 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     mOnContentBlock3ViewHolderInteractionListener = null;
     mOnXamoomContentFragmentInteractionListener = null;
     super.onDetachedFromRecyclerView(recyclerView);
+  }
+
+  private void cleanViewHolders(RecyclerView recyclerView) {
+    for (int i = 0; i < mContentBlocks.size(); i++) {
+      RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(i);
+      if (viewHolder != null && viewHolder.getClass() == ContentBlock2ViewHolder.class) {
+        ContentBlock2ViewHolder contentBlock2ViewHolder = (ContentBlock2ViewHolder) viewHolder;
+        contentBlock2ViewHolder.unregisterBroadcast();
+      }
+    }
   }
 
   public AdapterDelegatesManager getDelegatesManager() {

@@ -8,8 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.xamoom.android.xamoomcontentblocks.Adapters.ContentBlock2Adapter;
-import com.xamoom.android.xamoomcontentblocks.Adapters.ContentBlock4Adapter;
 import com.xamoom.android.xamoomcontentblocks.Adapters.ContentBlock4Adapter;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock4ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;

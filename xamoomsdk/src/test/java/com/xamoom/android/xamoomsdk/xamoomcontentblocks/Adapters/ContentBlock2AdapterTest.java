@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.xamoom.android.xamoomcontentblocks.Adapters.ContentBlock2Adapter;
-import com.xamoom.android.xamoomcontentblocks.Adapters.ContentBlock2Adapter;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock2ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.BuildConfig;
