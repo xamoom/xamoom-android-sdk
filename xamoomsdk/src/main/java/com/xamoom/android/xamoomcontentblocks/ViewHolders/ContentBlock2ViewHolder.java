@@ -152,7 +152,6 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
     if (savedBitmap != null) {
       mProgressBar.setVisibility(View.GONE);
       mYouTubeThumbnailView.setImageBitmap(savedBitmap);
-      Log.e("tag", "Loaded bitmap from cache.");
     } else {
       mYouTubeThumbnailView.initialize(mYoutubeApiKey, new YouTubeThumbnailView.OnInitializedListener() {
         @Override
@@ -324,11 +323,53 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
     LocalBroadcastManager.getInstance(mContext).unregisterReceiver(mResetYoutubeBroadCastReciever);
   }
 
+  // getters & setters
+
   public void setStyle(Style style) {
     mStyle = style;
 
     if (style != null && style.getForegroundFontColor() != null) {
       mTextColor = Color.parseColor(style.getForegroundFontColor());
     }
+  }
+
+  public TextView getTitleTextView() {
+    return mTitleTextView;
+  }
+
+  public WebView getVideoWebView() {
+    return mVideoWebView;
+  }
+
+  public View getWebViewOverlay() {
+    return mWebViewOverlay;
+  }
+
+  public FrameLayout getFramelayout() {
+    return mFramelayout;
+  }
+
+  public YouTubeThumbnailView getYouTubeThumbnailView() {
+    return mYouTubeThumbnailView;
+  }
+
+  public ImageView getVideoPlayImageView() {
+    return mVideoPlayImageView;
+  }
+
+  public ProgressBar getProgressBar() {
+    return mProgressBar;
+  }
+
+  public int getTextColor() {
+    return mTextColor;
+  }
+
+  public LruCache<String, Bitmap> getBitmapCache() {
+    return mBitmapCache;
+  }
+
+  public Style getStyle() {
+    return mStyle;
   }
 }

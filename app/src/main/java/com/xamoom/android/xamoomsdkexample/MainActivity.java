@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
           @Override
           public void finished(Content result) {
             Log.v(TAG, "getContent: " + result);
-            XamoomContentFragment xamoomFragment = XamoomContentFragment.newInstance("AIzaSyBNZUh3-dj4YYY9-csOtQeHG_MpoE8x69Q"); //create new instance
+            XamoomContentFragment xamoomFragment = XamoomContentFragment.newInstance(getResources().getString(R.string.youtube_key)); //create new instance
             xamoomFragment.setEnduserApi(mEnduserApi);
             xamoomFragment.setDisplayAllStoreLinks(true);
             xamoomFragment.setContent(result, false);
