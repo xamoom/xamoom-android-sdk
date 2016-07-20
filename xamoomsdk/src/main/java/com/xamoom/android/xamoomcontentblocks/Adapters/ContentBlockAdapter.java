@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.LruCache;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.view.ViewGroup;
 
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock2ViewHolder;
@@ -43,7 +42,9 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
    * Constructor for the Adapter.
    * @param fragment Fragment with the recyclerView in it.
    * @param contentBlocks ContentBlocks to display.
+   * @param showSpotMapContentLinks Toggle links from your spotmap spots to content.
    * @param youtubeApiKey Youtube api key from Google Developer Console.
+   * @param contentBlock3ViewHolderInteractionListener Listener for viewHolder3 interactions.
    */
   public ContentBlockAdapter(Fragment fragment, List<ContentBlock> contentBlocks,
                              boolean showSpotMapContentLinks, String youtubeApiKey,

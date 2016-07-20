@@ -3,8 +3,6 @@ package com.xamoom.android.xamoomsdk.Resource;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 
 import at.rags.morpheus.Annotations.Relationship;

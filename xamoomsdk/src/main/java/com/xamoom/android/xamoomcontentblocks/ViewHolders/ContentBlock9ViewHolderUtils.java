@@ -47,6 +47,7 @@ public class ContentBlock9ViewHolderUtils {
    * Returns the icon for mapMarker.
    *
    * @param customMarker base64 custom marker (mappin) from xamoom
+   * @param context Android context.
    * @return icon Bitmap of custom marker
    */
   public static Bitmap getIcon(String customMarker, Context context) {

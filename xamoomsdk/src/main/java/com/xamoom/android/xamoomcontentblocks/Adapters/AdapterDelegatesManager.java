@@ -5,16 +5,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.util.LruCache;
 import android.support.v4.util.SparseArrayCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.ViewGroup;
 
-import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock2ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.Resource.Style;
-
-import java.util.ArrayList;
 
 public class AdapterDelegatesManager<T> {
   private static final String TAG = AdapterDelegate.class.getSimpleName();
@@ -57,6 +53,8 @@ public class AdapterDelegatesManager<T> {
         throw new NullPointerException("No adapter registered for viewType " + viewType);
       }
     }
+
+    assert delegate != null;
 
     RecyclerView.ViewHolder vh = delegate.onCreateViewHolder(parent, fragment, enduserApi,
         youtubeApiKey, bitmapCache, contentCache, showContentLinks,

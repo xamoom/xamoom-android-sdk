@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
-import com.xamoom.android.xamoomsdk.Resource.Style;
 
 /**
  * DownloadBlock

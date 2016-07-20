@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
-import com.xamoom.android.xamoomsdk.Resource.Style;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;

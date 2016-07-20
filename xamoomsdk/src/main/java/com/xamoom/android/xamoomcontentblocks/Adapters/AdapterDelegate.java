@@ -7,7 +7,6 @@ import android.support.v4.util.LruCache;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
-import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock2ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.EnduserApi;
@@ -15,19 +14,29 @@ import com.xamoom.android.xamoomsdk.Resource.Style;
 
 public interface AdapterDelegate<T> {
   /**
+   * Returns if the item on position is the right viewType for the adapter.
    *
-   * @param items
-   * @param position
-   * @return
+   * @param items List of contentblock items.
+   * @param position Position for recyclerview.
+   * @return true if adapter is for viewtype
    */
-  public boolean isForViewType(@NonNull T items, int position);
+  boolean isForViewType(@NonNull T items, int position);
 
   /**
+   * Return new instance of custom viewholder.
    *
-   * @param parent
-   * @return
+   * @param parent Parent view.
+   * @param fragment Current XamoomContentFragment instance.
+   * @param enduserApi Instance of {@link EnduserApi}.
+   * @param youtubeApiKey Youtube Api key.
+   * @param bitmapCache LruCache for bitmaps.
+   * @param contentCache LruCache for contents.
+   * @param showContentLinks Toggle links from your spotmap spots to content.
+   * @param onContentBlock3ViewHolderInteractionListener Listener for viewHolder3 interactions.
+   * @param onXamoomContentFragmentInteractionListener Listener for XamoomContent interactions.
+   * @return Custom contentBlock viewholder.
    */
-  @NonNull public RecyclerView.ViewHolder onCreateViewHolder(
+  @NonNull RecyclerView.ViewHolder onCreateViewHolder(
       ViewGroup parent, Fragment fragment, EnduserApi enduserApi, String youtubeApiKey,
       LruCache bitmapCache, LruCache contentCache, boolean showContentLinks,
       ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener
@@ -36,11 +45,13 @@ public interface AdapterDelegate<T> {
           onXamoomContentFragmentInteractionListener);
 
   /**
+   * Called before recyclerview shows viewholder.
    *
-   * @param items
-   * @param position
-   * @param holder
+   * @param items List of contentblock items.
+   * @param position Position for recyclerview.
+   * @param holder Custom contentBlock viewholder.
+   * @param style Style from xamoom to style content.
    */
-  public void onBindViewHolder(@NonNull T items, int position,
-                               @NonNull RecyclerView.ViewHolder holder, Style style);
+  void onBindViewHolder(@NonNull T items, int position,
+                        @NonNull RecyclerView.ViewHolder holder, Style style);
 }

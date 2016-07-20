@@ -10,9 +10,9 @@ import com.bumptech.glide.request.target.ImageViewTarget;
 import com.bumptech.glide.request.target.Target;
 
 /**
- * Listener which updates the {@link ImageView} to be software rendered,
- * because SVG/{@link android.graphics.Picture Picture}
- * can't render on a hardware backed {@link android.graphics.Canvas Canvas}.
+ * Listener which updates the {@link android.widget.ImageView} to be software rendered,
+ * because SVG/{@link android.graphics.Picture}
+ * can't render on a hardware backed {@link android.graphics.Canvas}.
  *
  * @param <T> not used, here to prevent unchecked warnings at usage
  */
