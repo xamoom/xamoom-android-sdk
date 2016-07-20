@@ -53,9 +53,7 @@ public class AdapterDelegatesManager<T> {
         throw new NullPointerException("No adapter registered for viewType " + viewType);
       }
     }
-
-    assert delegate != null;
-
+    
     RecyclerView.ViewHolder vh = delegate.onCreateViewHolder(parent, fragment, enduserApi,
         youtubeApiKey, bitmapCache, contentCache, showContentLinks,
         onContentBlock3ViewHolderInteractionListener, onXamoomContentFragmentInteractionListener);
