@@ -4,8 +4,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -45,8 +49,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
   private final static String youtubeRegex = "(?:youtube(?:-nocookie)?\\.com\\/(?:[^\\/\\n\\s]+\\/\\S+\\/|(?:v|e(?:mbed)?)\\/|\\S*?[?&]v=)|youtu\\.be\\/)([a-zA-Z0-9_-]{11})";
   private final static String vimeoRegex = "^.*(?:vimeo.com)\\/(?:channels\\/|groups\\/[^\\/]*\\/videos\\/|album\\/\\d+\\/video\\/|video\\/|)(\\d+)(?:$|\\/|\\?)";
 
-  private static int staticId = 1;
-  private int frameId;
+  private int frameId = 1;
 
   private Context mContext;
   private Fragment mFragment;
@@ -145,31 +148,44 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
   private void setupYoutube(ContentBlock contentBlock) {
     final String youtubeVideoId = getYoutubeVideoId(contentBlock.getVideoUrl());
 
-    mYouTubeThumbnailView.initialize(mYoutubeApiKey, new YouTubeThumbnailView.OnInitializedListener() {
-      @Override
-      public void onInitializationSuccess(YouTubeThumbnailView youTubeThumbnailView, final YouTubeThumbnailLoader youTubeThumbnailLoader) {
-        youTubeThumbnailLoader.setVideo(youtubeVideoId);
-        youTubeThumbnailLoader.setOnThumbnailLoadedListener(new YouTubeThumbnailLoader.OnThumbnailLoadedListener() {
-          @Override
-          public void onThumbnailLoaded(YouTubeThumbnailView youTubeThumbnailView, String s) {
-            mProgressBar.setVisibility(View.GONE);
-            youTubeThumbnailLoader.release();
-          }
+    Bitmap savedBitmap = mBitmapCache.get(youtubeVideoId);
+    if (savedBitmap != null) {
+      mProgressBar.setVisibility(View.GONE);
+      mYouTubeThumbnailView.setImageBitmap(savedBitmap);
+      Log.e("tag", "Loaded bitmap from cache.");
+    } else {
+      mYouTubeThumbnailView.initialize(mYoutubeApiKey, new YouTubeThumbnailView.OnInitializedListener() {
+        @Override
+        public void onInitializationSuccess(YouTubeThumbnailView youTubeThumbnailView, final YouTubeThumbnailLoader youTubeThumbnailLoader) {
+          youTubeThumbnailLoader.setVideo(youtubeVideoId);
+          youTubeThumbnailLoader.setOnThumbnailLoadedListener(new YouTubeThumbnailLoader.OnThumbnailLoadedListener() {
+            @Override
+            public void onThumbnailLoaded(YouTubeThumbnailView youTubeThumbnailView, String s) {
+              mProgressBar.setVisibility(View.GONE);
 
-          @Override
-          public void onThumbnailError(YouTubeThumbnailView youTubeThumbnailView, YouTubeThumbnailLoader.ErrorReason errorReason) {
-            youTubeThumbnailView.setBackgroundColor(Color.BLACK);
-            mProgressBar.setVisibility(View.GONE);
-            youTubeThumbnailLoader.release();
-          }
-        });
-      }
+              Drawable drawable = mYouTubeThumbnailView.getDrawable();
+              if (drawable instanceof BitmapDrawable) {
+                BitmapDrawable bitmapDrawable = (BitmapDrawable)drawable;
+                mBitmapCache.put(youtubeVideoId, bitmapDrawable.getBitmap());
+              }
+              youTubeThumbnailLoader.release();
+            }
 
-      @Override
-      public void onInitializationFailure(YouTubeThumbnailView youTubeThumbnailView, YouTubeInitializationResult youTubeInitializationResult) {
-        mProgressBar.setVisibility(View.GONE);
-      }
-    });
+            @Override
+            public void onThumbnailError(YouTubeThumbnailView youTubeThumbnailView, YouTubeThumbnailLoader.ErrorReason errorReason) {
+              youTubeThumbnailView.setBackgroundColor(Color.BLACK);
+              mProgressBar.setVisibility(View.GONE);
+              youTubeThumbnailLoader.release();
+            }
+          });
+        }
+
+        @Override
+        public void onInitializationFailure(YouTubeThumbnailView youTubeThumbnailView, YouTubeInitializationResult youTubeInitializationResult) {
+          mProgressBar.setVisibility(View.GONE);
+        }
+      });
+    }
 
     mYouTubeThumbnailView.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -181,11 +197,10 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
         mVideoPlayImageView.setVisibility(View.GONE);
 
         final FrameLayout frame = new FrameLayout(mContext);
-        frameId = staticId;
         frame.setId(frameId);
-        //staticId++;
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
-            FrameLayout.LayoutParams.MATCH_PARENT);
+
+        FrameLayout.LayoutParams layoutParams = layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
+              FrameLayout.LayoutParams.MATCH_PARENT);
         frame.setLayoutParams(layoutParams);
 
         mFramelayout.addView(frame);
