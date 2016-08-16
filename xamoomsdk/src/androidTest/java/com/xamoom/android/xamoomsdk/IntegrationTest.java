@@ -86,7 +86,7 @@ public class IntegrationTest extends InstrumentationTestCase {
         assertEquals(result.getDescription(), "Test");
         assertEquals(result.getLanguage(), "de");
         assertEquals(result.getTags(), checkTags);
-        assertEquals(result.getPublicImageUrl(), "https://storage.googleapis.com/xamoom-files-dev/mobile/e7f670906b464ea58352d90d3c4674fa.jpg?v=dc8c0f42a508b67a3f95b2f84db798fe43181c51df9bb3797f4f39f4adab64800a7df9fc2d8938d9303708afae9ce5e24e6eea065b95e60cfe94d422a3cdffbc");
+        assertTrue(result.getPublicImageUrl().contains("https://storage.googleapis.com/xamoom-files-dev/mobile/e7f670906b464ea58352d90d3c4674fa.jpg"));
         assertEquals(result.getTitle(), "DO NOT TOUCH | APP | Testsite 1");
 
         assertEquals(result.getSystem().getId(), "5755996320301056");
