@@ -114,6 +114,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
       setupVimeo(contentBlock);
     } else {
       mProgressBar.setVisibility(View.VISIBLE);
+      mYouTubeThumbnailView.setVisibility(View.VISIBLE);
       mVideoPlayImageView.setVisibility(View.VISIBLE);
       setupHTMLPlayer(contentBlock);
     }
@@ -137,6 +138,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
   private void setupHTMLPlayer(final ContentBlock contentBlock) {
     if (mBitmapCache.get(contentBlock.getVideoUrl()) != null) {
       mProgressBar.setVisibility(View.GONE);
+      mYouTubeThumbnailView.setImageBitmap(mBitmapCache.get(contentBlock.getVideoUrl()));
     } else {
       new VideoThumbnailAsync().execute(contentBlock.getVideoUrl());
     }
@@ -233,7 +235,6 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
       resetYoutube();
       LocalBroadcastManager.getInstance(mContext).unregisterReceiver(mResetYoutubeBroadCastReciever);
       mVideoPlayImageView.setVisibility(View.VISIBLE );
-
     }
   };
 
@@ -288,7 +289,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
     @Override
     protected void onPostExecute(Bitmap bitmap) {
       super.onPostExecute(bitmap);
-      //mYouTubeThumbnailView.setImageBitmap(bitmap);
+      mYouTubeThumbnailView.setImageBitmap(bitmap);
       if (videoUrl != null && bitmap != null) {
         mBitmapCache.put(videoUrl, bitmap);
       }
