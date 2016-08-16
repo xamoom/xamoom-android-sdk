@@ -31,6 +31,7 @@ import android.widget.TextView;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
+import com.google.android.youtube.player.YouTubeStandalonePlayer;
 import com.google.android.youtube.player.YouTubeThumbnailLoader;
 import com.google.android.youtube.player.YouTubeThumbnailView;
 import com.xamoom.android.xamoomsdk.R;
@@ -209,14 +210,27 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
         final YouTubePlayerSupportFragment youTubePlayerSupportFragment = YouTubePlayerSupportFragment.newInstance();
         mFragment.getChildFragmentManager()
             .beginTransaction()
-            .replace(frame.getId(), youTubePlayerSupportFragment)
+            .add(frame.getId(), youTubePlayerSupportFragment)
             .commit();
 
         youTubePlayerSupportFragment.initialize(mYoutubeApiKey, new YouTubePlayer.OnInitializedListener() {
           @Override
-          public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
+          public void onInitializationSuccess(YouTubePlayer.Provider provider, final YouTubePlayer youTubePlayer, boolean b) {
+            youTubePlayer.setFullscreenControlFlags(YouTubePlayer.FULLSCREEN_FLAG_CUSTOM_LAYOUT);
+
             youTubePlayer.loadVideo(youtubeVideoId);
             mProgressBar.setVisibility(View.GONE);
+
+            youTubePlayer.setOnFullscreenListener(new YouTubePlayer.OnFullscreenListener() {
+              @Override
+              public void onFullscreen(boolean enterFullscreen) {
+                if (enterFullscreen) {
+                  Intent intent = YouTubeStandalonePlayer.createVideoIntent(mFragment.getActivity(),
+                      mYoutubeApiKey, youtubeVideoId, youTubePlayer.getCurrentTimeMillis(), true, false);
+                  mFragment.getActivity().startActivity(intent);
+                }
+              }
+            });
           }
 
           @Override
