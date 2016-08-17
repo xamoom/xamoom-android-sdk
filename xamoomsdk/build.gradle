@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
 
-version = "2.2.0"
+version = "2.2.1"
 group = "com.xamoom.android"
 
 android {
@@ -10,8 +10,8 @@ android {
 	defaultConfig {
 		minSdkVersion 18
 		targetSdkVersion 23
-		versionCode 2
-		versionName "2.2.0"
+		versionCode 3
+		versionName "2.2.1"
 		multiDexEnabled true
 	}
 	buildTypes {
@@ -69,7 +69,7 @@ ext {
 	siteUrl = 'https://github.com/xamoom/xamoom-android-sdk'
 	gitUrl = 'https://github.com/xamoom/xamoom-android-sdk.git'
 
-	libraryVersion = '2.2.0'
+	libraryVersion = '2.2.1'
 	developerId = 'xamoom-raphael'
 	developerName = 'Raphael Seher'
 	developerEmail = 'raphael@xamoom.com'
