@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -194,7 +195,8 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
             xamoomFragment.setDisplayAllStoreLinks(true);
             xamoomFragment.setContent(result, false);
             xamoomFragment.setShowSpotMapContentLinks(true);
-            xamoomFragment.setStyle(mStyle);
+            //xamoomFragment.setStyle(mStyle);
+            xamoomFragment.setBackgroundColor(Color.TRANSPARENT);
             //xamoomFragment.getContentBlockAdapter().getDelegatesManager().addDelegate(0, new CustomContentBlock0Adapter());
             getSupportFragmentManager().beginTransaction()
                 .replace(R.id.main_frame, xamoomFragment, "XamoomFragment")
@@ -399,7 +401,7 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
     xamoomFragment.setDisplayAllStoreLinks(true);
     xamoomFragment.setContent(content);
     xamoomFragment.setShowSpotMapContentLinks(true);
-    xamoomFragment.setStyle(mStyle);
+    //xamoomFragment.setStyle(mStyle);
     getSupportFragmentManager().beginTransaction()
         .replace(R.id.main_frame, xamoomFragment, "XamoomFragment")
         .addToBackStack(null)

@@ -4,11 +4,13 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,13 +56,14 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   private static final String ENDUSER_API = "0004";
   private static final int WRITE_STORAGE_PERMISSION = 0;
 
+  private View mRootView;
   private EnduserApi mEnduserApi;
   private RecyclerView mRecyclerView;
   private ContentBlockAdapter mContentBlockAdapter;
   private Content mContent;
   private ArrayList<ContentBlock> mContentBlocks = new ArrayList<>();
   private String mYoutubeApiKey;
-  private int mBackgroundColor;
+  private int mBackgroundColor = Color.WHITE;
 
   private boolean displayAllStoreLinks = false;
   private boolean showSpotMapContentLinks = false;
@@ -110,12 +113,13 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.fragment_xamoom_content, container, false);
-    mRecyclerView = (RecyclerView) view.findViewById(R.id.contentblock_recycler_view);
+    mRootView = inflater.inflate(R.layout.fragment_xamoom_content, container, false);
+    mRootView.setBackgroundColor(mBackgroundColor);
 
+    mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.contentblock_recycler_view);
     setupRecyclerView();
 
-    return view;
+    return mRootView;
   }
 
   @Override
@@ -162,9 +166,6 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
     mRecyclerView.setLayoutManager(
         new LinearLayoutManager(this.getActivity().getApplicationContext()));
     mRecyclerView.setAdapter(mContentBlockAdapter);
-    if (mBackgroundColor != 0) {
-      mRecyclerView.setBackgroundColor(mBackgroundColor);
-    }
   }
 
   /**
@@ -338,6 +339,14 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
 
     if(!displayAllStoreLinks) {
       mContentBlocks = removeStoreLinks(mContentBlocks);
+    }
+  }
+
+  public void setBackgroundColor(int backgroundColor) {
+    mBackgroundColor = backgroundColor;
+
+    if (mRootView != null) {
+      mRootView.setBackgroundColor(backgroundColor);
     }
   }
 
