@@ -50,8 +50,6 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
   private final static String youtubeRegex = "(?:youtube(?:-nocookie)?\\.com\\/(?:[^\\/\\n\\s]+\\/\\S+\\/|(?:v|e(?:mbed)?)\\/|\\S*?[?&]v=)|youtu\\.be\\/)([a-zA-Z0-9_-]{11})";
   private final static String vimeoRegex = "^.*(?:vimeo.com)\\/(?:channels\\/|groups\\/[^\\/]*\\/videos\\/|album\\/\\d+\\/video\\/|video\\/|)(\\d+)(?:$|\\/|\\?)";
 
-  private int frameId = 1;
-
   private Context mContext;
   private Fragment mFragment;
   private Style mStyle;
@@ -199,13 +197,14 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
         mVideoPlayImageView.setVisibility(View.GONE);
 
         final FrameLayout frame = new FrameLayout(mContext);
-        frame.setId(frameId);
+        frame.setId(R.id.youtube_fragment_id);
 
         FrameLayout.LayoutParams layoutParams = layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
               FrameLayout.LayoutParams.MATCH_PARENT);
         frame.setLayoutParams(layoutParams);
 
         mFramelayout.addView(frame);
+
 
         final YouTubePlayerSupportFragment youTubePlayerSupportFragment = YouTubePlayerSupportFragment.newInstance();
         mFragment.getChildFragmentManager()
@@ -248,7 +247,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
     public void onReceive(Context context, Intent intent) {
       resetYoutube();
       LocalBroadcastManager.getInstance(mContext).unregisterReceiver(mResetYoutubeBroadCastReciever);
-      mVideoPlayImageView.setVisibility(View.VISIBLE );
+      mVideoPlayImageView.setVisibility(View.VISIBLE);
     }
   };
 

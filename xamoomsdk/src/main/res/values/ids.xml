@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="map_fragment_id" type="id"/>
+    <item name="youtube_fragment_id" type="id"/>
 </resources>
