@@ -3,11 +3,13 @@ package com.xamoom.android.xamoomcontentblocks;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,6 +20,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
 import com.xamoom.android.xamoomcontentblocks.Adapters.ContentBlockAdapter;
+import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock2ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.R;
@@ -131,6 +134,13 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
         mContentBlockAdapter.notifyDataSetChanged();
       }
     }
+  }
+
+  @Override
+  public void onPause() {
+    Intent intent = new Intent(ContentBlock2ViewHolder.RESET_YOUTUBE);
+    LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
+    super.onPause();
   }
 
   @Override

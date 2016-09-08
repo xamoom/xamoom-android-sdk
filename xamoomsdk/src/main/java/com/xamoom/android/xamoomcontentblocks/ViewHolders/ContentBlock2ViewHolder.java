@@ -46,7 +46,7 @@ import java.util.regex.Pattern;
  * VideoBlock.
  */
 public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-  private final static String RESET_YOUTUBE = "ContentBlock2ViewHolder.RESET_YOUTUBE";
+  public final static String RESET_YOUTUBE = "ContentBlock2ViewHolder.RESET_YOUTUBE";
   private final static String youtubeRegex = "(?:youtube(?:-nocookie)?\\.com\\/(?:[^\\/\\n\\s]+\\/\\S+\\/|(?:v|e(?:mbed)?)\\/|\\S*?[?&]v=)|youtu\\.be\\/)([a-zA-Z0-9_-]{11})";
   private final static String vimeoRegex = "^.*(?:vimeo.com)\\/(?:channels\\/|groups\\/[^\\/]*\\/videos\\/|album\\/\\d+\\/video\\/|video\\/|)(\\d+)(?:$|\\/|\\?)";
 
