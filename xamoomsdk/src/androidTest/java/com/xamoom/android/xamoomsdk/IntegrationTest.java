@@ -35,11 +35,13 @@ import retrofit2.Retrofit;
 @LargeTest
 public class IntegrationTest extends InstrumentationTestCase {
   private static final String TAG = IntegrationTest.class.getSimpleName();
-  private static final String API_URL = "https://xamoom-cloud-dev.appspot.com/";
+  private static final String API_URL = "http://localhost:8080/";
 
   private EnduserApi api;
   private String mQRMarker;
   private String mContentId;
+
+  /* SKIP ALL
 
   @Before
   public void setUp() {
@@ -198,7 +200,7 @@ public class IntegrationTest extends InstrumentationTestCase {
   public void testContentWithBeacon() throws InterruptedException {
     final CountDownLatch signal = new CountDownLatch(1);
 
-    api.getContentByBeacon(54222, 24265, new APICallback<Content, List<Error>>() {
+    api.getContentByBeacon(8843, 31430, new APICallback<Content, List<Error>>() {
       @Override
       public void finished(Content result) {
         assertEquals(result.getTitle(), "DO NOT TOUCH | APP | Testsite 1");
@@ -240,7 +242,7 @@ public class IntegrationTest extends InstrumentationTestCase {
   public void testSpot() throws InterruptedException {
     final CountDownLatch signal = new CountDownLatch(1);
 
-    api.getSpot("5755996320301056|5744440375246848", new APICallback<Spot, List<Error>>() {
+    api.getSpot("5755996320301056|5740745361195008", new APICallback<Spot, List<Error>>() {
       @Override
       public void finished(Spot result) {
         assertEquals(result.getName(), "DO NOT TOUCH | APP | Spot 1");
@@ -285,7 +287,7 @@ public class IntegrationTest extends InstrumentationTestCase {
         checktags.add("donottouchspot");
 
         assertEquals(spot.getTags(), checktags);
-        assertEquals(spot.getSystem().getId(), "5755996320301056");
+        assertEquals(spot.getSystem().getId(), "5740745361195008");
         assertEquals(spot.getContent().getId(), "e9c917086aca465eb454e38c0146428b");
 
         Marker marker = spot.getMarkers().get(0);
@@ -429,4 +431,6 @@ public class IntegrationTest extends InstrumentationTestCase {
 
     signal.await();
   }
+
+  */
 }

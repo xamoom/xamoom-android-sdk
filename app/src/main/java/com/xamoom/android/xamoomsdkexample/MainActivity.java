@@ -56,8 +56,8 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
 
     setupEnduserApi();
 
-    //getContent();
-    //getContentOption();
+    getContent();
+    getContentOption();
     getContentLocationIdentifier();
     getContentsLocation();
     searchContent();
