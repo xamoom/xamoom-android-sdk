@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
         .client(httpClient)
         .build();
 
-    mEnduserApi = new EnduserApi(retrofit);
+    mEnduserApi = new EnduserApi(retrofit, getApplicationContext());
     EnduserApi.setSharedInstance(mEnduserApi);
   }
 

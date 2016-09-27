@@ -15,55 +15,31 @@ import retrofit2.http.QueryMap;
  */
 public interface EnduserApiInterface {
 
-  @Headers({"Content-Type: application/vnd.api+json",
-      "Accept: application/json",
-      "User-Agent: XamoomSDK Android",})
   @GET("_api/v2/consumer/contents/{id}")
   Call<ResponseBody> getContent(@Path("id") String contentId,
                                 @QueryMap Map<String, String> param);
 
-  @Headers({"Content-Type: application/vnd.api+json",
-      "Accept: application/json",
-      "User-Agent: XamoomSDK Android",})
   @GET("_api/v2/consumer/contents")
   Call<ResponseBody> getContents(@QueryMap Map<String, String> param);
 
-  @Headers({"Content-Type: application/vnd.api+json",
-      "Accept: application/json",
-      "User-Agent: XamoomSDK Android",})
   @GET("_api/v2/consumer/spots/{id}")
   Call<ResponseBody> getSpot(@Path("id") String spotId,
                                 @QueryMap Map<String, String> param);
 
-  @Headers({"Content-Type: application/vnd.api+json",
-      "Accept: application/json",
-      "User-Agent: XamoomSDK Android",})
   @GET("_api/v2/consumer/spots")
   Call<ResponseBody> getSpots(@QueryMap Map<String, String> param);
 
-  @Headers({"Content-Type: application/vnd.api+json",
-      "Accept: application/json",
-      "User-Agent: XamoomSDK Android",})
   @GET("_api/v2/consumer/systems")
   Call<ResponseBody> getSystem(@QueryMap Map<String, String> param);
 
-  @Headers({"Content-Type: application/vnd.api+json",
-      "Accept: application/json",
-      "User-Agent: XamoomSDK Android",})
   @GET("_api/v2/consumer/menus/{id}")
   Call<ResponseBody> getMenu(@Path("id") String systemId,
                              @QueryMap Map<String, String> param);
 
-  @Headers({"Content-Type: application/vnd.api+json",
-      "Accept: application/json",
-      "User-Agent: XamoomSDK Android",})
   @GET("_api/v2/consumer/settings/{id}")
   Call<ResponseBody> getSetting(@Path("id") String systemId,
                                 @QueryMap Map<String, String> param);
 
-  @Headers({"Content-Type: application/vnd.api+json",
-      "Accept: application/json",
-      "User-Agent: XamoomSDK Android",})
   @GET("_api/v2/consumer/styles/{id}")
   Call<ResponseBody> getStyle(@Path("id") String systemId,
                                  @QueryMap Map<String, String> param);

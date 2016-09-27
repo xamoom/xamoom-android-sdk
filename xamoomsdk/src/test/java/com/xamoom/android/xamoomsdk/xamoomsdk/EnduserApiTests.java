@@ -7,6 +7,7 @@ import com.xamoom.android.xamoomsdk.APIListCallback;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
+import com.xamoom.android.xamoomsdk.HTTPHeaderInterceptor;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.Menu;
 import com.xamoom.android.xamoomsdk.Resource.Spot;
@@ -34,6 +35,7 @@ import at.rags.morpheus.Error;
 import at.rags.morpheus.JsonApiObject;
 import at.rags.morpheus.Morpheus;
 import at.rags.morpheus.Resource;
+import okhttp3.OkHttpClient;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
@@ -41,6 +43,7 @@ import retrofit2.Retrofit;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.anyString;
@@ -61,10 +64,15 @@ public class EnduserApiTests {
   public void setup() {
     mMockWebServer = new MockWebServer();
 
+    OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
+    builder.addInterceptor(new HTTPHeaderInterceptor("UserAgent", "apikey"));
+    OkHttpClient httpClient = builder.build();
+
     Retrofit retrofit = new Retrofit.Builder()
+        .client(httpClient)
         .baseUrl(mMockWebServer.url(""))
         .build();
-    mEnduserApi = new EnduserApi(retrofit);
+    mEnduserApi = new EnduserApi(retrofit, null);
 
     mMockMorpheus = mock(Morpheus.class);
     mEnduserApi.getCallHandler().setMorpheus(mMockMorpheus);
@@ -81,7 +89,7 @@ public class EnduserApiTests {
 
   @Test
   public void testInitWithApikey() throws Exception {
-    EnduserApi enduserApi = new EnduserApi("test");
+    EnduserApi enduserApi = new EnduserApi("test", null);
 
     assertNotNull(enduserApi.getEnduserApiInterface());
     assertEquals(enduserApi.getSystemLanguage(), "en");
@@ -93,7 +101,7 @@ public class EnduserApiTests {
         .baseUrl("http://www.xamoom.com/")
         .build();
 
-    EnduserApi enduserApi = new EnduserApi(retrofit);
+    EnduserApi enduserApi = new EnduserApi(retrofit, null);
 
     assertNotNull(enduserApi.getEnduserApiInterface());
     assertEquals(enduserApi.getSystemLanguage(), "en");
@@ -101,14 +109,14 @@ public class EnduserApiTests {
 
   @Test
   public void testSharedInstanceApiKey() {
-    EnduserApi api = EnduserApi.getSharedInstance("key");
+    EnduserApi api = EnduserApi.getSharedInstance("key", null);
 
     assertNotNull(api);
   }
 
   @Test
   public void testSetSharedInstance() {
-    EnduserApi enduserApi = new EnduserApi("test");
+    EnduserApi enduserApi = new EnduserApi("test", null);
 
     EnduserApi.setSharedInstance(enduserApi);
     EnduserApi checkEnduserApi = EnduserApi.getSharedInstance();
@@ -124,7 +132,7 @@ public class EnduserApiTests {
 
   @Test(expected = NullPointerException.class)
   public void testSharedInstanceWithNullApikey() {
-    EnduserApi enduserApi = EnduserApi.getSharedInstance(null);
+    EnduserApi enduserApi = EnduserApi.getSharedInstance(null, null);
   }
 
   @Test
@@ -161,6 +169,9 @@ public class EnduserApiTests {
     assertTrue(checkContent[0].getTitle().equals("Test"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
     assertEquals("/_api/v2/consumer/contents/123456?lang=en", request1.getPath());
+
+    // TEST User-Agent
+    assertEquals(request1.getHeader("User-Agent"), "UserAgent");
   }
 
   @Test
