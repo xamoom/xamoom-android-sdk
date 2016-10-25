@@ -3,73 +3,87 @@ package com.xamoom.android.xamoomsdk.Storage.Database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteQueryBuilder;
 
+import com.xamoom.android.xamoomsdk.Resource.Style;
 import com.xamoom.android.xamoomsdk.Resource.System;
+import com.xamoom.android.xamoomsdk.Storage.TableContracts.OfflineEnduserContract;
 import com.xamoom.android.xamoomsdk.Storage.TableContracts.OfflineEnduserContract.SystemEntry;
 
 
 public class SystemDatabaseAdapter extends DatabaseAdapter {
 
+  public StyleDatabaseAdapter mStyleDatabaseAdapter;
+
+
   public SystemDatabaseAdapter(Context context) {
     super(context);
+    mStyleDatabaseAdapter = new StyleDatabaseAdapter(mContext);
   }
 
   public System getSystem(String jsonId) {
-    Cursor cursor = getCursor(jsonId);
+    open();
+    Cursor cursor = querySystems(jsonId);
 
     if (cursor.getCount() > 1) {
       // TODO: too many exception
     }
 
-    if (cursor.moveToFirst()) {
-      System system = new System();
-      system.setId(cursor.getString(
-          cursor.getColumnIndex(SystemEntry.COLUMN_NAME_JSON_ID)));
-      system.setName(cursor.getString(
-          cursor.getColumnIndex(SystemEntry.COLUMN_NAME_NAME)));
-      return system;
-    }
+    System system = cursorToSystem(cursor);
 
-    return null;
+    close();
+    return system;
   }
 
   public long insertOrUpdateSystem(System system) {
     ContentValues values = new ContentValues();
     values.put(SystemEntry.COLUMN_NAME_JSON_ID, system.getId());
     values.put(SystemEntry.COLUMN_NAME_NAME, system.getName());
+
+    long row = getPrimaryKey(system.getId());
+    if (row != -1) {
+      updateSystem(row, values);
+    } else {
+      open();
+      row = mDatabase.insert(SystemEntry.TABLE_NAME,
+          null, values);
+      close();
+    }
+
     if (system.getMenu() != null) {
       // TODO: insert menu
     }
 
     if (system.getStyle() != null) {
-      // TODO: insert style
+      long styleRow = mStyleDatabaseAdapter.insertOrUpdateStyle(system.getStyle());
+      if (styleRow != -1) {
+        values.put(SystemEntry.COLUMN_NAME_STYLE, system.getStyle().getId());
+        updateSystem(row, values);
+      }
     }
 
     if (system.getSystemSetting() != null) {
       // TODO: insert settings
     }
 
-    Cursor cursor = getCursor(system.getId());
-    if (cursor != null) {
-      if (cursor.moveToFirst()) {
-        long rows = updateSystem(cursor.getInt(
-            cursor.getColumnIndex(SystemEntry._ID)),
-            values);
-        return rows;
-      }
-    }
-
-    open();
-    long rows = mDatabase.insert(SystemEntry.TABLE_NAME,
-        null, values);
-    close();
-
-    return rows;
+    return row;
   }
 
-  public Cursor getCursor(String jsonId) {
-    open();
+  private long updateSystem(long id, ContentValues values) {
+    String selection = SystemEntry._ID + " = ?";
+    String[] selectionArgs = { String.valueOf(id) };
 
+    open();
+    int rowsUpdated = mDatabase.update(SystemEntry.TABLE_NAME,
+        values,
+        selection,
+        selectionArgs);
+    close();
+
+    return rowsUpdated;
+  }
+
+  private Cursor querySystems(String jsonId) {
     String selection = SystemEntry.COLUMN_NAME_JSON_ID + " = ?";
     String[] selectionArgs = { jsonId };
 
@@ -83,22 +97,41 @@ public class SystemDatabaseAdapter extends DatabaseAdapter {
         null
     );
 
-    close();
-
     return cursor;
   }
 
-  private long updateSystem(int id, ContentValues values) {
-    String selection = SystemEntry._ID + " = ?";
-    String[] selectionArgs = { String.valueOf(id) };
-
+  private long getPrimaryKey(String jsonId) {
     open();
-    int rowsUpdated = mDatabase.update(SystemEntry.TABLE_NAME,
-        values,
-        selection,
-        selectionArgs);
+    Cursor cursor = querySystems(jsonId);
+    if (cursor != null) {
+      if (cursor.moveToFirst()) {
+        long id = cursor.getLong(cursor.getColumnIndex(SystemEntry._ID));
+        close();
+        return id;
+      }
+    }
     close();
+    return -1;
+  }
 
-    return rowsUpdated;
+  private System cursorToSystem(Cursor cursor) {
+    if (cursor.moveToFirst()) {
+      System system = new System();
+      system.setId(cursor.getString(
+          cursor.getColumnIndex(SystemEntry.COLUMN_NAME_JSON_ID)));
+      system.setName(cursor.getString(
+          cursor.getColumnIndex(SystemEntry.COLUMN_NAME_NAME)));
+      system.setStyle(mStyleDatabaseAdapter.getStyle(
+          cursor.getString(cursor.getColumnIndex(SystemEntry.COLUMN_NAME_STYLE))));
+      return system;
+    }
+
+    return null;
+  }
+
+  // getter & setter
+
+  public void setStyleDatabaseAdapter(StyleDatabaseAdapter styleDatabaseAdapter) {
+    mStyleDatabaseAdapter = styleDatabaseAdapter;
   }
 }

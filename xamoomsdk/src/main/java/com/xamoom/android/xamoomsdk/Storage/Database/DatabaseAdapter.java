@@ -6,8 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 public class DatabaseAdapter {
-  private Context mContext;
   private DatabaseHelper mDatabaseHelper;
+  protected Context mContext;
   protected SQLiteDatabase mDatabase;
 
   public DatabaseAdapter(Context context) {

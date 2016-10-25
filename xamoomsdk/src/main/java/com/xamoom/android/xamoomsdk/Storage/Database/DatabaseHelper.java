@@ -5,7 +5,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.xamoom.android.xamoomsdk.Storage.TableContracts.OfflineEnduserContract;
-import com.xamoom.android.xamoomsdk.Storage.TableContracts.OfflineEnduserContract.SystemEntry;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -16,8 +15,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
   @Override
   public void onCreate(SQLiteDatabase sqLiteDatabase) {
-    sqLiteDatabase.execSQL(SystemEntry.SYSTEM_CREATE_TABLE);
-    // TODO: create other tables
+    sqLiteDatabase.execSQL(OfflineEnduserContract.SystemEntry.SYSTEM_CREATE_TABLE);
+    sqLiteDatabase.execSQL(OfflineEnduserContract.StyleEntry.STYLE_CREATE_TABLE);
   }
 
   @Override
