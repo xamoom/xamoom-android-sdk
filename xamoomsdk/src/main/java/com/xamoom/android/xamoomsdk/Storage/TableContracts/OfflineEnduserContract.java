@@ -4,6 +4,8 @@ import android.provider.BaseColumns;
 
 import com.xamoom.android.xamoomsdk.Resource.Style;
 
+import java.util.Set;
+
 /**
  * Created by raphaelseher on 24/10/2016.
  */
@@ -27,7 +29,7 @@ public class OfflineEnduserContract {
     public static final String COLUMN_NAME_SYSTEMSETTING = "setting";
     public static final String COLUMN_NAME_MENU = "menu";
 
-    public static final String SYSTEM_CREATE_TABLE =
+    public static final String CREATE_TABLE =
         "CREATE TABLE " + SystemEntry.TABLE_NAME + " (" +
             SystemEntry._ID + " INTEGER PRIMARY KEY," +
             SystemEntry.COLUMN_NAME_JSON_ID + TEXT_TYPE + COMMA_SEP +
@@ -53,7 +55,6 @@ public class OfflineEnduserContract {
    */
   public static class StyleEntry implements BaseColumns {
     public static final String TABLE_NAME = "Style";
-    public static final String COLUMN_NAME_SYSTEM_ID = "system_ID";
     public static final String COLUMN_NAME_JSON_ID = "json_id";
     public static final String COLUMN_NAME_BACKGROUND_COLOR = "background_color";
     public static final String COLUMN_NAME_HIGHLIGHT_COLOR = "highlight_color";
@@ -62,10 +63,9 @@ public class OfflineEnduserContract {
     public static final String COLUMN_NAME_MAP_PIN = "map_pin";
     public static final String COLUMN_NAME_ICON = "icon";
 
-    public static final String STYLE_CREATE_TABLE =
+    public static final String CREATE_TABLE =
         "CREATE TABLE " + StyleEntry.TABLE_NAME + " (" +
             StyleEntry._ID + " INTEGER PRIMARY KEY," +
-            StyleEntry.COLUMN_NAME_SYSTEM_ID + " INTEGER" + COMMA_SEP +
             StyleEntry.COLUMN_NAME_JSON_ID + TEXT_TYPE + COMMA_SEP +
             StyleEntry.COLUMN_NAME_BACKGROUND_COLOR + TEXT_TYPE + COMMA_SEP +
             StyleEntry.COLUMN_NAME_HIGHLIGHT_COLOR + TEXT_TYPE + COMMA_SEP +
@@ -76,7 +76,6 @@ public class OfflineEnduserContract {
 
     public static  final String[] PROJECTION = {
         StyleEntry._ID,
-        StyleEntry.COLUMN_NAME_SYSTEM_ID,
         StyleEntry.COLUMN_NAME_JSON_ID,
         StyleEntry.COLUMN_NAME_BACKGROUND_COLOR,
         StyleEntry.COLUMN_NAME_HIGHLIGHT_COLOR,
@@ -84,6 +83,30 @@ public class OfflineEnduserContract {
         StyleEntry.COLUMN_NAME_CHROME_HEADER_COLOR,
         StyleEntry.COLUMN_NAME_MAP_PIN,
         StyleEntry.COLUMN_NAME_ICON,
+    };
+  }
+
+  /**
+   * Settings
+   */
+  public static class SettingEntry implements BaseColumns {
+    public static final String TABLE_NAME = "Settings";
+    public static final String COLUMN_NAME_JSON_ID = "json_id";
+    public static final String COLUMN_NAME_PLAYSTORE_ID = "playstore_id";
+    public static final String COLUMN_NAME_APPSTORE_ID = "appstore_id";
+
+    public static final String CREATE_TABLE =
+        "CREATE TABLE " + SettingEntry.TABLE_NAME + " (" +
+            SettingEntry._ID + " INTEGER PRIMARY KEY," +
+            SettingEntry.COLUMN_NAME_JSON_ID + TEXT_TYPE + COMMA_SEP +
+            SettingEntry.COLUMN_NAME_PLAYSTORE_ID + TEXT_TYPE + COMMA_SEP +
+            SettingEntry.COLUMN_NAME_APPSTORE_ID + TEXT_TYPE + " )";
+
+    public static final String[] PROJECTION = {
+        SettingEntry._ID,
+        SettingEntry.COLUMN_NAME_JSON_ID,
+        SettingEntry.COLUMN_NAME_PLAYSTORE_ID,
+        SettingEntry.COLUMN_NAME_APPSTORE_ID
     };
   }
 }
