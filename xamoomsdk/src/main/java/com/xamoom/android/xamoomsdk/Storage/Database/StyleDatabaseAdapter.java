@@ -36,25 +36,6 @@ public class StyleDatabaseAdapter extends DatabaseAdapter {
     return style;
   }
 
-  public Style getStyle(long key) {
-    String selection = StyleEntry._ID + " = ?";
-    String[] selectionArgs = { String.valueOf(key) };
-
-    open();
-
-    Cursor cursor = queryStyles(selection, selectionArgs);
-
-    if (cursor.getCount() > 1) {
-      return null;
-      // TODO: throw to many exception
-    }
-
-    Style style = cursorToStyle(cursor);
-    close();
-
-    return style;
-  }
-
   public long insertOrUpdateStyle(Style style) {
     ContentValues values = new ContentValues();
     values.put(StyleEntry.COLUMN_NAME_JSON_ID, style.getId());
