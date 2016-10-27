@@ -23,6 +23,7 @@ import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.Resource.*;
 import com.xamoom.android.xamoomsdk.Resource.System;
+import com.xamoom.android.xamoomsdk.Storage.Database.SystemDatabaseAdapter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -56,6 +57,25 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
 
     setupEnduserApi();
 
+    System system = new System();
+    system.setId("1");
+
+    SystemSetting setting = new SystemSetting();
+    setting.setId("2");
+    system.setSystemSetting(setting);
+
+    Style style = new Style();
+    style.setId("3");
+    system.setStyle(style);
+
+    SystemDatabaseAdapter systemDatabaseAdapter =
+        new SystemDatabaseAdapter(getApplicationContext());
+
+    systemDatabaseAdapter.insertOrUpdateSystem(system);
+
+    System savedSystem = systemDatabaseAdapter.getSystem("1");
+
+    /*
     getContent();
     getContentOption();
     getContentLocationIdentifier();
@@ -69,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
     getMenu();
     getSystemSetting();
     getStyle();
+    */
   }
 
   @Override
