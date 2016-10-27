@@ -59,7 +59,7 @@ public class StyleDatabaseAdapter extends DatabaseAdapter {
   }
 
   public int updateStyle(long id, ContentValues values) {
-    String selection = StyleEntry.COLUMN_NAME_JSON_ID + " = ?";
+    String selection = StyleEntry._ID + " = ?";
     String[] selectionArgs = { String.valueOf(id) };
 
     open();
