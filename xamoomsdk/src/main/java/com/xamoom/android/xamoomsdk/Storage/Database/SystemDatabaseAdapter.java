@@ -13,12 +13,13 @@ import com.xamoom.android.xamoomsdk.Storage.TableContracts.OfflineEnduserContrac
 
 public class SystemDatabaseAdapter extends DatabaseAdapter {
 
-  public StyleDatabaseAdapter mStyleDatabaseAdapter;
-
+  private StyleDatabaseAdapter mStyleDatabaseAdapter;
+  private SettingDatabaseAdapter mSettingDatabaseAdapter;
 
   public SystemDatabaseAdapter(Context context) {
     super(context);
     mStyleDatabaseAdapter = new StyleDatabaseAdapter(mContext);
+    mSettingDatabaseAdapter = new SettingDatabaseAdapter(mContext);
   }
 
   public System getSystem(String jsonId) {
@@ -63,7 +64,11 @@ public class SystemDatabaseAdapter extends DatabaseAdapter {
     }
 
     if (system.getSystemSetting() != null) {
-      // TODO: insert settings
+      long settingRow = mSettingDatabaseAdapter.insertOrUpdateSetting(system.getSystemSetting());
+      if (settingRow != -1) {
+        values.put(SystemEntry.COLUMN_NAME_SYSTEMSETTING, system.getSystemSetting().getId());
+        updateSystem(row, values);
+      }
     }
 
     return row;
@@ -123,6 +128,8 @@ public class SystemDatabaseAdapter extends DatabaseAdapter {
           cursor.getColumnIndex(SystemEntry.COLUMN_NAME_NAME)));
       system.setStyle(mStyleDatabaseAdapter.getStyle(
           cursor.getString(cursor.getColumnIndex(SystemEntry.COLUMN_NAME_STYLE))));
+      system.setSystemSetting(mSettingDatabaseAdapter.getSystemSetting(
+          cursor.getString(cursor.getColumnIndex(SystemEntry.COLUMN_NAME_SYSTEMSETTING))));
       return system;
     }
 
