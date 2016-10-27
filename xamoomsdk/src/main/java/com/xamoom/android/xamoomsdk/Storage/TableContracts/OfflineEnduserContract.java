@@ -15,6 +15,7 @@ public class OfflineEnduserContract {
   public static final int DATABASE_VERSION = 1;
   public static final String DATABASE_NAME = "OfflineEnduser.db";
   public static final String TEXT_TYPE = " TEXT";
+  public static final String INTEGER_TYPE = " INTEGER";
   public static final String COMMA_SEP = ",";
 
   /**
@@ -35,9 +36,9 @@ public class OfflineEnduserContract {
             SystemEntry.COLUMN_NAME_JSON_ID + TEXT_TYPE + COMMA_SEP +
             SystemEntry.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
             SystemEntry.COLUMN_NAME_URL + TEXT_TYPE + COMMA_SEP +
-            SystemEntry.COLUMN_NAME_STYLE + TEXT_TYPE + COMMA_SEP +
-            SystemEntry.COLUMN_NAME_SYSTEMSETTING + TEXT_TYPE + COMMA_SEP +
-            SystemEntry.COLUMN_NAME_MENU + TEXT_TYPE + " )";
+            SystemEntry.COLUMN_NAME_STYLE + INTEGER_TYPE + COMMA_SEP +
+            SystemEntry.COLUMN_NAME_SYSTEMSETTING + INTEGER_TYPE + COMMA_SEP +
+            SystemEntry.COLUMN_NAME_MENU + INTEGER_TYPE + " )";
 
     public static  final String[] PROJECTION = {
           SystemEntry._ID,
