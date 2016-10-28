@@ -8,6 +8,7 @@ import com.xamoom.android.xamoomsdk.BuildConfig;
 import com.xamoom.android.xamoomsdk.Resource.Style;
 import com.xamoom.android.xamoomsdk.Resource.System;
 import com.xamoom.android.xamoomsdk.Storage.Database.DatabaseHelper;
+import com.xamoom.android.xamoomsdk.Storage.Database.SettingDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.StyleDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.SystemDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.TableContracts.OfflineEnduserContract;
@@ -35,6 +36,7 @@ public class SystemDatabaseAdapterTest {
 
   private SystemDatabaseAdapter mSystemDatabaseAdapter;
   private StyleDatabaseAdapter mMockedStyleDatabaseAdapter;
+  private SettingDatabaseAdapter mMockedSettingDatabaseAdapter;
   private DatabaseHelper mMockedDatabaseHelper;
   private SQLiteDatabase mMockedDatabase;
 
@@ -44,11 +46,14 @@ public class SystemDatabaseAdapterTest {
         new SystemDatabaseAdapter(RuntimeEnvironment.application);
     mMockedStyleDatabaseAdapter =
         mock(StyleDatabaseAdapter.class);
+    mMockedSettingDatabaseAdapter =
+        mock(SettingDatabaseAdapter.class);
     mMockedDatabaseHelper = mock(DatabaseHelper.class);
     mMockedDatabase = mock(SQLiteDatabase.class);
     mSystemDatabaseAdapter.setDatabaseHelper(mMockedDatabaseHelper);
     mSystemDatabaseAdapter.setStyleDatabaseAdapter(mMockedStyleDatabaseAdapter);
-
+    mSystemDatabaseAdapter.setSettingDatabaseAdapter(mMockedSettingDatabaseAdapter);
+    
     Mockito.stub(mMockedDatabaseHelper.getWritableDatabase())
         .toReturn(mMockedDatabase);
     Mockito.stub(mMockedDatabaseHelper.getReadableDatabase())
