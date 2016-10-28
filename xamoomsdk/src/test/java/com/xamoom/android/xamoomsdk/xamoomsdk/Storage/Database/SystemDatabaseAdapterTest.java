@@ -53,7 +53,7 @@ public class SystemDatabaseAdapterTest {
     mSystemDatabaseAdapter.setDatabaseHelper(mMockedDatabaseHelper);
     mSystemDatabaseAdapter.setStyleDatabaseAdapter(mMockedStyleDatabaseAdapter);
     mSystemDatabaseAdapter.setSettingDatabaseAdapter(mMockedSettingDatabaseAdapter);
-    
+
     Mockito.stub(mMockedDatabaseHelper.getWritableDatabase())
         .toReturn(mMockedDatabase);
     Mockito.stub(mMockedDatabaseHelper.getReadableDatabase())

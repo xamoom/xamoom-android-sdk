@@ -141,4 +141,8 @@ public class SystemDatabaseAdapter extends DatabaseAdapter {
   public void setStyleDatabaseAdapter(StyleDatabaseAdapter styleDatabaseAdapter) {
     mStyleDatabaseAdapter = styleDatabaseAdapter;
   }
+
+  public void setSettingDatabaseAdapter(SettingDatabaseAdapter settingDatabaseAdapter) {
+    mSettingDatabaseAdapter = settingDatabaseAdapter;
+  }
 }

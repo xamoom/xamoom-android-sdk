@@ -25,7 +25,7 @@ public class SettingDatabaseAdapter extends DatabaseAdapter {
 
     if (cursor.getCount() > 1) {
       return null;
-      // TODO: throw to many exception
+      // TODO: throw too many exception
     }
 
     SystemSetting setting = cursorToSetting(cursor);
