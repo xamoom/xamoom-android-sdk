@@ -1,7 +1,9 @@
 package com.xamoom.android.xamoomsdk.Storage.TableContracts;
 
 import android.provider.BaseColumns;
+import android.provider.Settings;
 
+import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Resource.Style;
 
 import java.util.Set;
@@ -11,12 +13,15 @@ import java.util.Set;
  */
 
 public class OfflineEnduserContract {
-  private OfflineEnduserContract() {}
   public static final int DATABASE_VERSION = 1;
   public static final String DATABASE_NAME = "OfflineEnduser.db";
+
   public static final String TEXT_TYPE = " TEXT";
   public static final String INTEGER_TYPE = " INTEGER";
+  public static final String REAL_TYPE = " REAL";
   public static final String COMMA_SEP = ",";
+
+  private OfflineEnduserContract() {}
 
   /**
    * System
@@ -109,5 +114,70 @@ public class OfflineEnduserContract {
         SettingEntry.COLUMN_NAME_PLAYSTORE_ID,
         SettingEntry.COLUMN_NAME_APPSTORE_ID
     };
+  }
+
+  /**
+   * ContentBlock
+   */
+  public static class ContentBlockEntry implements BaseColumns {
+    public static final String TABLE_NAME = "ContentBlock";
+    public static final String COLUMN_NAME_JSON_ID = "json_id";
+    public static final String COLUMN_NAME_BLOCK_TYPE = "blockType";
+    public static final String COLUMN_NAME_PUBLIC_STATUS = "publicStatus";
+    public static final String COLUMN_NAME_TITLE = "title";
+    public static final String COLUMN_NAME_TEXT = "text";
+    public static final String COLUMN_NAME_ARTISTS = "artists";
+    public static final String COLUMN_NAME_FILE_ID = "fileId";
+    public static final String COLUMN_NAME_SOUNDCLOUD_URL = "soundcloudUrl";
+    public static final String COLUMN_NAME_LINK_TYPE = "linkType";
+    public static final String COLUMN_NAME_LINK_URL = "linkUrl";
+    public static final String COLUMN_NAME_CONTENT_ID = "contentId";
+    public static final String COLUMN_NAME_DOWNLOAD_TYPE = "downloadType";
+    public static final String COLUMN_NAME_SPOT_MAP_TAGS = "spotMapTags";
+    public static final String COLUMN_NAME_SCALE_X = "scaleX";
+    public static final String COLUMN_NAME_VIDEO_URL = "videoUrl";
+    public static final String COLUMN_NAME_SHOW_CONTENT_ON_SPOTMAP = "showContentOnSpotmap";
+    public static final String COLUMN_NAME_ALT_TEXT = "altText";
+
+    public static final String CREATE_TABLE =
+        "CREATE TABLE " + ContentBlockEntry.TABLE_NAME + " (" +
+            ContentBlockEntry._ID + " INTEGER PRIMARY KEY," +
+            ContentBlockEntry.COLUMN_NAME_JSON_ID + TEXT_TYPE + COMMA_SEP +
+            ContentBlockEntry.COLUMN_NAME_BLOCK_TYPE + TEXT_TYPE + COMMA_SEP +
+            ContentBlockEntry.COLUMN_NAME_PUBLIC_STATUS + TEXT_TYPE + COMMA_SEP +
+            ContentBlockEntry.COLUMN_NAME_TITLE + TEXT_TYPE + COMMA_SEP +
+            ContentBlockEntry.COLUMN_NAME_TEXT + TEXT_TYPE + COMMA_SEP +
+            ContentBlockEntry.COLUMN_NAME_ARTISTS + TEXT_TYPE + COMMA_SEP +
+            ContentBlockEntry.COLUMN_NAME_FILE_ID + TEXT_TYPE + COMMA_SEP +
+            ContentBlockEntry.COLUMN_NAME_SOUNDCLOUD_URL + TEXT_TYPE + COMMA_SEP +
+            ContentBlockEntry.COLUMN_NAME_LINK_TYPE + INTEGER_TYPE + COMMA_SEP +
+            ContentBlockEntry.COLUMN_NAME_LINK_URL + TEXT_TYPE + COMMA_SEP +
+            ContentBlockEntry.COLUMN_NAME_CONTENT_ID + TEXT_TYPE + COMMA_SEP +
+            ContentBlockEntry.COLUMN_NAME_DOWNLOAD_TYPE + INTEGER_TYPE + COMMA_SEP +
+            ContentBlockEntry.COLUMN_NAME_SPOT_MAP_TAGS + TEXT_TYPE + COMMA_SEP +
+            ContentBlockEntry.COLUMN_NAME_SCALE_X + REAL_TYPE + COMMA_SEP +
+            ContentBlockEntry.COLUMN_NAME_VIDEO_URL + TEXT_TYPE + COMMA_SEP +
+            ContentBlockEntry.COLUMN_NAME_SHOW_CONTENT_ON_SPOTMAP + INTEGER_TYPE + COMMA_SEP +
+            ContentBlockEntry.COLUMN_NAME_ALT_TEXT + TEXT_TYPE +  " )";
+
+    public static final String[] PROJECTION = {
+        ContentBlockEntry._ID,
+        ContentBlockEntry.COLUMN_NAME_JSON_ID,
+        ContentBlockEntry.COLUMN_NAME_BLOCK_TYPE,
+        ContentBlockEntry.COLUMN_NAME_PUBLIC_STATUS,
+        ContentBlockEntry.COLUMN_NAME_TITLE,
+        ContentBlockEntry.COLUMN_NAME_TEXT,
+        ContentBlockEntry.COLUMN_NAME_ARTISTS,
+        ContentBlockEntry.COLUMN_NAME_FILE_ID,
+        ContentBlockEntry.COLUMN_NAME_SOUNDCLOUD_URL,
+        ContentBlockEntry.COLUMN_NAME_LINK_TYPE,
+        ContentBlockEntry.COLUMN_NAME_LINK_URL,
+        ContentBlockEntry.COLUMN_NAME_CONTENT_ID,
+        ContentBlockEntry.COLUMN_NAME_DOWNLOAD_TYPE,
+        ContentBlockEntry.COLUMN_NAME_SPOT_MAP_TAGS,
+        ContentBlockEntry.COLUMN_NAME_SCALE_X,
+        ContentBlockEntry.COLUMN_NAME_VIDEO_URL,
+        ContentBlockEntry.COLUMN_NAME_SHOW_CONTENT_ON_SPOTMAP,
+        ContentBlockEntry.COLUMN_NAME_ALT_TEXT };
   }
 }

@@ -18,6 +18,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     sqLiteDatabase.execSQL(OfflineEnduserContract.SystemEntry.CREATE_TABLE);
     sqLiteDatabase.execSQL(OfflineEnduserContract.StyleEntry.CREATE_TABLE);
     sqLiteDatabase.execSQL(OfflineEnduserContract.SettingEntry.CREATE_TABLE);
+    sqLiteDatabase.execSQL(OfflineEnduserContract.ContentBlockEntry.CREATE_TABLE);
   }
 
   @Override
