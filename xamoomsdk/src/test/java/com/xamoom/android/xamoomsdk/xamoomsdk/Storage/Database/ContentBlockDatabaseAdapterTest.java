@@ -56,7 +56,7 @@ public class ContentBlockDatabaseAdapterTest {
     Mockito.stub(mMockedDatabase.query(anyString(), any(String[].class), anyString(),
         any(String[].class), anyString(), anyString(), anyString())).toReturn(mMockedCursor);
     Mockito.stub(mMockedCursor.getCount()).toReturn(1);
-    Mockito.stub(mMockedCursor.moveToFirst()).toReturn(true);
+    Mockito.stub(mMockedCursor.moveToNext()).toReturn(true).toReturn(false);
 
     Mockito.stub(mMockedCursor.getInt(anyInt())).toReturn(1);
 
@@ -76,7 +76,7 @@ public class ContentBlockDatabaseAdapterTest {
         anyString(), anyString())).toReturn(mMockedCursor);
     Mockito.stub(mMockedCursor.moveToFirst()).toReturn(false);
 
-    mContentBlockDatabaseAdapter.insertOrUpdate(block);
+    mContentBlockDatabaseAdapter.insertOrUpdate(block, 0);
 
     Mockito.verify(mMockedDatabase).insert(anyString(), anyString(), any(ContentValues.class));
   }
@@ -91,7 +91,7 @@ public class ContentBlockDatabaseAdapterTest {
     Mockito.stub(mMockedCursor.moveToFirst()).toReturn(true);
     Mockito.stub(mMockedCursor.getCount()).toReturn(1);
 
-    mContentBlockDatabaseAdapter.insertOrUpdate(block);
+    mContentBlockDatabaseAdapter.insertOrUpdate(block, 0);
 
     Mockito.verify(mMockedDatabase).update(anyString(), any(ContentValues.class), anyString(),
         any(String[].class));

@@ -19,6 +19,7 @@ public class OfflineEnduserContract {
   public static final String TEXT_TYPE = " TEXT";
   public static final String INTEGER_TYPE = " INTEGER";
   public static final String REAL_TYPE = " REAL";
+  public static final String UNIQUE = " UNIQUE";
   public static final String COMMA_SEP = ",";
 
   private OfflineEnduserContract() {}
@@ -117,11 +118,51 @@ public class OfflineEnduserContract {
   }
 
   /**
+   * Content
+   */
+  public static class ContentEntry implements BaseColumns {
+    public static final String TABLE_NAME = "Content";
+    public static final String COLUMN_NAME_JSON_ID = "json_id";
+    public static final String COLUMN_NAME_SYSTEM_RELATION = "systemRelation";
+    public static final String COLUMN_NAME_TITLE = "title";
+    public static final String COLUMN_NAME_DESCRIPTION = "description";
+    public static final String COLUMN_NAME_LANGUAGE = "language";
+    public static final String COLUMN_NAME_CATEGORY = "category";
+    public static final String COLUMN_NAME_TAGS = "tags";
+    public static final String COLUMN_NAME_PUBLIC_IMAGE_URL = "imageUrl";
+
+    public static final String CREATE_TABLE =
+        "CREATE TABLE " + ContentEntry.TABLE_NAME + " (" +
+            ContentEntry._ID + " INTEGER PRIMARY KEY," +
+            ContentEntry.COLUMN_NAME_JSON_ID + TEXT_TYPE + COMMA_SEP +
+            ContentEntry.COLUMN_NAME_SYSTEM_RELATION + TEXT_TYPE + COMMA_SEP +
+            ContentEntry.COLUMN_NAME_TITLE + TEXT_TYPE + COMMA_SEP +
+            ContentEntry.COLUMN_NAME_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
+            ContentEntry.COLUMN_NAME_LANGUAGE + TEXT_TYPE + COMMA_SEP +
+            ContentEntry.COLUMN_NAME_CATEGORY + INTEGER_TYPE + COMMA_SEP +
+            ContentEntry.COLUMN_NAME_TAGS + TEXT_TYPE + COMMA_SEP +
+            ContentEntry.COLUMN_NAME_PUBLIC_IMAGE_URL + TEXT_TYPE + " )";
+
+    public static final String[] PROJECTION = {
+        ContentEntry._ID,
+        ContentEntry.COLUMN_NAME_JSON_ID,
+        ContentEntry.COLUMN_NAME_SYSTEM_RELATION,
+        ContentEntry.COLUMN_NAME_TITLE,
+        ContentEntry.COLUMN_NAME_DESCRIPTION,
+        ContentEntry.COLUMN_NAME_LANGUAGE,
+        ContentEntry.COLUMN_NAME_CATEGORY,
+        ContentEntry.COLUMN_NAME_TAGS,
+        ContentEntry.COLUMN_NAME_PUBLIC_IMAGE_URL
+    };
+  }
+
+  /**
    * ContentBlock
    */
   public static class ContentBlockEntry implements BaseColumns {
     public static final String TABLE_NAME = "ContentBlock";
     public static final String COLUMN_NAME_JSON_ID = "json_id";
+    public static final String COLUMN_NAME_CONTENT_RELATION = "contentRelation";
     public static final String COLUMN_NAME_BLOCK_TYPE = "blockType";
     public static final String COLUMN_NAME_PUBLIC_STATUS = "publicStatus";
     public static final String COLUMN_NAME_TITLE = "title";
@@ -143,6 +184,7 @@ public class OfflineEnduserContract {
         "CREATE TABLE " + ContentBlockEntry.TABLE_NAME + " (" +
             ContentBlockEntry._ID + " INTEGER PRIMARY KEY," +
             ContentBlockEntry.COLUMN_NAME_JSON_ID + TEXT_TYPE + COMMA_SEP +
+            ContentBlockEntry.COLUMN_NAME_CONTENT_RELATION + TEXT_TYPE + COMMA_SEP +
             ContentBlockEntry.COLUMN_NAME_BLOCK_TYPE + TEXT_TYPE + COMMA_SEP +
             ContentBlockEntry.COLUMN_NAME_PUBLIC_STATUS + TEXT_TYPE + COMMA_SEP +
             ContentBlockEntry.COLUMN_NAME_TITLE + TEXT_TYPE + COMMA_SEP +

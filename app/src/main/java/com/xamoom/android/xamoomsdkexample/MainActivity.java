@@ -23,6 +23,8 @@ import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.Resource.*;
 import com.xamoom.android.xamoomsdk.Resource.System;
+import com.xamoom.android.xamoomsdk.Storage.Database.ContentBlockDatabaseAdapter;
+import com.xamoom.android.xamoomsdk.Storage.Database.ContentDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.SystemDatabaseAdapter;
 
 import java.io.IOException;
@@ -57,26 +59,8 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
 
     setupEnduserApi();
 
-    System system = new System();
-    system.setId("1");
-
-    SystemSetting setting = new SystemSetting();
-    setting.setId("2");
-    system.setSystemSetting(setting);
-
-    Style style = new Style();
-    style.setId("3");
-    system.setStyle(style);
-
-    SystemDatabaseAdapter systemDatabaseAdapter =
-        new SystemDatabaseAdapter(getApplicationContext());
-
-    systemDatabaseAdapter.insertOrUpdateSystem(system);
-
-    System savedSystem = systemDatabaseAdapter.getSystem("1");
-
-    /*
     getContent();
+    /*
     getContentOption();
     getContentLocationIdentifier();
     getContentsLocation();
@@ -192,10 +176,15 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
   }
 
   public void getContent() {
-    mEnduserApi.getContent("e5be72be162d44b189893a406aff5227", new APICallback<Content, List<at.rags.morpheus.Error>>() {
+    mEnduserApi.getContent("7cf2c58e6d374ce3888c32eb80be53b5", new APICallback<Content, List<at.rags.morpheus.Error>>() {
       @Override
       public void finished(Content result) {
         Log.v(TAG, "getContent: " + result);
+        ContentDatabaseAdapter adapter =
+            new ContentDatabaseAdapter(getApplicationContext());
+        adapter.insertOrUpdateContent(result);
+        Content savedContent = adapter.getContent(result.getId());
+        Log.v(TAG, "getContent: " + savedContent);
       }
 
       @Override

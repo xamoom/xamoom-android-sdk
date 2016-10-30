@@ -9,6 +9,7 @@ import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Storage.TableContracts.OfflineEnduserContract;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class ContentBlockDatabaseAdapter extends DatabaseAdapter {
@@ -31,13 +32,27 @@ public class ContentBlockDatabaseAdapter extends DatabaseAdapter {
       // TODO: throw too many exception
     }
 
-    ContentBlock contentBlock = cursorToContentBlock(cursor);
+    ArrayList<ContentBlock> contentBlocks = cursorToContentBlocks(cursor);
 
     close();
-    return contentBlock;
+    return contentBlocks.get(0);
   }
 
-  public long insertOrUpdate(ContentBlock contentBlock) {
+  // TODO: test
+  public ArrayList<ContentBlock> getRelatedContentBlocks(long row) {
+    String selection = OfflineEnduserContract.
+        ContentBlockEntry.COLUMN_NAME_CONTENT_RELATION + " = ?";
+    String[] selectionArgs = {String.valueOf(row)};
+
+    open();
+    Cursor cursor = queryContentBlocks(selection, selectionArgs);
+    ArrayList<ContentBlock> contentBlocks = cursorToContentBlocks(cursor);
+    close();
+
+    return contentBlocks;
+  }
+
+  public long insertOrUpdate(ContentBlock contentBlock, long parentRow) {
     ContentValues values = new ContentValues();
     values.put(OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_JSON_ID,
         contentBlock.getId());
@@ -75,6 +90,7 @@ public class ContentBlockDatabaseAdapter extends DatabaseAdapter {
         contentBlock.isShowContentOnSpotmap());
     values.put(OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_ALT_TEXT,
         contentBlock.getAltText());
+    values.put(OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_CONTENT_RELATION, parentRow);
 
     long row = getPrimaryKey(contentBlock.getId());
     if (row != -1) {
@@ -96,7 +112,7 @@ public class ContentBlockDatabaseAdapter extends DatabaseAdapter {
 
     open();
     int rows = mDatabase.update(
-        OfflineEnduserContract.SettingEntry.TABLE_NAME,
+        OfflineEnduserContract.ContentBlockEntry.TABLE_NAME,
         values, selection, selectionArgs);
     close();
   }
@@ -117,8 +133,10 @@ public class ContentBlockDatabaseAdapter extends DatabaseAdapter {
     return -1;
   }
 
-  private ContentBlock cursorToContentBlock(Cursor cursor) {
-    if (cursor.moveToFirst()) {
+  private ArrayList<ContentBlock> cursorToContentBlocks(Cursor cursor) {
+    ArrayList<ContentBlock> contentBlocks = new ArrayList<>();
+
+    while(cursor.moveToNext()) {
       ContentBlock contentBlock = new ContentBlock();
       contentBlock.setId(cursor.getString(cursor
           .getColumnIndex(OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_JSON_ID)));
@@ -157,9 +175,10 @@ public class ContentBlockDatabaseAdapter extends DatabaseAdapter {
           .getColumnIndex(OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_SHOW_CONTENT_ON_SPOTMAP)) == 1));
       contentBlock.setAltText(cursor.getString(cursor
           .getColumnIndex(OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_ALT_TEXT)));
-      return contentBlock;
+      contentBlocks.add(contentBlock);
     }
-    return null;
+
+    return contentBlocks;
   }
 
   private Cursor queryContentBlocks(String selection, String[] selectionArgs) {
