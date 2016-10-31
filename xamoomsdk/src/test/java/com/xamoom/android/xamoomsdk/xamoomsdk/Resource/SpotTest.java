@@ -53,6 +53,7 @@ public class SpotTest {
     Content content = new Content();
     content.setId("id");
     mSpot.setContent(content);
+    mSpot.setCategory(11);
   }
 
   @Test
@@ -79,6 +80,7 @@ public class SpotTest {
     assertEquals(mSpot.getMarkers().get(0).getId(), createdFromParcel.getMarkers().get(0).getId());
     assertEquals(mSpot.getSystem().getName(), createdFromParcel.getSystem().getName());
     assertEquals(mSpot.getContent().getId(), createdFromParcel.getContent().getId());
+    assertEquals(mSpot.getCategory(), createdFromParcel.getCategory());
   }
 
 }

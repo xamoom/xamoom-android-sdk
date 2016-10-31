@@ -26,6 +26,7 @@ public class Spot extends Resource implements Parcelable {
   private System system;
   @Relationship("content")
   private Content content;
+  private int category;
 
   public Spot() {
   }
@@ -40,6 +41,7 @@ public class Spot extends Resource implements Parcelable {
     markers = in.createTypedArrayList(Marker.CREATOR);
     system = in.readParcelable(System.class.getClassLoader());
     content = in.readParcelable(Content.class.getClassLoader());
+    category = in.readInt();
   }
 
   public static final Creator<Spot> CREATOR = new Creator<Spot>() {
@@ -118,6 +120,14 @@ public class Spot extends Resource implements Parcelable {
     this.location = location;
   }
 
+  public void setCategory(int category) {
+    this.category = category;
+  }
+
+  public int getCategory() {
+    return category;
+  }
+
   @Override
   public int describeContents() {
     return 0;
@@ -134,5 +144,6 @@ public class Spot extends Resource implements Parcelable {
     dest.writeTypedList(markers);
     dest.writeParcelable(system, flags);
     dest.writeParcelable(content, flags);
+    dest.writeInt(category);
   }
 }
