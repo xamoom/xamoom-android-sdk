@@ -7,7 +7,6 @@ import android.text.TextUtils;
 
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
-import com.xamoom.android.xamoomsdk.Resource.System;
 import com.xamoom.android.xamoomsdk.Storage.TableContracts.OfflineEnduserContract;
 
 import java.util.ArrayList;
@@ -27,20 +26,35 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
   }
 
   public Content getContent(String jsonId) {
+    String selection = OfflineEnduserContract.ContentEntry.COLUMN_NAME_JSON_ID + " = ?";
+    String[] selectionArgs = { jsonId };
+
     open();
-    Cursor cursor = queryContent(jsonId);
+    Cursor cursor = queryContent(selection, selectionArgs);
 
     if (cursor.getCount() > 1) {
       // TODO: too many exception
     }
 
-    Content content = cursorToContent(cursor);
+    ArrayList<Content> contents = cursorToContents(cursor);
 
     close();
-    return content;
+    return contents.get(0);
   }
 
-  public long insertOrUpdateContent(Content content) {
+  public ArrayList<Content> getRelatedContents(long menuRow) {
+    String selection = OfflineEnduserContract.ContentEntry.COLUMN_NAME_MENU_RELATION + " = ?";
+    String[] selectionArgs = { String.valueOf(menuRow) };
+
+    open();
+    Cursor cursor = queryContent(selection, selectionArgs);
+    ArrayList<Content> contents = cursorToContents(cursor);
+
+    close();
+    return contents;
+  }
+
+  public long insertOrUpdateContent(Content content, boolean hasMenu, long menuRow) {
     ContentValues values = new ContentValues();
     values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_JSON_ID, content.getId());
     values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_TITLE, content.getTitle());
@@ -50,6 +64,9 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
     if (content.getTags() != null) {
       values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_TAGS,
           TextUtils.join(",", content.getTags()));
+    }
+    if (hasMenu) {
+      values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_MENU_RELATION, menuRow);
     }
 
     long row = getPrimaryKey(content.getId());
@@ -96,8 +113,11 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
   }
 
   private long getPrimaryKey(String jsonId) {
+    String selection = OfflineEnduserContract.ContentEntry.COLUMN_NAME_JSON_ID + " = ?";
+    String[] selectionArgs = { jsonId };
+
     open();
-    Cursor cursor = queryContent(jsonId);
+    Cursor cursor = queryContent(selection, selectionArgs);
     if (cursor != null) {
       if (cursor.moveToFirst()) {
         long id = cursor.getInt(cursor.getColumnIndex(OfflineEnduserContract.ContentEntry._ID));
@@ -109,10 +129,7 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
     return -1;
   }
 
-  private Cursor queryContent(String jsonId) {
-    String selection = OfflineEnduserContract.ContentEntry.COLUMN_NAME_JSON_ID + " = ?";
-    String[] selectionArgs = { jsonId };
-
+  private Cursor queryContent(String selection, String[] selectionArgs) {
     Cursor cursor = mDatabase.query(
         OfflineEnduserContract.ContentEntry.TABLE_NAME,
         OfflineEnduserContract.ContentEntry.PROJECTION,
@@ -126,8 +143,10 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
     return cursor;
   }
 
-  private Content cursorToContent(Cursor cursor) {
-    if (cursor.moveToFirst()) {
+  private ArrayList<Content> cursorToContents(Cursor cursor) {
+    ArrayList<Content> contents = new ArrayList<>();
+
+    while (cursor.moveToNext()) {
       Content content = new Content();
       content.setId(cursor.getString(cursor.getColumnIndex(
           OfflineEnduserContract.ContentEntry.COLUMN_NAME_JSON_ID)));
@@ -148,9 +167,10 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
           OfflineEnduserContract.ContentEntry.COLUMN_NAME_PUBLIC_IMAGE_URL)));
       content.setContentBlocks(relatedBlocks(cursor
           .getLong(cursor.getColumnIndex(OfflineEnduserContract.ContentEntry._ID))));
-      return content;
+      contents.add(content);
     }
-    return null;
+
+    return contents;
   }
 
   public ArrayList<ContentBlock> relatedBlocks(long id) {
