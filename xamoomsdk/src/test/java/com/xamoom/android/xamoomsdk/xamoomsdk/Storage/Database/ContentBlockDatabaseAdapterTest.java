@@ -96,4 +96,21 @@ public class ContentBlockDatabaseAdapterTest {
     Mockito.verify(mMockedDatabase).update(anyString(), any(ContentValues.class), anyString(),
         any(String[].class));
   }
+
+  @Test
+  public void testGetRelatedContentBlocks() {
+    String selection = OfflineEnduserContract.
+        ContentBlockEntry.COLUMN_NAME_CONTENT_RELATION + " = ?";
+    String[] selectionArg = {"1"};
+
+    Mockito.stub(mMockedDatabase.query(anyString(), any(String[].class), anyString(), any(String[].class), anyString(),
+        anyString(), anyString())).toReturn(mMockedCursor);
+    Mockito.stub(mMockedCursor.moveToFirst()).toReturn(true);
+    Mockito.stub(mMockedCursor.getCount()).toReturn(1);
+
+    mContentBlockDatabaseAdapter.getRelatedContentBlocks(1);
+
+    Mockito.verify(mMockedDatabase).query(anyString(), any(String[].class), eq(selection),
+        eq(selectionArg), anyString(), anyString(), anyString());
+  }
 }
