@@ -118,12 +118,31 @@ public class OfflineEnduserContract {
   }
 
   /**
+   * Menu
+   */
+  public static class MenuEntry implements BaseColumns {
+    public static final String TABLE_NAME = "Menu";
+    public static final String COLUMN_NAME_JSON_ID = "json_id";
+
+    public static final String CREATE_TABLE =
+        "CREATE TABLE " + MenuEntry.TABLE_NAME + " (" +
+            MenuEntry._ID + " INTEGER PRIMARY KEY," +
+            MenuEntry.COLUMN_NAME_JSON_ID + TEXT_TYPE + " )";
+
+    public static final String[] PROJECTION = {
+        MenuEntry._ID,
+        MenuEntry.COLUMN_NAME_JSON_ID
+    };
+  }
+
+  /**
    * Content
    */
   public static class ContentEntry implements BaseColumns {
     public static final String TABLE_NAME = "Content";
     public static final String COLUMN_NAME_JSON_ID = "json_id";
     public static final String COLUMN_NAME_SYSTEM_RELATION = "systemRelation";
+    public static final String COLUMN_NAME_MENU_RELATION = "menuRelation";
     public static final String COLUMN_NAME_TITLE = "title";
     public static final String COLUMN_NAME_DESCRIPTION = "description";
     public static final String COLUMN_NAME_LANGUAGE = "language";
@@ -136,6 +155,7 @@ public class OfflineEnduserContract {
             ContentEntry._ID + " INTEGER PRIMARY KEY," +
             ContentEntry.COLUMN_NAME_JSON_ID + TEXT_TYPE + COMMA_SEP +
             ContentEntry.COLUMN_NAME_SYSTEM_RELATION + TEXT_TYPE + COMMA_SEP +
+            ContentEntry.COLUMN_NAME_MENU_RELATION + TEXT_TYPE + COMMA_SEP +
             ContentEntry.COLUMN_NAME_TITLE + TEXT_TYPE + COMMA_SEP +
             ContentEntry.COLUMN_NAME_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
             ContentEntry.COLUMN_NAME_LANGUAGE + TEXT_TYPE + COMMA_SEP +
@@ -184,7 +204,7 @@ public class OfflineEnduserContract {
         "CREATE TABLE " + ContentBlockEntry.TABLE_NAME + " (" +
             ContentBlockEntry._ID + " INTEGER PRIMARY KEY," +
             ContentBlockEntry.COLUMN_NAME_JSON_ID + TEXT_TYPE + COMMA_SEP +
-            ContentBlockEntry.COLUMN_NAME_CONTENT_RELATION + TEXT_TYPE + COMMA_SEP +
+            ContentBlockEntry.COLUMN_NAME_CONTENT_RELATION + INTEGER_TYPE + COMMA_SEP +
             ContentBlockEntry.COLUMN_NAME_BLOCK_TYPE + TEXT_TYPE + COMMA_SEP +
             ContentBlockEntry.COLUMN_NAME_PUBLIC_STATUS + TEXT_TYPE + COMMA_SEP +
             ContentBlockEntry.COLUMN_NAME_TITLE + TEXT_TYPE + COMMA_SEP +
