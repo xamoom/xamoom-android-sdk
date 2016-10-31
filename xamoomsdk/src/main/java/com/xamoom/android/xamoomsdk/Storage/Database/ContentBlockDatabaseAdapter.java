@@ -38,7 +38,6 @@ public class ContentBlockDatabaseAdapter extends DatabaseAdapter {
     return contentBlocks.get(0);
   }
 
-  // TODO: test
   public ArrayList<ContentBlock> getRelatedContentBlocks(long row) {
     String selection = OfflineEnduserContract.
         ContentBlockEntry.COLUMN_NAME_CONTENT_RELATION + " = ?";
