@@ -184,6 +184,9 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
       @Override
       public void finished(Content result) {
         Log.v(TAG, "getContent: " + result);
+        ContentDatabaseAdapter adapter = new ContentDatabaseAdapter(getApplicationContext());
+        adapter.insertOrUpdateContent(result, false, 0);
+        Content savedContent = adapter.getContent(result.getId());
       }
 
       @Override

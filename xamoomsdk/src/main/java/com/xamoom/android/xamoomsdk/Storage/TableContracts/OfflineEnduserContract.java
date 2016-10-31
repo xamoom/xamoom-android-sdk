@@ -4,6 +4,7 @@ import android.provider.BaseColumns;
 import android.provider.Settings;
 
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
+import com.xamoom.android.xamoomsdk.Resource.Marker;
 import com.xamoom.android.xamoomsdk.Resource.Style;
 
 import java.util.Set;
@@ -118,6 +119,45 @@ public class OfflineEnduserContract {
   }
 
   /**
+   * Marker
+   */
+  public static class MarkerEntry implements BaseColumns {
+    public static final String TABLE_NAME = "Marker";
+    public static final String COLUMN_NAME_JSON_ID = "json_id";
+    public static final String COLUMN_NAME_SPOT_RELATION = "spotRelation";
+    public static final String COLUMN_NAME_QR = "qr";
+    public static final String COLUMN_NAME_NFC = "nfc";
+    public static final String COLUMN_NAME_BEACON_UUID = "beaconUUID";
+    public static final String COLUMN_NAME_BEACON_MAJOR = "beaconMajor";
+    public static final String COLUMN_NAME_BEACON_MINOR = "beaconMinor";
+    public static final String COLUMN_NAME_EDDYSTONE_URL = "eddystoneUrl";
+
+    public static final String CREATE_TABLE =
+        "CREATE TABLE " + MarkerEntry.TABLE_NAME + " (" +
+            MarkerEntry._ID + " INTEGER PRIMARY KEY," +
+            MarkerEntry.COLUMN_NAME_JSON_ID + TEXT_TYPE + COMMA_SEP +
+            MarkerEntry.COLUMN_NAME_SPOT_RELATION + INTEGER_TYPE + COMMA_SEP +
+            MarkerEntry.COLUMN_NAME_QR + TEXT_TYPE + COMMA_SEP +
+            MarkerEntry.COLUMN_NAME_NFC + TEXT_TYPE + COMMA_SEP +
+            MarkerEntry.COLUMN_NAME_BEACON_UUID + TEXT_TYPE + COMMA_SEP +
+            MarkerEntry.COLUMN_NAME_BEACON_MAJOR + TEXT_TYPE + COMMA_SEP +
+            MarkerEntry.COLUMN_NAME_BEACON_MINOR + TEXT_TYPE + COMMA_SEP +
+            MarkerEntry.COLUMN_NAME_EDDYSTONE_URL + TEXT_TYPE + " )";
+
+    public static final String[] PROJECTION = {
+        MarkerEntry._ID,
+        MarkerEntry.COLUMN_NAME_JSON_ID,
+        MarkerEntry.COLUMN_NAME_SPOT_RELATION,
+        MarkerEntry.COLUMN_NAME_QR,
+        MarkerEntry.COLUMN_NAME_NFC,
+        MarkerEntry.COLUMN_NAME_BEACON_UUID,
+        MarkerEntry.COLUMN_NAME_BEACON_MAJOR,
+        MarkerEntry.COLUMN_NAME_BEACON_MINOR,
+        MarkerEntry.COLUMN_NAME_EDDYSTONE_URL
+    };
+  }
+
+  /**
    * Menu
    */
   public static class MenuEntry implements BaseColumns {
@@ -154,8 +194,8 @@ public class OfflineEnduserContract {
         "CREATE TABLE " + ContentEntry.TABLE_NAME + " (" +
             ContentEntry._ID + " INTEGER PRIMARY KEY," +
             ContentEntry.COLUMN_NAME_JSON_ID + TEXT_TYPE + COMMA_SEP +
-            ContentEntry.COLUMN_NAME_SYSTEM_RELATION + TEXT_TYPE + COMMA_SEP +
-            ContentEntry.COLUMN_NAME_MENU_RELATION + TEXT_TYPE + COMMA_SEP +
+            ContentEntry.COLUMN_NAME_SYSTEM_RELATION + INTEGER_TYPE + COMMA_SEP +
+            ContentEntry.COLUMN_NAME_MENU_RELATION + INTEGER_TYPE + COMMA_SEP +
             ContentEntry.COLUMN_NAME_TITLE + TEXT_TYPE + COMMA_SEP +
             ContentEntry.COLUMN_NAME_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
             ContentEntry.COLUMN_NAME_LANGUAGE + TEXT_TYPE + COMMA_SEP +
