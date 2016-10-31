@@ -37,6 +37,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyChar;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
@@ -67,7 +68,7 @@ public class ContentDatabaseAdapterTest {
   }
 
   @Test
-  public void testGetSystem() {
+  public void testGetContent() {
     Cursor mockedCursor = mock(Cursor.class);
 
     Mockito.stub(mMockedDatabase.query(
@@ -76,7 +77,7 @@ public class ContentDatabaseAdapterTest {
         Mockito.anyString())).toReturn(mockedCursor);
 
     Mockito.stub(mockedCursor.getCount()).toReturn(1);
-    Mockito.stub(mockedCursor.moveToFirst()).toReturn(true);
+    Mockito.stub(mockedCursor.moveToNext()).toReturn(true).toReturn(false);
 
     Content savedContent = mContentDatabaseAdapter.getContent("1");
 
@@ -98,10 +99,10 @@ public class ContentDatabaseAdapterTest {
     content.setId("1");
     content.setContentBlocks(contentBlocks);
 
-    mContentDatabaseAdapter.insertOrUpdateContent(content);
+    mContentDatabaseAdapter.insertOrUpdateContent(content, false, 0);
 
     Mockito.verify(mMockedDatabase)
-        .insert(Mockito.eq(OfflineEnduserContract.SystemEntry.TABLE_NAME),
+        .insert(Mockito.eq(OfflineEnduserContract.ContentEntry.TABLE_NAME),
             Mockito.isNull(String.class),
             Mockito.any(ContentValues.class));
 
@@ -126,7 +127,7 @@ public class ContentDatabaseAdapterTest {
     )).toReturn(mockCursor);
     Mockito.stub(mockCursor.moveToFirst()).toReturn(true);
 
-    mContentDatabaseAdapter.insertOrUpdateContent(content);
+    mContentDatabaseAdapter.insertOrUpdateContent(content, false, 0);
 
     Mockito.verify(mMockedDatabase)
         .update(Mockito.eq(
@@ -154,7 +155,7 @@ public class ContentDatabaseAdapterTest {
         Mockito.any(String[].class), Mockito.anyString(), Mockito.anyString(),
         Mockito.anyString())).toReturn(mockedCursor);
     Mockito.stub(mockedCursor.getCount()).toReturn(1);
-    Mockito.stub(mockedCursor.moveToFirst()).toReturn(true);
+    Mockito.stub(mockedCursor.moveToNext()).toReturn(true).toReturn(false);
     Mockito.stub(mMockedContentBlockAdapter.getRelatedContentBlocks(anyLong()))
         .toReturn(contentBlocks);
 
@@ -162,5 +163,21 @@ public class ContentDatabaseAdapterTest {
 
     Assert.assertEquals(savedContent.getContentBlocks().get(0), block2);
     Assert.assertEquals(savedContent.getContentBlocks().get(1), block);
+  }
+
+  @Test
+  public void testRelatedContents() {
+    Cursor mockedCursor = mock(Cursor.class);
+    Mockito.stub(mMockedDatabase.query(
+        Mockito.anyString(), Mockito.any(String[].class), Mockito.anyString(),
+        Mockito.any(String[].class), Mockito.anyString(), Mockito.anyString(),
+        Mockito.anyString())).toReturn(mockedCursor);
+    Mockito.stub(mockedCursor.getCount()).toReturn(1);
+    Mockito.stub(mockedCursor.moveToNext()).toReturn(true).toReturn(false);
+
+    ArrayList<Content> contents = mContentDatabaseAdapter.getRelatedContents(1);
+
+    Mockito.verify(mMockedDatabase).query(anyString(), any(String[].class), anyString(),
+        any(String[].class), anyString(), anyString(), anyString());
   }
 }
