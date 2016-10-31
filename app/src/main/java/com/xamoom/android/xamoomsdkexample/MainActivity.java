@@ -25,6 +25,7 @@ import com.xamoom.android.xamoomsdk.Resource.*;
 import com.xamoom.android.xamoomsdk.Resource.System;
 import com.xamoom.android.xamoomsdk.Storage.Database.ContentBlockDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.ContentDatabaseAdapter;
+import com.xamoom.android.xamoomsdk.Storage.Database.MenuDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.SystemDatabaseAdapter;
 
 import java.io.IOException;
@@ -33,6 +34,7 @@ import java.util.EnumSet;
 import java.util.List;
 
 import at.rags.morpheus.Error;
+import at.rags.morpheus.Resource;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -70,7 +72,9 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
     getSpotsWithTags();
     searchSpots();
     getSystem();
+    */
     getMenu();
+    /*
     getSystemSetting();
     getStyle();
     */
@@ -180,11 +184,6 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
       @Override
       public void finished(Content result) {
         Log.v(TAG, "getContent: " + result);
-        ContentDatabaseAdapter adapter =
-            new ContentDatabaseAdapter(getApplicationContext());
-        adapter.insertOrUpdateContent(result);
-        Content savedContent = adapter.getContent(result.getId());
-        Log.v(TAG, "getContent: " + savedContent);
       }
 
       @Override
@@ -366,11 +365,16 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
       @Override
       public void finished(com.xamoom.android.xamoomsdk.Resource.Menu result) {
         Log.v(TAG, "getMenu: " + result.getItems());
+
+        MenuDatabaseAdapter adapter = new MenuDatabaseAdapter(getApplicationContext());
+        adapter.insertOrUpdate(result);
+        com.xamoom.android.xamoomsdk.Resource.Menu savedMenu = adapter.getMenu(result.getId());
+        Log.v(TAG, "Saved menu: " + savedMenu);
       }
 
       @Override
       public void error(List<Error> error) {
-
+        Log.e(TAG, "Error: " + error);
       }
     });
   }
