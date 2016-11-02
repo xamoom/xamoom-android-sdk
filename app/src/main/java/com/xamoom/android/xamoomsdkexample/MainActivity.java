@@ -63,7 +63,9 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
 
     setupEnduserApi();
 
-    getContent();
+    getSpotsWithTags();
+
+    //getContent();
     /*
     getContentOption();
     getContentLocationIdentifier();
@@ -75,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
     searchSpots();
     getSystem();
     getMenu();
-    getSystemSetting();
+    getRelatedSystemSetting();
     getStyle();
     */
   }
@@ -183,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
     mEnduserApi.getContent("7cf2c58e6d374ce3888c32eb80be53b5", new APICallback<Content, List<at.rags.morpheus.Error>>() {
       @Override
       public void finished(Content result) {Log.v(TAG, "getContent: " + result);
-        ContentDatabaseAdapter adapter = new ContentDatabaseAdapter(getApplicationContext());
+        ContentDatabaseAdapter adapter = ContentDatabaseAdapter.getInstance(getApplicationContext());
         adapter.insertOrUpdateContent(result, false, 0);
         Content savedContent = adapter.getContent(result.getId());
 
@@ -289,7 +291,7 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
       @Override
       public void finished(Spot result) {
         Log.v(TAG, "Result: " + result);
-        SpotDatabaseAdapter spotDatabaseAdapter = new SpotDatabaseAdapter(getApplicationContext());
+        SpotDatabaseAdapter spotDatabaseAdapter = SpotDatabaseAdapter.getInstance(getApplicationContext());
         spotDatabaseAdapter.insertOrUpdateSpot(result);
         Spot savedSpot = spotDatabaseAdapter.getSpot(result.getId());
         Log.v(TAG, "Saved spot: " + savedSpot);
@@ -332,7 +334,7 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
         Log.v(TAG, "getSpotsWithTags: " + cursor);
         Log.v(TAG, "getSpotsWithTags: " + hasMore);
 
-        SpotDatabaseAdapter spotDatabaseAdapter = new SpotDatabaseAdapter(getApplicationContext());
+        SpotDatabaseAdapter spotDatabaseAdapter = SpotDatabaseAdapter.getInstance(getApplicationContext());
         spotDatabaseAdapter.insertOrUpdateSpot(result.get(0));
         Spot savedSpot = spotDatabaseAdapter.getSpot(result.get(0).getId());
         Log.v(TAG, "Saved spot: " + savedSpot);
@@ -366,7 +368,7 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
       public void finished(System result) {
         Log.v(TAG, "getSystem: " + result.getId());
 
-        SystemDatabaseAdapter systemDatabaseAdapter = new SystemDatabaseAdapter(getApplicationContext());
+        SystemDatabaseAdapter systemDatabaseAdapter = SystemDatabaseAdapter.getInstance(getApplicationContext());
         systemDatabaseAdapter.insertOrUpdateSystem(result);
         System savedSystem = systemDatabaseAdapter.getSystem(result.getId());
         Log.v(TAG, "Saved system: " + savedSystem);
@@ -387,8 +389,8 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
       public void finished(com.xamoom.android.xamoomsdk.Resource.Menu result) {
         Log.v(TAG, "getMenu: " + result.getItems());
 
-        MenuDatabaseAdapter adapter = new MenuDatabaseAdapter(getApplicationContext());
-        adapter.insertOrUpdate(result);
+        MenuDatabaseAdapter adapter = MenuDatabaseAdapter.getInstance(getApplicationContext());
+        adapter.insertOrUpdate(result, -1);
         com.xamoom.android.xamoomsdk.Resource.Menu savedMenu = adapter.getMenu(result.getId());
         Log.v(TAG, "Saved menu: " + savedMenu);
       }
@@ -404,7 +406,7 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
     mEnduserApi.getSystemSetting("5755996320301056", new APICallback<SystemSetting, List<Error>>() {
       @Override
       public void finished(SystemSetting result) {
-        Log.v(TAG, "getSystemSetting: " + result);
+        Log.v(TAG, "getRelatedSystemSetting: " + result);
       }
 
       @Override
