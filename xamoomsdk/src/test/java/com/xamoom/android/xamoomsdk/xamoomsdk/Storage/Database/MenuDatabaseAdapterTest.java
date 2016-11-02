@@ -75,6 +75,23 @@ public class MenuDatabaseAdapterTest {
   }
 
   @Test
+  public void getMenuWithRow() {
+    Mockito.stub(mMockedDatabase.query(
+        Mockito.anyString(), Mockito.any(String[].class), Mockito.anyString(),
+        Mockito.any(String[].class), Mockito.anyString(), Mockito.anyString(),
+        Mockito.anyString())).toReturn(mMockedCursor);
+    Mockito.stub(mMockedCursor.getCount()).toReturn(1);
+    Mockito.stub(mMockedCursor.moveToFirst()).toReturn(true);
+
+    Menu savedMenu = mMenuDatabaseAdapter.getMenu(1);
+
+    Mockito.verify(mMockedDatabase).query(anyString(), any(String[].class), anyString(),
+        any(String[].class), anyString(), anyString(), anyString());
+
+    Assert.assertNotNull(savedMenu);
+  }
+
+  @Test
   public void testInsertOrUpdateNewEntity() {
     Mockito.stub(mMockedDatabase.query(
         Mockito.anyString(), Mockito.any(String[].class), Mockito.anyString(),

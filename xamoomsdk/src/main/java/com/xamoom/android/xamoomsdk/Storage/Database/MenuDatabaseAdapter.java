@@ -28,6 +28,17 @@ public class MenuDatabaseAdapter extends DatabaseAdapter {
     String selection = OfflineEnduserContract.MenuEntry.COLUMN_NAME_JSON_ID  + " = ?";
     String[] selectionArgs = {jsonId};
 
+    return getMenu(selection, selectionArgs);
+  }
+
+  public Menu getMenu(long row) {
+    String selection = OfflineEnduserContract.MenuEntry._ID  + " = ?";
+    String[] selectionArgs = {String.valueOf(row)};
+
+    return getMenu(selection, selectionArgs);
+  }
+
+  public Menu getMenu(String selection, String[] selectionArgs) {
     open();
     Cursor cursor = queryMenu(selection, selectionArgs);
 
