@@ -184,7 +184,7 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
           OfflineEnduserContract.ContentEntry.COLUMN_NAME_PUBLIC_IMAGE_URL)));
       content.setContentBlocks(relatedBlocks(cursor
           .getLong(cursor.getColumnIndex(OfflineEnduserContract.ContentEntry._ID))));
-      content.setSystem(mSystemDatabaseAdapter.getSystem(cursor.getLong(
+      content.setSystem(getSystemDatabaseAdapter().getSystem(cursor.getLong(
           cursor.getColumnIndex(OfflineEnduserContract.ContentEntry.COLUMN_NAME_SYSTEM_RELATION))));
       contents.add(content);
     }
