@@ -81,8 +81,17 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
       values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_TAGS,
           TextUtils.join(",", content.getTags()));
     }
+
     if (hasMenu) {
       values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_MENU_RELATION, menuRow);
+    }
+
+    if (content.getSystem() != null) {
+      long systemRow = getSystemDatabaseAdapter().insertOrUpdateSystem(content.getSystem());
+      if (systemRow != -1) {
+        values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_SYSTEM_RELATION,
+            systemRow);
+      }
     }
 
     long row = getPrimaryKey(content.getId());
@@ -99,14 +108,6 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
     if (content.getContentBlocks() != null) {
       for (ContentBlock cb : content.getContentBlocks()) {
         getContentBlockDatabaseAdapter().insertOrUpdate(cb, row);
-      }
-    }
-
-    if (content.getSystem() != null) {
-      long styleRow = getSystemDatabaseAdapter().insertOrUpdateSystem(content.getSystem());
-      if (styleRow != -1) {
-        values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_SYSTEM_RELATION, content.getSystem().getId());
-        updateContent(row, values);
       }
     }
 
@@ -183,7 +184,8 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
           OfflineEnduserContract.ContentEntry.COLUMN_NAME_PUBLIC_IMAGE_URL)));
       content.setContentBlocks(relatedBlocks(cursor
           .getLong(cursor.getColumnIndex(OfflineEnduserContract.ContentEntry._ID))));
-      // TODO: set system
+      content.setSystem(mSystemDatabaseAdapter.getSystem(cursor.getLong(
+          cursor.getColumnIndex(OfflineEnduserContract.ContentEntry.COLUMN_NAME_SYSTEM_RELATION))));
       contents.add(content);
     }
 
