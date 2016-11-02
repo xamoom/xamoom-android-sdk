@@ -63,13 +63,15 @@ public class SpotDatabaseAdapter extends DatabaseAdapter {
 
     if (spot.getSystem() != null) {
       values.put(OfflineEnduserContract.SpotEntry.COLUMN_NAME_RELATION_SYSTEM,
-          mSystemDatabaseAdapter.insertOrUpdateSystem(spot.getSystem()));
+          getSystemDatabaseAdapter().insertOrUpdateSystem(spot.getSystem()));
     }
 
     if (spot.getContent() != null) {
       values.put(OfflineEnduserContract.SpotEntry.COLUMN_NAME_RELATION_CONTENT,
-          mContentDatabaseAdapter.insertOrUpdateContent(spot.getContent(), false, 0));
+          getContentDatabaseAdapter().insertOrUpdateContent(spot.getContent(), false, 0));
     }
+
+    // TODO: save marker
 
     long row = getPrimaryKey(spot.getId());
     if (row != -1) {
