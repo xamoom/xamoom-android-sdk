@@ -10,7 +10,16 @@ import com.xamoom.android.xamoomsdk.Storage.TableContracts.OfflineEnduserContrac
 
 public class StyleDatabaseAdapter extends DatabaseAdapter {
 
-  public StyleDatabaseAdapter(Context context) {
+  private static StyleDatabaseAdapter mSharedInstance;
+
+  public static StyleDatabaseAdapter getInstance(Context context) {
+    if (mSharedInstance == null) {
+      mSharedInstance = new StyleDatabaseAdapter(context);
+    }
+    return mSharedInstance;
+  }
+
+  private StyleDatabaseAdapter(Context context) {
     super(context);
   }
 

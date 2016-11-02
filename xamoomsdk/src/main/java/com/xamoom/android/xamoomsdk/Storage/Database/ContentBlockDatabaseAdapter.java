@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.text.TextUtils;
 
-import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Storage.TableContracts.OfflineEnduserContract;
 
@@ -13,13 +12,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class ContentBlockDatabaseAdapter extends DatabaseAdapter {
-  private static ContentBlockDatabaseAdapter sharedInstance;
+  private static ContentBlockDatabaseAdapter mSharedInstance;
 
   public static ContentBlockDatabaseAdapter getInstance(Context context) {
-    if(sharedInstance == null) {
-      sharedInstance = new ContentBlockDatabaseAdapter(context);
+    if(mSharedInstance == null) {
+      mSharedInstance = new ContentBlockDatabaseAdapter(context);
     }
-    return sharedInstance;
+    return mSharedInstance;
   }
 
   private ContentBlockDatabaseAdapter(Context context) {

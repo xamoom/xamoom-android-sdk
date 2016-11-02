@@ -10,13 +10,13 @@ import com.xamoom.android.xamoomsdk.Storage.TableContracts.OfflineEnduserContrac
 import java.util.ArrayList;
 
 public class MarkerDatabaseAdapter extends DatabaseAdapter {
-  private static MarkerDatabaseAdapter sharedInstance;
+  private static MarkerDatabaseAdapter mSharedInstance;
 
   public static MarkerDatabaseAdapter getInstance(Context context) {
-    if (sharedInstance == null) {
-      sharedInstance = new MarkerDatabaseAdapter(context);
+    if (mSharedInstance == null) {
+      mSharedInstance = new MarkerDatabaseAdapter(context);
     }
-    return sharedInstance;
+    return mSharedInstance;
   }
 
   private MarkerDatabaseAdapter(Context context) {

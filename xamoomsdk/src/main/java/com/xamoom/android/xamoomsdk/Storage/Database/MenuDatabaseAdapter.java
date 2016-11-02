@@ -10,12 +10,18 @@ import com.xamoom.android.xamoomsdk.Resource.Menu;
 import com.xamoom.android.xamoomsdk.Storage.TableContracts.OfflineEnduserContract;
 
 public class MenuDatabaseAdapter extends DatabaseAdapter {
-
+  private static MenuDatabaseAdapter mSharedInstance;
   private ContentDatabaseAdapter mContentDatabaseAdapter;
 
-  public MenuDatabaseAdapter(Context context) {
+  public static MenuDatabaseAdapter getInstance(Context context) {
+    if (mSharedInstance == null) {
+      mSharedInstance = new MenuDatabaseAdapter(context);
+    }
+    return mSharedInstance;
+  }
+
+  private MenuDatabaseAdapter(Context context) {
     super(context);
-    mContentDatabaseAdapter = ContentDatabaseAdapter.getInstance(context);
   }
 
   public Menu getMenu(String jsonId) {
@@ -50,7 +56,7 @@ public class MenuDatabaseAdapter extends DatabaseAdapter {
 
     if (menu.getItems() != null) {
       for (Content content : menu.getItems()) {
-        mContentDatabaseAdapter.insertOrUpdateContent(content, true, row);
+        getContentDatabaseAdapter().insertOrUpdateContent(content, true, row);
       }
     }
 
@@ -92,7 +98,7 @@ public class MenuDatabaseAdapter extends DatabaseAdapter {
       Menu menu = new Menu();
       menu.setId(cursor.getString(cursor
           .getColumnIndex(OfflineEnduserContract.MenuEntry.COLUMN_NAME_JSON_ID)));
-      menu.setItems(mContentDatabaseAdapter.getRelatedContents(cursor.getLong(
+      menu.setItems(getContentDatabaseAdapter().getRelatedContents(cursor.getLong(
           cursor.getColumnIndex(OfflineEnduserContract.MenuEntry._ID)
       )));
       return menu;
@@ -111,6 +117,14 @@ public class MenuDatabaseAdapter extends DatabaseAdapter {
   }
 
   // setter
+
+
+  public ContentDatabaseAdapter getContentDatabaseAdapter() {
+    if (mContentDatabaseAdapter == null) {
+      mContentDatabaseAdapter = ContentDatabaseAdapter.getInstance(mContext);
+    }
+    return mContentDatabaseAdapter;
+  }
 
   public void setContentDatabaseAdapter(ContentDatabaseAdapter contentDatabaseAdapter) {
     mContentDatabaseAdapter = contentDatabaseAdapter;

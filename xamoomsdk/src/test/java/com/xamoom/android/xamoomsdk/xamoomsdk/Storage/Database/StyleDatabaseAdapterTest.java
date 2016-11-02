@@ -43,7 +43,7 @@ public class StyleDatabaseAdapterTest {
   @Before
   public void setup() {
     mStyleDatabaseAdapter =
-        new StyleDatabaseAdapter(RuntimeEnvironment.application);
+        StyleDatabaseAdapter.getInstance(RuntimeEnvironment.application);
 
     mMockedDatabaseHelper = Mockito.mock(DatabaseHelper.class);
     mMockedDatabase = Mockito.mock(SQLiteDatabase.class);

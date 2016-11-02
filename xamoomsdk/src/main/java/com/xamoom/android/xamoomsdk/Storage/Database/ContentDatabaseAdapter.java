@@ -15,21 +15,19 @@ import java.util.Collections;
 import java.util.Comparator;
 
 public class ContentDatabaseAdapter extends DatabaseAdapter {
-  private static ContentDatabaseAdapter sharedInstance;
+  private static ContentDatabaseAdapter mSharedInstance;
   private ContentBlockDatabaseAdapter mContentBlockDatabaseAdapter;
   private SystemDatabaseAdapter mSystemDatabaseAdapter;
 
   public static ContentDatabaseAdapter getInstance(Context context) {
-    if (sharedInstance == null) {
-      sharedInstance = new ContentDatabaseAdapter(context);
+    if (mSharedInstance == null) {
+      mSharedInstance = new ContentDatabaseAdapter(context);
     }
-    return sharedInstance;
+    return mSharedInstance;
   }
 
   private ContentDatabaseAdapter(Context context) {
     super(context);
-    mContentBlockDatabaseAdapter = ContentBlockDatabaseAdapter.getInstance(context);
-    mSystemDatabaseAdapter = SystemDatabaseAdapter.getInstance(context);
   }
 
   public Content getContent(String jsonId) {
@@ -89,12 +87,12 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
     // inserts contentBlocks to database with foreign key to content
     if (content.getContentBlocks() != null) {
       for (ContentBlock cb : content.getContentBlocks()) {
-        mContentBlockDatabaseAdapter.insertOrUpdate(cb, row);
+        getContentBlockDatabaseAdapter().insertOrUpdate(cb, row);
       }
     }
 
     if (content.getSystem() != null) {
-      long styleRow = mSystemDatabaseAdapter.insertOrUpdateSystem(content.getSystem());
+      long styleRow = getSystemDatabaseAdapter().insertOrUpdateSystem(content.getSystem());
       if (styleRow != -1) {
         values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_SYSTEM_RELATION, content.getSystem().getId());
         updateContent(row, values);
@@ -182,7 +180,7 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
   }
 
   public ArrayList<ContentBlock> relatedBlocks(long id) {
-    ArrayList<ContentBlock> blocks = mContentBlockDatabaseAdapter.getRelatedContentBlocks(id);
+    ArrayList<ContentBlock> blocks = getContentBlockDatabaseAdapter().getRelatedContentBlocks(id);
     Collections.sort(blocks, new Comparator<ContentBlock>() {
       @Override
       public int compare(ContentBlock cb1, ContentBlock cb2) {
@@ -193,6 +191,20 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
   }
 
   // setter
+
+  public ContentBlockDatabaseAdapter getContentBlockDatabaseAdapter() {
+    if (mContentBlockDatabaseAdapter == null) {
+      mContentBlockDatabaseAdapter = ContentBlockDatabaseAdapter.getInstance(mContext);
+    }
+    return mContentBlockDatabaseAdapter;
+  }
+
+  public SystemDatabaseAdapter getSystemDatabaseAdapter() {
+    if (mSystemDatabaseAdapter == null) {
+      mSystemDatabaseAdapter = SystemDatabaseAdapter.getInstance(mContext);
+    }
+    return mSystemDatabaseAdapter;
+  }
 
   public void setContentBlockDatabaseAdapter(ContentBlockDatabaseAdapter contentBlockDatabaseAdapter) {
     mContentBlockDatabaseAdapter = contentBlockDatabaseAdapter;

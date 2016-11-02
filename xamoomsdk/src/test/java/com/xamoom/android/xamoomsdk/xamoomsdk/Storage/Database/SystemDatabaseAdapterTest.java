@@ -49,10 +49,9 @@ public class SystemDatabaseAdapterTest {
   public void setup() {
     mSystemDatabaseAdapter =
         SystemDatabaseAdapter.getInstance(RuntimeEnvironment.application);
-    mMockedStyleDatabaseAdapter =
-        mock(StyleDatabaseAdapter.class);
-    mMockedSettingDatabaseAdapter =
-        mock(SettingDatabaseAdapter.class);
+    mMockedStyleDatabaseAdapter = mock(StyleDatabaseAdapter.class);
+    mMockedSettingDatabaseAdapter = mock(SettingDatabaseAdapter.class);
+    mMockedMenuDatabaseAdapter = mock(MenuDatabaseAdapter.class);
     mMockedDatabaseHelper = mock(DatabaseHelper.class);
     mMockedDatabase = mock(SQLiteDatabase.class);
     mSystemDatabaseAdapter.setDatabaseHelper(mMockedDatabaseHelper);

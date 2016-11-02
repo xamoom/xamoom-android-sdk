@@ -4,7 +4,6 @@ package com.xamoom.android.xamoomsdk.Storage.Database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.text.Selection;
 import android.text.TextUtils;
 
 import com.xamoom.android.xamoomsdk.Resource.Location;
@@ -14,21 +13,19 @@ import com.xamoom.android.xamoomsdk.Storage.TableContracts.OfflineEnduserContrac
 import java.util.Arrays;
 
 public class SpotDatabaseAdapter extends DatabaseAdapter {
-  private static SpotDatabaseAdapter sharedInstance;
+  private static SpotDatabaseAdapter mSharedInstance;
   private SystemDatabaseAdapter mSystemDatabaseAdapter;
   private ContentDatabaseAdapter mContentDatabaseAdapter;
 
   public static SpotDatabaseAdapter getInstance(Context context) {
-    if (sharedInstance == null) {
-      sharedInstance = new SpotDatabaseAdapter(context);
+    if (mSharedInstance == null) {
+      mSharedInstance = new SpotDatabaseAdapter(context);
     }
-    return sharedInstance;
+    return mSharedInstance;
   }
 
   private SpotDatabaseAdapter(Context context) {
     super(context);
-    mSystemDatabaseAdapter = SystemDatabaseAdapter.getInstance(context);
-    mContentDatabaseAdapter = ContentDatabaseAdapter.getInstance(context);
   }
 
   public Spot getSpot(String jsonId) {
@@ -162,6 +159,20 @@ public class SpotDatabaseAdapter extends DatabaseAdapter {
 
   // setter
 
+
+  public ContentDatabaseAdapter getContentDatabaseAdapter() {
+    if (mContentDatabaseAdapter == null) {
+      mContentDatabaseAdapter = ContentDatabaseAdapter.getInstance(mContext);
+    }
+    return mContentDatabaseAdapter;
+  }
+
+  public SystemDatabaseAdapter getSystemDatabaseAdapter() {
+    if (mSystemDatabaseAdapter == null) {
+      mSystemDatabaseAdapter = SystemDatabaseAdapter.getInstance(mContext);
+    }
+    return mSystemDatabaseAdapter;
+  }
 
   public void setSystemDatabaseAdapter(SystemDatabaseAdapter systemDatabaseAdapter) {
     mSystemDatabaseAdapter = systemDatabaseAdapter;

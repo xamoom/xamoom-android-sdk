@@ -9,8 +9,16 @@ import com.xamoom.android.xamoomsdk.Resource.SystemSetting;
 import com.xamoom.android.xamoomsdk.Storage.TableContracts.OfflineEnduserContract;
 
 public class SettingDatabaseAdapter extends DatabaseAdapter {
+  private static SettingDatabaseAdapter mSharedInstance;
 
-  public SettingDatabaseAdapter(Context context) {
+  public static SettingDatabaseAdapter getInstance(Context context) {
+    if (mSharedInstance == null) {
+      mSharedInstance = new SettingDatabaseAdapter(context);
+    }
+    return mSharedInstance;
+  }
+
+  private SettingDatabaseAdapter(Context context) {
     super(context);
   }
 

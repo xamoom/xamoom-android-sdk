@@ -41,7 +41,7 @@ public class SettingDatabaseAdapterTest {
 
   @Before
   public void setup() {
-    mSettingDatabaseAdapter = new SettingDatabaseAdapter(RuntimeEnvironment.application);
+    mSettingDatabaseAdapter = SettingDatabaseAdapter.getInstance(RuntimeEnvironment.application);
     mMockedDatabaseHelper = mock(DatabaseHelper.class);
     mMockedDatabase = mock(SQLiteDatabase.class);
     mMockedCursor = mock(Cursor.class);

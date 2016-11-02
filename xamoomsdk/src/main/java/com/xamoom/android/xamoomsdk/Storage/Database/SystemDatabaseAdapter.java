@@ -3,33 +3,27 @@ package com.xamoom.android.xamoomsdk.Storage.Database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteQueryBuilder;
 
-import com.xamoom.android.xamoomsdk.Resource.Style;
 import com.xamoom.android.xamoomsdk.Resource.System;
-import com.xamoom.android.xamoomsdk.Storage.TableContracts.OfflineEnduserContract;
 import com.xamoom.android.xamoomsdk.Storage.TableContracts.OfflineEnduserContract.SystemEntry;
 
 
 public class SystemDatabaseAdapter extends DatabaseAdapter {
-  private static SystemDatabaseAdapter sharedInstance;
+  private static SystemDatabaseAdapter mSharedInstance;
 
   private StyleDatabaseAdapter mStyleDatabaseAdapter;
   private SettingDatabaseAdapter mSettingDatabaseAdapter;
   private MenuDatabaseAdapter mMenuDatabaseAdapter;
 
   public static SystemDatabaseAdapter getInstance(Context context) {
-    if (sharedInstance == null) {
-      sharedInstance = new SystemDatabaseAdapter(context);
+    if (mSharedInstance == null) {
+      mSharedInstance = new SystemDatabaseAdapter(context);
     }
-    return sharedInstance;
+    return mSharedInstance;
   }
 
   private SystemDatabaseAdapter(Context context) {
     super(context);
-    mStyleDatabaseAdapter = new StyleDatabaseAdapter(context);
-    mSettingDatabaseAdapter = new SettingDatabaseAdapter(context);
-    //mMenuDatabaseAdapter = new MenuDatabaseAdapter(context);
   }
 
   public System getSystem(String jsonId) {
@@ -76,17 +70,15 @@ public class SystemDatabaseAdapter extends DatabaseAdapter {
     }
 
     if (system.getMenu() != null) {
-      /* // TODO : insert menu
-      long menuRow = mMenuDatabaseAdapter.insertOrUpdate(system.getMenu());
+      long menuRow = getMenuDatabaseAdapter().insertOrUpdate(system.getMenu());
       if (menuRow != -1) {
         values.put(SystemEntry.COLUMN_NAME_MENU, menuRow);
         updateSystem(row, values);
       }
-      */
     }
 
     if (system.getStyle() != null) {
-      long styleRow = mStyleDatabaseAdapter.insertOrUpdateStyle(system.getStyle());
+      long styleRow = getStyleDatabaseAdapter().insertOrUpdateStyle(system.getStyle());
       if (styleRow != -1) {
         values.put(SystemEntry.COLUMN_NAME_STYLE, system.getStyle().getId());
         updateSystem(row, values);
@@ -94,7 +86,7 @@ public class SystemDatabaseAdapter extends DatabaseAdapter {
     }
 
     if (system.getSystemSetting() != null) {
-      long settingRow = mSettingDatabaseAdapter.insertOrUpdateSetting(system.getSystemSetting());
+      long settingRow = getSettingDatabaseAdapter().insertOrUpdateSetting(system.getSystemSetting());
       if (settingRow != -1) {
         values.put(SystemEntry.COLUMN_NAME_SYSTEMSETTING, system.getSystemSetting().getId());
         updateSystem(row, values);
@@ -158,8 +150,12 @@ public class SystemDatabaseAdapter extends DatabaseAdapter {
           cursor.getColumnIndex(SystemEntry.COLUMN_NAME_NAME)));
       system.setStyle(mStyleDatabaseAdapter.getStyle(
           cursor.getString(cursor.getColumnIndex(SystemEntry.COLUMN_NAME_STYLE))));
+      // TODO: change to FK
       system.setSystemSetting(mSettingDatabaseAdapter.getSystemSetting(
           cursor.getString(cursor.getColumnIndex(SystemEntry.COLUMN_NAME_SYSTEMSETTING))));
+      // TODO: change to FK
+      system.setMenu(mMenuDatabaseAdapter.getMenu(cursor.getLong(
+          cursor.getColumnIndex(SystemEntry.COLUMN_NAME_MENU))));
       return system;
     }
 
@@ -167,6 +163,28 @@ public class SystemDatabaseAdapter extends DatabaseAdapter {
   }
 
   // getter & setter
+
+
+  public StyleDatabaseAdapter getStyleDatabaseAdapter() {
+    if (mStyleDatabaseAdapter == null) {
+      mStyleDatabaseAdapter = StyleDatabaseAdapter.getInstance(mContext);
+    }
+    return mStyleDatabaseAdapter;
+  }
+
+  public SettingDatabaseAdapter getSettingDatabaseAdapter() {
+    if (mSettingDatabaseAdapter == null) {
+      mSettingDatabaseAdapter = SettingDatabaseAdapter.getInstance(mContext);
+    }
+    return mSettingDatabaseAdapter;
+  }
+
+  public MenuDatabaseAdapter getMenuDatabaseAdapter() {
+    if (mMenuDatabaseAdapter == null) {
+      mMenuDatabaseAdapter = MenuDatabaseAdapter.getInstance(mContext);
+    }
+    return mMenuDatabaseAdapter;
+  }
 
   public void setStyleDatabaseAdapter(StyleDatabaseAdapter styleDatabaseAdapter) {
     mStyleDatabaseAdapter = styleDatabaseAdapter;

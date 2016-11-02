@@ -43,7 +43,7 @@ public class MenuDatabaseAdapterTest {
 
   @Before
   public void setup() {
-    mMenuDatabaseAdapter = new MenuDatabaseAdapter(RuntimeEnvironment.application);
+    mMenuDatabaseAdapter = MenuDatabaseAdapter.getInstance(RuntimeEnvironment.application);
     mMockedContentDatabaseAdapter = Mockito.mock(ContentDatabaseAdapter.class);
     mMockedDatabaseHelper = mock(DatabaseHelper.class);
     mMockedDatabase = mock(SQLiteDatabase.class);
