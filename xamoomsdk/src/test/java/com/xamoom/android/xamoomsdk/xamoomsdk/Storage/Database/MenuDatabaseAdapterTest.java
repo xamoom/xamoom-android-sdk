@@ -115,7 +115,7 @@ public class MenuDatabaseAdapterTest {
     menu.setId("1");
     menu.setItems(contents);
 
-    long row = mMenuDatabaseAdapter.insertOrUpdate(menu);
+    long row = mMenuDatabaseAdapter.insertOrUpdate(menu, 0);
 
     Mockito.verify(mMockedDatabase).insert(anyString(), anyString(), any(ContentValues.class));
     Mockito.verify(mMockedContentDatabaseAdapter).insertOrUpdateContent(eq(content1), eq(true), anyInt());
@@ -135,7 +135,7 @@ public class MenuDatabaseAdapterTest {
     Menu menu = new Menu();
     menu.setId("1");
 
-    long row = mMenuDatabaseAdapter.insertOrUpdate(menu);
+    long row = mMenuDatabaseAdapter.insertOrUpdate(menu, 0);
 
     Mockito.verify(mMockedDatabase).update(eq(OfflineEnduserContract.MenuEntry.TABLE_NAME),
         any(ContentValues.class), anyString(), any(String[].class));

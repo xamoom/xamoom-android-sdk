@@ -27,8 +27,18 @@ public class StyleDatabaseAdapter extends DatabaseAdapter {
     String selection = OfflineEnduserContract.StyleEntry.COLUMN_NAME_JSON_ID + " = ?";
     String[] selectionArgs = {jsonId};
 
-    open();
+    return getStyle(selection, selectionArgs);
+  }
 
+  public Style getRelatedStyle(long systemRow) {
+    String selection = StyleEntry.COLUMN_NAME_SYSTEM_RELATION + " = ?";
+    String[] selectionArgs = {String.valueOf(systemRow)};
+
+    return getStyle(selection, selectionArgs);
+  }
+
+  private Style getStyle(String selection, String[] selectionArgs) {
+    open();
     Cursor cursor = queryStyles(selection, selectionArgs);
 
     if (cursor.getCount() > 1) {
@@ -45,7 +55,7 @@ public class StyleDatabaseAdapter extends DatabaseAdapter {
     return style;
   }
 
-  public long insertOrUpdateStyle(Style style) {
+  public long insertOrUpdateStyle(Style style, long systemRow) {
     ContentValues values = new ContentValues();
     values.put(StyleEntry.COLUMN_NAME_JSON_ID, style.getId());
     values.put(StyleEntry.COLUMN_NAME_BACKGROUND_COLOR, style.getBackgroundColor());
@@ -54,6 +64,10 @@ public class StyleDatabaseAdapter extends DatabaseAdapter {
     values.put(StyleEntry.COLUMN_NAME_CHROME_HEADER_COLOR, style.getChromeHeaderColor());
     values.put(StyleEntry.COLUMN_NAME_MAP_PIN, style.getCustomMarker());
     values.put(StyleEntry.COLUMN_NAME_ICON, style.getIcon());
+
+    if (systemRow != -1) {
+      values.put(StyleEntry.COLUMN_NAME_SYSTEM_RELATION, systemRow);
+    }
 
     long row = getPrimaryKey(style.getId());
     if (row != -1) {
@@ -67,7 +81,7 @@ public class StyleDatabaseAdapter extends DatabaseAdapter {
     return row;
   }
 
-  public int updateStyle(long id, ContentValues values) {
+  private int updateStyle(long id, ContentValues values) {
     String selection = StyleEntry._ID + " = ?";
     String[] selectionArgs = { String.valueOf(id) };
 

@@ -196,10 +196,10 @@ public class SystemDatabaseAdapterTest {
     mSystemDatabaseAdapter.insertOrUpdateSystem(system);
 
     Mockito.verify(mMockedStyleDatabaseAdapter)
-      .insertOrUpdateStyle(Mockito.eq(style));
+      .insertOrUpdateStyle(Mockito.eq(style), anyLong());
     Mockito.verify(mMockedSettingDatabaseAdapter)
-        .insertOrUpdateSetting(Mockito.eq(setting));
+        .insertOrUpdateSetting(Mockito.eq(setting), anyLong());
     Mockito.verify(mMockedMenuDatabaseAdapter)
-        .insertOrUpdate(Mockito.eq(menu));
+        .insertOrUpdate(Mockito.eq(menu), anyLong());
   }
 }

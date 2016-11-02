@@ -86,19 +86,8 @@ public class StyleDatabaseAdapterTest {
   }
 
   @Test
-  public void testUpdateSystem() {
-    ContentValues values = new ContentValues();
-    values.put(OfflineEnduserContract.StyleEntry.COLUMN_NAME_ICON, "new icon");
-
-    mStyleDatabaseAdapter.updateStyle(1, values);
-
-    verify(mMockedDatabase).update(eq(OfflineEnduserContract.StyleEntry.TABLE_NAME),
-        eq(values), anyString(), any(String[].class));
-  }
-
-  @Test
   public void testInserOrUpdateStyleInsertNew() {
-    mStyleDatabaseAdapter.insertOrUpdateStyle(mStyle);
+    mStyleDatabaseAdapter.insertOrUpdateStyle(mStyle, 0);
 
     verify(mMockedDatabase).insert(
         eq(OfflineEnduserContract.StyleEntry.TABLE_NAME), anyString(), any(ContentValues.class));
@@ -118,7 +107,7 @@ public class StyleDatabaseAdapterTest {
     )).toReturn(mockCursor);
     stub(mockCursor.moveToFirst()).toReturn(true);
 
-    mStyleDatabaseAdapter.insertOrUpdateStyle(mStyle);
+    mStyleDatabaseAdapter.insertOrUpdateStyle(mStyle, 0);
 
     verify(mMockedDatabase).update(
         eq(OfflineEnduserContract.StyleEntry.TABLE_NAME), any(ContentValues.class),

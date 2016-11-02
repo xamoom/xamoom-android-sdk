@@ -22,13 +22,24 @@ public class SettingDatabaseAdapter extends DatabaseAdapter {
     super(context);
   }
 
-  public SystemSetting getSystemSetting(String jsonId) {
+  public SystemSetting getRelatedSystemSetting(String jsonId) {
     String selection = OfflineEnduserContract.SettingEntry.
         COLUMN_NAME_JSON_ID + " = ?";
     String[] selectionArgs = {jsonId};
 
-    open();
+    return getRelatedSystemSetting(selection, selectionArgs);
+  }
 
+  public SystemSetting getRelatedSystemSetting(long systemRow) {
+    String selection = OfflineEnduserContract.SettingEntry.
+        _ID + " = ?";
+    String[] selectionArgs = {String.valueOf(systemRow)};
+
+    return getRelatedSystemSetting(selection, selectionArgs);
+  }
+
+  private SystemSetting getRelatedSystemSetting(String selection, String[] selectionArgs) {
+    open();
     Cursor cursor = querySettings(selection, selectionArgs);
 
     if (cursor.getCount() > 1) {
@@ -42,7 +53,7 @@ public class SettingDatabaseAdapter extends DatabaseAdapter {
     return setting;
   }
 
-  public long insertOrUpdateSetting(SystemSetting setting) {
+  public long insertOrUpdateSetting(SystemSetting setting, long systemRow) {
     ContentValues values = new ContentValues();
     values.put(OfflineEnduserContract.SettingEntry.COLUMN_NAME_JSON_ID,
         setting.getId());
@@ -50,6 +61,10 @@ public class SettingDatabaseAdapter extends DatabaseAdapter {
         setting.getItunesAppId());
     values.put(OfflineEnduserContract.SettingEntry.COLUMN_NAME_PLAYSTORE_ID,
         setting.getGooglePlayAppId());
+    if (systemRow != -1) {
+      values.put(OfflineEnduserContract.SettingEntry.COLUMN_NAME_SYSTEM_RELATION,
+          systemRow);
+    }
 
     long row = getPrimaryKey(setting.getId());
     if (row != -1) {

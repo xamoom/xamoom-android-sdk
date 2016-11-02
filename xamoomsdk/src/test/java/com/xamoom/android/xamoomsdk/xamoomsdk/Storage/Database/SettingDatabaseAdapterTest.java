@@ -6,8 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.xamoom.android.xamoomsdk.BuildConfig;
-import com.xamoom.android.xamoomsdk.Resource.Content;
-import com.xamoom.android.xamoomsdk.Resource.System;
 import com.xamoom.android.xamoomsdk.Resource.SystemSetting;
 import com.xamoom.android.xamoomsdk.Storage.Database.DatabaseHelper;
 import com.xamoom.android.xamoomsdk.Storage.Database.SettingDatabaseAdapter;
@@ -21,13 +19,11 @@ import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
-import org.robolectric.shadows.util.SQLiteLibraryLoader;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockingDetails;
 import static org.mockito.Mockito.stub;
 
 @RunWith(RobolectricTestRunner.class)
@@ -65,7 +61,7 @@ public class SettingDatabaseAdapterTest {
     stub(mMockedCursor.getString(0)).toReturn("1");
 
     SystemSetting savedSetting =
-        mSettingDatabaseAdapter.getSystemSetting("1");
+        mSettingDatabaseAdapter.getRelatedSystemSetting("1");
 
     Assert.assertNotNull(savedSetting);
     Assert.assertEquals(savedSetting.getId(), "1");
@@ -83,7 +79,7 @@ public class SettingDatabaseAdapterTest {
     stub(mMockedCursor.moveToFirst()).toReturn(true);
     stub(mMockedCursor.getLong(0)).toReturn(-1L);
 
-    mSettingDatabaseAdapter.insertOrUpdateSetting(setting);
+    mSettingDatabaseAdapter.insertOrUpdateSetting(setting, 0);
 
     Mockito.verify(mMockedDatabase).insert(anyString(), anyString(),
         any(ContentValues.class));
@@ -101,7 +97,7 @@ public class SettingDatabaseAdapterTest {
     stub(mMockedCursor.moveToFirst()).toReturn(true);
     stub(mMockedCursor.getLong(0)).toReturn(0L);
 
-    mSettingDatabaseAdapter.insertOrUpdateSetting(setting);
+    mSettingDatabaseAdapter.insertOrUpdateSetting(setting, 0);
 
     Mockito.verify(mMockedDatabase).update(anyString(), any(ContentValues.class),
         anyString(), any(String[].class));

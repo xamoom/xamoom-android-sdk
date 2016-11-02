@@ -70,29 +70,19 @@ public class SystemDatabaseAdapter extends DatabaseAdapter {
     }
 
     if (system.getMenu() != null) {
-      long menuRow = getMenuDatabaseAdapter().insertOrUpdate(system.getMenu());
-      if (menuRow != -1) {
-        values.put(SystemEntry.COLUMN_NAME_MENU, menuRow);
-        updateSystem(row, values);
-      }
+      long menuRow = getMenuDatabaseAdapter().
+          insertOrUpdate(system.getMenu(), row);
     }
 
     if (system.getStyle() != null) {
-      long styleRow = getStyleDatabaseAdapter().insertOrUpdateStyle(system.getStyle());
-      if (styleRow != -1) {
-        values.put(SystemEntry.COLUMN_NAME_STYLE, system.getStyle().getId());
-        updateSystem(row, values);
-      }
+      long styleRow = getStyleDatabaseAdapter().
+          insertOrUpdateStyle(system.getStyle(), row);
     }
 
     if (system.getSystemSetting() != null) {
-      long settingRow = getSettingDatabaseAdapter().insertOrUpdateSetting(system.getSystemSetting());
-      if (settingRow != -1) {
-        values.put(SystemEntry.COLUMN_NAME_SYSTEMSETTING, system.getSystemSetting().getId());
-        updateSystem(row, values);
-      }
+      long settingRow = getSettingDatabaseAdapter().
+          insertOrUpdateSetting(system.getSystemSetting(), row);
     }
-
     return row;
   }
 
@@ -148,14 +138,12 @@ public class SystemDatabaseAdapter extends DatabaseAdapter {
           cursor.getColumnIndex(SystemEntry.COLUMN_NAME_JSON_ID)));
       system.setName(cursor.getString(
           cursor.getColumnIndex(SystemEntry.COLUMN_NAME_NAME)));
-      system.setStyle(mStyleDatabaseAdapter.getStyle(
-          cursor.getString(cursor.getColumnIndex(SystemEntry.COLUMN_NAME_STYLE))));
-      // TODO: change to FK
-      system.setSystemSetting(mSettingDatabaseAdapter.getSystemSetting(
-          cursor.getString(cursor.getColumnIndex(SystemEntry.COLUMN_NAME_SYSTEMSETTING))));
-      // TODO: change to FK
-      system.setMenu(mMenuDatabaseAdapter.getMenu(cursor.getLong(
-          cursor.getColumnIndex(SystemEntry.COLUMN_NAME_MENU))));
+      system.setStyle(mStyleDatabaseAdapter.getRelatedStyle(
+          cursor.getLong(cursor.getColumnIndex(SystemEntry._ID))));
+      system.setSystemSetting(mSettingDatabaseAdapter.getRelatedSystemSetting(
+          cursor.getLong(cursor.getColumnIndex(SystemEntry._ID))));
+      system.setMenu(mMenuDatabaseAdapter.getRelatedMenu(
+          cursor.getLong(cursor.getColumnIndex(SystemEntry._ID))));
       return system;
     }
 
@@ -163,7 +151,6 @@ public class SystemDatabaseAdapter extends DatabaseAdapter {
   }
 
   // getter & setter
-
 
   public StyleDatabaseAdapter getStyleDatabaseAdapter() {
     if (mStyleDatabaseAdapter == null) {

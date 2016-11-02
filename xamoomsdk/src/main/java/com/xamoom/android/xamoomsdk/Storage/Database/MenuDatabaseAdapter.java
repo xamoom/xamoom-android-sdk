@@ -38,6 +38,14 @@ public class MenuDatabaseAdapter extends DatabaseAdapter {
     return getMenu(selection, selectionArgs);
   }
 
+  public Menu getRelatedMenu(long systemRow) {
+    String selection = OfflineEnduserContract.MenuEntry.
+        COLUMN_NAME_SYSTEM_RELATION  + " = ?";
+    String[] selectionArgs = {String.valueOf(systemRow)};
+
+    return getMenu(selection, selectionArgs);
+  }
+
   public Menu getMenu(String selection, String[] selectionArgs) {
     open();
     Cursor cursor = queryMenu(selection, selectionArgs);
@@ -51,9 +59,12 @@ public class MenuDatabaseAdapter extends DatabaseAdapter {
     return menu;
   }
 
-  public long insertOrUpdate(Menu menu) {
+  public long insertOrUpdate(Menu menu, long systemRow) {
     ContentValues values = new ContentValues();
     values.put(OfflineEnduserContract.MenuEntry.COLUMN_NAME_JSON_ID, menu.getId());
+    if (systemRow != -1) {
+      values.put(OfflineEnduserContract.MenuEntry.COLUMN_NAME_SYSTEM_RELATION, systemRow);
+    }
 
     long row = getPrimaryKey(menu.getId());
     if (row != -1) {
