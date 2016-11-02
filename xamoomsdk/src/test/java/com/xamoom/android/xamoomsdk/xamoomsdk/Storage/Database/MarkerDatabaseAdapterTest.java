@@ -1,5 +1,6 @@
 package com.xamoom.android.xamoomsdk.xamoomsdk.Storage.Database;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -14,11 +15,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.mockito.internal.matchers.MatchersPrinter;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 
@@ -60,5 +63,45 @@ public class MarkerDatabaseAdapterTest {
         anyString(), anyString());
 
     Assert.assertNotNull(marker);
+  }
+
+  @Test
+  public void tesInsertOrUpdateNewEntity() {
+    Marker marker = new Marker();
+    marker.setId("1");
+
+    long row = mMarkerDatabaseAdapter.insertOrUpdateMarker(marker, 0);
+
+    Mockito.verify(mMockedDatabase).query(
+        Mockito.eq(OfflineEnduserContract.MarkerEntry.TABLE_NAME),
+        any(String[].class), anyString(), any(String[].class), anyString(),
+        anyString(), anyString());
+
+    Mockito.verify(mMockedDatabase).insert(
+        Mockito.eq(OfflineEnduserContract.MarkerEntry.TABLE_NAME),
+        anyString(), any(ContentValues.class));
+  }
+
+  @Test
+  public void testInsertOrUpdateExistingEntity() {
+    Marker marker = new Marker();
+    marker.setId("1");
+
+    Mockito.stub(mMockedDatabase.query(anyString(), any(String[].class), anyString(),
+        any(String[].class), anyString(), anyString(), anyString())).toReturn(mMockedCursor);
+    Mockito.stub(mMockedCursor.moveToFirst()).toReturn(true);
+    Mockito.stub(mMockedCursor.getInt(anyInt())).toReturn(1);
+
+    long row = mMarkerDatabaseAdapter.insertOrUpdateMarker(marker, 0);
+
+    Mockito.verify(mMockedDatabase).query(
+        Mockito.eq(OfflineEnduserContract.MarkerEntry.TABLE_NAME),
+        any(String[].class), anyString(), any(String[].class), anyString(),
+        anyString(), anyString());
+
+    Mockito.verify(mMockedDatabase).update(
+        Mockito.eq(OfflineEnduserContract.MarkerEntry.TABLE_NAME),
+        any(ContentValues.class), anyString(), any(String[].class));
+    Assert.assertNotEquals(row, -1L);
   }
 }
