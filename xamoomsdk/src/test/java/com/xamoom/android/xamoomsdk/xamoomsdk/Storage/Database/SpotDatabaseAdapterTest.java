@@ -46,7 +46,7 @@ public class SpotDatabaseAdapterTest {
 
   @Before
   public void setup() {
-    mSpotDatabaseAdapter = new SpotDatabaseAdapter(RuntimeEnvironment.application);
+    mSpotDatabaseAdapter = SpotDatabaseAdapter.getInstance(RuntimeEnvironment.application);
     mMockedDatabaseHelper = mock(DatabaseHelper.class);
     mMockedDatabase = mock(SQLiteDatabase.class);
     mSpotDatabaseAdapter.setDatabaseHelper(mMockedDatabaseHelper);

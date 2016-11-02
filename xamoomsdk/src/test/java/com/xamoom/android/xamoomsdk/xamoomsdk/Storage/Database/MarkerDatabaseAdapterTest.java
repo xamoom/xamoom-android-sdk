@@ -36,7 +36,7 @@ public class MarkerDatabaseAdapterTest {
   @Before
   public void setup() {
     mMarkerDatabaseAdapter =
-        new MarkerDatabaseAdapter(RuntimeEnvironment.application);
+        MarkerDatabaseAdapter.getInstance(RuntimeEnvironment.application);
     mMockedDatabaseHelper = mock(DatabaseHelper.class);
     mMockedDatabase = mock(SQLiteDatabase.class);
     mMarkerDatabaseAdapter.setDatabaseHelper(mMockedDatabaseHelper);

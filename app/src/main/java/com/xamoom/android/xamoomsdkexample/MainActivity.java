@@ -21,11 +21,13 @@ import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.APIListCallback;
 import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
 import com.xamoom.android.xamoomsdk.EnduserApi;
+import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
 import com.xamoom.android.xamoomsdk.Resource.*;
 import com.xamoom.android.xamoomsdk.Resource.System;
 import com.xamoom.android.xamoomsdk.Storage.Database.ContentBlockDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.ContentDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.MenuDatabaseAdapter;
+import com.xamoom.android.xamoomsdk.Storage.Database.SpotDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.SystemDatabaseAdapter;
 
 import java.io.IOException;
@@ -72,9 +74,7 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
     getSpotsWithTags();
     searchSpots();
     getSystem();
-    */
     getMenu();
-    /*
     getSystemSetting();
     getStyle();
     */
@@ -182,11 +182,12 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
   public void getContent() {
     mEnduserApi.getContent("7cf2c58e6d374ce3888c32eb80be53b5", new APICallback<Content, List<at.rags.morpheus.Error>>() {
       @Override
-      public void finished(Content result) {
-        Log.v(TAG, "getContent: " + result);
+      public void finished(Content result) {Log.v(TAG, "getContent: " + result);
         ContentDatabaseAdapter adapter = new ContentDatabaseAdapter(getApplicationContext());
         adapter.insertOrUpdateContent(result, false, 0);
         Content savedContent = adapter.getContent(result.getId());
+
+        getSystem();
       }
 
       @Override
@@ -284,10 +285,14 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
   }
 
   public void getSpot() {
-    mEnduserApi.getSpot("5755996320301056|5744440375246848", new APICallback<Spot, List<Error>>() {
+    mEnduserApi.getSpot("5755996320301056|5742506566221824", new APICallback<Spot, List<Error>>() {
       @Override
       public void finished(Spot result) {
         Log.v(TAG, "Result: " + result);
+        SpotDatabaseAdapter spotDatabaseAdapter = new SpotDatabaseAdapter(getApplicationContext());
+        spotDatabaseAdapter.insertOrUpdateSpot(result);
+        Spot savedSpot = spotDatabaseAdapter.getSpot(result.getId());
+        Log.v(TAG, "Saved spot: " + savedSpot);
       }
 
       @Override
@@ -319,17 +324,23 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
   public void getSpotsWithTags() {
     List<String> tags = new ArrayList<>();
     tags.add("tag1");
-    mEnduserApi.getSpotsByTags(tags, 0, null, null, null, new APIListCallback<List<Spot>, List<Error>>() {
+    mEnduserApi.getSpotsByTags(tags, 0, null, EnumSet.of(SpotFlags.INCLUDE_CONTENT, SpotFlags.INCLUDE_MARKERS),
+        null, new APIListCallback<List<Spot>, List<Error>>() {
       @Override
       public void finished(List<Spot> result, String cursor, boolean hasMore) {
         Log.v(TAG, "getSpotsWithTags: " + result.get(0));
         Log.v(TAG, "getSpotsWithTags: " + cursor);
         Log.v(TAG, "getSpotsWithTags: " + hasMore);
+
+        SpotDatabaseAdapter spotDatabaseAdapter = new SpotDatabaseAdapter(getApplicationContext());
+        spotDatabaseAdapter.insertOrUpdateSpot(result.get(0));
+        Spot savedSpot = spotDatabaseAdapter.getSpot(result.get(0).getId());
+        Log.v(TAG, "Saved spot: " + savedSpot);
       }
 
       @Override
       public void error(List<Error> error) {
-
+        Log.e(TAG, "Error " + error);
       }
     });
   }
@@ -354,6 +365,13 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
       @Override
       public void finished(System result) {
         Log.v(TAG, "getSystem: " + result.getId());
+
+        SystemDatabaseAdapter systemDatabaseAdapter = new SystemDatabaseAdapter(getApplicationContext());
+        systemDatabaseAdapter.insertOrUpdateSystem(result);
+        System savedSystem = systemDatabaseAdapter.getSystem(result.getId());
+        Log.v(TAG, "Saved system: " + savedSystem);
+
+        getSpotsWithTags();
       }
 
       @Override

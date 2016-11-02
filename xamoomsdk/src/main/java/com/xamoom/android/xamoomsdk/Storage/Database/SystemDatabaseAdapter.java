@@ -12,19 +12,43 @@ import com.xamoom.android.xamoomsdk.Storage.TableContracts.OfflineEnduserContrac
 
 
 public class SystemDatabaseAdapter extends DatabaseAdapter {
+  private static SystemDatabaseAdapter sharedInstance;
 
   private StyleDatabaseAdapter mStyleDatabaseAdapter;
   private SettingDatabaseAdapter mSettingDatabaseAdapter;
+  private MenuDatabaseAdapter mMenuDatabaseAdapter;
 
-  public SystemDatabaseAdapter(Context context) {
+  public static SystemDatabaseAdapter getInstance(Context context) {
+    if (sharedInstance == null) {
+      sharedInstance = new SystemDatabaseAdapter(context);
+    }
+    return sharedInstance;
+  }
+
+  private SystemDatabaseAdapter(Context context) {
     super(context);
-    mStyleDatabaseAdapter = new StyleDatabaseAdapter(mContext);
-    mSettingDatabaseAdapter = new SettingDatabaseAdapter(mContext);
+    mStyleDatabaseAdapter = new StyleDatabaseAdapter(context);
+    mSettingDatabaseAdapter = new SettingDatabaseAdapter(context);
+    //mMenuDatabaseAdapter = new MenuDatabaseAdapter(context);
   }
 
   public System getSystem(String jsonId) {
+    String selection = SystemEntry.COLUMN_NAME_JSON_ID + " = ?";
+    String[] selectionArgs = {jsonId};
+
+    return getSystem(selection, selectionArgs);
+  }
+
+  public System getSystem(long row) {
+    String selection = SystemEntry._ID + " = ?";
+    String[] selectionArgs = {String.valueOf(row)};
+
+    return getSystem(selection, selectionArgs);
+  }
+
+  private System getSystem(String selection, String[] selectionArgs) {
     open();
-    Cursor cursor = querySystems(jsonId);
+    Cursor cursor = querySystems(selection, selectionArgs);
 
     if (cursor.getCount() > 1) {
       // TODO: too many exception
@@ -52,7 +76,13 @@ public class SystemDatabaseAdapter extends DatabaseAdapter {
     }
 
     if (system.getMenu() != null) {
-      // TODO: insert menu
+      /* // TODO : insert menu
+      long menuRow = mMenuDatabaseAdapter.insertOrUpdate(system.getMenu());
+      if (menuRow != -1) {
+        values.put(SystemEntry.COLUMN_NAME_MENU, menuRow);
+        updateSystem(row, values);
+      }
+      */
     }
 
     if (system.getStyle() != null) {
@@ -88,10 +118,7 @@ public class SystemDatabaseAdapter extends DatabaseAdapter {
     return rowsUpdated;
   }
 
-  private Cursor querySystems(String jsonId) {
-    String selection = SystemEntry.COLUMN_NAME_JSON_ID + " = ?";
-    String[] selectionArgs = { jsonId };
-
+  private Cursor querySystems(String selection, String[] selectionArgs) {
     Cursor cursor = mDatabase.query(
         SystemEntry.TABLE_NAME,
         SystemEntry.PROJECTION,
@@ -106,8 +133,11 @@ public class SystemDatabaseAdapter extends DatabaseAdapter {
   }
 
   private long getPrimaryKey(String jsonId) {
+    String selection = SystemEntry.COLUMN_NAME_JSON_ID + " = ?";
+    String[] selectionArgs = {jsonId};
+
     open();
-    Cursor cursor = querySystems(jsonId);
+    Cursor cursor = querySystems(selection, selectionArgs);
     if (cursor != null) {
       if (cursor.moveToFirst()) {
         long id = cursor.getLong(cursor.getColumnIndex(SystemEntry._ID));
@@ -144,5 +174,9 @@ public class SystemDatabaseAdapter extends DatabaseAdapter {
 
   public void setSettingDatabaseAdapter(SettingDatabaseAdapter settingDatabaseAdapter) {
     mSettingDatabaseAdapter = settingDatabaseAdapter;
+  }
+
+  public void setMenuDatabaseAdapter(MenuDatabaseAdapter menuDatabaseAdapter) {
+    mMenuDatabaseAdapter = menuDatabaseAdapter;
   }
 }

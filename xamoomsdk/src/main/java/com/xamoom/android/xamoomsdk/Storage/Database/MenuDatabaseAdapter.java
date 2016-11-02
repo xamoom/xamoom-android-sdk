@@ -15,7 +15,7 @@ public class MenuDatabaseAdapter extends DatabaseAdapter {
 
   public MenuDatabaseAdapter(Context context) {
     super(context);
-    mContentDatabaseAdapter = new ContentDatabaseAdapter(context);
+    mContentDatabaseAdapter = ContentDatabaseAdapter.getInstance(context);
   }
 
   public Menu getMenu(String jsonId) {

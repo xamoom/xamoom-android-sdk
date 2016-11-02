@@ -38,7 +38,7 @@ public class ContentBlockDatabaseAdapterTest {
 
   @Before
   public void setup() {
-    mContentBlockDatabaseAdapter = new ContentBlockDatabaseAdapter(RuntimeEnvironment.application);
+    mContentBlockDatabaseAdapter = ContentBlockDatabaseAdapter.getInstance(RuntimeEnvironment.application);
     mMockedDatabaseHelper = mock(DatabaseHelper.class);
     mMockedDatabase = mock(SQLiteDatabase.class);
     mMockedCursor = mock(Cursor.class);

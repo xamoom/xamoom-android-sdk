@@ -13,8 +13,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class ContentBlockDatabaseAdapter extends DatabaseAdapter {
+  private static ContentBlockDatabaseAdapter sharedInstance;
 
-  public ContentBlockDatabaseAdapter(Context context) {
+  public static ContentBlockDatabaseAdapter getInstance(Context context) {
+    if(sharedInstance == null) {
+      sharedInstance = new ContentBlockDatabaseAdapter(context);
+    }
+    return sharedInstance;
+  }
+
+  private ContentBlockDatabaseAdapter(Context context) {
     super(context);
   }
 

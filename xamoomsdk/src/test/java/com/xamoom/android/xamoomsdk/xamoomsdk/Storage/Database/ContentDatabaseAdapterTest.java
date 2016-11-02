@@ -52,7 +52,7 @@ public class ContentDatabaseAdapterTest {
   @Before
   public void setup() {
     mContentDatabaseAdapter =
-        new ContentDatabaseAdapter(RuntimeEnvironment.application);
+        ContentDatabaseAdapter.getInstance(RuntimeEnvironment.application);
     mMockedDatabaseHelper = mock(DatabaseHelper.class);
     mMockedDatabase = mock(SQLiteDatabase.class);
     mContentDatabaseAdapter.setDatabaseHelper(mMockedDatabaseHelper);

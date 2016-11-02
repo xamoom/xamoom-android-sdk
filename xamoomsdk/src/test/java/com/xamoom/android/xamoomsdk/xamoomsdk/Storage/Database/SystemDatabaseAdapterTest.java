@@ -5,9 +5,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.xamoom.android.xamoomsdk.BuildConfig;
+import com.xamoom.android.xamoomsdk.Resource.Menu;
 import com.xamoom.android.xamoomsdk.Resource.Style;
 import com.xamoom.android.xamoomsdk.Resource.System;
+import com.xamoom.android.xamoomsdk.Resource.SystemSetting;
 import com.xamoom.android.xamoomsdk.Storage.Database.DatabaseHelper;
+import com.xamoom.android.xamoomsdk.Storage.Database.MenuDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.SettingDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.StyleDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.SystemDatabaseAdapter;
@@ -28,6 +31,7 @@ import org.robolectric.res.StyleData;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 
 @RunWith(RobolectricTestRunner.class)
@@ -37,13 +41,14 @@ public class SystemDatabaseAdapterTest {
   private SystemDatabaseAdapter mSystemDatabaseAdapter;
   private StyleDatabaseAdapter mMockedStyleDatabaseAdapter;
   private SettingDatabaseAdapter mMockedSettingDatabaseAdapter;
+  private MenuDatabaseAdapter mMockedMenuDatabaseAdapter;
   private DatabaseHelper mMockedDatabaseHelper;
   private SQLiteDatabase mMockedDatabase;
 
   @Before
   public void setup() {
     mSystemDatabaseAdapter =
-        new SystemDatabaseAdapter(RuntimeEnvironment.application);
+        SystemDatabaseAdapter.getInstance(RuntimeEnvironment.application);
     mMockedStyleDatabaseAdapter =
         mock(StyleDatabaseAdapter.class);
     mMockedSettingDatabaseAdapter =
@@ -53,6 +58,7 @@ public class SystemDatabaseAdapterTest {
     mSystemDatabaseAdapter.setDatabaseHelper(mMockedDatabaseHelper);
     mSystemDatabaseAdapter.setStyleDatabaseAdapter(mMockedStyleDatabaseAdapter);
     mSystemDatabaseAdapter.setSettingDatabaseAdapter(mMockedSettingDatabaseAdapter);
+    mSystemDatabaseAdapter.setMenuDatabaseAdapter(mMockedMenuDatabaseAdapter);
 
     Mockito.stub(mMockedDatabaseHelper.getWritableDatabase())
         .toReturn(mMockedDatabase);
@@ -64,11 +70,6 @@ public class SystemDatabaseAdapterTest {
   public void testGetSystem() {
     Cursor mockedCursor = mock(Cursor.class);
 
-    System system = new System();
-    system.setId("1");
-    system.setName("Content name");
-    mSystemDatabaseAdapter.insertOrUpdateSystem(system);
-
     Mockito.stub(mMockedDatabase.query(
         Mockito.anyString(), Mockito.any(String[].class), Mockito.anyString(),
         Mockito.any(String[].class), Mockito.anyString(), Mockito.anyString(),
@@ -78,6 +79,38 @@ public class SystemDatabaseAdapterTest {
     Mockito.stub(mockedCursor.moveToFirst()).toReturn(true);
 
     System savedSystem = mSystemDatabaseAdapter.getSystem("1");
+
+    Mockito.verify(mMockedDatabase).query(
+        Mockito.anyString(), Mockito.any(String[].class), Mockito.eq(OfflineEnduserContract.SystemEntry.COLUMN_NAME_JSON_ID + " = ?"),
+        Mockito.any(String[].class), Mockito.anyString(), Mockito.anyString(),
+        Mockito.anyString());
+
+    Assert.assertNotNull(savedSystem);
+  }
+
+  @Test
+  public void testGetSystemWithRow() {
+    Cursor mockedCursor = mock(Cursor.class);
+
+    System system = new System();
+    system.setId("1");
+    system.setName("Content name");
+    mSystemDatabaseAdapter.insertOrUpdateSystem(system);
+
+    Mockito.stub(mMockedDatabase.query(
+        Mockito.anyString(), Mockito.any(String[].class), anyString(),
+        Mockito.any(String[].class), Mockito.anyString(), Mockito.anyString(),
+        Mockito.anyString())).toReturn(mockedCursor);
+
+    Mockito.stub(mockedCursor.getCount()).toReturn(1);
+    Mockito.stub(mockedCursor.moveToFirst()).toReturn(true);
+
+    System savedSystem = mSystemDatabaseAdapter.getSystem(1);
+
+    Mockito.verify(mMockedDatabase).query(
+        Mockito.anyString(), Mockito.any(String[].class), Mockito.eq(OfflineEnduserContract.SystemEntry._ID + " = ?"),
+        Mockito.any(String[].class), Mockito.anyString(), Mockito.anyString(),
+        Mockito.anyString());
 
     Assert.assertNotNull(savedSystem);
   }
@@ -133,13 +166,21 @@ public class SystemDatabaseAdapterTest {
   }
 
   @Test
-  public void insertOrUpdateSystemWithStyleRelation() {
+  public void insertOrUpdateSystemWithRelations() {
     System system = new System();
     system.setId("1");
 
     Style style = new Style();
     style.setId("2");
     system.setStyle(style);
+
+    Menu menu = new Menu();
+    menu.setId("3");
+    system.setMenu(menu);
+
+    SystemSetting setting = new SystemSetting();
+    setting.setId("4");
+    system.setSystemSetting(setting);
 
     Cursor mockCursor = mock(Cursor.class);
     Mockito.stub(mMockedDatabase.query(
@@ -157,5 +198,9 @@ public class SystemDatabaseAdapterTest {
 
     Mockito.verify(mMockedStyleDatabaseAdapter)
       .insertOrUpdateStyle(Mockito.eq(style));
+    Mockito.verify(mMockedSettingDatabaseAdapter)
+        .insertOrUpdateSetting(Mockito.eq(setting));
+    /*Mockito.verify(mMockedMenuDatabaseAdapter)
+        .insertOrUpdate(Mockito.eq(menu));*/
   }
 }

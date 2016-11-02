@@ -14,13 +14,21 @@ import com.xamoom.android.xamoomsdk.Storage.TableContracts.OfflineEnduserContrac
 import java.util.Arrays;
 
 public class SpotDatabaseAdapter extends DatabaseAdapter {
+  private static SpotDatabaseAdapter sharedInstance;
   private SystemDatabaseAdapter mSystemDatabaseAdapter;
   private ContentDatabaseAdapter mContentDatabaseAdapter;
 
-  public SpotDatabaseAdapter(Context context) {
+  public static SpotDatabaseAdapter getInstance(Context context) {
+    if (sharedInstance == null) {
+      sharedInstance = new SpotDatabaseAdapter(context);
+    }
+    return sharedInstance;
+  }
+
+  private SpotDatabaseAdapter(Context context) {
     super(context);
-    mSystemDatabaseAdapter = new SystemDatabaseAdapter(context);
-    mContentDatabaseAdapter = new ContentDatabaseAdapter(context);
+    mSystemDatabaseAdapter = SystemDatabaseAdapter.getInstance(context);
+    mContentDatabaseAdapter = ContentDatabaseAdapter.getInstance(context);
   }
 
   public Spot getSpot(String jsonId) {

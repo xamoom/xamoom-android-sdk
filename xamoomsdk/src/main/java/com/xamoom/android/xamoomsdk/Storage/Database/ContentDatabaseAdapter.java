@@ -15,14 +15,21 @@ import java.util.Collections;
 import java.util.Comparator;
 
 public class ContentDatabaseAdapter extends DatabaseAdapter {
-
+  private static ContentDatabaseAdapter sharedInstance;
   private ContentBlockDatabaseAdapter mContentBlockDatabaseAdapter;
   private SystemDatabaseAdapter mSystemDatabaseAdapter;
 
-  public ContentDatabaseAdapter(Context context) {
+  public static ContentDatabaseAdapter getInstance(Context context) {
+    if (sharedInstance == null) {
+      sharedInstance = new ContentDatabaseAdapter(context);
+    }
+    return sharedInstance;
+  }
+
+  private ContentDatabaseAdapter(Context context) {
     super(context);
-    mContentBlockDatabaseAdapter = new ContentBlockDatabaseAdapter(context);
-    mSystemDatabaseAdapter = new SystemDatabaseAdapter(context);
+    mContentBlockDatabaseAdapter = ContentBlockDatabaseAdapter.getInstance(context);
+    mSystemDatabaseAdapter = SystemDatabaseAdapter.getInstance(context);
   }
 
   public Content getContent(String jsonId) {
