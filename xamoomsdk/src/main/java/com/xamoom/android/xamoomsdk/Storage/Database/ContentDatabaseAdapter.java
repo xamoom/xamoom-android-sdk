@@ -34,6 +34,17 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
     String selection = OfflineEnduserContract.ContentEntry.COLUMN_NAME_JSON_ID + " = ?";
     String[] selectionArgs = { jsonId };
 
+    return getContent(selection, selectionArgs);
+  }
+
+  public Content getContent(long row) {
+    String selection = OfflineEnduserContract.ContentEntry._ID + " = ?";
+    String[] selectionArgs = { String.valueOf(row) };
+
+    return getContent(selection, selectionArgs);
+  }
+
+  private Content getContent(String selection, String[] selectionArgs) {
     open();
     Cursor cursor = queryContent(selection, selectionArgs);
 
