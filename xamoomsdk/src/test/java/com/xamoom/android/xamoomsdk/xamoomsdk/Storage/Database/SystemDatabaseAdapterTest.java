@@ -199,7 +199,7 @@ public class SystemDatabaseAdapterTest {
       .insertOrUpdateStyle(Mockito.eq(style));
     Mockito.verify(mMockedSettingDatabaseAdapter)
         .insertOrUpdateSetting(Mockito.eq(setting));
-    /*Mockito.verify(mMockedMenuDatabaseAdapter)
-        .insertOrUpdate(Mockito.eq(menu));*/
+    Mockito.verify(mMockedMenuDatabaseAdapter)
+        .insertOrUpdate(Mockito.eq(menu));
   }
 }
