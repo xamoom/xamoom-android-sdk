@@ -17,6 +17,11 @@ public class Location implements Parcelable {
   public Location() {
   }
 
+  public Location(double latitude, double longitude) {
+    mLatitude = latitude;
+    mLongitude = longitude;
+  }
+
   protected Location(Parcel in) {
     mLatitude = in.readDouble();
     mLongitude = in.readDouble();

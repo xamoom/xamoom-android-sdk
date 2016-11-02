@@ -51,7 +51,7 @@ public class MarkerDatabaseAdapter extends DatabaseAdapter {
       row = mDatabase.insert(MarkerEntry.TABLE_NAME, null, values);
       close();
     }
-    
+
     return row;
   }
 

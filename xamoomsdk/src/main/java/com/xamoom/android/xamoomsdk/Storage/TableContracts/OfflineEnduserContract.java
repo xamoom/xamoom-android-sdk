@@ -1,13 +1,6 @@
 package com.xamoom.android.xamoomsdk.Storage.TableContracts;
 
 import android.provider.BaseColumns;
-import android.provider.Settings;
-
-import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
-import com.xamoom.android.xamoomsdk.Resource.Marker;
-import com.xamoom.android.xamoomsdk.Resource.Style;
-
-import java.util.Set;
 
 /**
  * Created by raphaelseher on 24/10/2016.
@@ -115,6 +108,47 @@ public class OfflineEnduserContract {
         SettingEntry.COLUMN_NAME_JSON_ID,
         SettingEntry.COLUMN_NAME_PLAYSTORE_ID,
         SettingEntry.COLUMN_NAME_APPSTORE_ID
+    };
+  }
+
+  /**
+   * Spot
+   */
+  public static class SpotEntry implements BaseColumns {
+    public static final String TABLE_NAME = "Spot";
+    public static final String COLUMN_NAME_JSON_ID = "json_id";
+    public static final String COLUMN_NAME_NAME = "name";
+    public static final String COLUMN_NAME_PUBLIC_IMAGE_URL = "publicImageUrl";
+    public static final String COLUMN_NAME_LOCATION_LAT = "locationLat";
+    public static final String COLUMN_NAME_LOCATION_LON = "locationLon";
+    public static final String COLUMN_NAME_TAGS = "tags";
+    public static final String COLUMN_NAME_CATEGORY = "category";
+    public static final String COLUMN_NAME_RELATION_SYSTEM = "system";
+    public static final String COLUMN_NAME_RELATION_CONTENT = "content";
+
+    public static final String CREATE_TABLE =
+        "CREATE TABLE " + SpotEntry.TABLE_NAME + " (" +
+            SpotEntry._ID + " INTEGER PRIMARY KEY," +
+            SpotEntry.COLUMN_NAME_JSON_ID + TEXT_TYPE + COMMA_SEP +
+            SpotEntry.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
+            SpotEntry.COLUMN_NAME_PUBLIC_IMAGE_URL + TEXT_TYPE + COMMA_SEP +
+            SpotEntry.COLUMN_NAME_LOCATION_LAT + REAL_TYPE + COMMA_SEP +
+            SpotEntry.COLUMN_NAME_LOCATION_LON + REAL_TYPE + COMMA_SEP +
+            SpotEntry.COLUMN_NAME_TAGS + TEXT_TYPE + COMMA_SEP +
+            SpotEntry.COLUMN_NAME_CATEGORY + INTEGER_TYPE + COMMA_SEP +
+            SpotEntry.COLUMN_NAME_RELATION_SYSTEM + INTEGER_TYPE + COMMA_SEP +
+            SpotEntry.COLUMN_NAME_RELATION_CONTENT + INTEGER_TYPE + " )";
+
+    public static final String[] PROJECTION = {
+        COLUMN_NAME_JSON_ID,
+        COLUMN_NAME_NAME,
+        COLUMN_NAME_PUBLIC_IMAGE_URL,
+        COLUMN_NAME_LOCATION_LAT,
+        COLUMN_NAME_LOCATION_LON,
+        COLUMN_NAME_TAGS,
+        COLUMN_NAME_CATEGORY,
+        COLUMN_NAME_RELATION_SYSTEM,
+        COLUMN_NAME_RELATION_CONTENT
     };
   }
 
