@@ -49,6 +49,7 @@ public class SpotDatabaseAdapter extends DatabaseAdapter {
     ContentValues values = new ContentValues();
     values.put(OfflineEnduserContract.SpotEntry.COLUMN_NAME_JSON_ID, spot.getId());
     values.put(OfflineEnduserContract.SpotEntry.COLUMN_NAME_NAME, spot.getName());
+    values.put(OfflineEnduserContract.SpotEntry.COLUMN_NAME_DESCRIPTION, spot.getDescription());
     values.put(OfflineEnduserContract.SpotEntry.COLUMN_NAME_PUBLIC_IMAGE_URL, spot.getPublicImageUrl());
     if (spot.getLocation() != null) {
       values.put(OfflineEnduserContract.SpotEntry.COLUMN_NAME_LOCATION_LAT, spot.getLocation().getLatitude());
@@ -116,6 +117,8 @@ public class SpotDatabaseAdapter extends DatabaseAdapter {
       Spot spot = new Spot();
       spot.setId(cursor.getString(cursor.getColumnIndex(
           OfflineEnduserContract.SpotEntry.COLUMN_NAME_JSON_ID)));
+      spot.setDescription(cursor.getColumnName(cursor.getColumnIndex(
+          OfflineEnduserContract.SpotEntry.COLUMN_NAME_DESCRIPTION)));
       spot.setName(cursor.getString(cursor.getColumnIndex(
           OfflineEnduserContract.SpotEntry.COLUMN_NAME_NAME)));
       spot.setPublicImageUrl(cursor.getString(cursor.getColumnIndex(

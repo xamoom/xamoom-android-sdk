@@ -117,6 +117,7 @@ public class OfflineEnduserContract {
     public static final String COLUMN_NAME_RELATION_SYSTEM = "system";
     public static final String COLUMN_NAME_RELATION_CONTENT = "content";
     public static final String COLUMN_NAME_NAME = "name";
+    public static final String COLUMN_NAME_DESCRIPTION = "description";
     public static final String COLUMN_NAME_PUBLIC_IMAGE_URL = "publicImageUrl";
     public static final String COLUMN_NAME_LOCATION_LAT = "locationLat";
     public static final String COLUMN_NAME_LOCATION_LON = "locationLon";
@@ -128,6 +129,7 @@ public class OfflineEnduserContract {
             SpotEntry._ID + " INTEGER PRIMARY KEY," +
             SpotEntry.COLUMN_NAME_JSON_ID + TEXT_TYPE + COMMA_SEP +
             SpotEntry.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
+            SpotEntry.COLUMN_NAME_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
             SpotEntry.COLUMN_NAME_PUBLIC_IMAGE_URL + TEXT_TYPE + COMMA_SEP +
             SpotEntry.COLUMN_NAME_LOCATION_LAT + REAL_TYPE + COMMA_SEP +
             SpotEntry.COLUMN_NAME_LOCATION_LON + REAL_TYPE + COMMA_SEP +
@@ -139,6 +141,7 @@ public class OfflineEnduserContract {
     public static final String[] PROJECTION = {
         COLUMN_NAME_JSON_ID,
         COLUMN_NAME_NAME,
+        COLUMN_NAME_DESCRIPTION,
         COLUMN_NAME_PUBLIC_IMAGE_URL,
         COLUMN_NAME_LOCATION_LAT,
         COLUMN_NAME_LOCATION_LON,
