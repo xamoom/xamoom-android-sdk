@@ -141,14 +141,16 @@ public class SpotDatabaseAdapter extends DatabaseAdapter {
       long systemRow = cursor.getLong(cursor.getColumnIndex(
           OfflineEnduserContract.SpotEntry.COLUMN_NAME_RELATION_SYSTEM));
       if (systemRow != -1) {
-        // TODO: set system
+        spot.setSystem(getSystemDatabaseAdapter().getSystem(systemRow));
       }
 
       long contentRow = cursor.getLong(cursor.getColumnIndex(
           OfflineEnduserContract.SpotEntry.COLUMN_NAME_RELATION_CONTENT));
       if (contentRow != -1) {
-        // TODO: set content
+        spot.setContent(getContentDatabaseAdapter().getContent(contentRow));
       }
+
+      // TODO: get marker
       
       return spot;
     }
