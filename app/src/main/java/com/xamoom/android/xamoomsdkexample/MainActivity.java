@@ -29,6 +29,7 @@ import com.xamoom.android.xamoomsdk.Storage.Database.ContentDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.MenuDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.SpotDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.SystemDatabaseAdapter;
+import com.xamoom.android.xamoomsdk.Storage.FileManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -63,7 +64,19 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
 
     setupEnduserApi();
 
-    getSpotsWithTags();
+    FileManager fileManager = new FileManager(getApplicationContext());
+    try {
+      fileManager.saveFile("https://storage.googleapis.com/xamoom-files-dev/mobile/d2fee0d551d9432eaed4596f1300af5d.jpg", "String".getBytes());
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    try {
+      boolean deleted = fileManager.deleteFile("https://storage.googleapis.com/xamoom-files-dev/mobile/d2fee0d551d9432eaed4596f1300af5d.jpg");
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
 
     //getContent();
     /*

@@ -60,6 +60,7 @@ public class SystemDatabaseAdapter extends DatabaseAdapter {
     values.put(SystemEntry.COLUMN_NAME_NAME, system.getName());
 
     long row = getPrimaryKey(system.getId());
+
     if (row != -1) {
       updateSystem(row, values);
     } else {
