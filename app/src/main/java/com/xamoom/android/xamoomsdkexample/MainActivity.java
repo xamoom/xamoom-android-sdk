@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -29,9 +30,13 @@ import com.xamoom.android.xamoomsdk.Storage.Database.ContentDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.MenuDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.SpotDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.SystemDatabaseAdapter;
+import com.xamoom.android.xamoomsdk.Storage.DownloadTask;
 import com.xamoom.android.xamoomsdk.Storage.FileManager;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -64,9 +69,10 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
 
     setupEnduserApi();
 
-    FileManager fileManager = new FileManager(getApplicationContext());
+    final FileManager fileManager = new FileManager(getApplicationContext());
     try {
-      fileManager.saveFile("https://storage.googleapis.com/xamoom-files-dev/mobile/d2fee0d551d9432eaed4596f1300af5d.jpg", "String".getBytes());
+      fileManager.saveFile("https://storage.googleapis.com/xamoom-files-dev/mobile/d2fee0d551d9432eaed4596f1300af5d.jpg",
+          "String".getBytes());
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -74,6 +80,31 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
     try {
       boolean deleted = fileManager.deleteFile("https://storage.googleapis.com/xamoom-files-dev/mobile/d2fee0d551d9432eaed4596f1300af5d.jpg");
     } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    DownloadTask task = new DownloadTask(new DownloadTask.OnDownloadTaskCompleted() {
+      @Override
+      public void completed(ByteArrayOutputStream byteArrayOutputStream) {
+        Log.v(TAG, "Downloaded");
+        try {
+          fileManager.saveFile("https://storage.googleapis.com/xamoom-files-dev/mobile/d2fee0d551d9432eaed4596f1300af5d.jpg",
+              byteArrayOutputStream.toByteArray());
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+
+      @Override
+      public void failed() {
+        Log.e(TAG, "Failed downloading");
+      }
+    });
+
+    try {
+      URL url = new URL("https://storage.googleapis.com/xamoom-files-dev/mobile/d2fee0d551d9432eaed4596f1300af5d.jpg");
+      task.execute();
+    } catch (MalformedURLException e) {
       e.printStackTrace();
     }
 
