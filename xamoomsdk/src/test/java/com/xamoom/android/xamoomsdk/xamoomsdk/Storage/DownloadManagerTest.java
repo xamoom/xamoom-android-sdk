@@ -58,11 +58,11 @@ public class DownloadManagerTest {
 
     manager.saveFileFromUrl(mURL, true, new DownloadManager.OnDownloadManagerCompleted() {
       @Override
-      public void completed() {
+      public void completed(String urlString) {
       }
 
       @Override
-      public void failed(DownloadError error) {
+      public void failed(String urlString, DownloadError error) {
         Assert.fail();
       }
     });
@@ -81,12 +81,12 @@ public class DownloadManagerTest {
     final Semaphore semaphore = new Semaphore(0);
     manager.saveFileFromUrl(mURL, false, new DownloadManager.OnDownloadManagerCompleted() {
       @Override
-      public void completed() {
+      public void completed(String urlString) {
         semaphore.release();
       }
 
       @Override
-      public void failed(DownloadError error) {
+      public void failed(String urlString, DownloadError error) {
         Assert.fail();
       }
     });
