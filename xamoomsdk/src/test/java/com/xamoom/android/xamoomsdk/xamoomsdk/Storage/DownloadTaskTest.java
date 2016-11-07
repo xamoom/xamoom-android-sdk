@@ -67,6 +67,7 @@ public class DownloadTaskTest {
       @Override
       public void failed() {
         Assert.fail();
+        semaphore.release();
       }
     });
 
@@ -75,6 +76,6 @@ public class DownloadTaskTest {
 
     Mockito.verify(mMockedInputStream, times(2)).read(any(byte[].class));
     Mockito.verify(mMockedURLConnection).getResponseCode();
-    Mockito.verify(mMockedURLConnection.getInputStream());
+    Mockito.verify(mMockedURLConnection).getInputStream();
   }
 }
