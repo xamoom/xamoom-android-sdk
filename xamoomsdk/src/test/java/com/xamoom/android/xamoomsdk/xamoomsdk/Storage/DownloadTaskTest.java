@@ -1,6 +1,7 @@
 package com.xamoom.android.xamoomsdk.xamoomsdk.Storage;
 
 import com.xamoom.android.xamoomsdk.BuildConfig;
+import com.xamoom.android.xamoomsdk.Storage.DownloadError;
 import com.xamoom.android.xamoomsdk.Storage.DownloadTask;
 
 import junit.framework.Assert;
@@ -57,7 +58,7 @@ public class DownloadTaskTest {
     Mockito.stub(mMockedInputStream.read(any(byte[].class))).toReturn(1000).toReturn(-1);
 
     final Semaphore semaphore = new Semaphore(0);
-    DownloadTask task = new DownloadTask(new DownloadTask.OnDownloadTaskCompleted() {
+    DownloadTask task = new DownloadTask(mURL, new DownloadTask.OnDownloadTaskCompleted() {
       @Override
       public void completed(ByteArrayOutputStream byteArrayOutputStream) {
         Assert.assertEquals(byteArrayOutputStream.size(), 1000);
@@ -65,13 +66,13 @@ public class DownloadTaskTest {
       }
 
       @Override
-      public void failed() {
+      public void failed(DownloadError downloadError) {
         Assert.fail();
         semaphore.release();
       }
     });
 
-    task.execute(mURL);
+    task.execute();
     semaphore.acquire();
 
     Mockito.verify(mMockedInputStream, times(2)).read(any(byte[].class));

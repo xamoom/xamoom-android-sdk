@@ -8,37 +8,35 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 
-public class DownloadTask extends AsyncTask<URL, Integer, ByteArrayOutputStream> {
+public class DownloadTask extends AsyncTask<Void, Integer, ByteArrayOutputStream> {
   private OnDownloadTaskCompleted mListener;
+  private URL mURL;
 
-  public DownloadTask(OnDownloadTaskCompleted listener) {
+  public DownloadTask(URL url, OnDownloadTaskCompleted listener) {
+    mURL = url;
     mListener = listener;
   }
 
   @Override
-  protected ByteArrayOutputStream doInBackground(URL... sUrl) {
+  protected ByteArrayOutputStream doInBackground(Void... voids) {
     InputStream input = null;
     ByteArrayOutputStream buffer = new ByteArrayOutputStream();
     HttpURLConnection connection = null;
 
     try {
-      URL url = sUrl[0];
-      connection = (HttpURLConnection) url.openConnection();
+      connection = (HttpURLConnection) mURL.openConnection();
       connection.connect();
 
-      // expect HTTP 200 OK, so we don't mistakenly save error report
-      // instead of the file
       if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-        return null;
+        if (mListener != null) {
+          mListener.failed(new DownloadError(DownloadError.CONNECTION_FAILED_ERROR_CODE,
+              DownloadError.CONNECTION_FAILED_ERROR, connection.getResponseCode(), null, null));
+        }
       }
 
-      // this will be useful to display download percentage
-      // might be -1: server did not report the length
       int fileLength = connection.getContentLength();
 
-      // download the file
       input = connection.getInputStream();
-      //output = new FileOutputStream("/sdcard/file_name.extension");
 
       byte data[] = new byte[4096];
       long total = 0;
@@ -49,7 +47,8 @@ public class DownloadTask extends AsyncTask<URL, Integer, ByteArrayOutputStream>
         if (isCancelled()) {
           input.close();
           if (mListener != null) {
-            mListener.failed();
+            mListener.failed(new DownloadError(DownloadError.CONNECTION_CANCALED_CODE,
+                DownloadError.CONNECTION_CANCELED, -1, null, null));
           }
           return null;
         }
@@ -63,15 +62,17 @@ public class DownloadTask extends AsyncTask<URL, Integer, ByteArrayOutputStream>
       }
     } catch (Exception e) {
       if (mListener != null) {
-        mListener.failed();
+        mListener.failed(new DownloadError(DownloadError.IO_EXCEPTION_ERROR_CODE,
+            DownloadError.IO_EXCEPTION_ERROR, -1, null, e));
       }
     } finally {
       if (mListener != null) {
         mListener.completed(buffer);
       }
 
-      if (connection != null)
+      if (connection != null) {
         connection.disconnect();
+      }
     }
     return null;
   }
@@ -83,6 +84,6 @@ public class DownloadTask extends AsyncTask<URL, Integer, ByteArrayOutputStream>
 
   public interface OnDownloadTaskCompleted {
     void completed(ByteArrayOutputStream byteArrayOutputStream);
-    void failed();
+    void failed(DownloadError downloadError);
   }
 }
