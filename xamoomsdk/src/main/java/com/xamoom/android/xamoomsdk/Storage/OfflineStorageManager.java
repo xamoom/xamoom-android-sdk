@@ -3,14 +3,12 @@ package com.xamoom.android.xamoomsdk.Storage;
 import android.content.Context;
 
 import com.xamoom.android.xamoomsdk.Resource.Content;
-import com.xamoom.android.xamoomsdk.Resource.Marker;
 import com.xamoom.android.xamoomsdk.Resource.Menu;
 import com.xamoom.android.xamoomsdk.Resource.Spot;
 import com.xamoom.android.xamoomsdk.Resource.System;
 import com.xamoom.android.xamoomsdk.Resource.Style;
 import com.xamoom.android.xamoomsdk.Resource.SystemSetting;
 import com.xamoom.android.xamoomsdk.Storage.Database.ContentDatabaseAdapter;
-import com.xamoom.android.xamoomsdk.Storage.Database.MarkerDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.MenuDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.SettingDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.SpotDatabaseAdapter;
@@ -20,8 +18,8 @@ import com.xamoom.android.xamoomsdk.Storage.Database.SystemDatabaseAdapter;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class OfflineSavingManager {
-  private static OfflineSavingManager mInstance;
+public class OfflineStorageManager {
+  private static OfflineStorageManager mInstance;
   private Context mContext;
 
   private DownloadManager mDownloadManager;
@@ -32,14 +30,14 @@ public class OfflineSavingManager {
   private SettingDatabaseAdapter mSettingDatabaseAdapter;
   private MenuDatabaseAdapter mMenuDatabaseAdapter;
 
-  public static OfflineSavingManager getInstance(Context context) {
+  public static OfflineStorageManager getInstance(Context context) {
     if (mInstance == null) {
-      mInstance = new OfflineSavingManager(context);
+      mInstance = new OfflineStorageManager(context);
     }
     return mInstance;
   }
 
-  private OfflineSavingManager(Context context) {
+  private OfflineStorageManager(Context context) {
     mContext = context;
     mDownloadManager = new DownloadManager(FileManager.getInstance(context));
     mContentDatabaseAdapter = ContentDatabaseAdapter.getInstance(context);
@@ -49,6 +47,8 @@ public class OfflineSavingManager {
     mSettingDatabaseAdapter = SettingDatabaseAdapter.getInstance(context);
     mMenuDatabaseAdapter = MenuDatabaseAdapter.getInstance(context);
   }
+
+  // Saving
 
   public boolean saveContent(Content content, DownloadManager.OnDownloadManagerCompleted completion)
       throws MalformedURLException {
@@ -91,6 +91,12 @@ public class OfflineSavingManager {
   public boolean saveMenu(Menu menu) {
     long row = mMenuDatabaseAdapter.insertOrUpdate(menu, -1);
     return row != -1;
+  }
+
+  // Query
+
+  public Content getContent(String jsonId) {
+    return mContentDatabaseAdapter.getContent(jsonId);
   }
 
   // getter & setter

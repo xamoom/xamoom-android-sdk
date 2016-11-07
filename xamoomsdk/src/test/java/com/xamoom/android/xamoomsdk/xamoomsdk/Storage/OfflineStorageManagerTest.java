@@ -13,9 +13,8 @@ import com.xamoom.android.xamoomsdk.Storage.Database.SettingDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.SpotDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.StyleDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.SystemDatabaseAdapter;
-import com.xamoom.android.xamoomsdk.Storage.DownloadError;
 import com.xamoom.android.xamoomsdk.Storage.DownloadManager;
-import com.xamoom.android.xamoomsdk.Storage.OfflineSavingManager;
+import com.xamoom.android.xamoomsdk.Storage.OfflineStorageManager;
 
 import junit.framework.Assert;
 
@@ -29,7 +28,6 @@ import org.robolectric.annotation.Config;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.concurrent.Semaphore;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
@@ -37,9 +35,9 @@ import static org.mockito.Matchers.eq;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
-public class OfflineSavingManagerTest {
+public class OfflineStorageManagerTest {
 
-  private OfflineSavingManager mOfflineSavingManager;
+  private OfflineStorageManager mOfflineSavingManager;
   private DownloadManager mMockedDownloadManager;
   private ContentDatabaseAdapter mMockedContentDatabaseAdapter;
   private SpotDatabaseAdapter mMockedSpotDatabaseAdapter;
@@ -50,7 +48,7 @@ public class OfflineSavingManagerTest {
 
   @Before
   public void setup() {
-    mOfflineSavingManager = OfflineSavingManager.getInstance(RuntimeEnvironment.application);
+    mOfflineSavingManager = OfflineStorageManager.getInstance(RuntimeEnvironment.application);
     mMockedDownloadManager = Mockito.mock(DownloadManager.class);
     mMockedContentDatabaseAdapter = Mockito.mock(ContentDatabaseAdapter.class);
     mMockedSpotDatabaseAdapter = Mockito.mock(SpotDatabaseAdapter.class);
@@ -167,4 +165,6 @@ public class OfflineSavingManagerTest {
     Assert.assertTrue(saved);
     Mockito.verify(mMockedMenuDatabaseAdapter).insertOrUpdate(eq(menu), eq(-1L));
   }
+
+
 }
