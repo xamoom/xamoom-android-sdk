@@ -48,7 +48,9 @@ public class DownloadTask extends AsyncTask<URL, Integer, ByteArrayOutputStream>
         // allow canceling with back button
         if (isCancelled()) {
           input.close();
-          mListener.failed();
+          if (mListener != null) {
+            mListener.failed();
+          }
           return null;
         }
 
@@ -60,9 +62,14 @@ public class DownloadTask extends AsyncTask<URL, Integer, ByteArrayOutputStream>
         buffer.write(data, 0, count);
       }
     } catch (Exception e) {
-      mListener.failed();
+      if (mListener != null) {
+        mListener.failed();
+      }
     } finally {
-      mListener.completed(buffer);
+      if (mListener != null) {
+        mListener.completed(buffer);
+      }
+
       if (connection != null)
         connection.disconnect();
     }
