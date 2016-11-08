@@ -28,6 +28,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static org.mockito.Matchers.any;
@@ -165,5 +166,21 @@ public class SpotDatabaseAdapterTest {
         Mockito.eq(OfflineEnduserContract.SpotEntry.TABLE_NAME),
         any(ContentValues.class), anyString(), any(String[].class));
     Assert.assertNotEquals(row, -1L);
+  }
+
+  @Test
+  public void testGetAllSpots() {
+    Mockito.stub(mMockedCursor.getCount()).toReturn(1);
+    Mockito.stub(mMockedCursor.moveToNext()).toReturn(true).toReturn(true).toReturn(false);
+
+    ArrayList<Spot> spots = mSpotDatabaseAdapter.getAllSpots();
+
+    Mockito.verify(mMockedDatabase).query(
+        Mockito.eq(OfflineEnduserContract.SpotEntry.TABLE_NAME),
+        any(String[].class), anyString(), any(String[].class), anyString(),
+        anyString(), anyString());
+
+    Assert.assertNotNull(spots);
+    Assert.assertEquals(spots.size(), 2);
   }
 }

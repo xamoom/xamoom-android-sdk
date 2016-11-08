@@ -11,6 +11,7 @@ import com.xamoom.android.xamoomsdk.Resource.Marker;
 import com.xamoom.android.xamoomsdk.Resource.Spot;
 import com.xamoom.android.xamoomsdk.Storage.TableContracts.OfflineEnduserContract;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class SpotDatabaseAdapter extends DatabaseAdapter {
@@ -52,10 +53,20 @@ public class SpotDatabaseAdapter extends DatabaseAdapter {
       // TODO: too many exception
     }
 
-    Spot spot = cursorToSpot(cursor);
+    ArrayList<Spot> spots = cursorToSpots(cursor);
 
     close();
-    return spot;
+    return spots.get(0);
+  }
+
+  public ArrayList<Spot> getAllSpots() {
+    open();
+    Cursor cursor = querySpot(null, null);
+
+    ArrayList<Spot> spots = cursorToSpots(cursor);
+    close();
+
+    return spots;
   }
 
   public long insertOrUpdateSpot(Spot spot) {
@@ -131,8 +142,9 @@ public class SpotDatabaseAdapter extends DatabaseAdapter {
     return -1;
   }
 
-  private Spot cursorToSpot(Cursor cursor) {
-    if (cursor.moveToFirst()) {
+  private ArrayList<Spot> cursorToSpots(Cursor cursor) {
+    ArrayList<Spot> spots = new ArrayList<>();
+    if (cursor.moveToNext()) {
       Spot spot = new Spot();
       spot.setId(cursor.getString(cursor.getColumnIndex(
           OfflineEnduserContract.SpotEntry.COLUMN_NAME_JSON_ID)));
@@ -170,10 +182,10 @@ public class SpotDatabaseAdapter extends DatabaseAdapter {
       long spotId = cursor.getLong(cursor.getColumnIndex(
           OfflineEnduserContract.SpotEntry._ID));
       spot.setMarkers(getMarkerDatabaseAdapter().getRelatedMarkers(spotId));
-      
-      return spot;
+
+      spots.add(spot);
     }
-    return null;
+    return spots;
   }
 
   private Cursor querySpot(String selection, String[] selectionArgs) {
