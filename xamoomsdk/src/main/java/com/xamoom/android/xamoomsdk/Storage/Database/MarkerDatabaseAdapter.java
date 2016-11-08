@@ -57,6 +57,28 @@ public class MarkerDatabaseAdapter extends DatabaseAdapter {
     return markers;
   }
 
+  public long getSpotRelation(String locId) {
+    String selection = String.format("%s = ? OR %s = ? OR %s = ? OR %s = ?",
+        OfflineEnduserContract.MarkerEntry.COLUMN_NAME_QR,
+        OfflineEnduserContract.MarkerEntry.COLUMN_NAME_NFC,
+        OfflineEnduserContract.MarkerEntry.COLUMN_NAME_BEACON_MINOR,
+        OfflineEnduserContract.MarkerEntry.COLUMN_NAME_EDDYSTONE_URL);
+    String[] selectionArgs = {locId};
+
+    open();
+    Cursor cursor = queryMarker(selection, selectionArgs);
+    close();
+
+    if (cursor.getCount() > 1) {
+      // TODO: too many exception
+    }
+
+    long spotRelation = cursor.getLong(cursor.getColumnIndex(MarkerEntry.COLUMN_NAME_SPOT_RELATION));
+
+    close();
+    return spotRelation;
+  }
+
   private Marker getMarker(String selection, String[] selectionArgs) {
     open();
     Cursor cursor = queryMarker(selection, selectionArgs);

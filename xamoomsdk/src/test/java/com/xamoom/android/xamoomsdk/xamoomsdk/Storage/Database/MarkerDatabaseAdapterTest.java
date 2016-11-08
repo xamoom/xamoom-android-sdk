@@ -145,4 +145,17 @@ public class MarkerDatabaseAdapterTest {
 
     Assert.assertNotNull(markers);
   }
+
+  @Test
+  public void testGetSpotRelation() {
+    Mockito.stub(mMockedCursor.getCount()).toReturn(1);
+    Mockito.stub(mMockedCursor.moveToNext()).toReturn(true).toReturn(false);
+
+    long spotRelation = mMarkerDatabaseAdapter.getSpotRelation("locId");
+
+    Mockito.verify(mMockedDatabase).query(
+        eq(OfflineEnduserContract.MarkerEntry.TABLE_NAME),
+        any(String[].class), anyString(), any(String[].class), anyString(),
+        anyString(), anyString());
+  }
 }
