@@ -76,7 +76,7 @@ public class SpotDatabaseAdapterTest {
   @Test
   public void testGetSpot() {
     Mockito.stub(mMockedCursor.getCount()).toReturn(1);
-    Mockito.stub(mMockedCursor.moveToFirst()).toReturn(true);
+    Mockito.stub(mMockedCursor.moveToNext()).toReturn(true).toReturn(false);
 
     Spot spot = mSpotDatabaseAdapter.getSpot("1");
 
@@ -93,7 +93,7 @@ public class SpotDatabaseAdapterTest {
     String query = OfflineEnduserContract.SpotEntry._ID + " = ?";
 
     Mockito.stub(mMockedCursor.getCount()).toReturn(1);
-    Mockito.stub(mMockedCursor.moveToFirst()).toReturn(true);
+    Mockito.stub(mMockedCursor.moveToNext()).toReturn(true).toReturn(false);
 
     Spot spot = mSpotDatabaseAdapter.getSpot(1L);
 
