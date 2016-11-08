@@ -23,6 +23,7 @@ import org.robolectric.annotation.Config;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 
 @RunWith(RobolectricTestRunner.class)
@@ -58,7 +59,7 @@ public class MarkerDatabaseAdapterTest {
     Marker marker = mMarkerDatabaseAdapter.getMarker("1");
 
     Mockito.verify(mMockedDatabase).query(
-        Mockito.eq(OfflineEnduserContract.MarkerEntry.TABLE_NAME),
+        eq(OfflineEnduserContract.MarkerEntry.TABLE_NAME),
         any(String[].class), anyString(), any(String[].class), anyString(),
         anyString(), anyString());
 
@@ -66,19 +67,40 @@ public class MarkerDatabaseAdapterTest {
   }
 
   @Test
-  public void tesInsertOrUpdateNewEntity() {
+  public void testGetMarkerWithLocId() {
+    String query = String.format("%s = ? OR %s = ? OR %s = ? OR %s = ?",
+        OfflineEnduserContract.MarkerEntry.COLUMN_NAME_QR,
+        OfflineEnduserContract.MarkerEntry.COLUMN_NAME_NFC,
+        OfflineEnduserContract.MarkerEntry.COLUMN_NAME_BEACON_MINOR,
+        OfflineEnduserContract.MarkerEntry.COLUMN_NAME_EDDYSTONE_URL);
+
+    Mockito.stub(mMockedCursor.getCount()).toReturn(1);
+    Mockito.stub(mMockedCursor.moveToNext()).toReturn(true).toReturn(false);
+
+    Marker marker = mMarkerDatabaseAdapter.getMarkerWithLocId("1");
+
+    Mockito.verify(mMockedDatabase).query(
+        eq(OfflineEnduserContract.MarkerEntry.TABLE_NAME),
+        any(String[].class), eq(query), any(String[].class), anyString(),
+        anyString(), anyString());
+
+    Assert.assertNotNull(marker);
+  }
+
+  @Test
+  public void testInsertOrUpdateNewEntity() {
     Marker marker = new Marker();
     marker.setId("1");
 
     long row = mMarkerDatabaseAdapter.insertOrUpdateMarker(marker, 0);
 
     Mockito.verify(mMockedDatabase).query(
-        Mockito.eq(OfflineEnduserContract.MarkerEntry.TABLE_NAME),
+        eq(OfflineEnduserContract.MarkerEntry.TABLE_NAME),
         any(String[].class), anyString(), any(String[].class), anyString(),
         anyString(), anyString());
 
     Mockito.verify(mMockedDatabase).insert(
-        Mockito.eq(OfflineEnduserContract.MarkerEntry.TABLE_NAME),
+        eq(OfflineEnduserContract.MarkerEntry.TABLE_NAME),
         anyString(), any(ContentValues.class));
   }
 
@@ -95,12 +117,12 @@ public class MarkerDatabaseAdapterTest {
     long row = mMarkerDatabaseAdapter.insertOrUpdateMarker(marker, 0);
 
     Mockito.verify(mMockedDatabase).query(
-        Mockito.eq(OfflineEnduserContract.MarkerEntry.TABLE_NAME),
+        eq(OfflineEnduserContract.MarkerEntry.TABLE_NAME),
         any(String[].class), anyString(), any(String[].class), anyString(),
         anyString(), anyString());
 
     Mockito.verify(mMockedDatabase).update(
-        Mockito.eq(OfflineEnduserContract.MarkerEntry.TABLE_NAME),
+        eq(OfflineEnduserContract.MarkerEntry.TABLE_NAME),
         any(ContentValues.class), anyString(), any(String[].class));
     Assert.assertNotEquals(row, -1L);
   }

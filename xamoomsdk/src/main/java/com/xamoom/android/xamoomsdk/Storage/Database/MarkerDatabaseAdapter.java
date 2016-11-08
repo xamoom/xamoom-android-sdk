@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.xamoom.android.xamoomsdk.Resource.Marker;
+import com.xamoom.android.xamoomsdk.Storage.TableContracts.OfflineEnduserContract;
 import com.xamoom.android.xamoomsdk.Storage.TableContracts.OfflineEnduserContract.MarkerEntry;
 
 import java.util.ArrayList;
@@ -27,6 +28,21 @@ public class MarkerDatabaseAdapter extends DatabaseAdapter {
     String selection = MarkerEntry.COLUMN_NAME_JSON_ID + " = ?";
     String[] selectionArgs = {jsonId};
 
+    return getMarker(selection, selectionArgs);
+  }
+
+  public Marker getMarkerWithLocId(String locId) {
+    String selection = String.format("%s = ? OR %s = ? OR %s = ? OR %s = ?",
+        OfflineEnduserContract.MarkerEntry.COLUMN_NAME_QR,
+        OfflineEnduserContract.MarkerEntry.COLUMN_NAME_NFC,
+        OfflineEnduserContract.MarkerEntry.COLUMN_NAME_BEACON_MINOR,
+        OfflineEnduserContract.MarkerEntry.COLUMN_NAME_EDDYSTONE_URL);
+    String[] selectionArgs = {locId};
+
+    return getMarker(selection, selectionArgs);
+  }
+
+  private Marker getMarker(String selection, String[] selectionArgs) {
     open();
     Cursor cursor = queryMarker(selection, selectionArgs);
 
@@ -34,9 +50,12 @@ public class MarkerDatabaseAdapter extends DatabaseAdapter {
       // TODO: too many exception
     }
 
-    ArrayList<Marker> markers= cursorToMarkers(cursor);
+    ArrayList<Marker> markers = cursorToMarkers(cursor);
 
     close();
+    if (markers == null) {
+      return null;
+    }
     return markers.get(0);
   }
 
