@@ -20,7 +20,6 @@ import java.net.URL;
 
 public class OfflineStorageManager {
   private static OfflineStorageManager mInstance;
-  private Context mContext;
 
   private DownloadManager mDownloadManager;
   private ContentDatabaseAdapter mContentDatabaseAdapter;
@@ -38,7 +37,6 @@ public class OfflineStorageManager {
   }
 
   private OfflineStorageManager(Context context) {
-    mContext = context;
     mDownloadManager = new DownloadManager(FileManager.getInstance(context));
     mContentDatabaseAdapter = ContentDatabaseAdapter.getInstance(context);
     mSpotDatabaseAdapter = SpotDatabaseAdapter.getInstance(context);
