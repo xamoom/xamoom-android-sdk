@@ -58,6 +58,16 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
     return contents.get(0);
   }
 
+  public ArrayList<Content> getAllContents() {
+    open();
+    Cursor cursor = queryContent(null, null);
+
+    ArrayList<Content> contents = cursorToContents(cursor);
+
+    close();
+    return contents;
+  }
+
   public ArrayList<Content> getRelatedContents(long menuRow) {
     String selection = OfflineEnduserContract.ContentEntry.COLUMN_NAME_MENU_RELATION + " = ?";
     String[] selectionArgs = { String.valueOf(menuRow) };

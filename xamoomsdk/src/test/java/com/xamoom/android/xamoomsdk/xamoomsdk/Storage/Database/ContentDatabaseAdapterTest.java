@@ -180,4 +180,22 @@ public class ContentDatabaseAdapterTest {
     Mockito.verify(mMockedDatabase).query(anyString(), any(String[].class), anyString(),
         any(String[].class), anyString(), anyString(), anyString());
   }
+
+  @Test
+  public void testGetAllContents() {
+    Cursor mockedCursor = mock(Cursor.class);
+    Mockito.stub(mMockedDatabase.query(
+        Mockito.anyString(), Mockito.any(String[].class), Mockito.anyString(),
+        Mockito.any(String[].class), Mockito.anyString(), Mockito.anyString(),
+        Mockito.anyString())).toReturn(mockedCursor);
+    Mockito.stub(mockedCursor.getCount()).toReturn(1);
+    Mockito.stub(mockedCursor.moveToNext()).toReturn(true).toReturn(true).toReturn(false);
+
+    ArrayList<Content> contents = mContentDatabaseAdapter.getAllContents();
+
+    Assert.assertEquals(2, contents.size());
+
+    Mockito.verify(mMockedDatabase).query(anyString(), any(String[].class), anyString(),
+        any(String[].class), anyString(), anyString(), anyString());
+  }
 }
