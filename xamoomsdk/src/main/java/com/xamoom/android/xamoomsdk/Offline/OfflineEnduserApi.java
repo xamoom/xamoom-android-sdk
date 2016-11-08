@@ -70,6 +70,7 @@ public class OfflineEnduserApi {
   public void getContentsByTags(List<String> tags, int pageSize, @Nullable String cursor,
                                 EnumSet<ContentSortFlags> sortFlags,
                                 APIListCallback<List<Content>, List<Error>> callback) {
+    mOfflineStorageManager.getContentByTags(tags, pageSize, cursor, sortFlags, callback);
   }
 
   public void searchContentsByName(String name, int pageSize, @Nullable String cursor,

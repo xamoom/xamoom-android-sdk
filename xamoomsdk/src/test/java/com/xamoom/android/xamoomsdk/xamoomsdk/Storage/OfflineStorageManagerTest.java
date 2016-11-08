@@ -280,4 +280,36 @@ public class OfflineStorageManagerTest {
     Mockito.verify(mMockedSpotDatabaseAdapter, times(2)).getAllSpots();
   }
 
+  @Test
+  public void testGetContentWithTags() throws InterruptedException {
+    ArrayList<String> tags = new ArrayList<>();
+    tags.add("tag1");
+
+    Content content1 = new Content();
+    content1.setTags(tags);
+    ArrayList<Content> contents = new ArrayList<>();
+    contents.add(content1);
+
+    Mockito.stub(mMockedContentDatabaseAdapter.getAllContents()).toReturn(contents);
+
+    final Semaphore semaphore = new Semaphore(0);
+    mOfflineStorageManager
+        .getContentByTags(tags, 1, null, null,
+            new APIListCallback<List<Content>, List<Error>>() {
+              @Override
+              public void finished(List<Content> result, String cursor, boolean hasMore) {
+                Assert.assertEquals(1, result.size());
+                Assert.assertFalse(hasMore);
+                Assert.assertEquals("1", cursor);
+                semaphore.release();
+              }
+
+              @Override
+              public void error(List<Error> error) {
+                Assert.fail();
+              }
+            });
+    semaphore.acquire();
+  }
+
 }

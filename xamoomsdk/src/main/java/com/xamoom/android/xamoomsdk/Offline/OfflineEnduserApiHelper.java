@@ -2,10 +2,12 @@ package com.xamoom.android.xamoomsdk.Offline;
 
 import android.location.Location;
 
+import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.Spot;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 public class OfflineEnduserApiHelper {
   private static final float GEOFENCE_RADIUS = 40.0F;
@@ -23,6 +25,23 @@ public class OfflineEnduserApiHelper {
     }
 
     return spotsInGeofence;
+  }
+
+  public static ArrayList<Content> getContentsWithTags(List<String> tags, ArrayList<Content> contents) {
+    ArrayList<Content> contentsWithTags = new ArrayList<>();
+    for (Content content : contents) {
+      boolean hasTag = false;
+      for (String tag : tags) {
+        if (content.getTags().contains(tag)) {
+          hasTag = true;
+        }
+      }
+      if (hasTag) {
+        contentsWithTags.add(content);
+      }
+    }
+
+    return contentsWithTags;
   }
 
   public static <E> PagedResult pageResults(ArrayList<E> list, int pageSize, String cursor) {

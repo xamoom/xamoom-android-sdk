@@ -2,6 +2,7 @@ package com.xamoom.android.xamoomsdk.Storage;
 
 import android.content.Context;
 import android.location.Location;
+import android.support.annotation.Nullable;
 
 import com.xamoom.android.xamoomsdk.APIListCallback;
 import com.xamoom.android.xamoomsdk.Enums.ContentSortFlags;
@@ -144,8 +145,27 @@ public class OfflineStorageManager {
       }
     }
 
+    // TODO: sorting
+
     OfflineEnduserApiHelper.PagedResult<Content> contentPagedResult =
         OfflineEnduserApiHelper.pageResults(contents, pageSize, cursor);
+
+    if (callback != null) {
+      callback.finished(contentPagedResult.getObjects(), contentPagedResult.getCursor(),
+          contentPagedResult.hasMore());
+    }
+  }
+
+  public void getContentByTags(List<String> tags, int pageSize, String cursor,
+                               EnumSet<ContentSortFlags> sortFlags,
+                               APIListCallback<List<Content>, List<Error>> callback) {
+
+    ArrayList<Content> contents = mContentDatabaseAdapter.getAllContents();
+    contents = OfflineEnduserApiHelper.getContentsWithTags(tags, contents);
+    OfflineEnduserApiHelper.PagedResult<Content> contentPagedResult =
+        OfflineEnduserApiHelper.pageResults(contents, pageSize, cursor);
+
+    // TODO: sorting
 
     if (callback != null) {
       callback.finished(contentPagedResult.getObjects(), contentPagedResult.getCursor(),
