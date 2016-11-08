@@ -34,6 +34,17 @@ public class SpotDatabaseAdapter extends DatabaseAdapter {
     String selection = OfflineEnduserContract.SpotEntry.COLUMN_NAME_JSON_ID + " = ?";
     String[] selectionArgs = {jsonId};
 
+    return getSpot(selection, selectionArgs);
+  }
+
+  public Spot getSpot(long spotId) {
+    String selection = OfflineEnduserContract.SpotEntry._ID + " = ?";
+    String[] selectionArgs = {String.valueOf(spotId)};
+
+    return getSpot(selection, selectionArgs);
+  }
+
+  private Spot getSpot(String selection, String[] selectionArgs) {
     open();
     Cursor cursor = querySpot(selection, selectionArgs);
 

@@ -88,6 +88,23 @@ public class SpotDatabaseAdapterTest {
   }
 
   @Test
+  public void testGetSpotLong() {
+    String query = OfflineEnduserContract.SpotEntry._ID + " = ?";
+
+    Mockito.stub(mMockedCursor.getCount()).toReturn(1);
+    Mockito.stub(mMockedCursor.moveToFirst()).toReturn(true);
+
+    Spot spot = mSpotDatabaseAdapter.getSpot(1L);
+
+    Mockito.verify(mMockedDatabase).query(
+        Mockito.eq(OfflineEnduserContract.SpotEntry.TABLE_NAME),
+        any(String[].class), eq(query), any(String[].class), anyString(),
+        anyString(), anyString());
+
+    Assert.assertNotNull(spot);
+  }
+
+  @Test
   public void testInsertOrUpdateNewEntity() {
     Spot spot = new Spot();
     spot.setId("1");
