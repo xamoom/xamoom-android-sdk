@@ -88,7 +88,7 @@ public class ContentDatabaseAdapterTest {
   }
 
   @Test
-  public void insertOrUpdateContentInsertingNew() {
+  public void testInsertOrUpdateContentInsertingNew() {
     ArrayList<ContentBlock> contentBlocks = new ArrayList<>();
     ContentBlock block = new ContentBlock();
     block.setId("test | 2");
@@ -111,7 +111,7 @@ public class ContentDatabaseAdapterTest {
   }
 
   @Test
-  public void insertOrUpdateContentUpdateExisting() {
+  public void testInsertOrUpdateContentUpdateExisting() {
     Content content = new Content();
     content.setId("1");
 
@@ -138,7 +138,7 @@ public class ContentDatabaseAdapterTest {
   }
 
   @Test
-  public void relatedBlocksSorting() {
+  public void testRelatedBlocksSorting() {
     ArrayList<ContentBlock> contentBlocks = new ArrayList<>();
     ContentBlock block = new ContentBlock();
     block.setId("test | 2");
