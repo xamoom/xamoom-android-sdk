@@ -12,6 +12,7 @@ import com.xamoom.android.xamoomsdk.Enums.ContentSortFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotSortFlags;
 import com.xamoom.android.xamoomsdk.Resource.Content;
+import com.xamoom.android.xamoomsdk.Resource.Marker;
 import com.xamoom.android.xamoomsdk.Resource.Menu;
 import com.xamoom.android.xamoomsdk.Resource.Spot;
 import com.xamoom.android.xamoomsdk.Resource.Style;
@@ -21,6 +22,7 @@ import com.xamoom.android.xamoomsdk.Storage.OfflineStorageManager;
 import com.xamoom.android.xamoomsdk.Utils.JsonListUtil;
 import com.xamoom.android.xamoomsdk.Utils.UrlUtil;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
@@ -46,12 +48,11 @@ public class OfflineEnduserApi {
 
   public void getContentByLocationIdentifier(String locationIdentifier, APICallback<Content,
       List<Error>> callback) {
-  }
+    Content content = mOfflineStorageManager.getContentWithLocationIdentifier(locationIdentifier);
 
-  public void getContentByLocationIdentifier(String locationIdentifier,
-                                             EnumSet<ContentFlags> contentFlags,
-                                             APICallback<Content, List<Error>> callback) {
-
+    if (callback != null) {
+      callback.finished(content);
+    }
   }
 
   public void getContentByBeacon(int major, int minor, APICallback<Content, List<Error>>

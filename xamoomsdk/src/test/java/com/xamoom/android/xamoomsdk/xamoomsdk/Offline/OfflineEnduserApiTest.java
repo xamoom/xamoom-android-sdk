@@ -20,6 +20,7 @@ import java.util.List;
 
 import at.rags.morpheus.Error;
 
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.contains;
 import static org.mockito.Matchers.eq;
 
@@ -58,5 +59,26 @@ public class OfflineEnduserApiTest {
     });
 
     Mockito.verify(mMockedOfflineStorageManager).getContent(eq("1234"));
+  }
+
+  @Test
+  public void testGetContentByLocationIdentifier() {
+    final Content savedContent = new Content();
+    savedContent.setId("1");
+
+    Mockito.stub(mMockedOfflineStorageManager.getContentWithLocationIdentifier(anyString()))
+        .toReturn(savedContent);
+
+    mOfflineEnduserApi.getContentByLocationIdentifier("locId", new APICallback<Content, List<Error>>() {
+      @Override
+      public void finished(Content result) {
+        Assert.assertEquals(savedContent, result);
+      }
+
+      @Override
+      public void error(List<Error> error) {
+        Assert.fail();
+      }
+    });
   }
 }
