@@ -42,6 +42,21 @@ public class MarkerDatabaseAdapter extends DatabaseAdapter {
     return getMarker(selection, selectionArgs);
   }
 
+  public ArrayList<Marker> getRelatedMarkers(long spotId) {
+    String selection = OfflineEnduserContract.MarkerEntry.COLUMN_NAME_SPOT_RELATION + " = ?";
+    String[] selectionArgs = {String.valueOf(spotId)};
+
+    open();
+    Cursor cursor = queryMarker(selection, selectionArgs);
+    ArrayList<Marker> markers = cursorToMarkers(cursor);
+    close();
+
+    if (markers == null) {
+      return null;
+    }
+    return markers;
+  }
+
   private Marker getMarker(String selection, String[] selectionArgs) {
     open();
     Cursor cursor = queryMarker(selection, selectionArgs);

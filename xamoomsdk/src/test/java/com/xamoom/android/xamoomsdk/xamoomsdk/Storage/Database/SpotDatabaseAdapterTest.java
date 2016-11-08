@@ -7,10 +7,12 @@ import android.test.suitebuilder.annotation.SmallTest;
 
 import com.xamoom.android.xamoomsdk.BuildConfig;
 import com.xamoom.android.xamoomsdk.Resource.Content;
+import com.xamoom.android.xamoomsdk.Resource.Marker;
 import com.xamoom.android.xamoomsdk.Resource.Spot;
 import com.xamoom.android.xamoomsdk.Resource.System;
 import com.xamoom.android.xamoomsdk.Storage.Database.ContentDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.DatabaseHelper;
+import com.xamoom.android.xamoomsdk.Storage.Database.MarkerDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.SpotDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.SystemDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.TableContracts.OfflineEnduserContract;
@@ -26,11 +28,14 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
+import java.util.ArrayList;
+
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -43,6 +48,7 @@ public class SpotDatabaseAdapterTest {
   private Cursor mMockedCursor;
   private SystemDatabaseAdapter mMockedSystemDatabaseAdapter;
   private ContentDatabaseAdapter mMockedContentDatabaseadapter;
+  private MarkerDatabaseAdapter mMockedMarkerDatabaseAdapter;
 
   @Before
   public void setup() {
@@ -52,8 +58,10 @@ public class SpotDatabaseAdapterTest {
     mSpotDatabaseAdapter.setDatabaseHelper(mMockedDatabaseHelper);
     mMockedContentDatabaseadapter = mock(ContentDatabaseAdapter.class);
     mMockedSystemDatabaseAdapter = mock(SystemDatabaseAdapter.class);
+    mMockedMarkerDatabaseAdapter = mock(MarkerDatabaseAdapter.class);
     mSpotDatabaseAdapter.setContentDatabaseAdapter(mMockedContentDatabaseadapter);
     mSpotDatabaseAdapter.setSystemDatabaseAdapter(mMockedSystemDatabaseAdapter);
+    mSpotDatabaseAdapter.setMarkerDatabaseAdapter(mMockedMarkerDatabaseAdapter);
     mMockedCursor = mock(Cursor.class);
 
     Mockito.stub(mMockedDatabaseHelper.getWritableDatabase())
@@ -93,6 +101,12 @@ public class SpotDatabaseAdapterTest {
     spot.setSystem(system);
     spot.setContent(content);
 
+    Marker marker = new Marker();
+    marker.setId("4");
+    ArrayList<Marker> markers = new ArrayList<>();
+    markers.add(marker);
+    spot.setMarkers(markers);
+
     long row = mSpotDatabaseAdapter.insertOrUpdateSpot(spot);
 
     Mockito.verify(mMockedDatabase).query(
@@ -109,6 +123,8 @@ public class SpotDatabaseAdapterTest {
 
     Mockito.verify(mMockedSystemDatabaseAdapter).insertOrUpdateSystem(
         Mockito.eq(system));
+
+    Mockito.verify(mMockedMarkerDatabaseAdapter).insertOrUpdateMarker(eq(marker), anyLong());
   }
 
   @Test

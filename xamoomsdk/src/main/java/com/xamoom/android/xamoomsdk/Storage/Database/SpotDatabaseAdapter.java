@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.text.TextUtils;
 
 import com.xamoom.android.xamoomsdk.Resource.Location;
+import com.xamoom.android.xamoomsdk.Resource.Marker;
 import com.xamoom.android.xamoomsdk.Resource.Spot;
 import com.xamoom.android.xamoomsdk.Storage.TableContracts.OfflineEnduserContract;
 
@@ -16,6 +17,7 @@ public class SpotDatabaseAdapter extends DatabaseAdapter {
   private static SpotDatabaseAdapter mSharedInstance;
   private SystemDatabaseAdapter mSystemDatabaseAdapter;
   private ContentDatabaseAdapter mContentDatabaseAdapter;
+  private MarkerDatabaseAdapter mMarkerDatabaseAdapter;
 
   public static SpotDatabaseAdapter getInstance(Context context) {
     if (mSharedInstance == null) {
@@ -71,8 +73,6 @@ public class SpotDatabaseAdapter extends DatabaseAdapter {
           getContentDatabaseAdapter().insertOrUpdateContent(spot.getContent(), false, 0));
     }
 
-    // TODO: save marker
-
     long row = getPrimaryKey(spot.getId());
     if (row != -1) {
       updateSpot(row, values);
@@ -80,6 +80,12 @@ public class SpotDatabaseAdapter extends DatabaseAdapter {
       open();
       row = mDatabase.insert(OfflineEnduserContract.SpotEntry.TABLE_NAME, null, values);
       close();
+    }
+
+    if (spot.getMarkers() != null) {
+      for (Marker marker : spot.getMarkers()) {
+        getMarkerDatabaseAdapter().insertOrUpdateMarker(marker, row);
+      }
     }
 
     return row;
@@ -150,7 +156,9 @@ public class SpotDatabaseAdapter extends DatabaseAdapter {
         spot.setContent(getContentDatabaseAdapter().getContent(contentRow));
       }
 
-      // TODO: get marker
+      long spotId = cursor.getLong(cursor.getColumnIndex(
+          OfflineEnduserContract.SpotEntry._ID));
+      spot.setMarkers(getMarkerDatabaseAdapter().getRelatedMarkers(spotId));
       
       return spot;
     }
@@ -166,7 +174,6 @@ public class SpotDatabaseAdapter extends DatabaseAdapter {
 
   // setter
 
-
   public ContentDatabaseAdapter getContentDatabaseAdapter() {
     if (mContentDatabaseAdapter == null) {
       mContentDatabaseAdapter = ContentDatabaseAdapter.getInstance(mContext);
@@ -181,11 +188,22 @@ public class SpotDatabaseAdapter extends DatabaseAdapter {
     return mSystemDatabaseAdapter;
   }
 
+  public MarkerDatabaseAdapter getMarkerDatabaseAdapter() {
+    if (mMarkerDatabaseAdapter == null) {
+      mMarkerDatabaseAdapter = MarkerDatabaseAdapter.getInstance(mContext);
+    }
+    return mMarkerDatabaseAdapter;
+  }
+
   public void setSystemDatabaseAdapter(SystemDatabaseAdapter systemDatabaseAdapter) {
     mSystemDatabaseAdapter = systemDatabaseAdapter;
   }
 
   public void setContentDatabaseAdapter(ContentDatabaseAdapter contentDatabaseAdapter) {
     mContentDatabaseAdapter = contentDatabaseAdapter;
+  }
+
+  public void setMarkerDatabaseAdapter(MarkerDatabaseAdapter markerDatabaseAdapter) {
+    mMarkerDatabaseAdapter = markerDatabaseAdapter;
   }
 }

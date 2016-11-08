@@ -20,6 +20,8 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
+import java.util.ArrayList;
+
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
@@ -125,5 +127,22 @@ public class MarkerDatabaseAdapterTest {
         eq(OfflineEnduserContract.MarkerEntry.TABLE_NAME),
         any(ContentValues.class), anyString(), any(String[].class));
     Assert.assertNotEquals(row, -1L);
+  }
+
+  @Test
+  public void testGetRelatedMarkers() {
+    String query = OfflineEnduserContract.MarkerEntry.COLUMN_NAME_SPOT_RELATION + " = ?";
+
+    Mockito.stub(mMockedCursor.getCount()).toReturn(1);
+    Mockito.stub(mMockedCursor.moveToNext()).toReturn(true).toReturn(false);
+
+    ArrayList<Marker> markers = mMarkerDatabaseAdapter.getRelatedMarkers(1);
+
+    Mockito.verify(mMockedDatabase).query(
+        eq(OfflineEnduserContract.MarkerEntry.TABLE_NAME),
+        any(String[].class), eq(query), any(String[].class), anyString(),
+        anyString(), anyString());
+
+    Assert.assertNotNull(markers);
   }
 }
