@@ -67,13 +67,16 @@ public class MarkerDatabaseAdapter extends DatabaseAdapter {
 
     open();
     Cursor cursor = queryMarker(selection, selectionArgs);
-    close();
 
     if (cursor.getCount() > 1) {
       // TODO: too many exception
     }
 
-    long spotRelation = cursor.getLong(cursor.getColumnIndex(MarkerEntry.COLUMN_NAME_SPOT_RELATION));
+    long spotRelation = -1L;
+
+    if (cursor.moveToFirst()) {
+      spotRelation = cursor.getLong(cursor.getColumnIndex(MarkerEntry.COLUMN_NAME_SPOT_RELATION));
+    }
 
     close();
     return spotRelation;
