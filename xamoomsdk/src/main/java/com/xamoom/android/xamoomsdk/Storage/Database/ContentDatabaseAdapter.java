@@ -77,6 +77,7 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
     values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_DESCRIPTION, content.getDescription());
     values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_LANGUAGE, content.getLanguage());
     values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_CATEGORY, content.getCategory());
+    values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_PUBLIC_IMAGE_URL, content.getPublicImageUrl());
     if (content.getTags() != null) {
       values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_TAGS,
           TextUtils.join(",", content.getTags()));
