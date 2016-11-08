@@ -3,12 +3,14 @@ package com.xamoom.android.xamoomsdk.Storage;
 import android.content.Context;
 
 import com.xamoom.android.xamoomsdk.Resource.Content;
+import com.xamoom.android.xamoomsdk.Resource.Marker;
 import com.xamoom.android.xamoomsdk.Resource.Menu;
 import com.xamoom.android.xamoomsdk.Resource.Spot;
 import com.xamoom.android.xamoomsdk.Resource.System;
 import com.xamoom.android.xamoomsdk.Resource.Style;
 import com.xamoom.android.xamoomsdk.Resource.SystemSetting;
 import com.xamoom.android.xamoomsdk.Storage.Database.ContentDatabaseAdapter;
+import com.xamoom.android.xamoomsdk.Storage.Database.MarkerDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.MenuDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.SettingDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.SpotDatabaseAdapter;
@@ -17,6 +19,7 @@ import com.xamoom.android.xamoomsdk.Storage.Database.SystemDatabaseAdapter;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class OfflineStorageManager {
   private static OfflineStorageManager mInstance;
@@ -28,6 +31,7 @@ public class OfflineStorageManager {
   private StyleDatabaseAdapter mStyleDatabaseAdapter;
   private SettingDatabaseAdapter mSettingDatabaseAdapter;
   private MenuDatabaseAdapter mMenuDatabaseAdapter;
+  private MarkerDatabaseAdapter mMarkerDatabaseAdapter;
 
   public static OfflineStorageManager getInstance(Context context) {
     if (mInstance == null) {
@@ -44,6 +48,7 @@ public class OfflineStorageManager {
     mStyleDatabaseAdapter = StyleDatabaseAdapter.getInstance(context);
     mSettingDatabaseAdapter = SettingDatabaseAdapter.getInstance(context);
     mMenuDatabaseAdapter = MenuDatabaseAdapter.getInstance(context);
+    mMarkerDatabaseAdapter = MarkerDatabaseAdapter.getInstance(context);
   }
 
   // Saving
@@ -97,6 +102,17 @@ public class OfflineStorageManager {
     return mContentDatabaseAdapter.getContent(jsonId);
   }
 
+  public Content getContentWithLocationIdentifier(String locId) {
+    long spotId = mMarkerDatabaseAdapter.getSpotRelation(locId);
+    Spot spot = mSpotDatabaseAdapter.getSpot(spotId);
+
+    if (spot != null && spot.getContent() != null) {
+      return spot.getContent();
+    }
+
+    return null;
+  }
+
   // getter & setter
 
   public void setContentDatabaseAdapter(ContentDatabaseAdapter contentDatabaseAdapter) {
@@ -125,5 +141,9 @@ public class OfflineStorageManager {
 
   public void setMenuDatabaseAdapter(MenuDatabaseAdapter menuDatabaseAdapter) {
     mMenuDatabaseAdapter = menuDatabaseAdapter;
+  }
+
+  public void setMarkerDatabaseAdapter(MarkerDatabaseAdapter markerDatabaseAdapter) {
+    mMarkerDatabaseAdapter = markerDatabaseAdapter;
   }
 }

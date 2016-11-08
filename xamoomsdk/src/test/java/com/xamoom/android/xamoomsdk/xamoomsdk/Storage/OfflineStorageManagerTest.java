@@ -8,6 +8,7 @@ import com.xamoom.android.xamoomsdk.Resource.Style;
 import com.xamoom.android.xamoomsdk.Resource.System;
 import com.xamoom.android.xamoomsdk.Resource.SystemSetting;
 import com.xamoom.android.xamoomsdk.Storage.Database.ContentDatabaseAdapter;
+import com.xamoom.android.xamoomsdk.Storage.Database.MarkerDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.MenuDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.SettingDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.SpotDatabaseAdapter;
@@ -31,13 +32,14 @@ import java.net.URL;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
 public class OfflineStorageManagerTest {
 
-  private OfflineStorageManager mOfflineSavingManager;
+  private OfflineStorageManager mOfflineStorageManager;
   private DownloadManager mMockedDownloadManager;
   private ContentDatabaseAdapter mMockedContentDatabaseAdapter;
   private SpotDatabaseAdapter mMockedSpotDatabaseAdapter;
@@ -45,10 +47,11 @@ public class OfflineStorageManagerTest {
   private StyleDatabaseAdapter mMockedStyleDatabaseAdapter;
   private SettingDatabaseAdapter mMockedSettingDatabaseAdapter;
   private MenuDatabaseAdapter mMockedMenuDatabaseAdapter;
+  private MarkerDatabaseAdapter mMockedMarkerDatabaseAdapter;
 
   @Before
   public void setup() {
-    mOfflineSavingManager = OfflineStorageManager.getInstance(RuntimeEnvironment.application);
+    mOfflineStorageManager = OfflineStorageManager.getInstance(RuntimeEnvironment.application);
     mMockedDownloadManager = Mockito.mock(DownloadManager.class);
     mMockedContentDatabaseAdapter = Mockito.mock(ContentDatabaseAdapter.class);
     mMockedSpotDatabaseAdapter = Mockito.mock(SpotDatabaseAdapter.class);
@@ -56,14 +59,16 @@ public class OfflineStorageManagerTest {
     mMockedStyleDatabaseAdapter = Mockito.mock(StyleDatabaseAdapter.class);
     mMockedSettingDatabaseAdapter = Mockito.mock(SettingDatabaseAdapter.class);
     mMockedMenuDatabaseAdapter = Mockito.mock(MenuDatabaseAdapter.class);
+    mMockedMarkerDatabaseAdapter = Mockito.mock(MarkerDatabaseAdapter.class);
 
-    mOfflineSavingManager.setDownloadManager(mMockedDownloadManager);
-    mOfflineSavingManager.setContentDatabaseAdapter(mMockedContentDatabaseAdapter);
-    mOfflineSavingManager.setSpotDatabaseAdapter(mMockedSpotDatabaseAdapter);
-    mOfflineSavingManager.setSystemDatabaseAdapter(mMockedSystemDatabaseAdapter);
-    mOfflineSavingManager.setStyleDatabaseAdapter(mMockedStyleDatabaseAdapter);
-    mOfflineSavingManager.setSettingDatabaseAdapter(mMockedSettingDatabaseAdapter);
-    mOfflineSavingManager.setMenuDatabaseAdapter(mMockedMenuDatabaseAdapter);
+    mOfflineStorageManager.setDownloadManager(mMockedDownloadManager);
+    mOfflineStorageManager.setContentDatabaseAdapter(mMockedContentDatabaseAdapter);
+    mOfflineStorageManager.setSpotDatabaseAdapter(mMockedSpotDatabaseAdapter);
+    mOfflineStorageManager.setSystemDatabaseAdapter(mMockedSystemDatabaseAdapter);
+    mOfflineStorageManager.setStyleDatabaseAdapter(mMockedStyleDatabaseAdapter);
+    mOfflineStorageManager.setSettingDatabaseAdapter(mMockedSettingDatabaseAdapter);
+    mOfflineStorageManager.setMenuDatabaseAdapter(mMockedMenuDatabaseAdapter);
+    mOfflineStorageManager.setMarkerDatabaseAdapter(mMockedMarkerDatabaseAdapter);
   }
 
   @Test
@@ -77,7 +82,7 @@ public class OfflineStorageManagerTest {
 
     boolean saved = false;
     try {
-      saved = mOfflineSavingManager.saveContent(content, null);
+      saved = mOfflineStorageManager.saveContent(content, null);
     } catch (MalformedURLException e) {
       Assert.fail();
     }
@@ -99,7 +104,7 @@ public class OfflineStorageManagerTest {
 
     boolean saved = false;
     try {
-      saved = mOfflineSavingManager.saveSpot(spot, null);
+      saved = mOfflineStorageManager.saveSpot(spot, null);
     } catch (MalformedURLException e) {
       Assert.fail();
     }
@@ -119,7 +124,7 @@ public class OfflineStorageManagerTest {
 
     Mockito.stub(mMockedSystemDatabaseAdapter.insertOrUpdateSystem(eq(system))).toReturn(1L);
 
-    boolean saved = mOfflineSavingManager.saveSystem(system);
+    boolean saved = mOfflineStorageManager.saveSystem(system);
 
     Assert.assertTrue(saved);
     Mockito.verify(mMockedSystemDatabaseAdapter).insertOrUpdateSystem(eq(system));
@@ -132,7 +137,7 @@ public class OfflineStorageManagerTest {
 
     Mockito.stub(mMockedStyleDatabaseAdapter.insertOrUpdateStyle(eq(style), anyLong())).toReturn(1L);
 
-    boolean saved = mOfflineSavingManager.saveStyle(style);
+    boolean saved = mOfflineStorageManager.saveStyle(style);
 
     Assert.assertTrue(saved);
     Mockito.verify(mMockedStyleDatabaseAdapter).insertOrUpdateStyle(eq(style), eq(-1L));
@@ -146,7 +151,7 @@ public class OfflineStorageManagerTest {
     Mockito.stub(mMockedSettingDatabaseAdapter.insertOrUpdateSetting(eq(setting), anyLong()))
         .toReturn(1L);
 
-    boolean saved = mOfflineSavingManager.saveSetting(setting);
+    boolean saved = mOfflineStorageManager.saveSetting(setting);
 
     Assert.assertTrue(saved);
     Mockito.verify(mMockedSettingDatabaseAdapter).insertOrUpdateSetting(eq(setting), eq(-1L));
@@ -160,11 +165,34 @@ public class OfflineStorageManagerTest {
     Mockito.stub(mMockedMenuDatabaseAdapter.insertOrUpdate(eq(menu), anyLong()))
         .toReturn(1L);
 
-    boolean saved = mOfflineSavingManager.saveMenu(menu);
+    boolean saved = mOfflineStorageManager.saveMenu(menu);
 
     Assert.assertTrue(saved);
     Mockito.verify(mMockedMenuDatabaseAdapter).insertOrUpdate(eq(menu), eq(-1L));
   }
 
+  @Test
+  public void testGetContent() {
+    mOfflineStorageManager.getContent("1");
+
+    Mockito.verify(mMockedContentDatabaseAdapter).getContent(eq("1"));
+  }
+
+  @Test
+  public void testGetContentWithLocationIdentifier() {
+    Content content = new Content();
+    content.setId("2");
+
+    Spot spot = new Spot();
+    spot.setId("1");
+    spot.setContent(content);
+
+    Mockito.stub(mMockedMarkerDatabaseAdapter.getSpotRelation(anyString())).toReturn(1L);
+    Mockito.stub(mMockedSpotDatabaseAdapter.getSpot(anyLong())).toReturn(spot);
+
+    Content savedContent = mOfflineStorageManager.getContentWithLocationIdentifier("locId");
+
+    Assert.assertEquals(content, savedContent);
+  }
 
 }
