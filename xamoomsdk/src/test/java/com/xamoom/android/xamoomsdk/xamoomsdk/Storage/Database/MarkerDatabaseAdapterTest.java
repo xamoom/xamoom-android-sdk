@@ -158,4 +158,21 @@ public class MarkerDatabaseAdapterTest {
         any(String[].class), anyString(), any(String[].class), anyString(),
         anyString(), anyString());
   }
+
+  @Test
+  public void testGetSpotRelationBeacon() {
+    String query = String.format("%s = ? AND %s = ?",
+        OfflineEnduserContract.MarkerEntry.COLUMN_NAME_BEACON_MAJOR,
+        OfflineEnduserContract.MarkerEntry.COLUMN_NAME_BEACON_MINOR);
+
+    Mockito.stub(mMockedCursor.getCount()).toReturn(1);
+    Mockito.stub(mMockedCursor.moveToNext()).toReturn(true).toReturn(false);
+
+    long spotRelation = mMarkerDatabaseAdapter.getSpotRelation("major", "minor");
+
+    Mockito.verify(mMockedDatabase).query(
+        eq(OfflineEnduserContract.MarkerEntry.TABLE_NAME),
+        any(String[].class), eq(query), any(String[].class), anyString(),
+        anyString(), anyString());
+  }
 }

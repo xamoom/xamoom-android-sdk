@@ -11,6 +11,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
@@ -23,6 +24,7 @@ import at.rags.morpheus.Error;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.contains;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.matches;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
@@ -80,5 +82,28 @@ public class OfflineEnduserApiTest {
         Assert.fail();
       }
     });
+  }
+
+  @Test
+  public void testGetContentByLocationIdentifierBeacon() {
+    final Content savedContent = new Content();
+    savedContent.setId("1");
+
+    Mockito.stub(mMockedOfflineStorageManager.getContentWithLocationIdentifier(anyString()))
+        .toReturn(savedContent);
+
+    mOfflineEnduserApi.getContentByBeacon(1, 2, new APICallback<Content, List<Error>>() {
+      @Override
+      public void finished(Content result) {
+        Assert.assertEquals(savedContent, result);
+      }
+
+      @Override
+      public void error(List<Error> error) {
+        Assert.fail();
+      }
+    });
+
+    Mockito.verify(mMockedOfflineStorageManager).getContentWithLocationIdentifier(eq(String.format("%d|%d", 1, 2)));
   }
 }

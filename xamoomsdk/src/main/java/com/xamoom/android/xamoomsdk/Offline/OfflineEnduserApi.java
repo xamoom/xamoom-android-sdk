@@ -57,10 +57,8 @@ public class OfflineEnduserApi {
 
   public void getContentByBeacon(int major, int minor, APICallback<Content, List<Error>>
       callback) {
-  }
-
-  public void getContentByBeacon(int major, int minor, EnumSet<ContentFlags> contentFlags,
-                                 APICallback<Content, List<Error>> callback) {
+    String beaconIds = String.format("%d|%d", major, minor);
+    getContentByLocationIdentifier(beaconIds, callback);
   }
 
   public void getContentsByLocation(Location location, int pageSize, @Nullable String cursor,

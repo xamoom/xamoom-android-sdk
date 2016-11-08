@@ -195,4 +195,22 @@ public class OfflineStorageManagerTest {
     Assert.assertEquals(content, savedContent);
   }
 
+  @Test
+  public void testGetContentWithLocationIdentifierBeacon() {
+    Content content = new Content();
+    content.setId("2");
+
+    Spot spot = new Spot();
+    spot.setId("1");
+    spot.setContent(content);
+
+    Mockito.stub(mMockedMarkerDatabaseAdapter.getSpotRelation(anyString())).toReturn(1L);
+    Mockito.stub(mMockedSpotDatabaseAdapter.getSpot(anyLong())).toReturn(spot);
+
+    Content savedContent = mOfflineStorageManager.getContentWithLocationIdentifier("locId|locId");
+
+    Mockito.verify(mMockedMarkerDatabaseAdapter).getSpotRelation(anyString(), anyString());
+    Assert.assertEquals(content, savedContent);
+  }
+
 }

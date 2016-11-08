@@ -65,6 +65,19 @@ public class MarkerDatabaseAdapter extends DatabaseAdapter {
         OfflineEnduserContract.MarkerEntry.COLUMN_NAME_EDDYSTONE_URL);
     String[] selectionArgs = {locId};
 
+    return getSpotRelation(selection, selectionArgs);
+  }
+
+  public long getSpotRelation(String major, String minor) {
+    String selection = String.format("%s = ? AND %s = ?",
+        MarkerEntry.COLUMN_NAME_BEACON_MAJOR,
+        MarkerEntry.COLUMN_NAME_BEACON_MINOR);
+    String[] selectionArgs = {major, minor};
+
+    return getSpotRelation(selection, selectionArgs);
+  }
+
+  private long getSpotRelation(String selection, String[] selectionArgs) {
     open();
     Cursor cursor = queryMarker(selection, selectionArgs);
 

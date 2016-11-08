@@ -103,8 +103,18 @@ public class OfflineStorageManager {
   }
 
   public Content getContentWithLocationIdentifier(String locId) {
-    long spotId = mMarkerDatabaseAdapter.getSpotRelation(locId);
-    Spot spot = mSpotDatabaseAdapter.getSpot(spotId);
+    long spotId = -1;
+    if (locId.contains("|")){
+      String[] beaconIds = locId.split("|");
+      spotId = mMarkerDatabaseAdapter.getSpotRelation(beaconIds[0], beaconIds[1]);
+    } else {
+      spotId = mMarkerDatabaseAdapter.getSpotRelation(locId);
+    }
+
+    Spot spot = null;
+    if (spotId != -1) {
+      spot = mSpotDatabaseAdapter.getSpot(spotId);
+    }
 
     if (spot != null && spot.getContent() != null) {
       return spot.getContent();
