@@ -139,6 +139,7 @@ public class OfflineEnduserContract {
             SpotEntry.COLUMN_NAME_RELATION_CONTENT + INTEGER_TYPE + " )";
 
     public static final String[] PROJECTION = {
+        _ID,
         COLUMN_NAME_JSON_ID,
         COLUMN_NAME_NAME,
         COLUMN_NAME_DESCRIPTION,
