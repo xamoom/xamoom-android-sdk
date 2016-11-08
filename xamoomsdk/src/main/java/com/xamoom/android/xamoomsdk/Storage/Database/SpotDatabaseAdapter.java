@@ -144,7 +144,7 @@ public class SpotDatabaseAdapter extends DatabaseAdapter {
 
   private ArrayList<Spot> cursorToSpots(Cursor cursor) {
     ArrayList<Spot> spots = new ArrayList<>();
-    if (cursor.moveToNext()) {
+    while (cursor.moveToNext()) {
       Spot spot = new Spot();
       spot.setId(cursor.getString(cursor.getColumnIndex(
           OfflineEnduserContract.SpotEntry.COLUMN_NAME_JSON_ID)));
