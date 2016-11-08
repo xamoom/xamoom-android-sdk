@@ -63,8 +63,8 @@ public class OfflineEnduserApi {
 
   public void getContentsByLocation(Location location, int pageSize, @Nullable String cursor,
                                     final EnumSet<ContentSortFlags> sortFlags,
-                                    APIListCallback<List<Content>,
-                                                                            List<Error>> callback) {
+                                    APIListCallback<List<Content>, List<Error>> callback) {
+    mOfflineStorageManager.getContentsByLocation(location, pageSize, cursor, sortFlags, callback);
   }
 
   public void getContentsByTags(List<String> tags, int pageSize, @Nullable String cursor,

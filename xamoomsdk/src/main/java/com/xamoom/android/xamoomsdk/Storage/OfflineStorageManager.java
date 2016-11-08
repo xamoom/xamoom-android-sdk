@@ -1,9 +1,13 @@
 package com.xamoom.android.xamoomsdk.Storage;
 
 import android.content.Context;
+import android.location.Location;
 
+import com.xamoom.android.xamoomsdk.APIListCallback;
+import com.xamoom.android.xamoomsdk.Enums.ContentSortFlags;
+import com.xamoom.android.xamoomsdk.Enums.SpotSortFlags;
+import com.xamoom.android.xamoomsdk.Offline.OfflineEnduserApiHelper;
 import com.xamoom.android.xamoomsdk.Resource.Content;
-import com.xamoom.android.xamoomsdk.Resource.Marker;
 import com.xamoom.android.xamoomsdk.Resource.Menu;
 import com.xamoom.android.xamoomsdk.Resource.Spot;
 import com.xamoom.android.xamoomsdk.Resource.System;
@@ -20,6 +24,10 @@ import com.xamoom.android.xamoomsdk.Storage.Database.SystemDatabaseAdapter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
+
+import at.rags.morpheus.Error;
 
 public class OfflineStorageManager {
   private static OfflineStorageManager mInstance;
@@ -121,6 +129,28 @@ public class OfflineStorageManager {
     }
 
     return null;
+  }
+
+  public void getContentsByLocation(Location location, int pageSize, String cursor,
+                                       EnumSet<ContentSortFlags> sortFlags,
+                                       APIListCallback<List<Content>, List<Error>> callback) {
+    ArrayList<Spot> allSpots = mSpotDatabaseAdapter.getAllSpots();
+    allSpots = OfflineEnduserApiHelper.getSpotsInGeofence(location, allSpots);
+
+    ArrayList<Content> contents = new ArrayList<>();
+    for (Spot spot : allSpots) {
+      if (spot.getContent() != null) {
+        contents.add(spot.getContent());
+      }
+    }
+
+    OfflineEnduserApiHelper.PagedResult<Content> contentPagedResult =
+        OfflineEnduserApiHelper.pageResults(contents, pageSize, cursor);
+
+    if (callback != null) {
+      callback.finished(contentPagedResult.getObjects(), contentPagedResult.getCursor(),
+          contentPagedResult.hasMore());
+    }
   }
 
   // getter & setter

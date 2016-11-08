@@ -1,5 +1,8 @@
 package com.xamoom.android.xamoomsdk.xamoomsdk.Storage;
 
+import android.location.Location;
+
+import com.xamoom.android.xamoomsdk.APIListCallback;
 import com.xamoom.android.xamoomsdk.BuildConfig;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.Menu;
@@ -29,11 +32,17 @@ import org.robolectric.annotation.Config;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Semaphore;
+
+import at.rags.morpheus.Error;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.times;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
@@ -211,6 +220,64 @@ public class OfflineStorageManagerTest {
 
     Mockito.verify(mMockedMarkerDatabaseAdapter).getSpotRelation(anyString(), anyString());
     Assert.assertEquals(content, savedContent);
+  }
+
+  @Test
+  public void testGetContentsByLocation() throws InterruptedException {
+    ArrayList<Spot> spots = new ArrayList<>();
+    Spot spot = new Spot();
+    spot.setLocation(new com.xamoom.android.xamoomsdk.Resource.Location(46.1, 15.2));
+    spot.setId("1");
+
+    Content content = new Content();
+    content.setId("2");
+    spot.setContent(content);
+    spots.add(spot);
+
+    Spot spot2 = new Spot();
+    spot2.setLocation(new com.xamoom.android.xamoomsdk.Resource.Location(46.1, 15.2));
+    spot2.setId("3");
+    spot2.setContent(content);
+    spots.add(spot2);
+
+    final Location location = new Location("custom");
+    location.setLatitude(46.1);
+    location.setLongitude(15.2);
+
+    Mockito.stub(mMockedSpotDatabaseAdapter.getAllSpots()).toReturn(spots);
+
+    final Semaphore semaphore = new Semaphore(0);
+    mOfflineStorageManager.getContentsByLocation(location, 1, null, null, new APIListCallback<List<Content>, List<Error>>() {
+      @Override
+      public void finished(List<Content> result, String cursor, boolean hasMore) {
+        Assert.assertEquals(1, result.size());
+        Assert.assertTrue(hasMore);
+        Assert.assertEquals("1", cursor);
+
+        mOfflineStorageManager.getContentsByLocation(location, 1, cursor, null, new APIListCallback<List<Content>, List<Error>>() {
+          @Override
+          public void finished(List<Content> result2, String cursor, boolean hasMore) {
+              Assert.assertEquals(1, result2.size());
+              Assert.assertFalse(hasMore);
+              Assert.assertEquals("2", cursor);
+              semaphore.release();
+            }
+
+          @Override
+          public void error(List<Error> error) {
+            Assert.fail();
+          }
+        });
+      }
+
+      @Override
+      public void error(List<Error> error) {
+        Assert.fail();
+      }
+    });
+    semaphore.acquire();
+
+    Mockito.verify(mMockedSpotDatabaseAdapter, times(2)).getAllSpots();
   }
 
 }
