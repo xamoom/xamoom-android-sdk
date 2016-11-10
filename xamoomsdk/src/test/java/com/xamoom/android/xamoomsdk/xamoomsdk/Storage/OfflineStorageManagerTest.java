@@ -25,6 +25,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
@@ -340,4 +341,12 @@ public class OfflineStorageManagerTest {
 
   }
 
+  @Test
+  public void testGetSpot() {
+    mOfflineStorageManager.getSpot("1");
+
+    Mockito.verify(mMockedSpotDatabaseAdapter).getSpot("1");
+  }
+
+  
 }

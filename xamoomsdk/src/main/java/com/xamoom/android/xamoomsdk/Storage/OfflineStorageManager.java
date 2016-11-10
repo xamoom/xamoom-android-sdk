@@ -4,6 +4,7 @@ import android.content.Context;
 import android.location.Location;
 import android.support.annotation.Nullable;
 
+import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.APIListCallback;
 import com.xamoom.android.xamoomsdk.Enums.ContentSortFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotSortFlags;
@@ -187,6 +188,10 @@ public class OfflineStorageManager {
       callback.finished(contentPagedResult.getObjects(), contentPagedResult.getCursor(),
           contentPagedResult.hasMore());
     }
+  }
+
+  public Spot getSpot(String spotId) {
+    return mSpotDatabaseAdapter.getSpot(spotId);
   }
 
 
