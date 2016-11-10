@@ -61,7 +61,7 @@ public class SettingDatabaseAdapterTest {
     stub(mMockedCursor.getString(0)).toReturn("1");
 
     SystemSetting savedSetting =
-        mSettingDatabaseAdapter.getRelatedSystemSetting("1");
+        mSettingDatabaseAdapter.getSystemSetting("1");
 
     Assert.assertNotNull(savedSetting);
     Assert.assertEquals(savedSetting.getId(), "1");

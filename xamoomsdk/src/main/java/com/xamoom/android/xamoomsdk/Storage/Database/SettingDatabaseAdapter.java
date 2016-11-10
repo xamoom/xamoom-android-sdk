@@ -22,23 +22,23 @@ public class SettingDatabaseAdapter extends DatabaseAdapter {
     super(context);
   }
 
-  public SystemSetting getRelatedSystemSetting(String jsonId) {
+  public SystemSetting getSystemSetting(String jsonId) {
     String selection = OfflineEnduserContract.SettingEntry.
         COLUMN_NAME_JSON_ID + " = ?";
     String[] selectionArgs = {jsonId};
 
-    return getRelatedSystemSetting(selection, selectionArgs);
+    return getSystemSetting(selection, selectionArgs);
   }
 
-  public SystemSetting getRelatedSystemSetting(long systemRow) {
+  public SystemSetting getSystemSetting(long systemRow) {
     String selection = OfflineEnduserContract.SettingEntry.
         _ID + " = ?";
     String[] selectionArgs = {String.valueOf(systemRow)};
 
-    return getRelatedSystemSetting(selection, selectionArgs);
+    return getSystemSetting(selection, selectionArgs);
   }
 
-  private SystemSetting getRelatedSystemSetting(String selection, String[] selectionArgs) {
+  private SystemSetting getSystemSetting(String selection, String[] selectionArgs) {
     open();
     Cursor cursor = querySettings(selection, selectionArgs);
 

@@ -141,7 +141,7 @@ public class SystemDatabaseAdapter extends DatabaseAdapter {
           cursor.getColumnIndex(SystemEntry.COLUMN_NAME_NAME)));
       system.setStyle(getStyleDatabaseAdapter().getRelatedStyle(
           cursor.getLong(cursor.getColumnIndex(SystemEntry._ID))));
-      system.setSystemSetting(getSettingDatabaseAdapter().getRelatedSystemSetting(
+      system.setSystemSetting(getSettingDatabaseAdapter().getSystemSetting(
           cursor.getLong(cursor.getColumnIndex(SystemEntry._ID))));
       system.setMenu(getMenuDatabaseAdapter().getRelatedMenu(
           cursor.getLong(cursor.getColumnIndex(SystemEntry._ID))));
