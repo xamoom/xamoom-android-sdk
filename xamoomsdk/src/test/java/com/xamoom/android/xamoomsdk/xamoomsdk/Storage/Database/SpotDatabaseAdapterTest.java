@@ -170,7 +170,7 @@ public class SpotDatabaseAdapterTest {
 
   @Test
   public void testGetAllSpots() {
-    Mockito.stub(mMockedCursor.getCount()).toReturn(1);
+    Mockito.stub(mMockedCursor.getCount()).toReturn(2);
     Mockito.stub(mMockedCursor.moveToNext()).toReturn(true).toReturn(true).toReturn(false);
 
     ArrayList<Spot> spots = mSpotDatabaseAdapter.getAllSpots();
@@ -178,6 +178,25 @@ public class SpotDatabaseAdapterTest {
     Mockito.verify(mMockedDatabase).query(
         Mockito.eq(OfflineEnduserContract.SpotEntry.TABLE_NAME),
         any(String[].class), anyString(), any(String[].class), anyString(),
+        anyString(), anyString());
+
+    Assert.assertNotNull(spots);
+    Assert.assertEquals(spots.size(), 2);
+  }
+
+  @Test
+  public void testGetSpotsWithName() {
+    String query = "LOWER(name) LIKE LOWER(?)";
+    String[] args = new String[]{ "%test%" };
+
+    Mockito.stub(mMockedCursor.getCount()).toReturn(2);
+    Mockito.stub(mMockedCursor.moveToNext()).toReturn(true).toReturn(true).toReturn(false);
+
+    ArrayList<Spot> spots = mSpotDatabaseAdapter.getSpots("test");
+
+    Mockito.verify(mMockedDatabase).query(
+        Mockito.eq(OfflineEnduserContract.SpotEntry.TABLE_NAME),
+        any(String[].class), eq(query), any(String[].class), anyString(),
         anyString(), anyString());
 
     Assert.assertNotNull(spots);

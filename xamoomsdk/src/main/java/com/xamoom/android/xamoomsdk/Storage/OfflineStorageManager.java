@@ -229,6 +229,22 @@ public class OfflineStorageManager {
     }
   }
 
+  public void searchSpotsByName(String name, int pageSize, @Nullable String cursor,
+                                @Nullable EnumSet<SpotFlags> spotFlags,
+                                @Nullable EnumSet<SpotSortFlags> sortFlags,
+                                APIListCallback<List<Spot>, List<Error>> callback) {
+    ArrayList<Spot> spots = mSpotDatabaseAdapter.getSpots(name);
+    // TODO: sorting
+
+    OfflineEnduserApiHelper.PagedResult<Spot> spotPagedResult =
+        OfflineEnduserApiHelper.pageResults(spots, pageSize, cursor);
+
+    if (callback != null) {
+      callback.finished(spotPagedResult.getObjects(), spotPagedResult.getCursor(),
+          spotPagedResult.hasMore());
+    }
+  }
+
   // getter & setter
 
   public void setContentDatabaseAdapter(ContentDatabaseAdapter contentDatabaseAdapter) {

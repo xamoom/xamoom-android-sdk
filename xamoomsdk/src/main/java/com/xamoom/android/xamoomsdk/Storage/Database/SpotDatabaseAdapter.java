@@ -45,6 +45,19 @@ public class SpotDatabaseAdapter extends DatabaseAdapter {
     return getSpot(selection, selectionArgs);
   }
 
+  public ArrayList<Spot> getSpots(String name) {
+    String selection = "LOWER(" + OfflineEnduserContract.SpotEntry.COLUMN_NAME_NAME + ") LIKE LOWER(?)";
+    String[] selectionArgs = {"%"+name+"%"};
+
+    open();
+    Cursor cursor = querySpot(selection, selectionArgs);
+
+    ArrayList<Spot> spots = cursorToSpots(cursor);
+    close();
+
+    return spots;
+  }
+
   private Spot getSpot(String selection, String[] selectionArgs) {
     open();
     Cursor cursor = querySpot(selection, selectionArgs);

@@ -229,4 +229,13 @@ public class OfflineEnduserApiTest {
         any(EnumSet.class), any(EnumSet.class),
         (APIListCallback<List<Spot>, List<Error>>) any(APICallback.class));
   }
+
+  @Test
+  public void testSearchSpotsByName() {
+    mOfflineEnduserApi.searchSpotsByName("1", 10, null, null, null, null);
+
+    Mockito.verify(mMockedOfflineStorageManager).searchSpotsByName(anyString(), anyInt(),
+        anyString(),any(EnumSet.class), any(EnumSet.class),
+        (APIListCallback<List<Spot>, List<Error>>) any(APICallback.class));
+  }
 }

@@ -424,4 +424,34 @@ public class OfflineStorageManagerTest {
 
     Mockito.verify(mMockedSpotDatabaseAdapter).getAllSpots();
   }
+
+  @Test
+  public void testSearchSpotsByName() throws InterruptedException {
+    Spot spot1 = new Spot();
+    spot1.setName("test");
+
+    ArrayList<Spot> spots = new ArrayList<>();
+    spots.add(spot1);
+
+    Mockito.stub(mMockedSpotDatabaseAdapter.getSpots(anyString())).toReturn(spots);
+
+    final Semaphore semaphore = new Semaphore(0);
+    mOfflineStorageManager.searchSpotsByName("test", 10, null, null, null, new APIListCallback<List<Spot>, List<Error>>() {
+      @Override
+      public void finished(List<Spot> result, String cursor, boolean hasMore) {
+        Assert.assertEquals(1, result.size());
+        Assert.assertFalse(hasMore);
+        Assert.assertEquals("10", cursor);
+        semaphore.release();
+      }
+
+      @Override
+      public void error(List<Error> error) {
+
+      }
+    });
+    semaphore.acquire();
+
+    Mockito.verify(mMockedSpotDatabaseAdapter).getSpots(eq("test"));
+  }
 }

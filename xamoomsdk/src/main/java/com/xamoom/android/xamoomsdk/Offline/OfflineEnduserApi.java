@@ -119,7 +119,7 @@ public class OfflineEnduserApi {
                                 @Nullable EnumSet<SpotFlags> spotFlags,
                                 @Nullable EnumSet<SpotSortFlags> sortFlags,
                                 APIListCallback<List<Spot>, List<Error>> callback) {
-
+    mOfflineStorageManager.searchSpotsByName(name, pageSize, cursor, spotFlags, sortFlags, callback);
   }
 
   public void getSystem(final APICallback<System, List<Error>> callback) {
