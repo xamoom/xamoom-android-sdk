@@ -1,6 +1,7 @@
 package com.xamoom.android.xamoomsdk.xamoomsdk.Offline;
 
 import com.xamoom.android.xamoomsdk.BuildConfig;
+import com.xamoom.android.xamoomsdk.Offline.OfflineEnduserApi;
 import com.xamoom.android.xamoomsdk.Offline.OfflineEnduserApiHelper;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.Location;
@@ -68,5 +69,38 @@ public class OfflineEnduserApiHelperTest {
 
     Assert.assertEquals(2, contentsWithTag1.size());
     Assert.assertEquals(1, contentsWithTag2.size());
+  }
+
+  @Test
+  public void testPageResult() {
+    ArrayList<String> list = new ArrayList<>();
+    list.add("1");
+    list.add("2");
+
+    OfflineEnduserApiHelper.PagedResult<String> result1 =
+        OfflineEnduserApiHelper.pageResults(list, 1, null);
+    OfflineEnduserApiHelper.PagedResult<String> result2 =
+        OfflineEnduserApiHelper.pageResults(list, 1, "2");
+
+    Assert.assertEquals(result1.getObjects().get(0), "1");
+    Assert.assertTrue(result1.hasMore());
+    Assert.assertEquals(result1.getCursor(), "1");
+
+    Assert.assertEquals(result2.getObjects().get(0), "2");
+    Assert.assertFalse(result1.hasMore());
+  }
+
+  @Test
+  public void testPageResultBiggerPageSizeThanListSize() {
+    ArrayList<String> list = new ArrayList<>();
+    list.add("1");
+    list.add("2");
+
+    OfflineEnduserApiHelper.PagedResult<String> result1 =
+        OfflineEnduserApiHelper.pageResults(list, 10, null);
+
+    Assert.assertEquals(result1.getObjects().size(), 2);
+    Assert.assertFalse(result1.hasMore());
+    Assert.assertEquals(result1.getCursor(), "10");
   }
 }

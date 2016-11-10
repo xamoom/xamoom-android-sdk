@@ -51,7 +51,12 @@ public class OfflineEnduserApiHelper {
     }
 
     ArrayList<E> pagedList = new ArrayList<>();
-    pagedList.addAll(list.subList(intCursor, intCursor + pageSize));
+
+    if (list.size() > intCursor + pageSize) {
+      pagedList.addAll(list.subList(intCursor, intCursor + pageSize));
+    } else {
+      pagedList.addAll(list);
+    }
 
     PagedResult<E> pagedResult = new PagedResult<>(pagedList, String.valueOf(intCursor + pageSize),
         (list.size() > intCursor+pageSize));
