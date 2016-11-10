@@ -153,6 +153,11 @@ public class EnduserApi implements Parcelable {
    */
   public void getContent(String contentID, EnumSet<ContentFlags> contentFlags, APICallback<Content,
       List<at.rags.morpheus.Error>> callback) {
+    if (offline) {
+      offlineEnduserApi.getContent(contentID, callback);
+      return;
+    }
+
     Map<String, String> params = UrlUtil.addContentParameter(UrlUtil.getUrlParameter(language),
         contentFlags);
 

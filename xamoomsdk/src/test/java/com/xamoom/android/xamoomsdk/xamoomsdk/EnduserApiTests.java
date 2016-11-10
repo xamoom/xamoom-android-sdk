@@ -8,6 +8,7 @@ import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
 import com.xamoom.android.xamoomsdk.HTTPHeaderInterceptor;
+import com.xamoom.android.xamoomsdk.Offline.OfflineEnduserApi;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.Menu;
 import com.xamoom.android.xamoomsdk.Resource.Spot;
@@ -21,6 +22,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.Matchers;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.IOException;
@@ -46,6 +49,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -57,6 +62,7 @@ public class EnduserApiTests {
   private MockWebServer mMockWebServer;
   private EnduserApi mEnduserApi;
   private Morpheus mMockMorpheus;
+  private OfflineEnduserApi mMockedOfflineEnduserApi;
 
   @Captor ArgumentCaptor<Map<String, String>> mMapArgumentCaptor;
 
@@ -75,7 +81,9 @@ public class EnduserApiTests {
     mEnduserApi = new EnduserApi(retrofit, null);
 
     mMockMorpheus = mock(Morpheus.class);
+    mMockedOfflineEnduserApi = mock(OfflineEnduserApi.class);
     mEnduserApi.getCallHandler().setMorpheus(mMockMorpheus);
+    mEnduserApi.setOfflineEnduserApi(mMockedOfflineEnduserApi);
   }
 
   @After
@@ -231,6 +239,15 @@ public class EnduserApiTests {
 
     RecordedRequest request1 = mMockWebServer.takeRequest();
     assertEquals("/_api/v2/consumer/contents/123456?lang=en&preview=true&public-only=true", request1.getPath());
+  }
+
+  @Test
+  public void testGetContentWhenOffline() {
+    mEnduserApi.setOffline(true);
+
+    mEnduserApi.getContent("1", null);
+
+    Mockito.verify(mMockedOfflineEnduserApi).getContent(eq("1"), Matchers.<APICallback<Content, List<Error>>>any());
   }
 
   @Test
