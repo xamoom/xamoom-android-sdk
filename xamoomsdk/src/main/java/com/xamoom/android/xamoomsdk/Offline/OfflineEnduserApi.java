@@ -123,19 +123,35 @@ public class OfflineEnduserApi {
   }
 
   public void getSystem(final APICallback<System, List<Error>> callback) {
+    System system = mOfflineStorageManager.getSystem();
 
+    if (callback != null) {
+      callback.finished(system);
+    }
   }
 
   public void getMenu(String systemId, final APICallback<Menu, List<Error>> callback) {
+    Menu menu = mOfflineStorageManager.getMenu(systemId);
 
+    if (callback != null) {
+      callback.finished(menu);
+    }
   }
 
   public void getSystemSetting(String systemId, final APICallback<SystemSetting, List<Error>> callback) {
+    SystemSetting setting = mOfflineStorageManager.getSystemSetting(systemId);
 
+    if (callback != null) {
+      callback.finished(setting);
+    }
   }
 
   public void getStyle(String systemId, final APICallback<Style, List<Error>> callback) {
+    Style style = mOfflineStorageManager.getStyle(systemId);
 
+    if (callback != null) {
+      callback.finished(style);
+    }
   }
 
   // getter & setter

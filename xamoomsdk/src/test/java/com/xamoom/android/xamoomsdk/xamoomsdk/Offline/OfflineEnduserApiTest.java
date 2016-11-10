@@ -8,7 +8,10 @@ import com.xamoom.android.xamoomsdk.BuildConfig;
 import com.xamoom.android.xamoomsdk.Enums.ContentSortFlags;
 import com.xamoom.android.xamoomsdk.Offline.OfflineEnduserApi;
 import com.xamoom.android.xamoomsdk.Resource.Content;
+import com.xamoom.android.xamoomsdk.Resource.Menu;
 import com.xamoom.android.xamoomsdk.Resource.Spot;
+import com.xamoom.android.xamoomsdk.Resource.System;
+import com.xamoom.android.xamoomsdk.Resource.SystemSetting;
 import com.xamoom.android.xamoomsdk.Storage.OfflineStorageManager;
 
 import junit.framework.Assert;
@@ -237,5 +240,68 @@ public class OfflineEnduserApiTest {
     Mockito.verify(mMockedOfflineStorageManager).searchSpotsByName(anyString(), anyInt(),
         anyString(),any(EnumSet.class), any(EnumSet.class),
         (APIListCallback<List<Spot>, List<Error>>) any(APICallback.class));
+  }
+
+  @Test
+  public void testGetSystem() throws InterruptedException {
+    Mockito.stub(mMockedOfflineStorageManager.getSystem()).toReturn(new System());
+
+    final Semaphore semaphore = new Semaphore(0);
+    mOfflineEnduserApi.getSystem(new APICallback<System, List<Error>>() {
+      @Override
+      public void finished(System result) {
+        semaphore.release();
+      }
+
+      @Override
+      public void error(List<Error> error) {
+
+      }
+    });
+    semaphore.acquire();
+
+    Mockito.verify(mMockedOfflineStorageManager).getSystem();
+  }
+
+  @Test
+  public void testGetMenu() throws InterruptedException {
+    Mockito.stub(mMockedOfflineStorageManager.getMenu(anyString())).toReturn(new Menu());
+
+    final Semaphore semaphore = new Semaphore(0);
+    mOfflineEnduserApi.getMenu("1", new APICallback<Menu, List<Error>>() {
+      @Override
+      public void finished(Menu result) {
+        semaphore.release();
+      }
+
+      @Override
+      public void error(List<Error> error) {
+
+      }
+    });
+    semaphore.acquire();
+
+    Mockito.verify(mMockedOfflineStorageManager).getMenu(eq("1"));
+  }
+
+  @Test
+  public void testGetSetting() throws InterruptedException {
+    Mockito.stub(mMockedOfflineStorageManager.getSystemSetting(anyString())).toReturn(new SystemSetting());
+
+    final Semaphore semaphore = new Semaphore(0);
+    mOfflineEnduserApi.getSystemSetting("1", new APICallback<SystemSetting, List<Error>>() {
+      @Override
+      public void finished(SystemSetting result) {
+        semaphore.release();
+      }
+
+      @Override
+      public void error(List<Error> error) {
+
+      }
+    });
+    semaphore.acquire();
+
+    Mockito.verify(mMockedOfflineStorageManager).getSystemSetting(eq("1"));
   }
 }
