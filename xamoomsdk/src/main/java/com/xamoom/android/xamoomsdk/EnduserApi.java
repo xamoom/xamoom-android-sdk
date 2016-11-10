@@ -14,6 +14,7 @@ import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
 import com.xamoom.android.xamoomsdk.Enums.ContentSortFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotSortFlags;
+import com.xamoom.android.xamoomsdk.Offline.OfflineEnduserApi;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Resource.Marker;
@@ -64,13 +65,16 @@ public class EnduserApi implements Parcelable {
   private Context context;
   private String apiKey;
   private EnduserApiInterface enduserApiInterface;
+  private OfflineEnduserApi offlineEnduserApi;
   private CallHandler callHandler;
   private String language;
   private String systemLanguage;
+  private boolean offline;
 
   public EnduserApi(final String apikey, Context context) {
     this.apiKey = apikey;
     this.context = context;
+    this.offlineEnduserApi = new OfflineEnduserApi(context);
 
     initRetrofit(apiKey);
     initMorpheus();
@@ -78,8 +82,9 @@ public class EnduserApi implements Parcelable {
   }
 
   public EnduserApi(Retrofit retrofit, Context context) {
-    enduserApiInterface = retrofit.create(EnduserApiInterface.class);
+    this.enduserApiInterface = retrofit.create(EnduserApiInterface.class);
     this.context = context;
+    this.offlineEnduserApi = new OfflineEnduserApi(context);
 
     initMorpheus();
     initVars();
@@ -547,6 +552,22 @@ public class EnduserApi implements Parcelable {
    */
   public static void setSharedInstance(EnduserApi sharedInstance) {
     EnduserApi.sharedInstance = sharedInstance;
+  }
+
+  public OfflineEnduserApi getOfflineEnduserApi() {
+    return offlineEnduserApi;
+  }
+
+  public void setOfflineEnduserApi(OfflineEnduserApi offlineEnduserApi) {
+    this.offlineEnduserApi = offlineEnduserApi;
+  }
+
+  public boolean isOffline() {
+    return offline;
+  }
+
+  public void setOffline(boolean offline) {
+    this.offline = offline;
   }
 }
 
