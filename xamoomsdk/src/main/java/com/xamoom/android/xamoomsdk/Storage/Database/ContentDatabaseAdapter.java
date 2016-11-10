@@ -9,6 +9,7 @@ import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Storage.TableContracts.OfflineEnduserContract;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -65,6 +66,20 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
     ArrayList<Content> contents = cursorToContents(cursor);
 
     close();
+    return contents;
+  }
+
+  public ArrayList<Content> getContents(String name) {
+    String selection = "LOWER(" + OfflineEnduserContract.ContentEntry.COLUMN_NAME_TITLE + ") LIKE LOWER(?)";
+    String[] selectionArgs = { "%"+name+"%" };
+
+    open();
+    Cursor cursor = queryContent(selection, selectionArgs);
+
+    ArrayList<Content> contents = cursorToContents(cursor);
+
+    close();
+
     return contents;
   }
 

@@ -312,4 +312,32 @@ public class OfflineStorageManagerTest {
     semaphore.acquire();
   }
 
+  @Test
+  public void testSearchContentsByName() throws InterruptedException {
+    Content content1 = new Content();
+    ArrayList<Content> contents = new ArrayList<>();
+    contents.add(content1);
+
+    Mockito.stub(mMockedContentDatabaseAdapter.getContents(anyString())).toReturn(contents);
+
+    final Semaphore semaphore = new Semaphore(0);
+    mOfflineStorageManager
+        .searchContentsByName("test", 1, null, null, new APIListCallback<List<Content>, List<Error>>() {
+          @Override
+          public void finished(List<Content> result, String cursor, boolean hasMore) {
+            Assert.assertEquals(1, result.size());
+            Assert.assertFalse(hasMore);
+            Assert.assertEquals("1", cursor);
+            semaphore.release();
+          }
+
+          @Override
+          public void error(List<Error> error) {
+
+          }
+        });
+    semaphore.acquire();
+
+  }
+
 }

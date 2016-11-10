@@ -152,4 +152,22 @@ public class OfflineEnduserApiTest {
     Mockito.verify(mMockedOfflineStorageManager).getContentByTags(any(List.class), anyInt(),
         anyString(), any(EnumSet.class), any (APIListCallback.class));
   }
+
+  @Test
+  public void testSearchContentsByName() {
+    mOfflineEnduserApi.searchContentsByName("test", 1, null, null, new APIListCallback<List<Content>, List<Error>>() {
+      @Override
+      public void finished(List<Content> result, String cursor, boolean hasMore) {
+        Assert.assertNotNull(result);
+      }
+
+      @Override
+      public void error(List<Error> error) {
+
+      }
+    });
+
+    Mockito.verify(mMockedOfflineStorageManager).searchContentsByName(eq("test"), anyInt(), anyString(),
+        any(EnumSet.class), (APIListCallback<List<Content>, List<Error>>) any(APICallback.class));
+  }
 }

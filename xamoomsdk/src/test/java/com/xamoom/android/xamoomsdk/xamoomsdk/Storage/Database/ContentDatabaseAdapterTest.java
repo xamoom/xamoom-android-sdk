@@ -38,6 +38,7 @@ import static org.mockito.Matchers.anyChar;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
@@ -196,6 +197,25 @@ public class ContentDatabaseAdapterTest {
     Assert.assertEquals(2, contents.size());
 
     Mockito.verify(mMockedDatabase).query(anyString(), any(String[].class), anyString(),
+        any(String[].class), anyString(), anyString(), anyString());
+  }
+
+  @Test
+  public void testGetContentsWithName() {
+    Cursor mockedCursor = mock(Cursor.class);
+    Mockito.stub(mMockedDatabase.query(
+        Mockito.anyString(), Mockito.any(String[].class), Mockito.anyString(),
+        Mockito.any(String[].class), Mockito.anyString(), Mockito.anyString(),
+        Mockito.anyString())).toReturn(mockedCursor);
+    Mockito.stub(mockedCursor.getCount()).toReturn(1);
+    Mockito.stub(mockedCursor.moveToNext()).toReturn(true).toReturn(true).toReturn(false);
+
+    ArrayList<Content> contents = mContentDatabaseAdapter.getContents("testing");
+
+    Assert.assertEquals(2, contents.size());
+
+    Mockito.verify(mMockedDatabase).query(anyString(), any(String[].class),
+        eq("LOWER(title) LIKE LOWER(?)"),
         any(String[].class), anyString(), anyString(), anyString());
   }
 }

@@ -76,6 +76,7 @@ public class OfflineEnduserApi {
   public void searchContentsByName(String name, int pageSize, @Nullable String cursor,
                                    EnumSet<ContentSortFlags> sortFlags,
                                    APIListCallback<List<Content>, List<Error>> callback) {
+    mOfflineStorageManager.searchContentsByName(name, pageSize, cursor, sortFlags, callback);
   }
 
   public void getSpot(String spotId, APICallback<Spot, List<Error>> callback) {
