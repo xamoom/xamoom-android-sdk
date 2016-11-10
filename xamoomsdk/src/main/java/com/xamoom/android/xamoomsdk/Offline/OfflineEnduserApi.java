@@ -80,7 +80,11 @@ public class OfflineEnduserApi {
   }
 
   public void getSpot(String spotId, APICallback<Spot, List<Error>> callback) {
-    mOfflineStorageManager.getSpot(spotId);
+    Spot spot = mOfflineStorageManager.getSpot(spotId);
+
+    if (callback != null) {
+      callback.finished(spot);
+    }
   }
 
   public void getSpotsByLocation(Location location, int radius, EnumSet<SpotFlags> spotFlags,
