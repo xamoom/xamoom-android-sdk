@@ -33,6 +33,23 @@ public class OfflineEnduserApiHelper {
     return contentsWithTags;
   }
 
+  public static ArrayList<Spot> getSpotsWithTags(List<String> tags, ArrayList<Spot> spots) {
+    ArrayList<Spot> spotsWithTags = new ArrayList<>();
+    for (Spot spot : spots) {
+      boolean hasTag = false;
+      for (String tag : tags) {
+        if (spot.getTags().contains(tag)) {
+          hasTag = true;
+        }
+      }
+      if (hasTag) {
+        spotsWithTags.add(spot);
+      }
+    }
+
+    return spotsWithTags;
+  }
+
   public static ArrayList<Spot> getSpotsInRadius(Location location, int radius, ArrayList<Spot> allSpots) {
     ArrayList<Spot> spotsInRadius = new ArrayList<>();
     for (Spot spot : allSpots) {

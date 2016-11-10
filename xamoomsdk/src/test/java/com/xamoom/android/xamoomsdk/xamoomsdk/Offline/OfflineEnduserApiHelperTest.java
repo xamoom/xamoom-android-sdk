@@ -1,7 +1,6 @@
 package com.xamoom.android.xamoomsdk.xamoomsdk.Offline;
 
 import com.xamoom.android.xamoomsdk.BuildConfig;
-import com.xamoom.android.xamoomsdk.Offline.OfflineEnduserApi;
 import com.xamoom.android.xamoomsdk.Offline.OfflineEnduserApiHelper;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.Location;
@@ -124,5 +123,32 @@ public class OfflineEnduserApiHelperTest {
 
     Assert.assertEquals(1, geofenceSpots.size());
     Assert.assertEquals(spot1, geofenceSpots.get(0));
+  }
+
+  @Test
+  public void testGetSpotsWithTags() {
+    Spot spot1 = new Spot();
+    ArrayList<String> tags1 = new ArrayList<>();
+    tags1.add("tag1");
+    spot1.setTags(tags1);
+
+    Spot spot2 = new Spot();
+    ArrayList<String> tags2 = new ArrayList<>();
+    tags2.add("tag1");
+    tags2.add("tag2");
+    spot2.setTags(tags2);
+
+    ArrayList<Spot> spots = new ArrayList<>();
+    spots.add(spot1);
+    spots.add(spot2);
+
+    ArrayList<Spot> spotsWithTag1 = OfflineEnduserApiHelper.getSpotsWithTags(tags1, spots);
+
+    Assert.assertEquals(2, spotsWithTag1.size());
+    Assert.assertEquals(spot1, spotsWithTag1.get(0));
+
+    ArrayList<Spot> spotsWithTag2 = OfflineEnduserApiHelper.getSpotsWithTags(tags2, spots);
+
+    Assert.assertEquals(2, spotsWithTag2.size());
   }
 }

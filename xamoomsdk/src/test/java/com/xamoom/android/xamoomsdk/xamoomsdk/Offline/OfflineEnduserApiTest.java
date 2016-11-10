@@ -25,11 +25,13 @@ import org.robolectric.annotation.Config;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 import at.rags.morpheus.Error;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.contains;
 import static org.mockito.Matchers.eq;
@@ -172,14 +174,28 @@ public class OfflineEnduserApiTest {
   }
 
   @Test
-  public void testGetSpot() {
-    mOfflineEnduserApi.getSpot("1", null);
+  public void testGetSpot() throws InterruptedException {
+    Mockito.stub(mMockedOfflineStorageManager.getSpot(anyString())).toReturn(new Spot());
+
+    final Semaphore semaphore = new Semaphore(0);
+    mOfflineEnduserApi.getSpot("1", new APICallback<Spot, List<Error>>() {
+      @Override
+      public void finished(Spot result) {
+        semaphore.release();
+      }
+
+      @Override
+      public void error(List<Error> error) {
+
+      }
+    });
+    semaphore.acquire();
 
     Mockito.verify(mMockedOfflineStorageManager).getSpot(eq("1"));
   }
 
   @Test
-  public void testGetSpotsByLocationWithPaging() {
+  public void testGetSpotsByLocationWithPaging() throws InterruptedException {
     mOfflineEnduserApi.getSpotsByLocation(null, 1, 10, null, null, null, null);
 
     Mockito.verify(mMockedOfflineStorageManager).getSpotsByLocation(any(Location.class), anyInt(),
@@ -188,11 +204,29 @@ public class OfflineEnduserApiTest {
   }
 
   @Test
-  public void getGetSpotsByLocationWithWithoutPaging() {
+  public void getGetSpotsByLocationWithWithoutPaging() throws InterruptedException {
     mOfflineEnduserApi.getSpotsByLocation(null, 1, null, null, null);
 
     Mockito.verify(mMockedOfflineStorageManager).getSpotsByLocation(any(Location.class), anyInt(),
         anyInt(), anyString(), any(EnumSet.class), any(EnumSet.class),
+        (APIListCallback<List<Spot>, List<Error>>) any(APICallback.class));
+  }
+
+  @Test
+  public void testGetSpotsByTags() throws InterruptedException {
+    mOfflineEnduserApi.getSpotsByTags(null, null, null, null);
+
+    Mockito.verify(mMockedOfflineStorageManager).getSpotsByTags(anyList(), anyInt(), anyString(),
+        any(EnumSet.class), any(EnumSet.class),
+        (APIListCallback<List<Spot>, List<Error>>) any(APICallback.class));
+  }
+
+  @Test
+  public void testGetSpotsByTagsWithPaging() throws InterruptedException {
+    mOfflineEnduserApi.getSpotsByTags(null, 10, null, null, null, null);
+
+    Mockito.verify(mMockedOfflineStorageManager).getSpotsByTags(anyList(), anyInt(), anyString(),
+        any(EnumSet.class), any(EnumSet.class),
         (APIListCallback<List<Spot>, List<Error>>) any(APICallback.class));
   }
 }

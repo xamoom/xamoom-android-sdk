@@ -4,7 +4,6 @@ import android.content.Context;
 import android.location.Location;
 import android.support.annotation.Nullable;
 
-import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.APIListCallback;
 import com.xamoom.android.xamoomsdk.Enums.ContentSortFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
@@ -202,6 +201,23 @@ public class OfflineStorageManager {
 
     ArrayList<Spot> allSpots = mSpotDatabaseAdapter.getAllSpots();
     allSpots = OfflineEnduserApiHelper.getSpotsInRadius(location, radius, allSpots);
+    // TODO: sorting
+
+    OfflineEnduserApiHelper.PagedResult<Spot> spotPagedResult =
+        OfflineEnduserApiHelper.pageResults(allSpots, pageSize, cursor);
+
+    if (callback != null) {
+      callback.finished(spotPagedResult.getObjects(), spotPagedResult.getCursor(),
+          spotPagedResult.hasMore());
+    }
+  }
+
+  public void getSpotsByTags(List<String> tags, int pageSize, @Nullable String cursor,
+                             @Nullable EnumSet<SpotFlags> spotFlags,
+                             @Nullable EnumSet<SpotSortFlags> sortFlags,
+                             APIListCallback<List<Spot>, List<Error>> callback) {
+    ArrayList<Spot> allSpots = mSpotDatabaseAdapter.getAllSpots();
+    allSpots = OfflineEnduserApiHelper.getSpotsWithTags(tags, allSpots);
     // TODO: sorting
 
     OfflineEnduserApiHelper.PagedResult<Spot> spotPagedResult =

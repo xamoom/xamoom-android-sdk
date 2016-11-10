@@ -385,5 +385,40 @@ public class OfflineStorageManagerTest {
     Mockito.verify(mMockedSpotDatabaseAdapter).getAllSpots();
   }
 
+  @Test
+  public void testGetSpotsWithTags() {
+    Spot spot1 = new Spot();
+    ArrayList<String> tags1 = new ArrayList<>();
+    tags1.add("tag1");
+    spot1.setTags(tags1);
 
+    Spot spot2 = new Spot();
+    ArrayList<String> tags2 = new ArrayList<>();
+    tags2.add("tag1");
+    tags2.add("tag2");
+    spot2.setTags(tags2);
+
+    ArrayList<Spot> spots = new ArrayList<>();
+    spots.add(spot1);
+    spots.add(spot2);
+
+    Mockito.stub(mMockedSpotDatabaseAdapter.getAllSpots()).toReturn(spots);
+
+    final Semaphore semaphore = new Semaphore(0);
+    mOfflineStorageManager.getSpotsByTags(tags1, 10, null, null, null, new APIListCallback<List<Spot>, List<Error>>() {
+      @Override
+      public void finished(List<Spot> result, String cursor, boolean hasMore) {
+        Assert.assertNotNull(result);
+        Assert.assertEquals(2, result.size());
+        Assert.assertFalse(hasMore);
+        Assert.assertEquals("10", cursor);
+        semaphore.release();
+      }
+
+      @Override
+      public void error(List<Error> error) {
+
+      }
+    });
+  }
 }

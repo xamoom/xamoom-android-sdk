@@ -105,14 +105,14 @@ public class OfflineEnduserApi {
   public void getSpotsByTags(List<String> tags, @Nullable EnumSet<SpotFlags> spotFlags,
                              @Nullable EnumSet<SpotSortFlags> sortFlags,
                              APIListCallback<List<Spot>, List<Error>> callback) {
-
+    mOfflineStorageManager.getSpotsByTags(tags, 100, null, spotFlags, sortFlags, callback);
   }
 
   public void getSpotsByTags(List<String> tags, int pageSize, @Nullable String cursor,
                              @Nullable EnumSet<SpotFlags> spotFlags,
                              @Nullable EnumSet<SpotSortFlags> sortFlags,
                              APIListCallback<List<Spot>, List<Error>> callback) {
-
+    mOfflineStorageManager.getSpotsByTags(tags, pageSize, cursor, spotFlags, sortFlags, callback);
   }
 
   public void searchSpotsByName(String name, int pageSize, @Nullable String cursor,
