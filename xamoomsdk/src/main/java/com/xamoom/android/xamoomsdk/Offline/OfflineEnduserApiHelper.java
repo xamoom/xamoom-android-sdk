@@ -10,21 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OfflineEnduserApiHelper {
-  private static final float GEOFENCE_RADIUS = 40.0F;
+  private static final int GEOFENCE_RADIUS = 40;
 
   public static ArrayList<Spot> getSpotsInGeofence(Location location, ArrayList<Spot> allSpots) {
-    ArrayList<Spot> spotsInGeofence = new ArrayList<>();
-    for (Spot spot : allSpots) {
-      Location spotLocation = new Location("custom");
-      spotLocation.setLatitude(spot.getLocation().getLatitude());
-      spotLocation.setLongitude(spot.getLocation().getLongitude());
-
-      if (location.distanceTo(spotLocation) <= GEOFENCE_RADIUS) {
-        spotsInGeofence.add(spot);
-      }
-    }
-
-    return spotsInGeofence;
+    return getSpotsInRadius(location, GEOFENCE_RADIUS, allSpots);
   }
 
   public static ArrayList<Content> getContentsWithTags(List<String> tags, ArrayList<Content> contents) {
@@ -42,6 +31,21 @@ public class OfflineEnduserApiHelper {
     }
 
     return contentsWithTags;
+  }
+
+  public static ArrayList<Spot> getSpotsInRadius(Location location, int radius, ArrayList<Spot> allSpots) {
+    ArrayList<Spot> spotsInRadius = new ArrayList<>();
+    for (Spot spot : allSpots) {
+      Location spotLocation = new Location("custom");
+      spotLocation.setLatitude(spot.getLocation().getLatitude());
+      spotLocation.setLongitude(spot.getLocation().getLongitude());
+
+      if (location.distanceTo(spotLocation) <= radius) {
+        spotsInRadius.add(spot);
+      }
+    }
+
+    return spotsInRadius;
   }
 
   public static <E> PagedResult pageResults(ArrayList<E> list, int pageSize, String cursor) {

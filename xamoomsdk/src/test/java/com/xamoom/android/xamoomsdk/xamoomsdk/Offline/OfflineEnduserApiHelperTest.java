@@ -80,14 +80,14 @@ public class OfflineEnduserApiHelperTest {
     OfflineEnduserApiHelper.PagedResult<String> result1 =
         OfflineEnduserApiHelper.pageResults(list, 1, null);
     OfflineEnduserApiHelper.PagedResult<String> result2 =
-        OfflineEnduserApiHelper.pageResults(list, 1, "2");
+        OfflineEnduserApiHelper.pageResults(list, 1, "1");
 
     Assert.assertEquals(result1.getObjects().get(0), "1");
     Assert.assertTrue(result1.hasMore());
     Assert.assertEquals(result1.getCursor(), "1");
 
     Assert.assertEquals(result2.getObjects().get(0), "2");
-    Assert.assertFalse(result1.hasMore());
+    Assert.assertFalse(result2.hasMore());
   }
 
   @Test
@@ -102,5 +102,27 @@ public class OfflineEnduserApiHelperTest {
     Assert.assertEquals(result1.getObjects().size(), 2);
     Assert.assertFalse(result1.hasMore());
     Assert.assertEquals(result1.getCursor(), "10");
+  }
+
+  @Test
+  public void testGetSpotsInRadius() {
+    Spot spot1 = new Spot();
+    spot1.setLocation(new Location(46.6222743, 14.2619214));
+
+    Spot spot2 = new Spot();
+    spot2.setLocation(new Location(46.6182128, 14.2610747));
+
+    ArrayList<Spot> spots = new ArrayList<>();
+    spots.add(spot1);
+    spots.add(spot2);
+
+    android.location.Location location = new android.location.Location("custom");
+    location.setLatitude(46.6222743);
+    location.setLongitude(14.2619214);
+
+    ArrayList<Spot> geofenceSpots = OfflineEnduserApiHelper.getSpotsInRadius(location, 100, spots);
+
+    Assert.assertEquals(1, geofenceSpots.size());
+    Assert.assertEquals(spot1, geofenceSpots.get(0));
   }
 }
