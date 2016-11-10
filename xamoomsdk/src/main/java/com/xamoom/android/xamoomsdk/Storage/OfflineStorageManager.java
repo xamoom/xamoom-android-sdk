@@ -246,8 +246,8 @@ public class OfflineStorageManager {
     }
   }
 
-  public System getSystem(String jsonID) {
-    return mSystemDatabaseAdapter.getSystem(jsonID);
+  public System getSystem() {
+    return mSystemDatabaseAdapter.getSystem();
   }
 
   public Menu getMenu(String jsonId) {

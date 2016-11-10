@@ -459,9 +459,9 @@ public class OfflineStorageManagerTest {
     System system = new System();
     system.setId("1");
 
-    Mockito.stub(mMockedSystemDatabaseAdapter.getSystem(anyString())).toReturn(system);
+    Mockito.stub(mMockedSystemDatabaseAdapter.getSystem()).toReturn(system);
 
-    System savedSystem = mOfflineStorageManager.getSystem("1");
+    System savedSystem = mOfflineStorageManager.getSystem();
 
     Assert.assertEquals(system, savedSystem);
   }
