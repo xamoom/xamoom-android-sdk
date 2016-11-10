@@ -386,7 +386,7 @@ public class OfflineStorageManagerTest {
   }
 
   @Test
-  public void testGetSpotsWithTags() {
+  public void testGetSpotsWithTags() throws InterruptedException {
     Spot spot1 = new Spot();
     ArrayList<String> tags1 = new ArrayList<>();
     tags1.add("tag1");
@@ -420,5 +420,8 @@ public class OfflineStorageManagerTest {
 
       }
     });
+    semaphore.acquire();
+
+    Mockito.verify(mMockedSpotDatabaseAdapter).getAllSpots();
   }
 }
