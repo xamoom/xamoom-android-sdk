@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.APIListCallback;
 import com.xamoom.android.xamoomsdk.Enums.ContentSortFlags;
+import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotSortFlags;
 import com.xamoom.android.xamoomsdk.Offline.OfflineEnduserApiHelper;
 import com.xamoom.android.xamoomsdk.Resource.Content;
@@ -194,6 +195,23 @@ public class OfflineStorageManager {
     return mSpotDatabaseAdapter.getSpot(spotId);
   }
 
+  public void getSpotsByLocation(Location location, int radius, int pageSize, @Nullable String cursor,
+                                 @Nullable EnumSet<SpotFlags> spotFlags,
+                                 @Nullable EnumSet<SpotSortFlags> sortFlags,
+                                 APIListCallback<List<Spot>, List<Error>> callback) {
+
+    ArrayList<Spot> allSpots = mSpotDatabaseAdapter.getAllSpots();
+    allSpots = OfflineEnduserApiHelper.getSpotsInRadius(location, radius, allSpots);
+    // TODO: sorting
+
+    OfflineEnduserApiHelper.PagedResult<Spot> spotPagedResult =
+        OfflineEnduserApiHelper.pageResults(allSpots, pageSize, cursor);
+
+    if (callback != null) {
+      callback.finished(spotPagedResult.getObjects(), spotPagedResult.getCursor(),
+          spotPagedResult.hasMore());
+    }
+  }
 
   // getter & setter
 

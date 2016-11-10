@@ -80,27 +80,28 @@ public class OfflineEnduserApi {
   }
 
   public void getSpot(String spotId, APICallback<Spot, List<Error>> callback) {
-  }
-
-  public void getSpot(String spotId, EnumSet<SpotFlags> spotFlags, APICallback<Spot, List<Error>> callback) {
-
+    mOfflineStorageManager.getSpot(spotId);
   }
 
   public void getSpotsByLocation(Location location, int radius, EnumSet<SpotFlags> spotFlags,
                                  @Nullable EnumSet<SpotSortFlags> sortFlags,
                                  APIListCallback<List<Spot>, List<Error>> callback) {
+    mOfflineStorageManager.getSpotsByLocation(location, radius, 100, null, spotFlags, sortFlags,
+        callback);
   }
 
   public void getSpotsByLocation(Location location, int radius, int pageSize, @Nullable String cursor,
                                  @Nullable EnumSet<SpotFlags> spotFlags,
                                  @Nullable EnumSet<SpotSortFlags> sortFlags,
                                  APIListCallback<List<Spot>, List<Error>> callback) {
-
+    mOfflineStorageManager.getSpotsByLocation(location, radius, pageSize, cursor, spotFlags, sortFlags,
+        callback);
   }
 
   public void getSpotsByTags(List<String> tags, @Nullable EnumSet<SpotFlags> spotFlags,
                              @Nullable EnumSet<SpotSortFlags> sortFlags,
                              APIListCallback<List<Spot>, List<Error>> callback) {
+
   }
 
   public void getSpotsByTags(List<String> tags, int pageSize, @Nullable String cursor,

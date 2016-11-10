@@ -348,5 +348,42 @@ public class OfflineStorageManagerTest {
     Mockito.verify(mMockedSpotDatabaseAdapter).getSpot("1");
   }
 
-  
+  @Test
+  public void testGetSpotsByLocation() throws InterruptedException {
+    Spot spot1 = new Spot();
+    spot1.setLocation(new com.xamoom.android.xamoomsdk.Resource.Location(46.6222743, 14.2619214));
+
+    Spot spot2 = new Spot();
+    spot2.setLocation(new com.xamoom.android.xamoomsdk.Resource.Location(46.6182128, 14.2610747));
+
+    ArrayList<Spot> spots = new ArrayList<>();
+    spots.add(spot1);
+    spots.add(spot2);
+
+    android.location.Location location = new android.location.Location("custom");
+    location.setLatitude(46.6222743);
+    location.setLongitude(14.2619214);
+
+    Mockito.stub(mMockedSpotDatabaseAdapter.getAllSpots()).toReturn(spots);
+
+    final Semaphore semaphore = new Semaphore(0);
+    mOfflineStorageManager.getSpotsByLocation(location, 100, 10, null, null,
+        null, new APIListCallback<List<Spot>, List<Error>>() {
+      @Override
+      public void finished(List<Spot> result, String cursor, boolean hasMore) {
+        Assert.assertEquals(result.size(), 1);
+        semaphore.release();
+      }
+
+      @Override
+      public void error(List<Error> error) {
+
+      }
+    });
+    semaphore.acquire();
+
+    Mockito.verify(mMockedSpotDatabaseAdapter).getAllSpots();
+  }
+
+
 }

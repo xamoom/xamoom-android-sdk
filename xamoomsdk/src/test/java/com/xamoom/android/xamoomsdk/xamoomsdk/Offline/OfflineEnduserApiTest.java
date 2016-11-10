@@ -170,4 +170,29 @@ public class OfflineEnduserApiTest {
     Mockito.verify(mMockedOfflineStorageManager).searchContentsByName(eq("test"), anyInt(), anyString(),
         any(EnumSet.class), (APIListCallback<List<Content>, List<Error>>) any(APICallback.class));
   }
+
+  @Test
+  public void testGetSpot() {
+    mOfflineEnduserApi.getSpot("1", null);
+
+    Mockito.verify(mMockedOfflineStorageManager).getSpot(eq("1"));
+  }
+
+  @Test
+  public void testGetSpotsByLocationWithPaging() {
+    mOfflineEnduserApi.getSpotsByLocation(null, 1, 10, null, null, null, null);
+
+    Mockito.verify(mMockedOfflineStorageManager).getSpotsByLocation(any(Location.class), anyInt(),
+        anyInt(), anyString(), any(EnumSet.class), any(EnumSet.class),
+        (APIListCallback<List<Spot>, List<Error>>) any(APICallback.class));
+  }
+
+  @Test
+  public void getGetSpotsByLocationWithWithoutPaging() {
+    mOfflineEnduserApi.getSpotsByLocation(null, 1, null, null, null);
+
+    Mockito.verify(mMockedOfflineStorageManager).getSpotsByLocation(any(Location.class), anyInt(),
+        anyInt(), anyString(), any(EnumSet.class), any(EnumSet.class),
+        (APIListCallback<List<Spot>, List<Error>>) any(APICallback.class));
+  }
 }
