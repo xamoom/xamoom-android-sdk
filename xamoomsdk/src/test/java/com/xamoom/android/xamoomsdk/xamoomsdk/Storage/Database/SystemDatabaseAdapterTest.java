@@ -66,6 +66,28 @@ public class SystemDatabaseAdapterTest {
   }
 
   @Test
+  public void testGetSystemWithoutId() {
+    Cursor mockedCursor = mock(Cursor.class);
+
+    Mockito.stub(mMockedDatabase.query(
+        Mockito.anyString(), Mockito.any(String[].class), Mockito.anyString(),
+        Mockito.any(String[].class), Mockito.anyString(), Mockito.anyString(),
+        Mockito.anyString())).toReturn(mockedCursor);
+
+    Mockito.stub(mockedCursor.getCount()).toReturn(1);
+    Mockito.stub(mockedCursor.moveToFirst()).toReturn(true);
+
+    System savedSystem = mSystemDatabaseAdapter.getSystem();
+
+    Mockito.verify(mMockedDatabase).query(
+        Mockito.anyString(), Mockito.any(String[].class), anyString(),
+        Mockito.any(String[].class), Mockito.anyString(), Mockito.anyString(),
+        Mockito.anyString());
+
+    Assert.assertNotNull(savedSystem);
+  }
+
+  @Test
   public void testGetSystem() {
     Cursor mockedCursor = mock(Cursor.class);
 

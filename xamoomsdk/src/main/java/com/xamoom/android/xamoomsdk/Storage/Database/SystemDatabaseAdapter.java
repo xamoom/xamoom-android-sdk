@@ -26,6 +26,10 @@ public class SystemDatabaseAdapter extends DatabaseAdapter {
     super(context);
   }
 
+  public System getSystem() {
+    return getSystem(null, null);
+  }
+
   public System getSystem(String jsonId) {
     String selection = SystemEntry.COLUMN_NAME_JSON_ID + " = ?";
     String[] selectionArgs = {jsonId};
