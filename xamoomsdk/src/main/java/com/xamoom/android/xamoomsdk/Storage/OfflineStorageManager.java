@@ -4,6 +4,7 @@ import android.content.Context;
 import android.location.Location;
 import android.support.annotation.Nullable;
 
+import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.APIListCallback;
 import com.xamoom.android.xamoomsdk.Enums.ContentSortFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
@@ -243,6 +244,22 @@ public class OfflineStorageManager {
       callback.finished(spotPagedResult.getObjects(), spotPagedResult.getCursor(),
           spotPagedResult.hasMore());
     }
+  }
+
+  public System getSystem(String jsonID) {
+    return mSystemDatabaseAdapter.getSystem(jsonID);
+  }
+
+  public Menu getMenu(String jsonId) {
+    return mMenuDatabaseAdapter.getMenu(jsonId);
+  }
+
+  public SystemSetting getSystemSetting(String jsonId) {
+    return mSettingDatabaseAdapter.getSystemSetting(jsonId);
+  }
+
+  public Style getStyle(String jsonId) {
+    return mStyleDatabaseAdapter.getStyle(jsonId);
   }
 
   // getter & setter

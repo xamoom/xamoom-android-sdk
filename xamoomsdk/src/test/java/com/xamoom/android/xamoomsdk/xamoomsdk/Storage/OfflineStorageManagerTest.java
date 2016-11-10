@@ -25,7 +25,6 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
@@ -453,5 +452,53 @@ public class OfflineStorageManagerTest {
     semaphore.acquire();
 
     Mockito.verify(mMockedSpotDatabaseAdapter).getSpots(eq("test"));
+  }
+
+  @Test
+  public void testGetSystem() {
+    System system = new System();
+    system.setId("1");
+
+    Mockito.stub(mMockedSystemDatabaseAdapter.getSystem(anyString())).toReturn(system);
+
+    System savedSystem = mOfflineStorageManager.getSystem("1");
+
+    Assert.assertEquals(system, savedSystem);
+  }
+
+  @Test
+  public void testGetMenu() {
+    Menu menu = new Menu();
+    menu.setId("1");
+
+    Mockito.stub(mMockedMenuDatabaseAdapter.getMenu(anyString())).toReturn(menu);
+
+    Menu savedMenu = mOfflineStorageManager.getMenu("1");
+
+    Assert.assertEquals(menu, savedMenu);
+  }
+
+  @Test
+  public void testGetSystemSettings() {
+    SystemSetting setting = new SystemSetting();
+    setting.setId("1");
+
+    Mockito.stub(mMockedSettingDatabaseAdapter.getSystemSetting(anyString())).toReturn(setting);
+
+    SystemSetting savedSetting = mOfflineStorageManager.getSystemSetting("1");
+
+    Assert.assertEquals(setting, savedSetting);
+  }
+
+  @Test
+  public void testGetStyle() {
+    Style style = new Style();
+    style.setId("1");
+
+    Mockito.stub(mMockedStyleDatabaseAdapter.getStyle(anyString())).toReturn(style);
+
+    Style savedStyle = mOfflineStorageManager.getStyle("1");
+
+    Assert.assertEquals(style, savedStyle);
   }
 }
