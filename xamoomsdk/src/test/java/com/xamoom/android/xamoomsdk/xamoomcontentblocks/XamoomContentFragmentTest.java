@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
@@ -23,8 +24,8 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 
-@RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 21)
+@RunWith(RobolectricTestRunner.class)
+@Config(constants = BuildConfig.class, sdk = 22)
 public class XamoomContentFragmentTest {
 
   private ContentFragmentActivity activity;
@@ -87,7 +88,7 @@ public class XamoomContentFragmentTest {
     content.setContentBlocks(blocks);
 
     XamoomContentFragment fragment = XamoomContentFragment.newInstance("api");
-    fragment.setEnduserApi(new EnduserApi("api"));
+    fragment.setEnduserApi(new EnduserApi("api", null));
     fragment.setContent(content);
 
     addFragmentToActivity(fragment);

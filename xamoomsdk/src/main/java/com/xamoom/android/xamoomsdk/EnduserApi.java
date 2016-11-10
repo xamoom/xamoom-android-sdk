@@ -1,10 +1,14 @@
 package com.xamoom.android.xamoomsdk;
 
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
 import com.xamoom.android.xamoomsdk.Enums.ContentSortFlags;
@@ -33,40 +37,49 @@ import at.rags.morpheus.Morpheus;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.Response;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Retrofit;
+
+import static okhttp3.internal.Internal.logger;
 
 /**
  * EnduserApi is the main part of the XamoomSDK. You can use it to send api request to
  * the xamoom cloud.
  *
- * Use {@link #EnduserApi(String)} to initialize.
+ * Use {@link #EnduserApi(String, Context)} to initialize.
  *
  * Change the requested language by  setting {@link #language}. The users language is saved
  * in {@link #systemLanguage}.
  */
 public class EnduserApi implements Parcelable {
+  public static final String SDK_VERSION = "2.2.4";
+
   private static final String TAG = EnduserApi.class.getSimpleName();
   private static final String API_URL = "https://xamoom-cloud.appspot.com/";
 
   private static EnduserApi sharedInstance;
 
+  private Context context;
   private String apiKey;
   private EnduserApiInterface enduserApiInterface;
   private CallHandler callHandler;
   private String language;
   private String systemLanguage;
 
-  public EnduserApi(final String apikey) {
+  public EnduserApi(final String apikey, Context context) {
     this.apiKey = apikey;
+    this.context = context;
+
     initRetrofit(apiKey);
     initMorpheus();
     initVars();
   }
 
-  public EnduserApi(Retrofit retrofit) {
+  public EnduserApi(Retrofit retrofit, Context context) {
     enduserApiInterface = retrofit.create(EnduserApiInterface.class);
+    this.context = context;
 
     initMorpheus();
     initVars();
@@ -86,21 +99,12 @@ public class EnduserApi implements Parcelable {
     }
 
     OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
-    builder.addInterceptor(new Interceptor() {
-      @Override
-      public okhttp3.Response intercept(Chain chain) throws IOException {
-        Request request = chain.request().newBuilder()
-            .addHeader("Content-Type", "application/vnd.api+json")
-            .addHeader("APIKEY", apiKey)
-            .build();
-        return chain.proceed(request);
-      }
-    });
+    builder.addInterceptor(new HTTPHeaderInterceptor(generateUserAgent(), apiKey));
     OkHttpClient httpClient = builder.build();
 
     Retrofit retrofit = new Retrofit.Builder()
-        .baseUrl(API_URL)
         .client(httpClient)
+        .baseUrl(API_URL)
         .build();
     enduserApiInterface = retrofit.create(EnduserApiInterface.class);
   }
@@ -465,7 +469,24 @@ public class EnduserApi implements Parcelable {
     dest.writeString(language);
   }
 
-  //getters & setters
+  // helper
+
+  private String generateUserAgent() {
+    if (this.context == null) {
+      return "Xamoom SDK Android";
+    }
+
+    StringBuilder builder = new StringBuilder();
+    builder.append("Xamoom SDK Android");
+    builder.append("|");
+    builder.append(context.getApplicationInfo().loadLabel(context.getPackageManager()));
+    builder.append("|");
+    builder.append(SDK_VERSION);
+
+    return builder.toString();
+  }
+
+  // getters & setters
   public String getSystemLanguage() {
     return systemLanguage;
   }
@@ -486,6 +507,10 @@ public class EnduserApi implements Parcelable {
     return callHandler;
   }
 
+  public void setCallHandler(CallHandler callHandler) {
+    this.callHandler = callHandler;
+  }
+
   /**
    * Use this to get your instance. It will create a new one with your api key, when
    * there is no isntance.
@@ -493,13 +518,13 @@ public class EnduserApi implements Parcelable {
    * @param apikey Your xamoom api key.
    * @return EnduserApi instance.
    */
-  public static EnduserApi getSharedInstance(@NonNull String apikey) {
+  public static EnduserApi getSharedInstance(@NonNull String apikey, Context context) {
     if (apikey == null) {
       throw new NullPointerException("Apikey should not be null.");
     }
 
     if (EnduserApi.sharedInstance == null) {
-      EnduserApi.sharedInstance = new EnduserApi(apikey);
+      EnduserApi.sharedInstance = new EnduserApi(apikey, context);
     }
     return EnduserApi.sharedInstance;
   }
@@ -510,7 +535,7 @@ public class EnduserApi implements Parcelable {
    */
   public static EnduserApi getSharedInstance() {
     if (EnduserApi.sharedInstance == null) {
-      throw new NullPointerException("Instance is null. Please use getSharedInstance(apikey) " +
+      throw new NullPointerException("Instance is null. Please use getSharedInstance(apikey, context) " +
           "or setSharedInstance");
     }
     return EnduserApi.sharedInstance;

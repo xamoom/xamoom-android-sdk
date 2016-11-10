@@ -1,21 +1,37 @@
 package com.xamoom.android.xamoomsdk.xamoomsdk;
 
 import android.os.Parcel;
+import android.telecom.Call;
 
+import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.BuildConfig;
+import com.xamoom.android.xamoomsdk.CallHandler;
 import com.xamoom.android.xamoomsdk.EnduserApi;
+import com.xamoom.android.xamoomsdk.EnduserApiInterface;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 
+import org.apache.maven.artifact.ant.shaded.cli.Commandline;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNull;
 import static junit.framework.TestCase.assertNotNull;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-@RunWith(RobolectricGradleTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
 public class EnduserApiParcelableTest {
 
@@ -23,7 +39,7 @@ public class EnduserApiParcelableTest {
 
   @Before
   public void setup() {
-    mEnduserApi = new EnduserApi("api_key");
+    mEnduserApi = new EnduserApi("api_key", RuntimeEnvironment.application);
     mEnduserApi.setLanguage("other");
   }
 
