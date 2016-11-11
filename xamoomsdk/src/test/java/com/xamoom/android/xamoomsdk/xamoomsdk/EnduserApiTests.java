@@ -38,6 +38,7 @@ import at.rags.morpheus.Error;
 import at.rags.morpheus.JsonApiObject;
 import at.rags.morpheus.Morpheus;
 import at.rags.morpheus.Resource;
+import dalvik.annotation.TestTarget;
 import okhttp3.OkHttpClient;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -50,6 +51,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.mock;
@@ -325,6 +327,18 @@ public class EnduserApiTests {
   }
 
   @Test
+  public void testGetContentWithLocationIdentifierWhenOffline() {
+    mEnduserApi.setOffline(true);
+
+    mEnduserApi.getContentByLocationIdentifier("test", null, null);
+
+    Mockito.verify(mMockedOfflineEnduserApi).getContentByLocationIdentifier(eq("test"),
+        (APICallback<Content, List<Error>>) any());
+
+    Mockito.verifyNoMoreInteractions(mMockMorpheus);
+  }
+
+  @Test
   public void testGetContentWithBeaconSuccess() throws Exception {
     mMockWebServer.enqueue(new MockResponse().setBody(""));
 
@@ -446,6 +460,19 @@ public class EnduserApiTests {
   }
 
   @Test
+  public void testGetContentyByLocationWhenOffline() {
+    mEnduserApi.setOffline(true);
+
+    mEnduserApi.getContentsByLocation(null, 10, null, null, null);
+
+    Mockito.verify(mMockedOfflineEnduserApi).getContentsByLocation(any(Location.class),
+        anyInt(), anyString(), any(EnumSet.class),
+        (APIListCallback<List<Content>, List<Error>>) any());
+
+    Mockito.verifyNoMoreInteractions(mMockMorpheus);
+  }
+
+  @Test
   public void testGetContentsWithTagsSuccess() throws Exception {
     mMockWebServer.enqueue(new MockResponse().setBody(""));
 
@@ -493,6 +520,19 @@ public class EnduserApiTests {
   }
 
   @Test
+  public void testGetContentsWithTagsWhenOffline() {
+    mEnduserApi.setOffline(true);
+
+    mEnduserApi.getContentsByTags(null, 10, null, null, null);
+
+    Mockito.verify(mMockedOfflineEnduserApi).getContentsByTags(any(List.class),
+        anyInt(), anyString(), any(EnumSet.class),
+        (APIListCallback<List<Content>, List<Error>>) any());
+
+    Mockito.verifyNoMoreInteractions(mMockMorpheus);
+  }
+
+  @Test
   public void testSearchContent() throws Exception {
     mMockWebServer.enqueue(new MockResponse().setBody(""));
 
@@ -537,6 +577,19 @@ public class EnduserApiTests {
     assertTrue(checkContents.get(0).getTitle().equals("Test"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
     assertEquals("/_api/v2/consumer/contents?lang=en&page[size]=10&filter[name]=do%20not%20touch", request1.getPath());
+  }
+
+  @Test
+  public void testSearchContentByName() {
+    mEnduserApi.setOffline(true);
+
+    mEnduserApi.searchContentsByName("name", 10, null, null, null);
+
+    Mockito.verify(mMockedOfflineEnduserApi).searchContentsByName(anyString(), anyInt(),
+        anyString(), any(EnumSet.class),
+        (APIListCallback<List<Content>, List<Error>>) any());
+
+    Mockito.verifyNoMoreInteractions(mMockMorpheus);
   }
 
   @Test
@@ -613,6 +666,17 @@ public class EnduserApiTests {
   }
 
   @Test
+  public void testGetSpotWhenOffline() {
+    mEnduserApi.setOffline(true);
+
+    mEnduserApi.getSpot("test", null);
+
+    Mockito.verify(mMockedOfflineEnduserApi).getSpot(anyString(),
+        (APICallback<Spot, List<Error>>) any());
+    Mockito.verifyNoMoreInteractions(mMockMorpheus);
+  }
+
+  @Test
   public void testGetSpotsWithLocationSuccess() throws Exception {
     mMockWebServer.enqueue(new MockResponse().setBody(""));
 
@@ -657,6 +721,18 @@ public class EnduserApiTests {
     assertTrue(checkSpots.get(0).getName().equals("Test"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
     assertEquals("/_api/v2/consumer/spots?lang=en&filter[lat]=1.0&filter[lon]=2.0&filter[radius]=100", request1.getPath());
+  }
+
+  @Test
+  public void testGetSpotWithLocationWhenOffline() {
+    mEnduserApi.setOffline(true);
+
+    mEnduserApi.getSpotsByLocation(null, 10, 10, null, null, null, null);
+
+    Mockito.verify(mMockedOfflineEnduserApi).getSpotsByLocation(any(Location.class),
+        anyInt(), anyInt(), anyString(), any(EnumSet.class), any(EnumSet.class),
+        (APIListCallback<List<Spot>, List<Error>>) any());
+    Mockito.verifyNoMoreInteractions(mMockMorpheus);
   }
 
   @Test
@@ -762,6 +838,18 @@ public class EnduserApiTests {
   }
 
   @Test
+  public void testGetSpotsByTagsWhenOffline() {
+    mEnduserApi.setOffline(true);
+
+    mEnduserApi.getSpotsByTags(null, 10, null, null, null, null);
+
+    Mockito.verify(mMockedOfflineEnduserApi).getSpotsByTags(any(List.class),
+        anyInt(), anyString(), any(EnumSet.class), any(EnumSet.class),
+        (APIListCallback<List<Spot>, List<Error>>) any());
+    Mockito.verifyNoMoreInteractions(mMockMorpheus);
+  }
+
+  @Test
   public void testSearchSpotsWithTagsSpotFlagsSuccess() throws Exception {
     mMockWebServer.enqueue(new MockResponse().setBody(""));
 
@@ -815,6 +903,18 @@ public class EnduserApiTests {
   }
 
   @Test
+  public void testSearchSpotsWhenOffline() {
+    mEnduserApi.setOffline(true);
+
+    mEnduserApi.searchSpotsByName(null, 10, null, null, null, null);
+
+    Mockito.verify(mMockedOfflineEnduserApi).searchSpotsByName(anyString(),
+        anyInt(), anyString(), any(EnumSet.class), any(EnumSet.class),
+        (APIListCallback<List<Spot>, List<Error>>) any());
+    Mockito.verifyNoMoreInteractions(mMockMorpheus);
+  }
+
+  @Test
   public void testGetSystemSuccess() throws Exception {
     mMockWebServer.enqueue(new MockResponse().setBody(""));
 
@@ -848,6 +948,17 @@ public class EnduserApiTests {
     assertTrue(checkSystem[0].getName().equals("Test"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
     assertEquals("/_api/v2/consumer/systems?lang=en", request1.getPath());
+  }
+
+  @Test
+  public void testGetSystemWhenOffline() {
+    mEnduserApi.setOffline(true);
+
+    mEnduserApi.getSystem(null);
+
+    Mockito.verify(mMockedOfflineEnduserApi)
+        .getSystem((APICallback<System, List<Error>>) any());
+    Mockito.verifyNoMoreInteractions(mMockMorpheus);
   }
 
   @Test
@@ -887,6 +998,17 @@ public class EnduserApiTests {
   }
 
   @Test
+  public void testGetMenuWhenOffline() {
+    mEnduserApi.setOffline(true);
+
+    mEnduserApi.getMenu(null, null);
+
+    Mockito.verify(mMockedOfflineEnduserApi)
+        .getMenu(anyString(), (APICallback<Menu, List<Error>>) any());
+    Mockito.verifyNoMoreInteractions(mMockMorpheus);
+  }
+
+  @Test
   public void testGetSystemSettingsSuccess() throws Exception {
     mMockWebServer.enqueue(new MockResponse().setBody(""));
 
@@ -923,6 +1045,17 @@ public class EnduserApiTests {
   }
 
   @Test
+  public void testGetSystemSettingWhenOffline() {
+    mEnduserApi.setOffline(true);
+
+    mEnduserApi.getSystemSetting(null, null);
+
+    Mockito.verify(mMockedOfflineEnduserApi).getSystemSetting(anyString(),
+        (APICallback<SystemSetting, List<Error>>) any());
+    Mockito.verifyNoMoreInteractions(mMockMorpheus);
+  }
+
+  @Test
   public void testGetStyleSuccess() throws Exception {
     mMockWebServer.enqueue(new MockResponse().setBody(""));
 
@@ -956,5 +1089,16 @@ public class EnduserApiTests {
     assertTrue(checkStyle[0].getId().equals("123456"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
     assertEquals("/_api/v2/consumer/styles/123456?lang=en", request1.getPath());
+  }
+
+  @Test
+  public void testGetStyleWhenOffline() {
+    mEnduserApi.setOffline(true);
+
+    mEnduserApi.getStyle(null, null);
+
+    Mockito.verify(mMockedOfflineEnduserApi).getStyle(anyString(),
+        (APICallback<Style, List<Error>>) any());
+    Mockito.verifyNoMoreInteractions(mMockMorpheus);
   }
 }

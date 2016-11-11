@@ -186,6 +186,11 @@ public class EnduserApi implements Parcelable {
   public void getContentByLocationIdentifier(String locationIdentifier,
                                              EnumSet<ContentFlags> contentFlags,
                                              APICallback<Content, List<Error>> callback) {
+    if (offline) {
+      offlineEnduserApi.getContentByLocationIdentifier(locationIdentifier, callback);
+      return;
+    }
+
     Map<String, String> params = UrlUtil.getUrlParameter(language);
     params.put("filter[location-identifier]", locationIdentifier);
     params = UrlUtil.addContentParameter(params, contentFlags);
@@ -232,6 +237,12 @@ public class EnduserApi implements Parcelable {
                                     final EnumSet<ContentSortFlags> sortFlags,
                                     APIListCallback<List<Content>,
       List<Error>> callback) {
+
+    if (offline) {
+      offlineEnduserApi.getContentsByLocation(location, 10, null, null, null);
+      return;
+    }
+
     Map<String, String> params = UrlUtil.addContentSortingParameter(UrlUtil.getUrlParameter(language),
         sortFlags);
     params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
@@ -254,6 +265,11 @@ public class EnduserApi implements Parcelable {
   public void getContentsByTags(List<String> tags, int pageSize, @Nullable String cursor,
                                 EnumSet<ContentSortFlags> sortFlags,
                                 APIListCallback<List<Content>, List<Error>> callback) {
+    if (offline) {
+      offlineEnduserApi.getContentsByTags(tags, pageSize, cursor, sortFlags, callback);
+      return;
+    }
+
     Map<String, String> params = UrlUtil.addContentSortingParameter(UrlUtil.getUrlParameter(language),
         sortFlags);
     params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
@@ -275,6 +291,12 @@ public class EnduserApi implements Parcelable {
   public void searchContentsByName(String name, int pageSize, @Nullable String cursor,
                                    EnumSet<ContentSortFlags> sortFlags,
                                    APIListCallback<List<Content>, List<Error>> callback) {
+    if (offline) {
+      offlineEnduserApi.searchContentsByName(name, pageSize, cursor, sortFlags,
+          callback);
+      return;
+    }
+
     Map<String, String> params = UrlUtil.addContentSortingParameter(UrlUtil.getUrlParameter(language),
         sortFlags);
     params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
@@ -295,6 +317,10 @@ public class EnduserApi implements Parcelable {
   }
 
   public void getSpot(String spotId, EnumSet<SpotFlags> spotFlags, APICallback<Spot, List<Error>> callback) {
+    if (offline) {
+      offlineEnduserApi.getSpot(spotId, callback);
+    }
+
     Map<String, String> params = UrlUtil.getUrlParameter(this.language);
     params = UrlUtil.addSpotParameter(params, spotFlags);
 
@@ -332,6 +358,12 @@ public class EnduserApi implements Parcelable {
                                  @Nullable EnumSet<SpotFlags> spotFlags,
                                  @Nullable EnumSet<SpotSortFlags> sortFlags,
                                  APIListCallback<List<Spot>, List<Error>> callback) {
+    if (offline) {
+      offlineEnduserApi.getSpotsByLocation(location, radius, pageSize, cursor,
+          spotFlags, sortFlags, callback);
+      return;
+    }
+
     Map<String, String> params = UrlUtil.addSpotParameter(UrlUtil.getUrlParameter(language),
         spotFlags);
     params = UrlUtil.addSpotSortingParameter(params, sortFlags);
@@ -374,6 +406,12 @@ public class EnduserApi implements Parcelable {
                              @Nullable EnumSet<SpotFlags> spotFlags,
                              @Nullable EnumSet<SpotSortFlags> sortFlags,
                              APIListCallback<List<Spot>, List<Error>> callback) {
+    if (offline) {
+      offlineEnduserApi.getSpotsByTags(tags, pageSize, cursor, spotFlags, sortFlags,
+          callback);
+      return;
+    }
+
     Map<String, String> params = UrlUtil.addSpotParameter(UrlUtil.getUrlParameter(language),
         spotFlags);
     params = UrlUtil.addSpotSortingParameter(params, sortFlags);
@@ -398,6 +436,12 @@ public class EnduserApi implements Parcelable {
                                 @Nullable EnumSet<SpotFlags> spotFlags,
                                 @Nullable EnumSet<SpotSortFlags> sortFlags,
                                 APIListCallback<List<Spot>, List<Error>> callback) {
+    if (offline) {
+      offlineEnduserApi.searchSpotsByName(name, pageSize, cursor, spotFlags,
+          sortFlags, callback);
+      return;
+    }
+
     Map<String, String> params = UrlUtil.addSpotParameter(UrlUtil.getUrlParameter(language),
         spotFlags);
     params = UrlUtil.addSpotSortingParameter(params, sortFlags);
@@ -414,6 +458,11 @@ public class EnduserApi implements Parcelable {
    * @param callback {@link APIListCallback}.
    */
   public void getSystem(final APICallback<System, List<Error>> callback) {
+    if (offline) {
+      offlineEnduserApi.getSystem(callback);
+      return;
+    }
+
     Map<String, String> params = UrlUtil.getUrlParameter(language);
     Call<ResponseBody> call = enduserApiInterface.getSystem(params);
     callHandler.enqueCall(call, callback);
@@ -426,6 +475,11 @@ public class EnduserApi implements Parcelable {
    * @param callback {@link APIListCallback}.
    */
   public void getMenu(String systemId, final APICallback<Menu, List<Error>> callback) {
+    if (offline) {
+      offlineEnduserApi.getMenu(systemId, callback);
+      return;
+    }
+
     Map<String, String> params = UrlUtil.getUrlParameter(language);
     Call<ResponseBody> call = enduserApiInterface.getMenu(systemId, params);
     callHandler.enqueCall(call, callback);
@@ -438,6 +492,11 @@ public class EnduserApi implements Parcelable {
    * @param callback {@link APIListCallback}.
    */
   public void getSystemSetting(String systemId, final APICallback<SystemSetting, List<Error>> callback) {
+    if (offline) {
+      offlineEnduserApi.getSystemSetting(systemId, callback);
+      return;
+    }
+
     Map<String, String> params = UrlUtil.getUrlParameter(language);
     Call<ResponseBody> call = enduserApiInterface.getSetting(systemId, params);
     callHandler.enqueCall(call, callback);
@@ -450,6 +509,11 @@ public class EnduserApi implements Parcelable {
    * @param callback {@link APIListCallback}.
    */
   public void getStyle(String systemId, final APICallback<Style, List<Error>> callback) {
+    if (offline) {
+      offlineEnduserApi.getStyle(systemId, callback);
+      return;
+    }
+
     Map<String, String> params = UrlUtil.getUrlParameter(language);
     Call<ResponseBody> call = enduserApiInterface.getStyle(systemId, params);
     callHandler.enqueCall(call, callback);
