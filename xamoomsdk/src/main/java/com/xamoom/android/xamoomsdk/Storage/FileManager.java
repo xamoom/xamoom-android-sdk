@@ -53,8 +53,8 @@ public class FileManager {
   }
 
   public String getFileName(String urlString) {
-    Uri url = Uri.parse(urlString);
-    String urlStringWithoutCaching = urlString.replace("?" + url.getQuery(), "");
+    String urlStringWithoutCaching = FileManager.removeQuery(urlString);
+    Uri url = Uri.parse(urlStringWithoutCaching);
     String fileName = url.getLastPathSegment();
     String[] fileNameSegments = fileName.split("\\.");
     String extension = "";
@@ -68,6 +68,11 @@ public class FileManager {
 
   public String getFilePath(String urlString) {
     return String.format("%s/%s", mContext.getFilesDir().getAbsolutePath(), getFileName(urlString));
+  }
+
+  public static String removeQuery(String urlString) {
+    Uri url = Uri.parse(urlString);
+    return urlString.replace("?" + url.getQuery(), "");
   }
 
   private static String md5(String s) {
