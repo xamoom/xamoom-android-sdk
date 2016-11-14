@@ -9,6 +9,7 @@ import com.xamoom.android.xamoomsdk.APIListCallback;
 import com.xamoom.android.xamoomsdk.Enums.ContentSortFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotSortFlags;
+import com.xamoom.android.xamoomsdk.Offline.OfflineEnduserApi;
 import com.xamoom.android.xamoomsdk.Offline.OfflineEnduserApiHelper;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.Menu;
@@ -147,7 +148,7 @@ public class OfflineStorageManager {
       }
     }
 
-    // TODO: sorting
+    sortContents(contents, sortFlags);
 
     OfflineEnduserApiHelper.PagedResult<Content> contentPagedResult =
         OfflineEnduserApiHelper.pageResults(contents, pageSize, cursor);
@@ -167,7 +168,7 @@ public class OfflineStorageManager {
     OfflineEnduserApiHelper.PagedResult<Content> contentPagedResult =
         OfflineEnduserApiHelper.pageResults(contents, pageSize, cursor);
 
-    // TODO: sorting
+    sortContents(contents, sortFlags);
 
     if (callback != null) {
       callback.finished(contentPagedResult.getObjects(), contentPagedResult.getCursor(),
@@ -180,7 +181,7 @@ public class OfflineStorageManager {
                                    APIListCallback<List<Content>, List<Error>> callback) {
     ArrayList<Content> contents = mContentDatabaseAdapter.getContents(name);
 
-    // TODO: sorting
+    sortContents(contents, sortFlags);
 
     OfflineEnduserApiHelper.PagedResult<Content> contentPagedResult =
         OfflineEnduserApiHelper.pageResults(contents, pageSize, cursor);
@@ -202,7 +203,8 @@ public class OfflineStorageManager {
 
     ArrayList<Spot> allSpots = mSpotDatabaseAdapter.getAllSpots();
     allSpots = OfflineEnduserApiHelper.getSpotsInRadius(location, radius, allSpots);
-    // TODO: sorting
+
+    allSpots = sortSpots(allSpots, sortFlags, location);
 
     OfflineEnduserApiHelper.PagedResult<Spot> spotPagedResult =
         OfflineEnduserApiHelper.pageResults(allSpots, pageSize, cursor);
@@ -219,7 +221,8 @@ public class OfflineStorageManager {
                              APIListCallback<List<Spot>, List<Error>> callback) {
     ArrayList<Spot> allSpots = mSpotDatabaseAdapter.getAllSpots();
     allSpots = OfflineEnduserApiHelper.getSpotsWithTags(tags, allSpots);
-    // TODO: sorting
+
+    allSpots = sortSpots(allSpots, sortFlags, null);
 
     OfflineEnduserApiHelper.PagedResult<Spot> spotPagedResult =
         OfflineEnduserApiHelper.pageResults(allSpots, pageSize, cursor);
@@ -235,7 +238,8 @@ public class OfflineStorageManager {
                                 @Nullable EnumSet<SpotSortFlags> sortFlags,
                                 APIListCallback<List<Spot>, List<Error>> callback) {
     ArrayList<Spot> spots = mSpotDatabaseAdapter.getSpots(name);
-    // TODO: sorting
+
+    spots = sortSpots(spots, sortFlags, null);
 
     OfflineEnduserApiHelper.PagedResult<Spot> spotPagedResult =
         OfflineEnduserApiHelper.pageResults(spots, pageSize, cursor);
@@ -260,6 +264,36 @@ public class OfflineStorageManager {
 
   public Style getStyle(String jsonId) {
     return mStyleDatabaseAdapter.getStyle(jsonId);
+  }
+
+
+  private ArrayList<Content> sortContents(ArrayList<Content> contents,
+                                          EnumSet<ContentSortFlags> sortFlags) {
+    if (sortFlags != null) {
+      // sortFlags.contains(ContentSortFlags.NAME) true if ASC, false if desc
+      contents = OfflineEnduserApiHelper.sortContentsByTitle(contents,
+          sortFlags.contains(ContentSortFlags.NAME));
+    }
+
+    return contents;
+  }
+
+  private ArrayList<Spot> sortSpots(ArrayList<Spot> spots, EnumSet<SpotSortFlags> sortFlags,
+                                    Location location) {
+    if (sortFlags != null) {
+      if ((sortFlags.contains(SpotSortFlags.DISTANCE) ||
+          sortFlags.contains(SpotSortFlags.DISTANCE_DESC)) &&
+          location != null) {
+        spots = OfflineEnduserApiHelper.sortSpotsByDistance(spots, location,
+            sortFlags.contains(SpotSortFlags.DISTANCE));
+      } else if (sortFlags.contains(SpotSortFlags.NAME) ||
+          sortFlags.contains(SpotSortFlags.NAME_DESC)) {
+        spots = OfflineEnduserApiHelper.sortSpotsByName(spots,
+            sortFlags.contains(SpotSortFlags.NAME));
+      }
+    }
+
+    return spots;
   }
 
   // getter & setter

@@ -151,4 +151,120 @@ public class OfflineEnduserApiHelperTest {
 
     Assert.assertEquals(2, spotsWithTag2.size());
   }
+
+  @Test
+  public void testSortSpotsByNameAsc() {
+    Spot spot1 = new Spot();
+    spot1.setName("B");
+
+    Spot spot2 = new Spot();
+    spot2.setName("A");
+
+    ArrayList<Spot> spots = new ArrayList<>();
+    spots.add(spot1);
+    spots.add(spot2);
+
+    ArrayList<Spot> orderedSpots = OfflineEnduserApiHelper.sortSpotsByName(spots, true);
+
+    Assert.assertEquals(spot2, orderedSpots.get(0));
+    Assert.assertEquals(spot1, orderedSpots.get(1));
+  }
+
+  @Test
+  public void testSortSpotsByNameDesc() {
+    Spot spot1 = new Spot();
+    spot1.setName("B");
+
+    Spot spot2 = new Spot();
+    spot2.setName("A");
+
+    ArrayList<Spot> spots = new ArrayList<>();
+    spots.add(spot1);
+    spots.add(spot2);
+
+    ArrayList<Spot> orderedSpots = OfflineEnduserApiHelper.sortSpotsByName(spots, false);
+
+    Assert.assertEquals(spot2, orderedSpots.get(1));
+    Assert.assertEquals(spot1, orderedSpots.get(0));
+  }
+
+  @Test
+  public void testSortSpotsByDistanceAsc() {
+    Spot spot1 = new Spot();
+    spot1.setLocation(new Location(46.6222743, 14.2619214));
+
+    Spot spot2 = new Spot();
+    spot2.setLocation(new Location(46.6182128, 14.2610747));
+
+    ArrayList<Spot> spots = new ArrayList<>();
+    spots.add(spot1);
+    spots.add(spot2);
+
+    android.location.Location location = new android.location.Location("custom");
+    location.setLatitude(46.6182128);
+    location.setLongitude(14.2610747);
+
+    ArrayList<Spot> orderedSpots = OfflineEnduserApiHelper.sortSpotsByDistance(spots, location, true);
+
+    Assert.assertEquals(spot2, orderedSpots.get(0));
+    Assert.assertEquals(spot1, orderedSpots.get(1));
+  }
+
+  @Test
+  public void testSortSpotsByDistanceDesc() {
+    Spot spot1 = new Spot();
+    spot1.setLocation(new Location(46.6222743, 14.2619214));
+
+    Spot spot2 = new Spot();
+    spot2.setLocation(new Location(46.6182128, 14.2610747));
+
+    ArrayList<Spot> spots = new ArrayList<>();
+    spots.add(spot1);
+    spots.add(spot2);
+
+    android.location.Location location = new android.location.Location("custom");
+    location.setLatitude(46.6182128);
+    location.setLongitude(14.2610747);
+
+    ArrayList<Spot> orderedSpots = OfflineEnduserApiHelper.sortSpotsByDistance(spots, location, false);
+
+    Assert.assertEquals(spot2, orderedSpots.get(1));
+    Assert.assertEquals(spot1, orderedSpots.get(0));
+  }
+
+  @Test
+  public void testSortContentByTitleAsc() {
+    Content content1 = new Content();
+    content1.setTitle("B");
+
+    Content content2 = new Content();
+    content2.setTitle("A");
+
+    ArrayList<Content> contents = new ArrayList<>();
+    contents.add(content1);
+    contents.add(content2);
+
+    ArrayList<Content> orderedContents = OfflineEnduserApiHelper.sortContentsByTitle(contents, true);
+
+    Assert.assertEquals(content2, orderedContents.get(0));
+    Assert.assertEquals(content1, orderedContents.get(1));
+  }
+
+  @Test
+  public void testSortContentByTitleDesc() {
+    Content content1 = new Content();
+    content1.setTitle("B");
+
+    Content content2 = new Content();
+    content2.setTitle("A");
+
+    ArrayList<Content> contents = new ArrayList<>();
+    contents.add(content1);
+    contents.add(content2);
+
+    ArrayList<Content> orderedContents = OfflineEnduserApiHelper.sortContentsByTitle(contents, false);
+
+    Assert.assertEquals(content2, orderedContents.get(1));
+    Assert.assertEquals(content1, orderedContents.get(0));
+  }
 }

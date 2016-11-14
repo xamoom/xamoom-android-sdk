@@ -4,6 +4,8 @@ import android.location.Location;
 
 import com.xamoom.android.xamoomsdk.APIListCallback;
 import com.xamoom.android.xamoomsdk.BuildConfig;
+import com.xamoom.android.xamoomsdk.Enums.ContentSortFlags;
+import com.xamoom.android.xamoomsdk.Enums.SpotSortFlags;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.Menu;
 import com.xamoom.android.xamoomsdk.Resource.Spot;
@@ -33,6 +35,7 @@ import org.robolectric.annotation.Config;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
@@ -224,20 +227,23 @@ public class OfflineStorageManagerTest {
 
   @Test
   public void testGetContentsByLocation() throws InterruptedException {
+    final Content content = new Content();
+    content.setTitle("B");
+
+    final Content content2 = new Content();
+    content2.setTitle("A");
+
     ArrayList<Spot> spots = new ArrayList<>();
     Spot spot = new Spot();
     spot.setLocation(new com.xamoom.android.xamoomsdk.Resource.Location(46.1, 15.2));
     spot.setId("1");
-
-    Content content = new Content();
-    content.setId("2");
     spot.setContent(content);
     spots.add(spot);
 
     Spot spot2 = new Spot();
     spot2.setLocation(new com.xamoom.android.xamoomsdk.Resource.Location(46.1, 15.2));
     spot2.setId("3");
-    spot2.setContent(content);
+    spot2.setContent(content2);
     spots.add(spot2);
 
     final Location location = new Location("custom");
@@ -247,19 +253,26 @@ public class OfflineStorageManagerTest {
     Mockito.stub(mMockedSpotDatabaseAdapter.getAllSpots()).toReturn(spots);
 
     final Semaphore semaphore = new Semaphore(0);
-    mOfflineStorageManager.getContentsByLocation(location, 1, null, null, new APIListCallback<List<Content>, List<Error>>() {
+    mOfflineStorageManager.getContentsByLocation(location, 1, null, EnumSet.of(ContentSortFlags.NAME),
+        new APIListCallback<List<Content>, List<Error>>() {
       @Override
-      public void finished(List<Content> result, String cursor, boolean hasMore) {
+      public void finished(final List<Content> result, String cursor, boolean hasMore) {
         Assert.assertEquals(1, result.size());
         Assert.assertTrue(hasMore);
         Assert.assertEquals("1", cursor);
 
-        mOfflineStorageManager.getContentsByLocation(location, 1, cursor, null, new APIListCallback<List<Content>, List<Error>>() {
+        Assert.assertEquals(content2, result.get(0));
+
+        mOfflineStorageManager.getContentsByLocation(location, 1, cursor, EnumSet.of(ContentSortFlags.NAME),
+            new APIListCallback<List<Content>, List<Error>>() {
           @Override
           public void finished(List<Content> result2, String cursor, boolean hasMore) {
               Assert.assertEquals(1, result2.size());
               Assert.assertFalse(hasMore);
               Assert.assertEquals("2", cursor);
+
+              Assert.assertEquals(content, result2.get(0));
+
               semaphore.release();
             }
 
@@ -349,10 +362,10 @@ public class OfflineStorageManagerTest {
 
   @Test
   public void testGetSpotsByLocation() throws InterruptedException {
-    Spot spot1 = new Spot();
+    final Spot spot1 = new Spot();
     spot1.setLocation(new com.xamoom.android.xamoomsdk.Resource.Location(46.6222743, 14.2619214));
 
-    Spot spot2 = new Spot();
+    final Spot spot2 = new Spot();
     spot2.setLocation(new com.xamoom.android.xamoomsdk.Resource.Location(46.6182128, 14.2610747));
 
     ArrayList<Spot> spots = new ArrayList<>();
@@ -371,6 +384,7 @@ public class OfflineStorageManagerTest {
       @Override
       public void finished(List<Spot> result, String cursor, boolean hasMore) {
         Assert.assertEquals(result.size(), 1);
+
         semaphore.release();
       }
 
@@ -379,6 +393,44 @@ public class OfflineStorageManagerTest {
 
       }
     });
+    semaphore.acquire();
+
+    Mockito.verify(mMockedSpotDatabaseAdapter).getAllSpots();
+  }
+
+  @Test
+  public void testGetSpotsByLocationWithSorting() throws InterruptedException {
+    final Spot spot1 = new Spot();
+    spot1.setLocation(new com.xamoom.android.xamoomsdk.Resource.Location(46.6222743, 14.2619214));
+
+    final Spot spot2 = new Spot();
+    spot2.setLocation(new com.xamoom.android.xamoomsdk.Resource.Location(46.6222753, 14.2619224));
+
+    ArrayList<Spot> spots = new ArrayList<>();
+    spots.add(spot1);
+    spots.add(spot2);
+
+    android.location.Location location = new android.location.Location("custom");
+    location.setLatitude(46.6222743);
+    location.setLongitude(14.2619214);
+
+    Mockito.stub(mMockedSpotDatabaseAdapter.getAllSpots()).toReturn(spots);
+
+    final Semaphore semaphore = new Semaphore(0);
+    mOfflineStorageManager.getSpotsByLocation(location, 100, 10, null, null,
+        EnumSet.of(SpotSortFlags.DISTANCE_DESC), new APIListCallback<List<Spot>, List<Error>>() {
+          @Override
+          public void finished(List<Spot> result, String cursor, boolean hasMore) {
+            Assert.assertEquals(spot2, result.get(0));
+
+            semaphore.release();
+          }
+
+          @Override
+          public void error(List<Error> error) {
+
+          }
+        });
     semaphore.acquire();
 
     Mockito.verify(mMockedSpotDatabaseAdapter).getAllSpots();
