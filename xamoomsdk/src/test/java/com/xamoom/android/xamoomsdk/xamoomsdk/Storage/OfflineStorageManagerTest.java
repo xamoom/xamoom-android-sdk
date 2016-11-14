@@ -12,6 +12,7 @@ import com.xamoom.android.xamoomsdk.Resource.Spot;
 import com.xamoom.android.xamoomsdk.Resource.Style;
 import com.xamoom.android.xamoomsdk.Resource.System;
 import com.xamoom.android.xamoomsdk.Resource.SystemSetting;
+import com.xamoom.android.xamoomsdk.Storage.Database.ContentBlockDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.ContentDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.MarkerDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.MenuDatabaseAdapter;
@@ -20,6 +21,7 @@ import com.xamoom.android.xamoomsdk.Storage.Database.SpotDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.StyleDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.SystemDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.DownloadManager;
+import com.xamoom.android.xamoomsdk.Storage.FileManager;
 import com.xamoom.android.xamoomsdk.Storage.OfflineStorageManager;
 
 import junit.framework.Assert;
@@ -32,6 +34,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -52,8 +55,10 @@ import static org.mockito.Mockito.times;
 public class OfflineStorageManagerTest {
 
   private OfflineStorageManager mOfflineStorageManager;
+  private FileManager mMockedFileManager;
   private DownloadManager mMockedDownloadManager;
   private ContentDatabaseAdapter mMockedContentDatabaseAdapter;
+  private ContentBlockDatabaseAdapter mMockedContentBlockDatabaseAdapterAdapter;
   private SpotDatabaseAdapter mMockedSpotDatabaseAdapter;
   private SystemDatabaseAdapter mMockedSystemDatabaseAdapter;
   private StyleDatabaseAdapter mMockedStyleDatabaseAdapter;
@@ -64,8 +69,10 @@ public class OfflineStorageManagerTest {
   @Before
   public void setup() {
     mOfflineStorageManager = OfflineStorageManager.getInstance(RuntimeEnvironment.application);
+    mMockedFileManager = Mockito.mock(FileManager.class);
     mMockedDownloadManager = Mockito.mock(DownloadManager.class);
     mMockedContentDatabaseAdapter = Mockito.mock(ContentDatabaseAdapter.class);
+    mMockedContentBlockDatabaseAdapterAdapter = Mockito.mock(ContentBlockDatabaseAdapter.class);
     mMockedSpotDatabaseAdapter = Mockito.mock(SpotDatabaseAdapter.class);
     mMockedSystemDatabaseAdapter = Mockito.mock(SystemDatabaseAdapter.class);
     mMockedStyleDatabaseAdapter = Mockito.mock(StyleDatabaseAdapter.class);
@@ -74,6 +81,8 @@ public class OfflineStorageManagerTest {
     mMockedMarkerDatabaseAdapter = Mockito.mock(MarkerDatabaseAdapter.class);
 
     mOfflineStorageManager.setDownloadManager(mMockedDownloadManager);
+    mOfflineStorageManager.setFileManager(mMockedFileManager);
+    mOfflineStorageManager.setContentBlockDatabaseAdapter(mMockedContentBlockDatabaseAdapterAdapter);
     mOfflineStorageManager.setContentDatabaseAdapter(mMockedContentDatabaseAdapter);
     mOfflineStorageManager.setSpotDatabaseAdapter(mMockedSpotDatabaseAdapter);
     mOfflineStorageManager.setSystemDatabaseAdapter(mMockedSystemDatabaseAdapter);
@@ -552,5 +561,35 @@ public class OfflineStorageManagerTest {
     Style savedStyle = mOfflineStorageManager.getStyle("1");
 
     Assert.assertEquals(style, savedStyle);
+  }
+
+  @Test
+  public void testDeleteFile() throws IOException {
+    mOfflineStorageManager.deleteFile("url", false);
+
+    Mockito.verify(mMockedFileManager).deleteFile(eq("url"));
+  }
+
+  @Test
+  public void testDeleteFileSaveDeletion() throws IOException {
+    String fileUrl = "fileUrl";
+
+    mOfflineStorageManager.deleteFile(fileUrl, true);
+
+    Assert.assertEquals(1, mOfflineStorageManager.getSaveDeletionFiles().size());
+  }
+
+  @Test
+  public void testDeleteFilesWithSafetyCheck() throws IOException {
+    String fileUrl = "fileUrl";
+
+    mOfflineStorageManager.deleteFile(fileUrl, true);
+
+
+    mOfflineStorageManager.deleteFilesWithSafetyCheck();
+
+    Mockito.verify(mMockedContentBlockDatabaseAdapterAdapter).getContentBlocksWithFile(eq(fileUrl));
+    Mockito.verify(mMockedContentDatabaseAdapter).getContentsWithFileId(eq(fileUrl));
+    Mockito.verify(mMockedSpotDatabaseAdapter).getSpotsWithImage(eq(fileUrl));
   }
 }

@@ -12,11 +12,13 @@ import com.xamoom.android.xamoomsdk.Enums.SpotSortFlags;
 import com.xamoom.android.xamoomsdk.Offline.OfflineEnduserApi;
 import com.xamoom.android.xamoomsdk.Offline.OfflineEnduserApiHelper;
 import com.xamoom.android.xamoomsdk.Resource.Content;
+import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Resource.Menu;
 import com.xamoom.android.xamoomsdk.Resource.Spot;
 import com.xamoom.android.xamoomsdk.Resource.System;
 import com.xamoom.android.xamoomsdk.Resource.Style;
 import com.xamoom.android.xamoomsdk.Resource.SystemSetting;
+import com.xamoom.android.xamoomsdk.Storage.Database.ContentBlockDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.ContentDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.MarkerDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.MenuDatabaseAdapter;
@@ -25,6 +27,7 @@ import com.xamoom.android.xamoomsdk.Storage.Database.SpotDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.StyleDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.SystemDatabaseAdapter;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -37,13 +40,17 @@ public class OfflineStorageManager {
   private static OfflineStorageManager mInstance;
 
   private DownloadManager mDownloadManager;
+  private FileManager mFileManager;
   private ContentDatabaseAdapter mContentDatabaseAdapter;
+  private ContentBlockDatabaseAdapter mContentBlockDatabaseAdapter;
   private SpotDatabaseAdapter mSpotDatabaseAdapter;
   private SystemDatabaseAdapter mSystemDatabaseAdapter;
   private StyleDatabaseAdapter mStyleDatabaseAdapter;
   private SettingDatabaseAdapter mSettingDatabaseAdapter;
   private MenuDatabaseAdapter mMenuDatabaseAdapter;
   private MarkerDatabaseAdapter mMarkerDatabaseAdapter;
+
+  private ArrayList<String> mSaveDeletionFiles = new ArrayList<>();
 
   public static OfflineStorageManager getInstance(Context context) {
     if (mInstance == null) {
@@ -53,8 +60,10 @@ public class OfflineStorageManager {
   }
 
   private OfflineStorageManager(Context context) {
-    mDownloadManager = new DownloadManager(FileManager.getInstance(context));
+    mFileManager = FileManager.getInstance(context);
+    mDownloadManager = new DownloadManager(mFileManager);
     mContentDatabaseAdapter = ContentDatabaseAdapter.getInstance(context);
+    mContentBlockDatabaseAdapter = ContentBlockDatabaseAdapter.getInstance(context);
     mSpotDatabaseAdapter = SpotDatabaseAdapter.getInstance(context);
     mSystemDatabaseAdapter = SystemDatabaseAdapter.getInstance(context);
     mStyleDatabaseAdapter = StyleDatabaseAdapter.getInstance(context);
@@ -266,6 +275,44 @@ public class OfflineStorageManager {
     return mStyleDatabaseAdapter.getStyle(jsonId);
   }
 
+  /**
+   * Delete file from phone storage.
+   *
+   * @param url Url of the file.
+   * @param saveDeletion True to save and delete a patch with check if the file is somewhere else.
+   * @return true when deleted. False when not deleted or when saveDeletion is true.
+   * @throws IOException
+   */
+  public boolean deleteFile(String url, boolean saveDeletion) throws IOException {
+    if (saveDeletion) {
+      mSaveDeletionFiles.add(url);
+      return false;
+    }
+
+    return mFileManager.deleteFile(url);
+  }
+
+  public void deleteFilesWithSafetyCheck() throws IOException {
+    for (String url : mSaveDeletionFiles) {
+      if (mContentBlockDatabaseAdapter.getContentBlocksWithFile(url).size() > 0) {
+        continue;
+      }
+
+      if (mContentDatabaseAdapter.getContentsWithFileId(url).size() > 0) {
+        continue;
+      }
+
+      if (mSpotDatabaseAdapter.getSpotsWithImage(url).size() > 0) {
+        continue;
+      }
+
+      mFileManager.deleteFile(url);
+    }
+
+    mSaveDeletionFiles.clear();
+  }
+
+  // private helpers
 
   private ArrayList<Content> sortContents(ArrayList<Content> contents,
                                           EnumSet<ContentSortFlags> sortFlags) {
@@ -302,6 +349,10 @@ public class OfflineStorageManager {
     mContentDatabaseAdapter = contentDatabaseAdapter;
   }
 
+  public void setContentBlockDatabaseAdapter(ContentBlockDatabaseAdapter contentBlockDatabaseAdapter) {
+    mContentBlockDatabaseAdapter = contentBlockDatabaseAdapter;
+  }
+
   public void setDownloadManager(DownloadManager downloadManager) {
     mDownloadManager = downloadManager;
   }
@@ -328,5 +379,13 @@ public class OfflineStorageManager {
 
   public void setMarkerDatabaseAdapter(MarkerDatabaseAdapter markerDatabaseAdapter) {
     mMarkerDatabaseAdapter = markerDatabaseAdapter;
+  }
+
+  public void setFileManager(FileManager fileManager) {
+    mFileManager = fileManager;
+  }
+
+  public ArrayList<String> getSaveDeletionFiles() {
+    return mSaveDeletionFiles;
   }
 }
