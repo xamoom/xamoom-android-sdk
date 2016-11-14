@@ -30,6 +30,10 @@ public class ContentBlockDatabaseAdapter extends DatabaseAdapter {
         " = ?";
     String[] selectionArgs = {jsonId};
 
+    return getContentBlock(selection, selectionArgs);
+  }
+
+  private ContentBlock getContentBlock(String selection, String[] selectionArgs) {
     open();
 
     Cursor cursor = queryContentBlocks(selection, selectionArgs);
@@ -49,6 +53,20 @@ public class ContentBlockDatabaseAdapter extends DatabaseAdapter {
     String selection = OfflineEnduserContract.
         ContentBlockEntry.COLUMN_NAME_CONTENT_RELATION + " = ?";
     String[] selectionArgs = {String.valueOf(row)};
+
+    open();
+    Cursor cursor = queryContentBlocks(selection, selectionArgs);
+    ArrayList<ContentBlock> contentBlocks = cursorToContentBlocks(cursor);
+    close();
+
+    return contentBlocks;
+  }
+
+  public ArrayList<ContentBlock> getContentBlocksWithFile(String fileID) {
+    String selection = OfflineEnduserContract.
+        ContentBlockEntry.COLUMN_NAME_FILE_ID + " = ? OR " +
+        OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_VIDEO_URL + " = ?";
+    String[] selectionArgs = { fileID, fileID };
 
     open();
     Cursor cursor = queryContentBlocks(selection, selectionArgs);

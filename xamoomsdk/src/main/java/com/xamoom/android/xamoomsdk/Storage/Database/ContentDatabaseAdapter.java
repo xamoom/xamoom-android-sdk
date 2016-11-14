@@ -83,6 +83,20 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
     return contents;
   }
 
+  public ArrayList<Content> getContentsWithFileId(String urlString) {
+    String selection = OfflineEnduserContract.ContentEntry.COLUMN_NAME_PUBLIC_IMAGE_URL + " = ?";
+    String[] selectionArgs = { urlString };
+
+    open();
+    Cursor cursor = queryContent(selection, selectionArgs);
+
+    ArrayList<Content> contents = cursorToContents(cursor);
+
+    close();
+
+    return contents;
+  }
+
   public ArrayList<Content> getRelatedContents(long menuRow) {
     String selection = OfflineEnduserContract.ContentEntry.COLUMN_NAME_MENU_RELATION + " = ?";
     String[] selectionArgs = { String.valueOf(menuRow) };

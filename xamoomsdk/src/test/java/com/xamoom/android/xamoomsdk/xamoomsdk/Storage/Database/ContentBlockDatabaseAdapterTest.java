@@ -5,18 +5,15 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.xamoom.android.xamoomsdk.BuildConfig;
-import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Storage.Database.ContentBlockDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.DatabaseHelper;
-import com.xamoom.android.xamoomsdk.Storage.Database.SettingDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.TableContracts.OfflineEnduserContract;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
@@ -109,6 +106,24 @@ public class ContentBlockDatabaseAdapterTest {
     Mockito.stub(mMockedCursor.getCount()).toReturn(1);
 
     mContentBlockDatabaseAdapter.getRelatedContentBlocks(1);
+
+    Mockito.verify(mMockedDatabase).query(anyString(), any(String[].class), eq(selection),
+        eq(selectionArg), anyString(), anyString(), anyString());
+  }
+
+  @Test
+  public void testGetContentBlocksWithFileId() {
+    String selection = OfflineEnduserContract.
+        ContentBlockEntry.COLUMN_NAME_FILE_ID + " = ? OR " +
+        OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_VIDEO_URL + " = ?";
+    String[] selectionArg = {"url", "url"};
+
+    Mockito.stub(mMockedDatabase.query(anyString(), any(String[].class), anyString(), any(String[].class), anyString(),
+        anyString(), anyString())).toReturn(mMockedCursor);
+    Mockito.stub(mMockedCursor.moveToFirst()).toReturn(true);
+    Mockito.stub(mMockedCursor.getCount()).toReturn(1);
+
+    mContentBlockDatabaseAdapter.getContentBlocksWithFile("url");
 
     Mockito.verify(mMockedDatabase).query(anyString(), any(String[].class), eq(selection),
         eq(selectionArg), anyString(), anyString(), anyString());

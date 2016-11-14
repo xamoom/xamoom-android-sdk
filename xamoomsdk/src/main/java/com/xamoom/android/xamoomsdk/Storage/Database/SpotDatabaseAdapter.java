@@ -82,6 +82,19 @@ public class SpotDatabaseAdapter extends DatabaseAdapter {
     return spots;
   }
 
+  public ArrayList<Spot> getSpotsWithImage(String imageUrl) {
+    String selection = OfflineEnduserContract.SpotEntry.COLUMN_NAME_PUBLIC_IMAGE_URL + " = ?";
+    String[] selectionArgs = { imageUrl };
+
+    open();
+    Cursor cursor = querySpot(selection, selectionArgs);
+
+    ArrayList<Spot> spots = cursorToSpots(cursor);
+    close();
+
+    return spots;
+  }
+
   public long insertOrUpdateSpot(Spot spot) {
     ContentValues values = new ContentValues();
     values.put(OfflineEnduserContract.SpotEntry.COLUMN_NAME_JSON_ID, spot.getId());

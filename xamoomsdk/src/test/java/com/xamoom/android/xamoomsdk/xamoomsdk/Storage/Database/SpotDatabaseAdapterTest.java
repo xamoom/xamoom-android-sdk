@@ -185,6 +185,24 @@ public class SpotDatabaseAdapterTest {
   }
 
   @Test
+  public void testGetSpotsWithImage() {
+    String selection = OfflineEnduserContract.SpotEntry.COLUMN_NAME_PUBLIC_IMAGE_URL + " = ?";
+
+    Mockito.stub(mMockedCursor.getCount()).toReturn(2);
+    Mockito.stub(mMockedCursor.moveToNext()).toReturn(true).toReturn(true).toReturn(false);
+
+    ArrayList<Spot> spots = mSpotDatabaseAdapter.getSpotsWithImage("url");
+
+    Mockito.verify(mMockedDatabase).query(
+        Mockito.eq(OfflineEnduserContract.SpotEntry.TABLE_NAME),
+        any(String[].class), eq(selection), any(String[].class), anyString(),
+        anyString(), anyString());
+
+    Assert.assertNotNull(spots);
+    Assert.assertEquals(spots.size(), 2);
+  }
+
+  @Test
   public void testGetSpotsWithName() {
     String query = "LOWER(name) LIKE LOWER(?)";
     String[] args = new String[]{ "%test%" };
