@@ -85,6 +85,18 @@ public class MenuDatabaseAdapter extends DatabaseAdapter {
     return row;
   }
 
+  public boolean deleteMenu(String jsonId) {
+    String selection = OfflineEnduserContract.MenuEntry.COLUMN_NAME_JSON_ID + " = ?";
+    String[] selectionArgs = { jsonId };
+
+    open();
+    int rowsAffected = mDatabase.delete(OfflineEnduserContract.MenuEntry.COLUMN_NAME_JSON_ID, selection,
+        selectionArgs);
+    close();
+
+    return rowsAffected >= 1;
+  }
+
   private int updateMenu(long row, ContentValues values) {
     String selection = OfflineEnduserContract.MenuEntry._ID + " = ?";
     String[] selectionArgs = {String.valueOf(row)};

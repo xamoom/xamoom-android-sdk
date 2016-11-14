@@ -113,4 +113,22 @@ public class ContentBlockDatabaseAdapterTest {
     Mockito.verify(mMockedDatabase).query(anyString(), any(String[].class), eq(selection),
         eq(selectionArg), anyString(), anyString(), anyString());
   }
+
+  @Test
+  public void testDelete() {
+    Mockito.stub(mMockedDatabase.delete(anyString(), anyString(), any(String[].class))).toReturn(1);
+
+    boolean deleted = mContentBlockDatabaseAdapter.deleteContentBlock("1");
+
+    junit.framework.Assert.assertTrue(deleted);
+  }
+
+  @Test
+  public void testDeleteFail() {
+    Mockito.stub(mMockedDatabase.delete(anyString(), anyString(), any(String[].class))).toReturn(0);
+
+    boolean deleted = mContentBlockDatabaseAdapter.deleteContentBlock("1");
+
+    junit.framework.Assert.assertFalse(deleted);
+  }
 }

@@ -79,6 +79,19 @@ public class SettingDatabaseAdapter extends DatabaseAdapter {
     return row;
   }
 
+  public boolean deleteSetting(String jsonId) {
+    String selection = OfflineEnduserContract.SettingEntry.COLUMN_NAME_JSON_ID + " = ?";
+    String[] selectionArgs = { jsonId };
+
+    open();
+    int rowsAffected = mDatabase.delete(OfflineEnduserContract.SettingEntry.COLUMN_NAME_JSON_ID, selection,
+        selectionArgs);
+    close();
+
+    return rowsAffected >= 1;
+  }
+
+
   private void updateSetting(long row, ContentValues values) {
     String selection = OfflineEnduserContract.
         SettingEntry._ID + " = ?";

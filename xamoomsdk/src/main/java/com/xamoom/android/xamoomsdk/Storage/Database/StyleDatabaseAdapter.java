@@ -81,6 +81,18 @@ public class StyleDatabaseAdapter extends DatabaseAdapter {
     return row;
   }
 
+  public boolean deleteStyle(String jsonId) {
+    String selection = OfflineEnduserContract.StyleEntry.COLUMN_NAME_JSON_ID + " = ?";
+    String[] selectionArgs = { jsonId };
+
+    open();
+    int rowsAffected = mDatabase.delete(OfflineEnduserContract.StyleEntry.COLUMN_NAME_JSON_ID, selection,
+        selectionArgs);
+    close();
+
+    return rowsAffected >= 1;
+  }
+
   private int updateStyle(long id, ContentValues values) {
     String selection = StyleEntry._ID + " = ?";
     String[] selectionArgs = { String.valueOf(id) };

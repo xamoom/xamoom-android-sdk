@@ -135,6 +135,18 @@ public class MarkerDatabaseAdapter extends DatabaseAdapter {
     return row;
   }
 
+  public boolean deleteMarker(String jsonId) {
+    String selection = OfflineEnduserContract.MarkerEntry.COLUMN_NAME_JSON_ID + " = ?";
+    String[] selectionArgs = { jsonId };
+
+    open();
+    int rowsAffected = mDatabase.delete(OfflineEnduserContract.MarkerEntry.COLUMN_NAME_JSON_ID, selection,
+        selectionArgs);
+    close();
+
+    return rowsAffected >= 1;
+  }
+
   private int updateMarker(long row, ContentValues values) {
     String selection = MarkerEntry._ID + " = ?";
     String[] selectionArgs = {String.valueOf(row)};

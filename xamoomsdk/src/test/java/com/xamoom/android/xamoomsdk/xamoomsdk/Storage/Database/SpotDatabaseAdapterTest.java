@@ -202,4 +202,22 @@ public class SpotDatabaseAdapterTest {
     Assert.assertNotNull(spots);
     Assert.assertEquals(spots.size(), 2);
   }
+
+  @Test
+  public void testDelete() {
+    Mockito.stub(mMockedDatabase.delete(anyString(), anyString(), any(String[].class))).toReturn(1);
+
+    boolean deleted = mSpotDatabaseAdapter.deleteSpot("1");
+
+    junit.framework.Assert.assertTrue(deleted);
+  }
+
+  @Test
+  public void testDeleteFail() {
+    Mockito.stub(mMockedDatabase.delete(anyString(), anyString(), any(String[].class))).toReturn(0);
+
+    boolean deleted = mSpotDatabaseAdapter.deleteSpot("1");
+
+    junit.framework.Assert.assertFalse(deleted);
+  }
 }

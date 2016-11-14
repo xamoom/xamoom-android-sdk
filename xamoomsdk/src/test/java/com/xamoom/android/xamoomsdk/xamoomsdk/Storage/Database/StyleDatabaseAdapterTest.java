@@ -113,4 +113,22 @@ public class StyleDatabaseAdapterTest {
         eq(OfflineEnduserContract.StyleEntry.TABLE_NAME), any(ContentValues.class),
         anyString(), any(String[].class));
   }
+
+  @Test
+  public void testDelete() {
+    Mockito.stub(mMockedDatabase.delete(anyString(), anyString(), any(String[].class))).toReturn(1);
+
+    boolean deleted = mStyleDatabaseAdapter.deleteStyle("1");
+
+    junit.framework.Assert.assertTrue(deleted);
+  }
+
+  @Test
+  public void testDeleteFail() {
+    Mockito.stub(mMockedDatabase.delete(anyString(), anyString(), any(String[].class))).toReturn(0);
+
+    boolean deleted = mStyleDatabaseAdapter.deleteStyle("1");
+
+    junit.framework.Assert.assertFalse(deleted);
+  }
 }

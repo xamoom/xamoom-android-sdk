@@ -126,6 +126,18 @@ public class SpotDatabaseAdapter extends DatabaseAdapter {
     return row;
   }
 
+  public boolean deleteSpot(String jsonId) {
+    String selection = OfflineEnduserContract.SpotEntry.COLUMN_NAME_JSON_ID + " = ?";
+    String[] selectionArgs = { jsonId };
+
+    open();
+    int rowsAffected = mDatabase.delete(OfflineEnduserContract.SpotEntry.COLUMN_NAME_JSON_ID, selection,
+        selectionArgs);
+    close();
+
+    return rowsAffected >= 1;
+  }
+
   private long updateSpot(long row, ContentValues values) {
     String selection = OfflineEnduserContract.SpotEntry._ID + " = ?";
     String[] selectionArgs = {String.valueOf(row)};

@@ -140,6 +140,18 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
     return row;
   }
 
+  public boolean deleteContent(String jsonId) {
+    String selection = OfflineEnduserContract.ContentEntry.COLUMN_NAME_JSON_ID + " = ?";
+    String[] selectionArgs = { jsonId };
+
+    open();
+    int rowsAffected = mDatabase.delete(OfflineEnduserContract.ContentEntry.TABLE_NAME, selection,
+        selectionArgs);
+    close();
+
+    return rowsAffected >= 1;
+  }
+
   private int updateContent(long row, ContentValues values) {
     String selection = OfflineEnduserContract.ContentEntry._ID + " = ?";
     String[] selectionArgs = { String.valueOf(row) };

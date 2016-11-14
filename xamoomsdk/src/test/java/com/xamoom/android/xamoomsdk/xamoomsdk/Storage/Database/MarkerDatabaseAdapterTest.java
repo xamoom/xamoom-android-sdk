@@ -175,4 +175,22 @@ public class MarkerDatabaseAdapterTest {
         any(String[].class), eq(query), any(String[].class), anyString(),
         anyString(), anyString());
   }
+
+  @Test
+  public void testDelete() {
+    Mockito.stub(mMockedDatabase.delete(anyString(), anyString(), any(String[].class))).toReturn(1);
+
+    boolean deleted = mMarkerDatabaseAdapter.deleteMarker("1");
+
+    junit.framework.Assert.assertTrue(deleted);
+  }
+
+  @Test
+  public void testDeleteContent() {
+    Mockito.stub(mMockedDatabase.delete(anyString(), anyString(), any(String[].class))).toReturn(0);
+
+    boolean deleted = mMarkerDatabaseAdapter.deleteMarker("1");
+
+    junit.framework.Assert.assertFalse(deleted);
+  }
 }

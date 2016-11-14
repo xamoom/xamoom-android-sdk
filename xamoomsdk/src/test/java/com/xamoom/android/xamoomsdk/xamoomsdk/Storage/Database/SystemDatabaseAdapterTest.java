@@ -224,4 +224,22 @@ public class SystemDatabaseAdapterTest {
     Mockito.verify(mMockedMenuDatabaseAdapter)
         .insertOrUpdate(Mockito.eq(menu), anyLong());
   }
+
+  @Test
+  public void testDelete() {
+    Mockito.stub(mMockedDatabase.delete(anyString(), anyString(), any(String[].class))).toReturn(1);
+
+    boolean deleted = mSystemDatabaseAdapter.deleteSystem("1");
+
+    junit.framework.Assert.assertTrue(deleted);
+  }
+
+  @Test
+  public void testDeleteFail() {
+    Mockito.stub(mMockedDatabase.delete(anyString(), anyString(), any(String[].class))).toReturn(0);
+
+    boolean deleted = mSystemDatabaseAdapter.deleteSystem("1");
+
+    junit.framework.Assert.assertFalse(deleted);
+  }
 }

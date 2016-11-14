@@ -91,6 +91,18 @@ public class SystemDatabaseAdapter extends DatabaseAdapter {
     return row;
   }
 
+  public boolean deleteSystem(String jsonId) {
+    String selection = SystemEntry.COLUMN_NAME_JSON_ID + " = ?";
+    String[] selectionArgs = { jsonId };
+
+    open();
+    int rowsAffected = mDatabase.delete(SystemEntry.COLUMN_NAME_JSON_ID, selection,
+        selectionArgs);
+    close();
+
+    return rowsAffected >= 1;
+  }
+
   private long updateSystem(long id, ContentValues values) {
     String selection = SystemEntry._ID + " = ?";
     String[] selectionArgs = { String.valueOf(id) };

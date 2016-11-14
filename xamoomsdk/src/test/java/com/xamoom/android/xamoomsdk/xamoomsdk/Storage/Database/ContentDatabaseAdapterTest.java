@@ -218,4 +218,22 @@ public class ContentDatabaseAdapterTest {
         eq("LOWER(title) LIKE LOWER(?)"),
         any(String[].class), anyString(), anyString(), anyString());
   }
+
+  @Test
+  public void testDelete() {
+    Mockito.stub(mMockedDatabase.delete(anyString(), anyString(), any(String[].class))).toReturn(1);
+
+    boolean deleted = mContentDatabaseAdapter.deleteContent("1");
+
+    Assert.assertTrue(deleted);
+  }
+
+  @Test
+  public void testDeleteFail() {
+    Mockito.stub(mMockedDatabase.delete(anyString(), anyString(), any(String[].class))).toReturn(0);
+
+    boolean deleted = mContentDatabaseAdapter.deleteContent("1");
+
+    Assert.assertFalse(deleted);
+  }
 }

@@ -102,4 +102,22 @@ public class SettingDatabaseAdapterTest {
     Mockito.verify(mMockedDatabase).update(anyString(), any(ContentValues.class),
         anyString(), any(String[].class));
   }
+
+  @Test
+  public void testDelete() {
+    Mockito.stub(mMockedDatabase.delete(anyString(), anyString(), any(String[].class))).toReturn(1);
+
+    boolean deleted = mSettingDatabaseAdapter.deleteSetting("1");
+
+    junit.framework.Assert.assertTrue(deleted);
+  }
+
+  @Test
+  public void testDeleteFail() {
+    Mockito.stub(mMockedDatabase.delete(anyString(), anyString(), any(String[].class))).toReturn(0);
+
+    boolean deleted = mSettingDatabaseAdapter.deleteSetting("1");
+
+    junit.framework.Assert.assertFalse(deleted);
+  }
 }

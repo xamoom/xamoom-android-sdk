@@ -111,6 +111,18 @@ public class ContentBlockDatabaseAdapter extends DatabaseAdapter {
     return row;
   }
 
+  public boolean deleteContentBlock(String jsonId) {
+    String selection = OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_JSON_ID + " = ?";
+    String[] selectionArgs = { jsonId };
+
+    open();
+    int rowsAffected = mDatabase.delete(OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_JSON_ID, selection,
+        selectionArgs);
+    close();
+
+    return rowsAffected >= 1;
+  }
+
   private void updateContentBlock(long row, ContentValues values) {
     String selection = OfflineEnduserContract.
         ContentBlockEntry._ID + " = ?";
