@@ -130,12 +130,13 @@ public class ContentBlockDatabaseAdapter extends DatabaseAdapter {
   }
 
   public boolean deleteContentBlock(String jsonId) {
-    String selection = OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_JSON_ID + " = ?";
+    String selection = OfflineEnduserContract.ContentBlockEntry
+        .COLUMN_NAME_JSON_ID + " = ?";
     String[] selectionArgs = { jsonId };
 
     open();
-    int rowsAffected = mDatabase.delete(OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_JSON_ID, selection,
-        selectionArgs);
+    int rowsAffected = mDatabase.delete(OfflineEnduserContract.ContentBlockEntry.TABLE_NAME,
+        selection, selectionArgs);
     close();
 
     return rowsAffected >= 1;
