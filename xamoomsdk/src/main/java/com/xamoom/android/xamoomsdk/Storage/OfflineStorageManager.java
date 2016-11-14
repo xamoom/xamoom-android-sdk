@@ -105,6 +105,20 @@ public class OfflineStorageManager {
     return row != -1;
   }
 
+  public boolean deleteContent(String jsonId) {
+    long row = mContentDatabaseAdapter.getPrimaryKey(jsonId);
+
+    ArrayList<ContentBlock> contentBlocks = mContentBlockDatabaseAdapter
+        .getRelatedContentBlocks(row);
+
+    for (ContentBlock block : contentBlocks) {
+      mContentBlockDatabaseAdapter.deleteContentBlock(block.getId());
+    }
+
+    boolean deleted = mContentDatabaseAdapter.deleteContent(jsonId);
+    return deleted;
+  }
+
   public boolean saveSpot(Spot spot, DownloadManager.OnDownloadManagerCompleted completion) throws MalformedURLException {
     long row = mSpotDatabaseAdapter.insertOrUpdateSpot(spot);
 

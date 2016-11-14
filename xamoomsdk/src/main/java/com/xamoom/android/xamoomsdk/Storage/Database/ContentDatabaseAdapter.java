@@ -181,15 +181,15 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
     return rowsUpdated;
   }
 
-  private long getPrimaryKey(String jsonId) {
-    String selection = OfflineEnduserContract.ContentEntry.COLUMN_NAME_JSON_ID + " = ?";
+  public long getPrimaryKey(String jsonId) {
+    String selection = OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_JSON_ID + " = ?";
     String[] selectionArgs = { jsonId };
 
     open();
     Cursor cursor = queryContent(selection, selectionArgs);
     if (cursor != null) {
       if (cursor.moveToFirst()) {
-        long id = cursor.getInt(cursor.getColumnIndex(OfflineEnduserContract.ContentEntry._ID));
+        long id = cursor.getInt(cursor.getColumnIndex(OfflineEnduserContract.ContentBlockEntry._ID));
         close();
         return id;
       }

@@ -30,8 +30,11 @@ import com.xamoom.android.xamoomsdk.Storage.Database.ContentDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.MenuDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.SpotDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.SystemDatabaseAdapter;
+import com.xamoom.android.xamoomsdk.Storage.DownloadError;
+import com.xamoom.android.xamoomsdk.Storage.DownloadManager;
 import com.xamoom.android.xamoomsdk.Storage.DownloadTask;
 import com.xamoom.android.xamoomsdk.Storage.FileManager;
+import com.xamoom.android.xamoomsdk.Storage.OfflineStorageManager;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -69,47 +72,7 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
 
     setupEnduserApi();
 
-    final FileManager fileManager = new FileManager(getApplicationContext());
-    try {
-      fileManager.saveFile("https://storage.googleapis.com/xamoom-files-dev/mobile/d2fee0d551d9432eaed4596f1300af5d.jpg",
-          "String".getBytes());
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
-    try {
-      boolean deleted = fileManager.deleteFile("https://storage.googleapis.com/xamoom-files-dev/mobile/d2fee0d551d9432eaed4596f1300af5d.jpg");
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
-    DownloadTask task = new DownloadTask(new DownloadTask.OnDownloadTaskCompleted() {
-      @Override
-      public void completed(ByteArrayOutputStream byteArrayOutputStream) {
-        Log.v(TAG, "Downloaded");
-        try {
-          fileManager.saveFile("https://storage.googleapis.com/xamoom-files-dev/mobile/d2fee0d551d9432eaed4596f1300af5d.jpg",
-              byteArrayOutputStream.toByteArray());
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      }
-
-      @Override
-      public void failed() {
-        Log.e(TAG, "Failed downloading");
-      }
-    });
-
-    try {
-      URL url = new URL("https://storage.googleapis.com/xamoom-files-dev/mobile/d2fee0d551d9432eaed4596f1300af5d.jpg");
-      task.execute();
-    } catch (MalformedURLException e) {
-      e.printStackTrace();
-    }
-
-
-    //getContent();
+    getContent();
     /*
     getContentOption();
     getContentLocationIdentifier();
@@ -229,11 +192,28 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
     mEnduserApi.getContent("7cf2c58e6d374ce3888c32eb80be53b5", new APICallback<Content, List<at.rags.morpheus.Error>>() {
       @Override
       public void finished(Content result) {Log.v(TAG, "getContent: " + result);
-        ContentDatabaseAdapter adapter = ContentDatabaseAdapter.getInstance(getApplicationContext());
-        adapter.insertOrUpdateContent(result, false, 0);
-        Content savedContent = adapter.getContent(result.getId());
 
-        getSystem();
+        OfflineStorageManager manager =
+            OfflineStorageManager.getInstance(getApplicationContext());
+        try {
+          manager.saveContent(result, new DownloadManager.OnDownloadManagerCompleted() {
+            @Override
+            public void completed(String urlString) {
+              Log.v(TAG, "File saved: " + urlString);
+            }
+
+            @Override
+            public void failed(String urlString, DownloadError downloadError) {
+              Log.v(TAG, "Failed saving: " + urlString);
+            }
+          });
+        } catch (MalformedURLException e) {
+          e.printStackTrace();
+        }
+
+        boolean deleted = manager.deleteContent(result.getId());
+
+        //getSystem();
       }
 
       @Override

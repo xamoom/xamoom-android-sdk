@@ -134,6 +134,21 @@ public class OfflineStorageManagerTest {
   }
 
   @Test
+  public void testDeleteContent() {
+    ArrayList<ContentBlock> contentBlocks = new ArrayList<>();
+    contentBlocks.add(new ContentBlock());
+
+    Mockito.stub(mMockedContentBlockDatabaseAdapterAdapter
+        .getRelatedContentBlocks(anyLong())).toReturn(contentBlocks);
+
+    mOfflineStorageManager.deleteContent("1");
+
+    Mockito.verify(mMockedContentDatabaseAdapter).deleteContent(anyString());
+    Mockito.verify(mMockedContentBlockDatabaseAdapterAdapter)
+        .deleteContentBlock(anyString());
+  }
+
+  @Test
   public void testSaveSpot() throws MalformedURLException {
     Spot spot = new Spot();
     spot.setPublicImageUrl("http://www.xamoom.com");
