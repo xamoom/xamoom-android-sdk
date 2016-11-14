@@ -83,6 +83,25 @@ public class OfflineStorageManager {
           false, completion);
     }
 
+    if (content.getContentBlocks() != null) {
+      for (ContentBlock contentBlock : content.getContentBlocks()) {
+        if (contentBlock.getFileId() != null) {
+          mDownloadManager.saveFileFromUrl(new URL(contentBlock.getFileId()),
+              false, completion);
+        }
+
+        if (contentBlock.getVideoUrl() != null) {
+          if (!contentBlock.getVideoUrl().contains("youtube.com") ||
+              !contentBlock.getVideoUrl().contains("youtu.be") ||
+              !contentBlock.getVideoUrl().contains("vimeo.com")) {
+            mDownloadManager.saveFileFromUrl(new URL(contentBlock.getVideoUrl()),
+                false, completion);
+          }
+        }
+      }
+
+    }
+
     return row != -1;
   }
 

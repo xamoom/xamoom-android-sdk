@@ -7,6 +7,7 @@ import com.xamoom.android.xamoomsdk.BuildConfig;
 import com.xamoom.android.xamoomsdk.Enums.ContentSortFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotSortFlags;
 import com.xamoom.android.xamoomsdk.Resource.Content;
+import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Resource.Menu;
 import com.xamoom.android.xamoomsdk.Resource.Spot;
 import com.xamoom.android.xamoomsdk.Resource.Style;
@@ -98,6 +99,14 @@ public class OfflineStorageManagerTest {
     content.setId("1");
     content.setPublicImageUrl("http://www.xamoom.com");
 
+    ContentBlock block = new ContentBlock();
+    block.setFileId("http://www.xamoom.com/file.jpg");
+    block.setVideoUrl("http://www.xamoom.com/file.mp4");
+
+    ArrayList<ContentBlock> contentBlocks = new ArrayList<>();
+    contentBlocks.add(block);
+    content.setContentBlocks(contentBlocks);
+
     Mockito.stub(mMockedContentDatabaseAdapter.insertOrUpdateContent(eq(content), eq(false),
         eq(-1))).toReturn(1L);
 
@@ -112,6 +121,14 @@ public class OfflineStorageManagerTest {
     Mockito.verify(mMockedContentDatabaseAdapter).insertOrUpdateContent(eq(content), eq(false), eq(-1L));
     Mockito.verify(mMockedDownloadManager).saveFileFromUrl(
         eq(new URL("http://www.xamoom.com")),
+        eq(false),
+        any(DownloadManager.OnDownloadManagerCompleted.class));
+    Mockito.verify(mMockedDownloadManager).saveFileFromUrl(
+        eq(new URL(block.getFileId())),
+        eq(false),
+        any(DownloadManager.OnDownloadManagerCompleted.class));
+    Mockito.verify(mMockedDownloadManager).saveFileFromUrl(
+        eq(new URL(block.getVideoUrl())),
         eq(false),
         any(DownloadManager.OnDownloadManagerCompleted.class));
   }
