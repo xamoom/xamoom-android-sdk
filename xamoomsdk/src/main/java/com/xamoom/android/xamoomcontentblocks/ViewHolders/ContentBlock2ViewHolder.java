@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
+import android.media.session.MediaController;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -27,6 +28,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
@@ -37,6 +39,7 @@ import com.google.android.youtube.player.YouTubeThumbnailView;
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Resource.Style;
+import com.xamoom.android.xamoomsdk.Storage.FileManager;
 
 import java.util.HashMap;
 import java.util.regex.Matcher;
@@ -56,6 +59,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
   private TextView mTitleTextView;
   private WebView mVideoWebView;
   private View mWebViewOverlay;
+  private VideoView mVideoView;
   private FrameLayout mFramelayout;
   private YouTubeThumbnailView mYouTubeThumbnailView;
   private ImageView mVideoPlayImageView;
@@ -64,6 +68,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
   private String mYoutubeApiKey;
   private LruCache<String, Bitmap> mBitmapCache;
   private int mTextColor = Color.BLACK;
+  private FileManager mFileManager;
 
   public ContentBlock2ViewHolder(View itemView, Fragment fragment, String youtubeApiKey,
                                  LruCache<String, Bitmap> bitmapCache) {
@@ -73,6 +78,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
     mContext = fragment.getContext();
     mFragment = fragment;
     mBitmapCache = bitmapCache;
+    mFileManager = FileManager.getInstance(fragment.getContext());
 
     mTitleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
     mFramelayout = (FrameLayout) itemView.findViewById(R.id.youtube_frame_layout);
@@ -82,6 +88,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
     mWebViewOverlay = itemView.findViewById(R.id.webViewOverlay);
     mVideoPlayImageView = (ImageView) itemView.findViewById(R.id.video_play_image_view);
     mProgressBar = (ProgressBar) itemView.findViewById(R.id.video_progress_bar);
+    mVideoView = (VideoView) itemView.findViewById(R.id.videoView);
 
     itemView.setOnClickListener(this);
 
@@ -106,16 +113,28 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
     if(getYoutubeVideoId(contentBlock.getVideoUrl()) != null) {
       mVideoPlayImageView.setVisibility(View.VISIBLE);
       mProgressBar.setVisibility(View.VISIBLE);
-      setupYoutube(contentBlock);
+      if (!offline) {
+        setupYoutube(contentBlock);
+      }
     } else if (contentBlock.getVideoUrl().contains("vimeo.com/")) {
       mWebViewOverlay.setVisibility(View.VISIBLE);
       mVideoWebView.setVisibility(View.VISIBLE);
-      setupVimeo(contentBlock);
+      if (!offline) {
+        setupVimeo(contentBlock);
+      }
     } else {
       mProgressBar.setVisibility(View.VISIBLE);
       mYouTubeThumbnailView.setVisibility(View.VISIBLE);
       mVideoPlayImageView.setVisibility(View.VISIBLE);
-      setupHTMLPlayer(contentBlock);
+
+      if (offline) {
+        String filePath = mFileManager.getFilePath(contentBlock.getVideoUrl());
+        if (filePath != null) {
+          setupHTMLPlayer(filePath);
+        }
+      } else {
+        setupHTMLPlayer(contentBlock.getVideoUrl());
+      }
     }
   }
 
@@ -134,16 +153,26 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
     mIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(contentBlock.getVideoUrl()));
   }
 
-  private void setupHTMLPlayer(final ContentBlock contentBlock) {
-    if (mBitmapCache.get(contentBlock.getVideoUrl()) != null) {
+  private void setupHTMLPlayer(final String videoPath) {
+    /*
+    if (mBitmapCache.get(videoPath) != null) {
       mProgressBar.setVisibility(View.GONE);
-      mYouTubeThumbnailView.setImageBitmap(mBitmapCache.get(contentBlock.getVideoUrl()));
+      mYouTubeThumbnailView.setImageBitmap(mBitmapCache.get(videoPath));
     } else {
-      new VideoThumbnailAsync().execute(contentBlock.getVideoUrl());
+      new VideoThumbnailAsync().execute(videoPath);
     }
 
-    mIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(contentBlock.getVideoUrl()));
-    mIntent.setDataAndType(Uri.parse(contentBlock.getVideoUrl()), "video/mp4");
+    mIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(videoPath));
+    mIntent.setDataAndType(Uri.parse(videoPath), "video/mp4");
+    */
+
+    //MediaController mc = new MediaController(this);
+    //mc.setAnchorView(videoView);
+    //mc.setMediaPlayer(videoView);
+    //mVideoView.setMediaController(mc);
+    mVideoView.setVideoURI(Uri.parse(videoPath));
+    mVideoView.requestFocus();
+    mVideoView.start();
   }
 
   private void setupYoutube(ContentBlock contentBlock) {
@@ -317,7 +346,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
         if (Build.VERSION.SDK_INT >= 14) {
           mediaMetadataRetriever.setDataSource(videoPath, new HashMap<String, String>());
         } else {
-          mediaMetadataRetriever.setDataSource(videoPath);
+          mediaMetadataRetriever.setDataSource(mContext, Uri.parse(videoPath));
         }
         bitmap = mediaMetadataRetriever.getFrameAtTime();
       }
@@ -385,5 +414,9 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
 
   public Style getStyle() {
     return mStyle;
+  }
+
+  public void setFileManager(FileManager fileManager) {
+    mFileManager = fileManager;
   }
 }

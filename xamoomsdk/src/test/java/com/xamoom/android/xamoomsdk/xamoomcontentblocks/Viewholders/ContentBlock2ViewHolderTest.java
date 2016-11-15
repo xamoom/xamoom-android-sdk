@@ -13,10 +13,12 @@ import com.xamoom.android.xamoomsdk.Helper.ContentFragmentActivity;
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Resource.Style;
+import com.xamoom.android.xamoomsdk.Storage.FileManager;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
@@ -63,4 +65,21 @@ public class ContentBlock2ViewHolderTest {
 
     assertNotNull(viewHolder);
   }
+
+  @Test
+  public void testSetupContentBlockOffline() {
+    View itemView = View.inflate(mActivity, R.layout.content_block_2_layout, null);
+    ContentBlock2ViewHolder viewHolder = new ContentBlock2ViewHolder(itemView, mXamoomContentFragment,
+        "youtube_key", mMockBitmapCache);
+    FileManager mockedFileManager = Mockito.mock(FileManager.class);
+    viewHolder.setFileManager(mockedFileManager);
+
+    ContentBlock contentBlock = new ContentBlock();
+    contentBlock.setVideoUrl("www.xamoom.com/video.mp4");
+
+    viewHolder.setupContentBlock(contentBlock, true);
+
+    Mockito.verify(mockedFileManager).getFilePath("www.xamoom.com/video.mp4");
+  }
+
 }
