@@ -383,6 +383,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
 
   public void setOffline(boolean offline) {
     this.offline = offline;
+    mContentBlockAdapter.setOffline(offline);
   }
 
   public void setEnduserApi(EnduserApi enduserApi) {
