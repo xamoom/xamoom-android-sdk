@@ -24,15 +24,22 @@ public class DownloadManager {
         try {
           mFileManager.saveFile(urlString, byteArrayOutputStream.toByteArray());
         } catch (IOException e) {
-          completedInterface.failed(urlString, new DownloadError(DownloadError.IO_EXCEPTION_ERROR_CODE,
-              DownloadError.IO_EXCEPTION_ERROR, -1, null, e));
+          if (completedInterface != null) {
+            completedInterface.failed(urlString, new DownloadError(DownloadError.IO_EXCEPTION_ERROR_CODE,
+                DownloadError.IO_EXCEPTION_ERROR, -1, null, e));
+          }
         }
-        completedInterface.completed(urlString);
+
+        if (completedInterface != null) {
+          completedInterface.completed(urlString);
+        }
       }
 
       @Override
       public void failed(DownloadError downloadError) {
-        completedInterface.failed(urlString, downloadError);
+        if (completedInterface != null) {
+          completedInterface.failed(urlString, downloadError);
+        }
       }
     });
 
