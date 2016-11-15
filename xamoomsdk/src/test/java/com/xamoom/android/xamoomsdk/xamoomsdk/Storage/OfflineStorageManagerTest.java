@@ -8,6 +8,7 @@ import com.xamoom.android.xamoomsdk.Enums.ContentSortFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotSortFlags;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
+import com.xamoom.android.xamoomsdk.Resource.Marker;
 import com.xamoom.android.xamoomsdk.Resource.Menu;
 import com.xamoom.android.xamoomsdk.Resource.Spot;
 import com.xamoom.android.xamoomsdk.Resource.Style;
@@ -171,6 +172,23 @@ public class OfflineStorageManagerTest {
   }
 
   @Test
+  public void testDeleteSpot() {
+    ArrayList<Marker> markers = new ArrayList<>();
+    markers.add(new Marker());
+
+    Mockito.stub(mMockedSpotDatabaseAdapter.deleteSpot(anyString())).toReturn(true);
+    Mockito.stub(mMockedMarkerDatabaseAdapter.getRelatedMarkers(anyLong())).toReturn(markers);
+
+    boolean deleted = mOfflineStorageManager.deleteSpot("1");
+
+    Assert.assertTrue(deleted);
+    Mockito.verify(mMockedSpotDatabaseAdapter).getPrimaryKey(eq("1"));
+    Mockito.verify(mMockedSpotDatabaseAdapter).deleteSpot(eq("1"));
+    Mockito.verify(mMockedMarkerDatabaseAdapter).getRelatedMarkers(anyLong());
+    Mockito.verify(mMockedMarkerDatabaseAdapter).deleteMarker(anyString());
+  }
+
+  @Test
   public void testSaveSystem() {
     System system = new System();
     system.setId("1");
@@ -184,6 +202,13 @@ public class OfflineStorageManagerTest {
   }
 
   @Test
+  public void testDeleteSystem() {
+    boolean deleted = mOfflineStorageManager.deleteSystem("1");
+
+    Mockito.verify(mMockedSystemDatabaseAdapter).deleteSystem(anyString());
+  }
+
+  @Test
   public void testSaveStyle() {
     Style style = new Style();
     style.setId("1");
@@ -194,6 +219,13 @@ public class OfflineStorageManagerTest {
 
     Assert.assertTrue(saved);
     Mockito.verify(mMockedStyleDatabaseAdapter).insertOrUpdateStyle(eq(style), eq(-1L));
+  }
+
+  @Test
+  public void testDeleteStyle() {
+    boolean deleted = mOfflineStorageManager.deleteStyle("1");
+
+    Mockito.verify(mMockedStyleDatabaseAdapter).deleteStyle(anyString());
   }
 
   @Test
@@ -211,6 +243,13 @@ public class OfflineStorageManagerTest {
   }
 
   @Test
+  public void testDeleteSetting() {
+    boolean deleted = mOfflineStorageManager.deleteSetting("1");
+
+    Mockito.verify(mMockedSettingDatabaseAdapter).deleteSetting(anyString());
+  }
+
+  @Test
   public void testSaveMenu() {
     Menu menu = new Menu();
     menu.setId("1");
@@ -222,6 +261,13 @@ public class OfflineStorageManagerTest {
 
     Assert.assertTrue(saved);
     Mockito.verify(mMockedMenuDatabaseAdapter).insertOrUpdate(eq(menu), eq(-1L));
+  }
+
+  @Test
+  public void testDeleteMenu() {
+    boolean deleted = mOfflineStorageManager.deleteMenu("1");
+
+    Mockito.verify(mMockedMenuDatabaseAdapter).deleteMenu(anyString());
   }
 
   @Test

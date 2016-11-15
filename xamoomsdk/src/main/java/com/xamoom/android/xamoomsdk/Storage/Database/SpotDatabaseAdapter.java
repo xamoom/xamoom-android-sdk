@@ -163,7 +163,7 @@ public class SpotDatabaseAdapter extends DatabaseAdapter {
     return updatedRow;
   }
 
-  private long getPrimaryKey(String jsonId) {
+  public long getPrimaryKey(String jsonId) {
     String selection = OfflineEnduserContract.SpotEntry.COLUMN_NAME_JSON_ID + " = ?";
     String[] selectionArgs = {jsonId};
 

@@ -13,6 +13,7 @@ import com.xamoom.android.xamoomsdk.Offline.OfflineEnduserApi;
 import com.xamoom.android.xamoomsdk.Offline.OfflineEnduserApiHelper;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
+import com.xamoom.android.xamoomsdk.Resource.Marker;
 import com.xamoom.android.xamoomsdk.Resource.Menu;
 import com.xamoom.android.xamoomsdk.Resource.Spot;
 import com.xamoom.android.xamoomsdk.Resource.System;
@@ -130,9 +131,25 @@ public class OfflineStorageManager {
     return row != -1;
   }
 
+  public boolean deleteSpot(String jsonId) {
+    long row = mSpotDatabaseAdapter.getPrimaryKey(jsonId);
+
+    ArrayList<Marker> markers = mMarkerDatabaseAdapter.getRelatedMarkers(row);
+    for (Marker marker : markers) {
+      mMarkerDatabaseAdapter.deleteMarker(marker.getId());
+    }
+
+    boolean deleted = mSpotDatabaseAdapter.deleteSpot(jsonId);
+    return deleted;
+  }
+
   public boolean saveSystem(System system) {
     long row = mSystemDatabaseAdapter.insertOrUpdateSystem(system);
     return row != -1;
+  }
+
+  public boolean deleteSystem(String jsonId) {
+    return mSystemDatabaseAdapter.deleteSystem(jsonId);
   }
 
   public boolean saveStyle(Style style) {
@@ -140,14 +157,26 @@ public class OfflineStorageManager {
     return row != -1;
   }
 
+  public boolean deleteStyle(String jsonId) {
+    return mStyleDatabaseAdapter.deleteStyle(jsonId);
+  }
+
   public boolean saveSetting(SystemSetting setting) {
     long row = mSettingDatabaseAdapter.insertOrUpdateSetting(setting, -1);
     return row != -1;
   }
 
+  public boolean deleteSetting(String jsonId) {
+    return mSettingDatabaseAdapter.deleteSetting(jsonId);
+  }
+
   public boolean saveMenu(Menu menu) {
     long row = mMenuDatabaseAdapter.insertOrUpdate(menu, -1);
     return row != -1;
+  }
+
+  public boolean deleteMenu(String jsonId) {
+    return mMenuDatabaseAdapter.deleteMenu(jsonId);
   }
 
   // Query
