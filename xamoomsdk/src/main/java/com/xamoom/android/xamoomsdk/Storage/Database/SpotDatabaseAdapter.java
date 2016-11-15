@@ -69,7 +69,11 @@ public class SpotDatabaseAdapter extends DatabaseAdapter {
     ArrayList<Spot> spots = cursorToSpots(cursor);
 
     close();
-    return spots.get(0);
+
+    if (spots.size() > 0) {
+      return spots.get(0);
+    }
+    return null;
   }
 
   public ArrayList<Spot> getAllSpots() {

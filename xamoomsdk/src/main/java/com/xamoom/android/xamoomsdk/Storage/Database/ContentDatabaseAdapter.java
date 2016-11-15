@@ -56,7 +56,11 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
     ArrayList<Content> contents = cursorToContents(cursor);
 
     close();
-    return contents.get(0);
+
+    if (contents.size() > 0) {
+      return contents.get(0);
+    }
+    return null;
   }
 
   public ArrayList<Content> getAllContents() {

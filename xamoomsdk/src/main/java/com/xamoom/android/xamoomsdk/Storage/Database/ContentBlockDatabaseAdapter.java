@@ -46,7 +46,12 @@ public class ContentBlockDatabaseAdapter extends DatabaseAdapter {
     ArrayList<ContentBlock> contentBlocks = cursorToContentBlocks(cursor);
 
     close();
-    return contentBlocks.get(0);
+
+    if (contentBlocks.size() > 0) {
+      return contentBlocks.get(0);
+    }
+
+    return null;
   }
 
   public ArrayList<ContentBlock> getRelatedContentBlocks(long row) {

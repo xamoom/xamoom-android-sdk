@@ -109,7 +109,11 @@ public class MarkerDatabaseAdapter extends DatabaseAdapter {
     if (markers == null) {
       return null;
     }
-    return markers.get(0);
+
+    if (markers.size() > 0) {
+      return markers.get(0);
+    }
+    return null;
   }
 
   public long insertOrUpdateMarker(Marker marker, long spotId) {
