@@ -62,7 +62,8 @@ public class AdapterDelegatesManager<T> {
   }
 
   public void onBindViewHolder(@NonNull T items, int position,
-                               @NonNull RecyclerView.ViewHolder viewHolder, Style style) {
+                               @NonNull RecyclerView.ViewHolder viewHolder, Style style,
+                               boolean offline) {
     AdapterDelegate<T> delegate = adapterDelegates.get(viewHolder.getItemViewType());
 
     if (delegate == null && fallbackAdapter != null) {
@@ -73,7 +74,7 @@ public class AdapterDelegatesManager<T> {
       }
     }
 
-    delegate.onBindViewHolder(items, position, viewHolder, style);
+    delegate.onBindViewHolder(items, position, viewHolder, style, offline);
   }
 
   public SparseArrayCompat<AdapterDelegate> getAdapterDelegates() {

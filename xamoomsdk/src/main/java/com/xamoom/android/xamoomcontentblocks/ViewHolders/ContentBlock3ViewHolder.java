@@ -73,7 +73,7 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
         .listener(new SvgSoftwareLayerSetter<Uri>());
   }
 
-  public void setupContentBlock(final ContentBlock contentBlock) {
+  public void setupContentBlock(final ContentBlock contentBlock, boolean offline) {
     mTitleTextView.setVisibility(View.VISIBLE);
     if(contentBlock.getTitle() != null && !contentBlock.getTitle().equalsIgnoreCase("")) {
       mTitleTextView.setText(contentBlock.getTitle());

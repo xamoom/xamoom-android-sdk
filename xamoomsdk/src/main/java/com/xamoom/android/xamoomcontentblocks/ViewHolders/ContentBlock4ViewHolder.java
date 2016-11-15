@@ -33,7 +33,7 @@ public class ContentBlock4ViewHolder extends RecyclerView.ViewHolder {
     mIcon = (ImageView) itemView.findViewById(R.id.iconImageView);
   }
 
-  public void setupContentBlock(final ContentBlock contentBlock) {
+  public void setupContentBlock(final ContentBlock contentBlock, boolean offline) {
     if(contentBlock.getTitle() != null && !contentBlock.getTitle().equalsIgnoreCase("")) {
       mTitleTextView.setText(contentBlock.getTitle());
     } else {

@@ -89,7 +89,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
     webSettings.setJavaScriptEnabled(true);
   }
 
-  public void setupContentBlock(ContentBlock contentBlock) {
+  public void setupContentBlock(ContentBlock contentBlock, boolean offline) {
     mTitleTextView.setVisibility(View.GONE);
     mVideoWebView.setVisibility(View.GONE);
     mWebViewOverlay.setVisibility(View.GONE);

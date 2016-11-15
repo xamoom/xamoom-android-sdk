@@ -68,6 +68,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   private String mYoutubeApiKey;
   private int mBackgroundColor = Color.WHITE;
 
+  private boolean offline = false;
   private boolean displayAllStoreLinks = false;
   private boolean showSpotMapContentLinks = false;
   private boolean isAnimated = false;
@@ -374,6 +375,14 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
 
   public void setShowSpotMapContentLinks(boolean showSpotMapContentLinks) {
     this.showSpotMapContentLinks = showSpotMapContentLinks;
+  }
+
+  public boolean isOffline() {
+    return offline;
+  }
+
+  public void setOffline(boolean offline) {
+    this.offline = offline;
   }
 
   public void setEnduserApi(EnduserApi enduserApi) {

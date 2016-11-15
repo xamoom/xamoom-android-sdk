@@ -62,7 +62,7 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
     mMapView = (MapView) itemView.findViewById(R.id.mapImageView);
   }
 
-  public void setupContentBlock(ContentBlock contentBlock) {
+  public void setupContentBlock(ContentBlock contentBlock, boolean offline) {
     mMapView.onCreate(null);
 
     mTitleTextView.setVisibility(View.VISIBLE);

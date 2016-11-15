@@ -56,7 +56,7 @@ public class ContentBlock7ViewHolder extends RecyclerView.ViewHolder {
     }
   }
 
-  public void setupContentBlock(final ContentBlock contentBlock) {
+  public void setupContentBlock(final ContentBlock contentBlock, boolean offline) {
     mTitleTextView.setVisibility(View.VISIBLE);
     mTitleTextView.setTextColor(mTextColor);
 

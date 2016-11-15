@@ -84,9 +84,9 @@ public class ContentBlockHeaderAdapterTest {
     ContentBlock0ViewHolder mockViewholder = Mockito.mock(ContentBlock0ViewHolder.class);
     ContentBlockHeaderAdapter adapter = new ContentBlockHeaderAdapter();
 
-    adapter.onBindViewHolder(contentBlocks, 0, mockViewholder, style);
+    adapter.onBindViewHolder(contentBlocks, 0, mockViewholder, style, false);
 
-    Mockito.verify(mockViewholder).setupContentBlock(Matchers.eq(contentBlock));
+    Mockito.verify(mockViewholder).setupContentBlock(Matchers.eq(contentBlock), Matchers.eq(false));
     Mockito.verify(mockViewholder).setStyle(Matchers.eq(style));
   }
 }

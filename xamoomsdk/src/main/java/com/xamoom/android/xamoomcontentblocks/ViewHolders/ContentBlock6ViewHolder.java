@@ -59,7 +59,7 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
     itemView.setOnClickListener(this);
   }
 
-  public void setupContentBlock(ContentBlock contentBlock) {
+  public void setupContentBlock(ContentBlock contentBlock, boolean offline) {
     mContentThumbnailImageView.setImageDrawable(null);
     mTitleTextView.setText(null);
     mDescriptionTextView.setText(null);

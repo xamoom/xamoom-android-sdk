@@ -41,12 +41,13 @@ public class CustomContentBlock0Adapter implements AdapterDelegate<List<ContentB
   }
 
   @Override
-  public void onBindViewHolder(@NonNull List<ContentBlock> items, int position, @NonNull RecyclerView.ViewHolder holder, Style style) {
+  public void onBindViewHolder(@NonNull List<ContentBlock> items, int position,
+                               @NonNull RecyclerView.ViewHolder holder, Style style, boolean offline) {
     ContentBlock cb = items.get(position);
     ContentBlock0ViewHolder newHolder = (ContentBlock0ViewHolder) holder;
     newHolder.setStyle(style);
     newHolder.setTextSize(10.0f);
-    newHolder.setupContentBlock(cb);
+    newHolder.setupContentBlock(cb, offline);
   }
 
 }

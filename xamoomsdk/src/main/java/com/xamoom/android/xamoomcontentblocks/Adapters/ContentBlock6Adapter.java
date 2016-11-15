@@ -37,10 +37,11 @@ public class ContentBlock6Adapter implements AdapterDelegate<List<ContentBlock>>
   }
 
   @Override
-  public void onBindViewHolder(@NonNull List<ContentBlock> items, int position, @NonNull RecyclerView.ViewHolder holder, Style style) {
+  public void onBindViewHolder(@NonNull List<ContentBlock> items, int position,
+                               @NonNull RecyclerView.ViewHolder holder, Style style, boolean offline) {
     ContentBlock cb = items.get(position);
     ContentBlock6ViewHolder newHolder = (ContentBlock6ViewHolder) holder;
     newHolder.setStyle(style);
-    newHolder.setupContentBlock(cb);
+    newHolder.setupContentBlock(cb, offline);
   }
 }

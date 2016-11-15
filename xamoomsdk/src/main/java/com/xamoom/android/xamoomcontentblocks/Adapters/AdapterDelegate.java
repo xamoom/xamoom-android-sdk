@@ -51,7 +51,8 @@ public interface AdapterDelegate<T> {
    * @param position Position for recyclerview.
    * @param holder Custom contentBlock viewholder.
    * @param style Style from xamoom to style content.
+   * @param offline Boolean to tell if offline.
    */
   void onBindViewHolder(@NonNull T items, int position,
-                        @NonNull RecyclerView.ViewHolder holder, Style style);
+                        @NonNull RecyclerView.ViewHolder holder, Style style, boolean offline);
 }

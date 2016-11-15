@@ -32,6 +32,7 @@ import java.util.List;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
+import static org.mockito.Matchers.eq;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21, manifest = "AndroidManifest.xml")
@@ -105,8 +106,8 @@ public class ContentBlock2AdapterTest {
     ContentBlock2ViewHolder mockViewholder = Mockito.mock(ContentBlock2ViewHolder.class);
     ContentBlock2Adapter adapter = new ContentBlock2Adapter();
 
-    adapter.onBindViewHolder(contentBlocks, 0, mockViewholder, style);
+    adapter.onBindViewHolder(contentBlocks, 0, mockViewholder, style, false);
 
-    Mockito.verify(mockViewholder).setupContentBlock(Matchers.eq(contentBlock));
+    Mockito.verify(mockViewholder).setupContentBlock(eq(contentBlock), eq(false));
   }
 }

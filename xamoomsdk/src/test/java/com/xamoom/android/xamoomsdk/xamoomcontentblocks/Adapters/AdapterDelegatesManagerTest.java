@@ -26,6 +26,7 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.TestCase.assertNotNull;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -60,7 +61,9 @@ public class AdapterDelegatesManagerTest {
 
 
       @Override
-      public void onBindViewHolder(@NonNull ContentBlock items, int position, @NonNull RecyclerView.ViewHolder holder, Style style) {
+      public void onBindViewHolder(@NonNull ContentBlock items, int position,
+                                   @NonNull RecyclerView.ViewHolder holder,
+                                   Style style, boolean offline) {
 
       }
     });
@@ -157,9 +160,10 @@ public class AdapterDelegatesManagerTest {
     contentBlock.setBlockType(0);
     items.add(contentBlock);
 
-    manager.onBindViewHolder(items, 0, mockViewHolder, null);
+    manager.onBindViewHolder(items, 0, mockViewHolder, null, false);
 
-    verify(mockAdapter).onBindViewHolder(anyList(), eq(0), any(RecyclerView.ViewHolder.class), any(Style.class));
+    verify(mockAdapter).onBindViewHolder(anyList(), eq(0), any(RecyclerView.ViewHolder.class),
+        any(Style.class), anyBoolean());
   }
 
   @Test(expected = NullPointerException.class)
@@ -172,7 +176,7 @@ public class AdapterDelegatesManagerTest {
     contentBlock.setBlockType(1);
     items.add(contentBlock);
 
-    manager.onBindViewHolder(items, 0, mockViewHolder, null);
+    manager.onBindViewHolder(items, 0, mockViewHolder, null, false);
   }
 
   @Test
@@ -187,9 +191,10 @@ public class AdapterDelegatesManagerTest {
     contentBlock.setBlockType(1);
     items.add(contentBlock);
 
-    manager.onBindViewHolder(items, 0, mockViewHolder, null);
+    manager.onBindViewHolder(items, 0, mockViewHolder, null, false);
 
 
-    verify(mockAdapter).onBindViewHolder(anyList(), eq(0), any(RecyclerView.ViewHolder.class), any(Style.class));
+    verify(mockAdapter).onBindViewHolder(anyList(), eq(0), any(RecyclerView.ViewHolder.class),
+        any(Style.class), anyBoolean());
   }
 }

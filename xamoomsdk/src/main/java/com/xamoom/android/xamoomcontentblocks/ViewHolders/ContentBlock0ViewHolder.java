@@ -49,7 +49,7 @@ public class ContentBlock0ViewHolder extends RecyclerView.ViewHolder {
     });
   }
 
-  public void setupContentBlock(ContentBlock contentBlock){
+  public void setupContentBlock(ContentBlock contentBlock, boolean offline){
     mTitleTextView.setVisibility(View.VISIBLE);
     mWebView.setVisibility(View.VISIBLE);
 

@@ -42,7 +42,7 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
     mSongProgressBar = (ProgressBar) itemView.findViewById(R.id.songProgressBar);
   }
 
-  public void setupContentBlock(ContentBlock contentBlock) {
+  public void setupContentBlock(ContentBlock contentBlock, boolean offline) {
     if (contentBlock.getTitle() != null)
       mTitleTextView.setText(contentBlock.getTitle());
     else {

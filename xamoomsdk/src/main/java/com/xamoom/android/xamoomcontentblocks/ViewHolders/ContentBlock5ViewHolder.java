@@ -29,7 +29,7 @@ public class ContentBlock5ViewHolder extends RecyclerView.ViewHolder {
     mContentTextView = (TextView) itemView.findViewById(R.id.contentTextView);
   }
 
-  public void setupContentBlock(final ContentBlock contentBlock) {
+  public void setupContentBlock(final ContentBlock contentBlock, boolean offline) {
     if(contentBlock.getTitle() != null && !contentBlock.getTitle().equalsIgnoreCase("")) {
       mTitleTextView.setText(contentBlock.getTitle());
     } else {

@@ -31,6 +31,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   private String mYoutubeApiKey;
   private EnduserApi mEnduserApi;
   private boolean showContentLinks;
+  private boolean offline;
 
   private String mLinkColor = "00F";
   private String mBackgroundColor = "000";
@@ -91,7 +92,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
   @Override
   public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-    mDelegatesManager.onBindViewHolder(mContentBlocks, position, holder, mStyle);
+    mDelegatesManager.onBindViewHolder(mContentBlocks, position, holder, mStyle, offline);
   }
 
   @Override
@@ -151,5 +152,9 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
   public void setStyle(Style style) {
     mStyle = style;
+  }
+
+  public void setOffline(boolean offline) {
+    this.offline = offline;
   }
 }

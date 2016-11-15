@@ -32,7 +32,7 @@ public class ContentBlock8ViewHolder extends RecyclerView.ViewHolder {
     mFragment = fragment;
   }
 
-  public void setupContentBlock(final ContentBlock contentBlock) {
+  public void setupContentBlock(final ContentBlock contentBlock, boolean offline) {
     if(contentBlock.getTitle() != null && !contentBlock.getTitle().equalsIgnoreCase("")) {
       mTitleTextView.setText(contentBlock.getTitle());
     } else {
