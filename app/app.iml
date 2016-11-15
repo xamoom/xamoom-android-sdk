@@ -157,8 +157,8 @@
     <orderEntry type="library" exported="" scope="TEST" name="robolectric-annotations-3.1.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="shadows-core-v23-3.1.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="icu4j-53.1" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="exposed-instrumentation-api-publish-0.4" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="robolectric-utils-3.1.1" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="exposed-instrumentation-api-publish-0.4" level="project" />
     <orderEntry type="library" exported="" name="YouTubeAndroidPlayerApi" level="project" />
     <orderEntry type="library" exported="" name="retrofit-2.0.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="robolectric-3.1.1" level="project" />
@@ -188,8 +188,8 @@
     <orderEntry type="library" exported="" name="play-services-maps-9.4.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="wagon-http-shared-1.0-beta-6" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="objenesis-2.1" level="project" />
-    <orderEntry type="library" exported="" name="support-v13-24.2.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="maven-artifact-2.2.1" level="project" />
+    <orderEntry type="library" exported="" name="support-v13-24.2.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="guava-19.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-basement-9.4.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="plexus-utils-1.5.15" level="project" />

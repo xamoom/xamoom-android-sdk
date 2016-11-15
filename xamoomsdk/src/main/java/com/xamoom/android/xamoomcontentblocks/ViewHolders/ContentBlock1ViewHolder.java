@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
+import com.xamoom.android.xamoomsdk.Storage.FileManager;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -31,6 +32,7 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
   private ProgressBar mSongProgressBar;
   private final Handler mHandler = new Handler();
   private Runnable mRunnable;
+  private FileManager mFileManager;
 
   public ContentBlock1ViewHolder(View itemView, Fragment fragment) {
     super(itemView);
@@ -40,6 +42,7 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
     mPlayPauseButton = (Button) itemView.findViewById(R.id.playPauseButton);
     mRemainingSongTimeTextView = (TextView) itemView.findViewById(R.id.remainingSongTimeTextView);
     mSongProgressBar = (ProgressBar) itemView.findViewById(R.id.songProgressBar);
+    mFileManager = FileManager.getInstance(fragment.getContext());
   }
 
   public void setupContentBlock(ContentBlock contentBlock, boolean offline) {
@@ -55,18 +58,28 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
       mArtistTextView.setText(null);
     }
 
-    if (contentBlock.getFileId() != null) {
-      setupMusicPlayer(contentBlock);
+    Uri fileUrl = null;
+    if (offline) {
+      String filePath = mFileManager.getFilePath(contentBlock.getFileId());
+      fileUrl = Uri.parse(filePath);
+    } else {
+      if (contentBlock.getFileId() != null) {
+        fileUrl = Uri.parse(contentBlock.getFileId());
+      }
+    }
+
+    if (fileUrl != null) {
+      setupMusicPlayer(fileUrl);
     }
   }
 
-  private void setupMusicPlayer(final ContentBlock contentBlock) {
+  private void setupMusicPlayer(final Uri fileUrl) {
     if(mMediaPlayer == null) {
       mMediaPlayer = new MediaPlayer();
 
       mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
       try {
-        mMediaPlayer.setDataSource(mFragment.getActivity(), Uri.parse(contentBlock.getFileId()));
+        mMediaPlayer.setDataSource(mFragment.getActivity(), fileUrl);
         mMediaPlayer.prepareAsync();
       } catch (IOException e) {
         e.printStackTrace();
@@ -97,7 +110,7 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
             public void onCompletion(MediaPlayer mp) {
               stopUpdatingProgress();
               if (mFragment.getActivity() != null) {
-                setupMusicPlayer(contentBlock);
+                setupMusicPlayer(fileUrl);
               }
             }
           });
@@ -151,5 +164,13 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
       mMediaPlayer.stop();
     mPlayPauseButton.setBackgroundResource(R.drawable.ic_play);
     mSongProgressBar.setProgress(0);
+  }
+
+  public void setMediaPlayer(MediaPlayer mediaPlayer) {
+    mMediaPlayer = mediaPlayer;
+  }
+
+  public void setFileManager(FileManager fileManager) {
+    mFileManager = fileManager;
   }
 }
