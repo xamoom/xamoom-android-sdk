@@ -89,6 +89,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
     mVideoPlayImageView = (ImageView) itemView.findViewById(R.id.video_play_image_view);
     mProgressBar = (ProgressBar) itemView.findViewById(R.id.video_progress_bar);
     mVideoView = (VideoView) itemView.findViewById(R.id.videoView);
+    mIntent = null;
 
     itemView.setOnClickListener(this);
 
@@ -102,8 +103,10 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
     mWebViewOverlay.setVisibility(View.GONE);
     mVideoPlayImageView.setVisibility(View.GONE);
     mProgressBar.setVisibility(View.GONE);
-    //mVideoView.setVisibility(View.GONE);
+    mVideoView.setVisibility(View.GONE);
+    mYouTubeThumbnailView.setVisibility(View.GONE);
     mYouTubeThumbnailView.setImageBitmap(null);
+    mYouTubeThumbnailView.setOnClickListener(null);
 
     if(contentBlock.getTitle() != null && !contentBlock.getTitle().equalsIgnoreCase("")) {
       mTitleTextView.setVisibility(View.VISIBLE);
@@ -113,6 +116,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
 
     if(getYoutubeVideoId(contentBlock.getVideoUrl()) != null) {
       mVideoPlayImageView.setVisibility(View.VISIBLE);
+      mYouTubeThumbnailView.setVisibility(View.VISIBLE);
       mProgressBar.setVisibility(View.VISIBLE);
       setupYoutube(contentBlock);
     } else if (contentBlock.getVideoUrl().contains("vimeo.com/")) {
@@ -137,7 +141,6 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
 
   @Override
   public void onClick(View v) {
-    //mContext.startActivity(mIntent);
     if (mVideoView.isPlaying()) {
       mVideoView.pause();
       mVideoPlayImageView.setVisibility(View.VISIBLE);
@@ -145,16 +148,25 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
       mVideoView.start();
       mVideoPlayImageView.setVisibility(View.GONE);
     }
+
+    if (mIntent != null) {
+      mContext.startActivity(mIntent);
+    }
   }
 
-  private void setupVimeo(ContentBlock contentBlock) {
+  private void setupVimeo(final ContentBlock contentBlock) {
     String vimeoEmbed = "<style>html,body,iframe{padding:0; margin:0;}</style><iframe src=\"https://player.vimeo.com/video/"
         + getVimeoVideoId(contentBlock.getVideoUrl()) + "?badge=0&byline=0\" width=\"100%%\" " +
         "height=\"100%%\" frameborder=\"0\" webkitallowfullscreen mozallowfullscreen " +
         "allowfullscreen></iframe>";
     mVideoWebView.loadData(vimeoEmbed, "text/html", "UTF-8");
-
-    mIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(contentBlock.getVideoUrl()));
+    mWebViewOverlay.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(contentBlock.getVideoUrl()));
+        mContext.startActivity(intent);
+      }
+    });
   }
 
   private void setupHTMLPlayer(final String videoPath, boolean offline) {
@@ -168,7 +180,22 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
     });
   }
 
-  private void setupYoutube(ContentBlock contentBlock) {
+  private void youtubeFallback(final String url) {
+    resetYoutube();
+    mVideoPlayImageView.setVisibility(View.VISIBLE);
+    mYouTubeThumbnailView.setVisibility(View.VISIBLE);
+    mYouTubeThumbnailView.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        mIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        mContext.startActivity(mIntent);
+      }
+    });
+    mYouTubeThumbnailView.setBackgroundColor(
+        mContext.getResources().getColor(R.color.black));
+  }
+
+  private void setupYoutube(final ContentBlock contentBlock) {
     final String youtubeVideoId = getYoutubeVideoId(contentBlock.getVideoUrl());
 
     Bitmap savedBitmap = mBitmapCache.get(youtubeVideoId);
@@ -197,6 +224,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
             public void onThumbnailError(YouTubeThumbnailView youTubeThumbnailView, YouTubeThumbnailLoader.ErrorReason errorReason) {
               youTubeThumbnailView.setBackgroundColor(Color.BLACK);
               mProgressBar.setVisibility(View.GONE);
+              youtubeFallback(contentBlock.getVideoUrl());
               youTubeThumbnailLoader.release();
             }
           });
@@ -205,6 +233,8 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
         @Override
         public void onInitializationFailure(YouTubeThumbnailView youTubeThumbnailView, YouTubeInitializationResult youTubeInitializationResult) {
           mProgressBar.setVisibility(View.GONE);
+          mVideoPlayImageView.setVisibility(View.GONE);
+          youtubeFallback(contentBlock.getVideoUrl());
         }
       });
     }
@@ -257,6 +287,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
           @Override
           public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
             mProgressBar.setVisibility(View.GONE);
+            youtubeFallback(contentBlock.getVideoUrl());
             Log.e("tag", youTubeInitializationResult.toString());
           }
         });
