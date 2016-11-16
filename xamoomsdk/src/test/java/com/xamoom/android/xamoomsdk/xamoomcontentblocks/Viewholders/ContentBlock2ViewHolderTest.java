@@ -3,8 +3,10 @@ package com.xamoom.android.xamoomsdk.xamoomcontentblocks.Viewholders;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.v4.util.LruCache;
 import android.view.View;
+import android.widget.VideoView;
 
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock2ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
@@ -25,6 +27,9 @@ import org.robolectric.annotation.Config;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.robolectric.shadows.support.v4.SupportFragmentTestUtil.startFragment;
 
@@ -73,6 +78,10 @@ public class ContentBlock2ViewHolderTest {
         "youtube_key", mMockBitmapCache);
     FileManager mockedFileManager = Mockito.mock(FileManager.class);
     viewHolder.setFileManager(mockedFileManager);
+    VideoView mockedVideoView = Mockito.mock(VideoView.class);
+    viewHolder.setVideoView(mockedVideoView);
+
+    Mockito.stub(mockedFileManager.getFilePath(anyString())).toReturn("test");
 
     ContentBlock contentBlock = new ContentBlock();
     contentBlock.setVideoUrl("www.xamoom.com/video.mp4");
@@ -80,6 +89,7 @@ public class ContentBlock2ViewHolderTest {
     viewHolder.setupContentBlock(contentBlock, true);
 
     Mockito.verify(mockedFileManager).getFilePath("www.xamoom.com/video.mp4");
+    Mockito.verify(mockedVideoView).setVideoURI(any(Uri.class));
   }
 
 }

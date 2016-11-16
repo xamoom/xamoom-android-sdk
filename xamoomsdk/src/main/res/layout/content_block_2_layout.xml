@@ -18,7 +18,13 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="260dp">
+
+        <VideoView
+            android:id="@+id/videoView"
+            android:layout_width="match_parent"
+            android:layout_height="260dp"
+            android:adjustViewBounds="true"/>
 
         <WebView
             android:id="@+id/videoWebView"
@@ -33,7 +39,7 @@
 
         <com.google.android.youtube.player.YouTubeThumbnailView
             android:id="@+id/youtube_thumbnail_view"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"/>
 

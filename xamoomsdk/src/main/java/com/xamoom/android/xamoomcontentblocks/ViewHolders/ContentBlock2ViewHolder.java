@@ -4,14 +4,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
-import android.media.session.MediaController;
+import android.media.MediaPlayer;
+import android.widget.MediaController;
+import android.view.SurfaceView;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -102,6 +102,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
     mWebViewOverlay.setVisibility(View.GONE);
     mVideoPlayImageView.setVisibility(View.GONE);
     mProgressBar.setVisibility(View.GONE);
+    //mVideoView.setVisibility(View.GONE);
     mYouTubeThumbnailView.setImageBitmap(null);
 
     if(contentBlock.getTitle() != null && !contentBlock.getTitle().equalsIgnoreCase("")) {
@@ -113,34 +114,37 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
     if(getYoutubeVideoId(contentBlock.getVideoUrl()) != null) {
       mVideoPlayImageView.setVisibility(View.VISIBLE);
       mProgressBar.setVisibility(View.VISIBLE);
-      if (!offline) {
-        setupYoutube(contentBlock);
-      }
+      setupYoutube(contentBlock);
     } else if (contentBlock.getVideoUrl().contains("vimeo.com/")) {
       mWebViewOverlay.setVisibility(View.VISIBLE);
       mVideoWebView.setVisibility(View.VISIBLE);
-      if (!offline) {
-        setupVimeo(contentBlock);
-      }
+      setupVimeo(contentBlock);
     } else {
       mProgressBar.setVisibility(View.VISIBLE);
-      mYouTubeThumbnailView.setVisibility(View.VISIBLE);
       mVideoPlayImageView.setVisibility(View.VISIBLE);
+      mVideoView.setVisibility(View.VISIBLE);
 
       if (offline) {
         String filePath = mFileManager.getFilePath(contentBlock.getVideoUrl());
         if (filePath != null) {
-          setupHTMLPlayer(filePath);
+          setupHTMLPlayer(filePath, offline);
         }
       } else {
-        setupHTMLPlayer(contentBlock.getVideoUrl());
+        setupHTMLPlayer(contentBlock.getVideoUrl(), offline);
       }
     }
   }
 
   @Override
   public void onClick(View v) {
-    mContext.startActivity(mIntent);
+    //mContext.startActivity(mIntent);
+    if (mVideoView.isPlaying()) {
+      mVideoView.pause();
+      mVideoPlayImageView.setVisibility(View.VISIBLE);
+    } else {
+      mVideoView.start();
+      mVideoPlayImageView.setVisibility(View.GONE);
+    }
   }
 
   private void setupVimeo(ContentBlock contentBlock) {
@@ -153,26 +157,15 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
     mIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(contentBlock.getVideoUrl()));
   }
 
-  private void setupHTMLPlayer(final String videoPath) {
-    /*
-    if (mBitmapCache.get(videoPath) != null) {
-      mProgressBar.setVisibility(View.GONE);
-      mYouTubeThumbnailView.setImageBitmap(mBitmapCache.get(videoPath));
-    } else {
-      new VideoThumbnailAsync().execute(videoPath);
-    }
-
-    mIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(videoPath));
-    mIntent.setDataAndType(Uri.parse(videoPath), "video/mp4");
-    */
-
-    //MediaController mc = new MediaController(this);
-    //mc.setAnchorView(videoView);
-    //mc.setMediaPlayer(videoView);
-    //mVideoView.setMediaController(mc);
+  private void setupHTMLPlayer(final String videoPath, boolean offline) {
     mVideoView.setVideoURI(Uri.parse(videoPath));
-    mVideoView.requestFocus();
-    mVideoView.start();
+    mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+      @Override
+      public void onPrepared(MediaPlayer mediaPlayer) {
+        mVideoView.seekTo(0);
+        mProgressBar.setVisibility(View.GONE);
+      }
+    });
   }
 
   private void setupYoutube(ContentBlock contentBlock) {
@@ -319,49 +312,6 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
     return null;
   }
 
-  private class VideoThumbnailAsync extends AsyncTask<String, Void, Bitmap> {
-    private String videoUrl;
-
-    @Override
-    protected Bitmap doInBackground(String... params) {
-      videoUrl = params[0];
-      return retriveVideoFrameFromVideo(params[0]);
-    }
-
-    @Override
-    protected void onPostExecute(Bitmap bitmap) {
-      super.onPostExecute(bitmap);
-      mYouTubeThumbnailView.setImageBitmap(bitmap);
-      if (videoUrl != null && bitmap != null) {
-        mBitmapCache.put(videoUrl, bitmap);
-      }
-      mProgressBar.setVisibility(View.GONE);
-    }
-
-    public Bitmap retriveVideoFrameFromVideo(String videoPath) {
-      Bitmap bitmap = null;
-      MediaMetadataRetriever mediaMetadataRetriever = null;
-      try {
-        mediaMetadataRetriever = new MediaMetadataRetriever();
-        if (Build.VERSION.SDK_INT >= 14) {
-          mediaMetadataRetriever.setDataSource(videoPath, new HashMap<String, String>());
-        } else {
-          mediaMetadataRetriever.setDataSource(mContext, Uri.parse(videoPath));
-        }
-        bitmap = mediaMetadataRetriever.getFrameAtTime();
-      }
-      catch (Exception e) {
-        e.printStackTrace();
-        return null;
-      } finally {
-        if (mediaMetadataRetriever != null) {
-          mediaMetadataRetriever.release();
-        }
-      }
-      return bitmap;
-    }
-  }
-
   public void unregisterBroadcast() {
     LocalBroadcastManager.getInstance(mContext).unregisterReceiver(mResetYoutubeBroadCastReciever);
   }
@@ -390,6 +340,14 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
 
   public FrameLayout getFramelayout() {
     return mFramelayout;
+  }
+
+  public VideoView getVideoView() {
+    return mVideoView;
+  }
+
+  public void setVideoView(VideoView videoView) {
+    mVideoView = videoView;
   }
 
   public YouTubeThumbnailView getYouTubeThumbnailView() {
