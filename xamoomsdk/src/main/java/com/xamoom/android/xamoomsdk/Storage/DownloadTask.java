@@ -66,8 +66,14 @@ public class DownloadTask extends AsyncTask<Void, Integer, ByteArrayOutputStream
             DownloadError.IO_EXCEPTION_ERROR, -1, null, e));
       }
     } finally {
+      if (connection == null) {
+        mListener.failed(null);
+        return null;
+      }
+
       if (mListener != null) {
         mListener.completed(buffer);
+        return buffer;
       }
 
       if (connection != null) {
