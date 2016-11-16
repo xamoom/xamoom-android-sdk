@@ -34,6 +34,7 @@ import com.xamoom.android.xamoomcontentblocks.Helper.SvgSoftwareLayerSetter;
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Resource.Style;
+import com.xamoom.android.xamoomsdk.Storage.FileManager;
 
 import java.io.InputStream;
 
@@ -87,7 +88,14 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
 
     setImageViewContentDescription(contentBlock);
 
-    if(contentBlock.getFileId() != null) {
+    String fileId = null;
+    if (offline) {
+      fileId = FileManager.getInstance(mContext).getFilePath(contentBlock.getFileId());
+    } else {
+      fileId = contentBlock.getFileId();
+    }
+
+    if(fileId != null) {
       final double scaleX;
       //checking scale and divide it by 100.0f
       if(contentBlock.getScaleX() != 0) {
@@ -96,8 +104,8 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
         scaleX = 100.0f/100;
       }
 
-      if (contentBlock.getFileId().contains(".svg")) {
-        Uri uri = Uri.parse(contentBlock.getFileId());
+      if (fileId.contains(".svg")) {
+        Uri uri = Uri.parse(fileId);
         requestBuilder
             .diskCacheStrategy(DiskCacheStrategy.NONE)
             .load(uri)
@@ -107,7 +115,7 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
       } else {
         //making the scaleX to a factor scaleX
         Glide.with(mContext)
-            .load(contentBlock.getFileId())
+            .load(fileId)
             .diskCacheStrategy(DiskCacheStrategy.NONE)
             .dontAnimate()
             .into(new GlideDrawableImageViewTarget(mImageView) {
