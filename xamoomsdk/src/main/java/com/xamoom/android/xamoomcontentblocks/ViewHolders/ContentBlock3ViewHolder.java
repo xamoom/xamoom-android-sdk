@@ -61,6 +61,8 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
     mImageProgressBar = (ProgressBar) itemView.findViewById(R.id.imageProgressBar);
     mListener = listener;
 
+    mFileManager = FileManager.getInstance(context);
+
     SvgDrawableTranscoder svgDrawableTranscoder =  new SvgDrawableTranscoder();
     svgDrawableTranscoder.setmDeviceWidth(mContext.getResources().getDisplayMetrics().widthPixels);
 
