@@ -3,6 +3,7 @@ package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.v4.util.LruCache;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -21,7 +22,9 @@ import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Resource.Style;
+import com.xamoom.android.xamoomsdk.Storage.FileManager;
 
+import java.io.IOException;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -41,6 +44,7 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
   private EnduserApi mEnduserApi;
   private Content mContent;
   private int mTextColor = Color.BLACK;
+  private FileManager mFileManager;
   private LruCache<String, Content> mContentCache;
 
   public ContentBlock6ViewHolder(View itemView, Context context, EnduserApi enduserApi,
@@ -55,6 +59,7 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
     mProgressBar = (ProgressBar) itemView.findViewById(R.id.contentProgressBar);
     mEnduserApi = enduserApi;
     mContentCache = contentCache;
+    mFileManager = FileManager.getInstance(context);
 
     itemView.setOnClickListener(this);
   }
@@ -68,14 +73,16 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
 
     mContent = mContentCache.get(contentBlock.getContentId());
     if (mContent != null) {
-      displayContent(mContent);
+      displayContent(mContent, offline);
       mProgressBar.setVisibility(View.GONE);
     } else {
-      loadContent(contentBlock.getContentId());
+      loadContent(contentBlock.getContentId(), offline);
     }
+
+    mEnduserApi.setOffline(offline);
   }
 
-  private void loadContent(final String contentId) {
+  private void loadContent(final String contentId, final boolean offline) {
     if (mEnduserApi == null) {
       throw new NullPointerException("EnduserApi is null.");
     }
@@ -86,7 +93,7 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
         mProgressBar.setVisibility(View.GONE);
         mContent = result;
         mContentCache.put(contentId, result);
-        displayContent(result);
+        displayContent(result, offline);
       }
 
       @Override
@@ -102,14 +109,24 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
     });
   }
 
-  private void displayContent(Content content) {
+  private void displayContent(Content content, boolean offline) {
     mTitleTextView.setText(content.getTitle());
     mDescriptionTextView.setText(content.getDescription());
     mTitleTextView.setTextColor(mTextColor);
     mDescriptionTextView.setTextColor(mTextColor);
 
+    String filePath = null;
+    if (offline) {
+      String imageUrl = mFileManager.getFilePath(content.getPublicImageUrl());
+      if (imageUrl != null) {
+        filePath = imageUrl;
+      }
+    } else {
+      filePath = content.getPublicImageUrl();
+    }
+
     Glide.with(mContext)
-        .load(content.getPublicImageUrl())
+        .load(filePath)
         .diskCacheStrategy(DiskCacheStrategy.ALL)
         .crossFade()
         .centerCrop()
@@ -127,5 +144,9 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
     if (style != null && style.getForegroundFontColor() != null) {
       mTextColor = Color.parseColor(style.getForegroundFontColor());
     }
+  }
+
+  public void setFileManager(FileManager fileManager) {
+    mFileManager = fileManager;
   }
 }
