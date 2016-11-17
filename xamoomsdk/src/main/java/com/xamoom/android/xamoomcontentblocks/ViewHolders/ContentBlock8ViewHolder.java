@@ -4,14 +4,21 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ShareCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
+import com.xamoom.android.xamoomsdk.Storage.FileManager;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * DownloadBlock
@@ -22,6 +29,7 @@ public class ContentBlock8ViewHolder extends RecyclerView.ViewHolder {
   private TextView mContentTextView;
   private ImageView mIconImageView;
   private LinearLayout mRootLayout;
+  private FileManager mFileManager;
 
   public ContentBlock8ViewHolder(View itemView, Fragment fragment) {
     super(itemView);
@@ -30,9 +38,10 @@ public class ContentBlock8ViewHolder extends RecyclerView.ViewHolder {
     mContentTextView = (TextView) itemView.findViewById(R.id.contentTextView);
     mIconImageView = (ImageView) itemView.findViewById(R.id.iconImageView);
     mFragment = fragment;
+    mFileManager = FileManager.getInstance(fragment.getContext());
   }
 
-  public void setupContentBlock(final ContentBlock contentBlock, boolean offline) {
+  public void setupContentBlock(final ContentBlock contentBlock, final boolean offline) {
     if(contentBlock.getTitle() != null && !contentBlock.getTitle().equalsIgnoreCase("")) {
       mTitleTextView.setText(contentBlock.getTitle());
     } else {
@@ -48,8 +57,15 @@ public class ContentBlock8ViewHolder extends RecyclerView.ViewHolder {
     mRootLayout.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(contentBlock.getFileId()));
-        mFragment.getActivity().startActivity(i);
+        Uri fileUri = null;
+        if (!offline) {
+          fileUri = Uri.parse(contentBlock.getFileId());
+          Intent i = new Intent(Intent.ACTION_VIEW, fileUri);
+          mFragment.getActivity().startActivity(i);
+          return;
+        }
+
+        startShareIntent(contentBlock.getFileId(), contentBlock.getDownloadType());
       }
     });
 
@@ -73,5 +89,48 @@ public class ContentBlock8ViewHolder extends RecyclerView.ViewHolder {
         mContentTextView.setTextColor(Color.parseColor("#333333"));
         break;
     }
+  }
+
+  private void startShareIntent(String fileUrl, int type) {
+    File file = null;
+    try {
+      file = mFileManager.getFile(fileUrl);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    if (file == null) {
+      fileNotFoundToast();
+      return;
+    }
+
+    Uri fileUri = FileProvider.getUriForFile(mFragment.getContext(),
+        "com.xamoom.android.xamoomsdk.fileprovider", file);
+
+    String mimeType = null;
+    switch (type) {
+      case 0: mimeType = "text/vcard";
+        break;
+      case 1: mimeType = "text/calendar";
+        break;
+      default: mimeType = mFragment.getContext().getContentResolver().getType(fileUri);
+    }
+
+    Intent shareIntent = ShareCompat.IntentBuilder.from(mFragment.getActivity())
+        .setType(mFragment.getContext().getContentResolver().getType(fileUri))
+        .setStream(fileUri)
+        .getIntent();
+    shareIntent.setData(fileUri);
+    shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+    mFragment.getActivity().startActivity(shareIntent);
+  }
+
+  private void fileNotFoundToast() {
+    Toast.makeText(mFragment.getContext(), R.string.file_not_found, Toast.LENGTH_LONG).show();
+  }
+
+  public void setFileManager(FileManager fileManager) {
+    mFileManager = fileManager;
   }
 }

@@ -94,8 +94,7 @@ public class ContentBlock5ViewHolder extends RecyclerView.ViewHolder {
   }
 
   private void fileNotFoundToast() {
-    // TODO: convert to string xml
-    Toast.makeText(mFragment.getContext(), "File not found", Toast.LENGTH_LONG).show();
+    Toast.makeText(mFragment.getContext(), R.string.file_not_found, Toast.LENGTH_LONG).show();
   }
 
   public void setFileManager(FileManager fileManager) {
