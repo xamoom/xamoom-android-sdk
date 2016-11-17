@@ -10,6 +10,8 @@ import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.Helper.ContentFragmentActivity;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 
+import junit.framework.Assert;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -166,7 +168,7 @@ public class XamoomContentFragmentTest {
     content.setContentBlocks(blocks);
 
     XamoomContentFragment fragment = XamoomContentFragment.newInstance("api");
-    fragment.setContent(content, false);
+    fragment.setContent(content, false, false);
 
     List<ContentBlock> contentBlocks = fragment.getContentBlocks();
     assertEquals(contentBlocks.size(), 1);
@@ -193,7 +195,7 @@ public class XamoomContentFragmentTest {
     content.setContentBlocks(blocks);
 
     XamoomContentFragment fragment = XamoomContentFragment.newInstance("api");
-    fragment.setContent(content, false);
+    fragment.setContent(content, false, false);
 
     List<ContentBlock> contentBlocks = fragment.getContentBlocks();
     assertEquals(contentBlocks.size(), 1);
@@ -253,5 +255,36 @@ public class XamoomContentFragmentTest {
     assertNotNull(fragment.getRecyclerView().getAdapter());
   }
 
+  @Test
+  public void testRemoveOfflineBlocks() {
+    com.xamoom.android.xamoomsdk.Resource.Content content = new com.xamoom.android.xamoomsdk.Resource.Content();
+    content.setTitle("Test Content");
+    List<ContentBlock> blocks = new ArrayList<>();
 
+    ContentBlock block1 = new ContentBlock();
+    block1.setBlockType(9);
+    blocks.add(block1);
+
+    ContentBlock block2 = new ContentBlock();
+    block2.setBlockType(7);
+    block2.setTitle("Test Block");
+    blocks.add(block2);
+
+    ContentBlock block3 = new ContentBlock();
+    block3.setBlockType(2);
+    block3.setVideoUrl("https://youtu.be/54jS8duRNn4");
+    blocks.add(block3);
+
+    ContentBlock block4 = new ContentBlock();
+    block4.setBlockType(2);
+    block4.setVideoUrl("https://vimeo.com/185865681");
+    blocks.add(block4);
+
+    content.setContentBlocks(blocks);
+
+    XamoomContentFragment fragment = XamoomContentFragment.newInstance("api");
+    fragment.setContent(content, false, true);
+
+    Assert.assertEquals(0, fragment.getContentBlocks().size());
+  }
 }

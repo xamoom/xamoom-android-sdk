@@ -69,6 +69,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   private int mBackgroundColor = Color.WHITE;
 
   private boolean offline = false;
+  private boolean showAllBlocksWhenOffline = false;
   private boolean displayAllStoreLinks = false;
   private boolean showSpotMapContentLinks = false;
   private boolean isAnimated = false;
@@ -240,6 +241,25 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
     }
   }
 
+  public void removeOfflineBlocks() {
+    ArrayList<ContentBlock> removeBlocks = new ArrayList<>();
+    for (ContentBlock block : mContentBlocks) {
+      if (block.getBlockType() == 9 ||
+          block.getBlockType() == 7) {
+        removeBlocks.add(block);
+      }
+
+      if (block.getBlockType() == 2) {
+        if (block.getVideoUrl().contains("youtu") ||
+            block.getVideoUrl().contains("vimeo")) {
+          removeBlocks.add(block);
+        }
+      }
+    }
+
+    mContentBlocks.removeAll(removeBlocks);
+  }
+
   /**
    * The default behaviour is that there are only Google Play Store link ContentBlocks
    * are shown.
@@ -335,10 +355,10 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
 
   // setters
   public void setContent(Content content) {
-    setContent(content, true);
+    setContent(content, true, false);
   }
 
-  public void setContent(Content content, boolean addHeader) {
+  public void setContent(Content content, boolean addHeader, boolean offline) {
     if (content == null) {
       return;
     }
@@ -350,6 +370,13 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
 
     if (addHeader) {
       addContentTitleAndImage();
+    }
+
+    if (offline && !showAllBlocksWhenOffline) {
+      this.offline = offline;
+      mContentBlockAdapter.setOffline(offline);
+
+      removeOfflineBlocks();
     }
 
     if(!displayAllStoreLinks) {
@@ -381,15 +408,6 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
     this.showSpotMapContentLinks = showSpotMapContentLinks;
   }
 
-  public boolean isOffline() {
-    return offline;
-  }
-
-  public void setOffline(boolean offline) {
-    this.offline = offline;
-    mContentBlockAdapter.setOffline(offline);
-  }
-
   public void setEnduserApi(EnduserApi enduserApi) {
     mEnduserApi = enduserApi;
     mContentBlockAdapter.setEnduserApi(enduserApi);
@@ -397,5 +415,13 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
 
   public EnduserApi getEnduserApi() {
     return mEnduserApi;
+  }
+
+  public boolean isShowAllBlocksWhenOffline() {
+    return showAllBlocksWhenOffline;
+  }
+
+  public void setShowAllBlocksWhenOffline(boolean showAllBlocksWhenOffline) {
+    this.showAllBlocksWhenOffline = showAllBlocksWhenOffline;
   }
 }
