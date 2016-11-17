@@ -9,4 +9,5 @@
     <string name="header_picture_alt_text">Headerimage</string>
     <string name="open">Open</string>
     <string name="close_map">Close map</string>
+    <string name="file_not_found">File not found</string>
 </resources>

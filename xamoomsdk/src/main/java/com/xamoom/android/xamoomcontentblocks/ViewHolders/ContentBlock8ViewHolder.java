@@ -65,7 +65,7 @@ public class ContentBlock8ViewHolder extends RecyclerView.ViewHolder {
           return;
         }
 
-        startShareIntent(contentBlock.getFileId(), contentBlock.getDownloadType());
+        startShareIntent(contentBlock.getFileId());
       }
     });
 
@@ -91,7 +91,7 @@ public class ContentBlock8ViewHolder extends RecyclerView.ViewHolder {
     }
   }
 
-  private void startShareIntent(String fileUrl, int type) {
+  private void startShareIntent(String fileUrl) {
     File file = null;
     try {
       file = mFileManager.getFile(fileUrl);
@@ -107,23 +107,11 @@ public class ContentBlock8ViewHolder extends RecyclerView.ViewHolder {
     Uri fileUri = FileProvider.getUriForFile(mFragment.getContext(),
         "com.xamoom.android.xamoomsdk.fileprovider", file);
 
-    String mimeType = null;
-    switch (type) {
-      case 0: mimeType = "text/vcard";
-        break;
-      case 1: mimeType = "text/calendar";
-        break;
-      default: mimeType = mFragment.getContext().getContentResolver().getType(fileUri);
-    }
+    Intent intent = new Intent(Intent.ACTION_VIEW);
+    intent.setDataAndType(fileUri, mFragment.getContext().getContentResolver().getType(fileUri));
+    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
-    Intent shareIntent = ShareCompat.IntentBuilder.from(mFragment.getActivity())
-        .setType(mFragment.getContext().getContentResolver().getType(fileUri))
-        .setStream(fileUri)
-        .getIntent();
-    shareIntent.setData(fileUri);
-    shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-
-    mFragment.getActivity().startActivity(shareIntent);
+    mFragment.getActivity().startActivity(intent);
   }
 
   private void fileNotFoundToast() {
