@@ -339,6 +339,10 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   }
 
   public void setContent(Content content, boolean addHeader) {
+    if (content == null) {
+      return;
+    }
+
     this.mContent = content;
     if (mContent.getContentBlocks() != null) {
       mContentBlocks.addAll(mContent.getContentBlocks());
