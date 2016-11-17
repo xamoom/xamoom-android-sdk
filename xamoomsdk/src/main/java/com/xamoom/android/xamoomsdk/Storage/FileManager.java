@@ -53,6 +53,10 @@ public class FileManager {
   }
 
   public String getFileName(String urlString) {
+    if (urlString == null) {
+      return null;
+    }
+
     String urlStringWithoutCaching = FileManager.removeQuery(urlString);
     Uri url = Uri.parse(urlStringWithoutCaching);
     String fileName = url.getLastPathSegment();
@@ -67,10 +71,18 @@ public class FileManager {
   }
 
   public String getFilePath(String urlString) {
+    if (urlString == null) {
+      return null;
+    }
+
     return String.format("%s/%s", mContext.getFilesDir().getAbsolutePath(), getFileName(urlString));
   }
 
   public static String removeQuery(String urlString) {
+    if (urlString == null) {
+      return null;
+    }
+
     Uri url = Uri.parse(urlString);
     return urlString.replace("?" + url.getQuery(), "");
   }
