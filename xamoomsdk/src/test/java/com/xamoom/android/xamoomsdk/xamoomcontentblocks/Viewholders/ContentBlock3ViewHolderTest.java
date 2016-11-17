@@ -1,8 +1,10 @@
 package com.xamoom.android.xamoomsdk.xamoomcontentblocks.Viewholders;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.support.v4.util.LruCache;
 import android.view.View;
+import android.widget.VideoView;
 
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock2ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
@@ -10,16 +12,21 @@ import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.BuildConfig;
 import com.xamoom.android.xamoomsdk.Helper.ContentFragmentActivity;
 import com.xamoom.android.xamoomsdk.R;
+import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Resource.Style;
+import com.xamoom.android.xamoomsdk.Storage.FileManager;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21, manifest = "AndroidManifest.xml")
@@ -59,4 +66,22 @@ public class ContentBlock3ViewHolderTest {
     assertNotNull(viewHolder);
   }
 
+  @Test
+  public void testSetupContentBlockWhenOffline() {
+    View itemView = View.inflate(mActivity, R.layout.content_block_3_layout, null);
+    ContentBlock3ViewHolder viewHolder = new ContentBlock3ViewHolder(itemView,
+        mXamoomContentFragment.getContext(), null);
+
+    FileManager mockedFileManager = Mockito.mock(FileManager.class);
+    viewHolder.setFileManager(mockedFileManager);
+
+    Mockito.stub(mockedFileManager.getFilePath(anyString())).toReturn("test");
+
+    ContentBlock contentBlock = new ContentBlock();
+    contentBlock.setFileId("www.xamoom.com/image.jpg");
+
+    viewHolder.setupContentBlock(contentBlock, true);
+
+    Mockito.verify(mockedFileManager).getFilePath("www.xamoom.com/image.jpg");
+  }
 }

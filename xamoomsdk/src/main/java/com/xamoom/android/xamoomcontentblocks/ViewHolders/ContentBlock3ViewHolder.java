@@ -48,6 +48,7 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
   private ImageView mImageView;
   private int mTextColor = Color.BLACK;
   private GenericRequestBuilder<Uri, InputStream, SVG, PictureDrawable> requestBuilder;
+  private FileManager mFileManager;
 
   private OnContentBlock3ViewHolderInteractionListener mListener;
 
@@ -90,7 +91,7 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
 
     String fileId = null;
     if (offline) {
-      fileId = FileManager.getInstance(mContext).getFilePath(contentBlock.getFileId());
+      fileId = mFileManager.getFilePath(contentBlock.getFileId());
     } else {
       fileId = contentBlock.getFileId();
     }
@@ -197,5 +198,9 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
     if (style != null && style.getForegroundFontColor() != null) {
       mTextColor = Color.parseColor(style.getForegroundFontColor());
     }
+  }
+
+  public void setFileManager(FileManager fileManager) {
+    mFileManager = fileManager;
   }
 }
