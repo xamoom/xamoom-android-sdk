@@ -41,14 +41,7 @@ public class SettingDatabaseAdapter extends DatabaseAdapter {
   private SystemSetting getSystemSetting(String selection, String[] selectionArgs) {
     open();
     Cursor cursor = querySettings(selection, selectionArgs);
-
-    if (cursor.getCount() > 1) {
-      return null;
-      // TODO: throw too many exception
-    }
-
     SystemSetting setting = cursorToSetting(cursor);
-
     close();
     return setting;
   }

@@ -80,11 +80,6 @@ public class MarkerDatabaseAdapter extends DatabaseAdapter {
   private long getSpotRelation(String selection, String[] selectionArgs) {
     open();
     Cursor cursor = queryMarker(selection, selectionArgs);
-
-    if (cursor.getCount() > 1) {
-      // TODO: too many exception
-    }
-
     long spotRelation = -1L;
 
     if (cursor.moveToFirst()) {
@@ -98,11 +93,6 @@ public class MarkerDatabaseAdapter extends DatabaseAdapter {
   private Marker getMarker(String selection, String[] selectionArgs) {
     open();
     Cursor cursor = queryMarker(selection, selectionArgs);
-
-    if (cursor.getCount() > 1) {
-      // TODO: too many exception
-    }
-
     ArrayList<Marker> markers = cursorToMarkers(cursor);
 
     close();

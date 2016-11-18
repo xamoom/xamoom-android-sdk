@@ -47,11 +47,6 @@ public class SystemDatabaseAdapter extends DatabaseAdapter {
   private System getSystem(String selection, String[] selectionArgs) {
     open();
     Cursor cursor = querySystems(selection, selectionArgs);
-
-    if (cursor.getCount() > 1) {
-      // TODO: too many exception
-    }
-
     System system = cursorToSystem(cursor);
 
     close();

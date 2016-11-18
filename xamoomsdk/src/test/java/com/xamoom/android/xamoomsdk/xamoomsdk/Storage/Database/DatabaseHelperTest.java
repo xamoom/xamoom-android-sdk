@@ -45,5 +45,8 @@ public class DatabaseHelperTest {
     Mockito.verify(mockedDb).execSQL(OfflineEnduserContract.StyleEntry.CREATE_TABLE);
     Mockito.verify(mockedDb).execSQL(OfflineEnduserContract.SettingEntry.CREATE_TABLE);
     Mockito.verify(mockedDb).execSQL(OfflineEnduserContract.ContentBlockEntry.CREATE_TABLE);
+    Mockito.verify(mockedDb).execSQL(OfflineEnduserContract.ContentEntry.CREATE_TABLE);
+    Mockito.verify(mockedDb).execSQL(OfflineEnduserContract.SpotEntry.CREATE_TABLE);
+    Mockito.verify(mockedDb).execSQL(OfflineEnduserContract.MenuEntry.CREATE_TABLE);
   }
 }

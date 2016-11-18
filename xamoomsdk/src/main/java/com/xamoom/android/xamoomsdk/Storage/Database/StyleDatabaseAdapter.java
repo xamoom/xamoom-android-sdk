@@ -40,12 +40,6 @@ public class StyleDatabaseAdapter extends DatabaseAdapter {
   private Style getStyle(String selection, String[] selectionArgs) {
     open();
     Cursor cursor = queryStyles(selection, selectionArgs);
-
-    if (cursor.getCount() > 1) {
-      return null;
-      // TODO: throw to many exception
-    }
-
     Style style = null;
     if (cursor.moveToFirst()) {
       style = cursorToStyle(cursor);

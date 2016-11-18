@@ -48,13 +48,7 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
   private Content getContent(String selection, String[] selectionArgs) {
     open();
     Cursor cursor = queryContent(selection, selectionArgs);
-
-    if (cursor.getCount() > 1) {
-      // TODO: too many exception
-    }
-
     ArrayList<Content> contents = cursorToContents(cursor);
-
     close();
 
     if (contents.size() > 0) {

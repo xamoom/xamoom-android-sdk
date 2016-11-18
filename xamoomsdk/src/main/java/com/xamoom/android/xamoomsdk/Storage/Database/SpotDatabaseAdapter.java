@@ -61,13 +61,7 @@ public class SpotDatabaseAdapter extends DatabaseAdapter {
   private Spot getSpot(String selection, String[] selectionArgs) {
     open();
     Cursor cursor = querySpot(selection, selectionArgs);
-
-    if (cursor.getCount() > 1) {
-      // TODO: too many exception
-    }
-
     ArrayList<Spot> spots = cursorToSpots(cursor);
-
     close();
 
     if (spots.size() > 0) {

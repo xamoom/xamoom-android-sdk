@@ -35,16 +35,8 @@ public class ContentBlockDatabaseAdapter extends DatabaseAdapter {
 
   private ContentBlock getContentBlock(String selection, String[] selectionArgs) {
     open();
-
     Cursor cursor = queryContentBlocks(selection, selectionArgs);
-
-    if (cursor.getCount() > 1) {
-      return null;
-      // TODO: throw too many exception
-    }
-
     ArrayList<ContentBlock> contentBlocks = cursorToContentBlocks(cursor);
-
     close();
 
     if (contentBlocks.size() > 0) {

@@ -49,11 +49,6 @@ public class MenuDatabaseAdapter extends DatabaseAdapter {
   public Menu getMenu(String selection, String[] selectionArgs) {
     open();
     Cursor cursor = queryMenu(selection, selectionArgs);
-
-    if (cursor.getCount() > 1) {
-      // TODO: too many exception
-    }
-
     Menu menu = cursorToMenu(cursor);
 
     return menu;
