@@ -2,10 +2,6 @@ package com.xamoom.android.xamoomsdk.Storage.TableContracts;
 
 import android.provider.BaseColumns;
 
-/**
- * Created by raphaelseher on 24/10/2016.
- */
-
 public class OfflineEnduserContract {
   public static final int DATABASE_VERSION = 1;
   public static final String DATABASE_NAME = "OfflineEnduser.db";
@@ -30,7 +26,7 @@ public class OfflineEnduserContract {
     public static final String CREATE_TABLE =
         "CREATE TABLE " + SystemEntry.TABLE_NAME + " (" +
             SystemEntry._ID + " INTEGER PRIMARY KEY," +
-            SystemEntry.COLUMN_NAME_JSON_ID + TEXT_TYPE + COMMA_SEP +
+            SystemEntry.COLUMN_NAME_JSON_ID + TEXT_TYPE + UNIQUE + COMMA_SEP +
             SystemEntry.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
             SystemEntry.COLUMN_NAME_URL + TEXT_TYPE + " )";
 
@@ -59,7 +55,7 @@ public class OfflineEnduserContract {
     public static final String CREATE_TABLE =
         "CREATE TABLE " + StyleEntry.TABLE_NAME + " (" +
             StyleEntry._ID + " INTEGER PRIMARY KEY," +
-            StyleEntry.COLUMN_NAME_JSON_ID + TEXT_TYPE + COMMA_SEP +
+            StyleEntry.COLUMN_NAME_JSON_ID + TEXT_TYPE + UNIQUE + COMMA_SEP +
             StyleEntry.COLUMN_NAME_SYSTEM_RELATION + INTEGER_TYPE + COMMA_SEP +
             StyleEntry.COLUMN_NAME_BACKGROUND_COLOR + TEXT_TYPE + COMMA_SEP +
             StyleEntry.COLUMN_NAME_HIGHLIGHT_COLOR + TEXT_TYPE + COMMA_SEP +
@@ -94,7 +90,7 @@ public class OfflineEnduserContract {
     public static final String CREATE_TABLE =
         "CREATE TABLE " + SettingEntry.TABLE_NAME + " (" +
             SettingEntry._ID + " INTEGER PRIMARY KEY," +
-            SettingEntry.COLUMN_NAME_JSON_ID + TEXT_TYPE + COMMA_SEP +
+            SettingEntry.COLUMN_NAME_JSON_ID + TEXT_TYPE + UNIQUE + COMMA_SEP +
             SettingEntry.COLUMN_NAME_SYSTEM_RELATION + INTEGER_TYPE + COMMA_SEP +
             SettingEntry.COLUMN_NAME_PLAYSTORE_ID + TEXT_TYPE + COMMA_SEP +
             SettingEntry.COLUMN_NAME_APPSTORE_ID + TEXT_TYPE + " )";
@@ -127,7 +123,7 @@ public class OfflineEnduserContract {
     public static final String CREATE_TABLE =
         "CREATE TABLE " + SpotEntry.TABLE_NAME + " (" +
             SpotEntry._ID + " INTEGER PRIMARY KEY," +
-            SpotEntry.COLUMN_NAME_JSON_ID + TEXT_TYPE + COMMA_SEP +
+            SpotEntry.COLUMN_NAME_JSON_ID + TEXT_TYPE + UNIQUE + COMMA_SEP +
             SpotEntry.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
             SpotEntry.COLUMN_NAME_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
             SpotEntry.COLUMN_NAME_PUBLIC_IMAGE_URL + TEXT_TYPE + COMMA_SEP +
@@ -170,7 +166,7 @@ public class OfflineEnduserContract {
     public static final String CREATE_TABLE =
         "CREATE TABLE " + MarkerEntry.TABLE_NAME + " (" +
             MarkerEntry._ID + " INTEGER PRIMARY KEY," +
-            MarkerEntry.COLUMN_NAME_JSON_ID + TEXT_TYPE + COMMA_SEP +
+            MarkerEntry.COLUMN_NAME_JSON_ID + TEXT_TYPE + UNIQUE + COMMA_SEP +
             MarkerEntry.COLUMN_NAME_SPOT_RELATION + INTEGER_TYPE + COMMA_SEP +
             MarkerEntry.COLUMN_NAME_QR + TEXT_TYPE + COMMA_SEP +
             MarkerEntry.COLUMN_NAME_NFC + TEXT_TYPE + COMMA_SEP +
@@ -231,7 +227,7 @@ public class OfflineEnduserContract {
     public static final String CREATE_TABLE =
         "CREATE TABLE " + ContentEntry.TABLE_NAME + " (" +
             ContentEntry._ID + " INTEGER PRIMARY KEY," +
-            ContentEntry.COLUMN_NAME_JSON_ID + TEXT_TYPE + COMMA_SEP +
+            ContentEntry.COLUMN_NAME_JSON_ID + TEXT_TYPE + UNIQUE + COMMA_SEP +
             ContentEntry.COLUMN_NAME_SYSTEM_RELATION + INTEGER_TYPE + COMMA_SEP +
             ContentEntry.COLUMN_NAME_MENU_RELATION + INTEGER_TYPE + COMMA_SEP +
             ContentEntry.COLUMN_NAME_TITLE + TEXT_TYPE + COMMA_SEP +
@@ -281,7 +277,7 @@ public class OfflineEnduserContract {
     public static final String CREATE_TABLE =
         "CREATE TABLE " + ContentBlockEntry.TABLE_NAME + " (" +
             ContentBlockEntry._ID + " INTEGER PRIMARY KEY," +
-            ContentBlockEntry.COLUMN_NAME_JSON_ID + TEXT_TYPE + COMMA_SEP +
+            ContentBlockEntry.COLUMN_NAME_JSON_ID + TEXT_TYPE + UNIQUE + COMMA_SEP +
             ContentBlockEntry.COLUMN_NAME_CONTENT_RELATION + INTEGER_TYPE + COMMA_SEP +
             ContentBlockEntry.COLUMN_NAME_BLOCK_TYPE + TEXT_TYPE + COMMA_SEP +
             ContentBlockEntry.COLUMN_NAME_PUBLIC_STATUS + TEXT_TYPE + COMMA_SEP +
