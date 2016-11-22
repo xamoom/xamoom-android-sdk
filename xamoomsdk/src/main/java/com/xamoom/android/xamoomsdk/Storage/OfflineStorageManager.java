@@ -37,6 +37,10 @@ import java.util.List;
 
 import at.rags.morpheus.Error;
 
+/**
+ * OfflineStorageManager is used to communicate with the databaseAdapters to save, query and delete
+ * data.
+ */
 public class OfflineStorageManager {
   private static OfflineStorageManager mInstance;
 
@@ -75,6 +79,15 @@ public class OfflineStorageManager {
 
   // Saving
 
+  /**
+   * Saves content object and it's contentBlocks. Will automatically save
+   * content image and media files from contentblocks (images, videos, audio).
+   *
+   * @param content Content object to save.
+   * @param completion DownloadCompletion.
+   * @return true if successfully saved to database.
+   * @throws MalformedURLException
+   */
   public boolean saveContent(Content content, DownloadManager.OnDownloadManagerCompleted completion)
       throws MalformedURLException {
     long row = mContentDatabaseAdapter.insertOrUpdateContent(content, false, -1);
@@ -106,6 +119,12 @@ public class OfflineStorageManager {
     return row != -1;
   }
 
+  /**
+   * Deletes content on database. Won't delete saved files.
+   *
+   * @param jsonId id of content to delete.
+   * @return true if successfully deleted.
+   */
   public boolean deleteContent(String jsonId) {
     long row = mContentDatabaseAdapter.getPrimaryKey(jsonId);
 
@@ -120,6 +139,14 @@ public class OfflineStorageManager {
     return deleted;
   }
 
+  /**
+   * Saves spot and automatically downloads spot image.
+   *
+   * @param spot Spot object to save.
+   * @param completion Callback for download.
+   * @return true if successfully saved to database.
+   * @throws MalformedURLException
+   */
   public boolean saveSpot(Spot spot, DownloadManager.OnDownloadManagerCompleted completion) throws MalformedURLException {
     long row = mSpotDatabaseAdapter.insertOrUpdateSpot(spot);
 
@@ -131,6 +158,12 @@ public class OfflineStorageManager {
     return row != -1;
   }
 
+  /**
+   * Deletes spot by their id. Won't delete saved files.
+   *
+   * @param jsonId id from Spot object.
+   * @return true if successfully deleted.
+   */
   public boolean deleteSpot(String jsonId) {
     long row = mSpotDatabaseAdapter.getPrimaryKey(jsonId);
 
@@ -143,48 +176,106 @@ public class OfflineStorageManager {
     return deleted;
   }
 
+  /**
+   * Saves system to database.
+   *
+   * @param system System object to save.
+   * @return true if successfully saved to database.
+   */
   public boolean saveSystem(System system) {
     long row = mSystemDatabaseAdapter.insertOrUpdateSystem(system);
     return row != -1;
   }
 
+  /**
+   * Deletes system by id.
+   * @param jsonId id from System object.
+   * @return true if successfully deleted.
+   */
   public boolean deleteSystem(String jsonId) {
     return mSystemDatabaseAdapter.deleteSystem(jsonId);
   }
 
+  /**
+   * Saves style to database.
+   *
+   * @param style Style object to save.
+   * @return true if successfully saved to database.
+   */
   public boolean saveStyle(Style style) {
     long row = mStyleDatabaseAdapter.insertOrUpdateStyle(style, -1);
     return row != -1;
   }
 
+  /**
+   * Deletes style by id.
+   *
+   * @param jsonId id from Style object.
+   * @return true if successfully deleted.
+   */
   public boolean deleteStyle(String jsonId) {
     return mStyleDatabaseAdapter.deleteStyle(jsonId);
   }
 
+  /**
+   * Saves systemSetting to database.
+   *
+   * @param setting SystemSetting object to save.
+   * @return true if successfully saved to database.
+   */
   public boolean saveSetting(SystemSetting setting) {
     long row = mSettingDatabaseAdapter.insertOrUpdateSetting(setting, -1);
     return row != -1;
   }
 
+  /**
+   * Deletes systemSetting by id.
+   *
+   * @param jsonId id from SystemSetting object.
+   * @return true if successfully deleted.
+   */
   public boolean deleteSetting(String jsonId) {
     return mSettingDatabaseAdapter.deleteSetting(jsonId);
   }
 
+  /**
+   * Saves menu to database.
+   * @param menu Menu object to save.
+   * @return true if successfully saved to database.
+   */
   public boolean saveMenu(Menu menu) {
     long row = mMenuDatabaseAdapter.insertOrUpdate(menu, -1);
     return row != -1;
   }
 
+  /**
+   * Deletes menu with id.
+   *
+   * @param jsonId id from Menu object.
+   * @return true if successfully deleted.
+   */
   public boolean deleteMenu(String jsonId) {
     return mMenuDatabaseAdapter.deleteMenu(jsonId);
   }
 
   // Query
 
+  /**
+   * Query content by id.
+   *
+   * @param jsonId id from Content object.
+   * @return Content object or null.
+   */
   public Content getContent(String jsonId) {
     return mContentDatabaseAdapter.getContent(jsonId);
   }
 
+  /**
+   * Query content by locationIdentifier.
+   *
+   * @param locId LocationIdentifier with connected content.
+   * @return Content object or null.
+   */
   public Content getContentWithLocationIdentifier(String locId) {
     long spotId = -1;
     if (locId.contains("|")){
@@ -206,6 +297,15 @@ public class OfflineStorageManager {
     return null;
   }
 
+  /**
+   * Query content by location within a 40 meter radius. (geofence)
+   *
+   * @param location Android location object.
+   * @param pageSize PageSize for paging. Limit 100.
+   * @param cursor Cursor when paging. Null when first call.
+   * @param sortFlags Sort query result.
+   * @param callback Callback when finished.
+   */
   public void getContentsByLocation(Location location, int pageSize, String cursor,
                                        EnumSet<ContentSortFlags> sortFlags,
                                        APIListCallback<List<Content>, List<Error>> callback) {
@@ -230,6 +330,15 @@ public class OfflineStorageManager {
     }
   }
 
+  /**
+   * Query content by tags.
+   *
+   * @param tags ArrayList<String> of tags.
+   * @param pageSize PageSize for paging. Limit 100.
+   * @param cursor Cursor when paging. Null when first call.
+   * @param sortFlags Sort query result.
+   * @param callback Callback when finished.
+   */
   public void getContentByTags(List<String> tags, int pageSize, String cursor,
                                EnumSet<ContentSortFlags> sortFlags,
                                APIListCallback<List<Content>, List<Error>> callback) {
@@ -247,6 +356,15 @@ public class OfflineStorageManager {
     }
   }
 
+  /**
+   * Search content by name.
+   *
+   * @param name String to search for.
+   * @param pageSize PageSize for paging. Limit 100.
+   * @param cursor Cursor when paging. Null when first call.
+   * @param sortFlags Sort query result.
+   * @param callback Callback when finished.
+   */
   public void searchContentsByName(String name, int pageSize, @Nullable String cursor,
                                    EnumSet<ContentSortFlags> sortFlags,
                                    APIListCallback<List<Content>, List<Error>> callback) {
@@ -263,10 +381,26 @@ public class OfflineStorageManager {
     }
   }
 
+  /**
+   * Get spot by id.
+   *
+   * @param spotId id from Spot object.
+   * @return Spot object or null.
+   */
   public Spot getSpot(String spotId) {
     return mSpotDatabaseAdapter.getSpot(spotId);
   }
 
+  /**
+   * Query spots by location and radius.
+   *
+   * @param location Android location.
+   * @param radius Radius to query around the location.
+   * @param pageSize PageSize for paging. Limit 100.
+   * @param cursor Cursor when paging. Null when first call.
+   * @param sortFlags Sort query result.
+   * @param callback Callback when finished.
+   */
   public void getSpotsByLocation(Location location, int radius, int pageSize, @Nullable String cursor,
                                  @Nullable EnumSet<SpotSortFlags> sortFlags,
                                  APIListCallback<List<Spot>, List<Error>> callback) {
@@ -285,6 +419,15 @@ public class OfflineStorageManager {
     }
   }
 
+  /**
+   * Query spots by tags.
+   *
+   * @param tags ArrayList<String> of tags.
+   * @param pageSize PageSize for paging. Limit 100.
+   * @param cursor Cursor when paging. Null when first call.
+   * @param sortFlags Sort query result.
+   * @param callback Callback when finished.
+   */
   public void getSpotsByTags(List<String> tags, int pageSize, @Nullable String cursor,
                              @Nullable EnumSet<SpotSortFlags> sortFlags,
                              APIListCallback<List<Spot>, List<Error>> callback) {
@@ -302,6 +445,15 @@ public class OfflineStorageManager {
     }
   }
 
+  /**
+   * Search spots by name.
+   *
+   * @param name Name to search for.
+   * @param pageSize PageSize for paging. Limit 100.
+   * @param cursor Cursor when paging. Null when first call.
+   * @param sortFlags Sort query result.
+   * @param callback Callback when finished.
+   */
   public void searchSpotsByName(String name, int pageSize, @Nullable String cursor,
                                 @Nullable EnumSet<SpotSortFlags> sortFlags,
                                 APIListCallback<List<Spot>, List<Error>> callback) {
@@ -318,21 +470,44 @@ public class OfflineStorageManager {
     }
   }
 
+  /**
+   * Get saved system.
+   *
+   * @return System object or null.
+   */
   public System getSystem() {
     return mSystemDatabaseAdapter.getSystem();
   }
 
+  /**
+   * Get menu by id.
+   * @param jsonId id from Menu object.
+   * @return Menu object or null.
+   */
   public Menu getMenu(String jsonId) {
     return mMenuDatabaseAdapter.getMenu(jsonId);
   }
 
+  /**
+   * Get saved systemSettings.
+   *
+   * @param jsonId Id from SystemSetting object.
+   * @return SystemSetting object or null.
+   */
   public SystemSetting getSystemSetting(String jsonId) {
     return mSettingDatabaseAdapter.getSystemSetting(jsonId);
   }
 
+  /**
+   * Get saved style by id.
+   * @param jsonId id from Style object.
+   * @return Style object or null.
+   */
   public Style getStyle(String jsonId) {
     return mStyleDatabaseAdapter.getStyle(jsonId);
   }
+
+  // file operation
 
   /**
    * Delete file from phone storage.
@@ -351,6 +526,11 @@ public class OfflineStorageManager {
     return mFileManager.deleteFile(url);
   }
 
+  /**
+   * Deletes files saved for saveDeletion after checking for usage in other saved objects.
+   *
+   * @throws IOException
+   */
   public void deleteFilesWithSafetyCheck() throws IOException {
     for (String url : mSaveDeletionFiles) {
       if (mContentBlockDatabaseAdapter.getContentBlocksWithFile(url).size() > 0) {

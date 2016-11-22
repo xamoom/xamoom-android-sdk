@@ -358,6 +358,14 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
     setContent(content, true, false);
   }
 
+  /**
+   * Sets the content to display when fragment gets loaded.
+   *
+   * @param content Content to display.
+   * @param addHeader Adds header (content title and content image).
+   * @param offline Will notify contentBlocks to use offline functioniality and remove
+   *                offline unavailable contentBlocks.
+   */
   public void setContent(Content content, boolean addHeader, boolean offline) {
     if (content == null) {
       return;

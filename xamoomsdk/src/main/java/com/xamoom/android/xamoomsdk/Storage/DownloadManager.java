@@ -6,6 +6,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
+/**
+ * DownloadManager is used to download and save files from Urls.
+ */
 public class DownloadManager {
   private FileManager mFileManager;
   private ArrayList<DownloadTask> mDownloadTasks = new ArrayList<>();
@@ -14,6 +17,14 @@ public class DownloadManager {
     mFileManager = fileManager;
   }
 
+  /**
+   * Will download file via a {@link DownloadTask} and save it to internal storage.
+   *
+   * @param url Url from remote file.
+   * @param queryTasks Boolean to queue files.
+   * @param completedInterface Callback when finished or failed.
+   * @throws MalformedURLException
+   */
   public void saveFileFromUrl(final URL url, boolean queryTasks,
                               final OnDownloadManagerCompleted completedInterface) throws MalformedURLException {
     final String urlString = url.toString();
@@ -50,6 +61,10 @@ public class DownloadManager {
     }
   }
 
+  /**
+   * Will start to download all queried tasks.
+   * After starting mDownloadTasks will get cleared.
+   */
   public void downloadQueriedTasks() {
     for (DownloadTask task : mDownloadTasks) {
       task.execute();

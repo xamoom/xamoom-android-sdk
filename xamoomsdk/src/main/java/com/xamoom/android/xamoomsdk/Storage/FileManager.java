@@ -31,6 +31,13 @@ public class FileManager {
     mContext = context;
   }
 
+  /**
+   * Saves file to internal storage.
+   *
+   * @param urlString Url as string to create fileName.
+   * @param bytes Bytes to save.
+   * @throws IOException
+   */
   public void saveFile(String urlString, byte[] bytes) throws IOException {
     FileOutputStream outputStream;
     String fileName = getFileName(urlString);
@@ -40,6 +47,13 @@ public class FileManager {
     outputStream.close();
   }
 
+  /**
+   * Deletes file with urlString.
+   *
+   * @param urlString Url as string to create fileName.
+   * @return True if deleted.
+   * @throws IOException
+   */
   public boolean deleteFile(String urlString) throws IOException {
     File file = getFile(urlString);
 
@@ -47,11 +61,24 @@ public class FileManager {
     return deleted;
   }
 
+  /**
+   * Returns file from internal storage.
+   *
+   * @param urlString Url as string to create fileName.
+   * @return Saved file.
+   * @throws IOException
+   */
   public File getFile(String urlString) throws IOException {
     File file = new File(mContext.getFilesDir(), getFileName(urlString));
     return file;
   }
 
+  /**
+   * Returns fileName of saved file on internal storage.
+   *
+   * @param urlString Url as string to create fileName.
+   * @return fileName of saved file.
+   */
   public String getFileName(String urlString) {
     if (urlString == null) {
       return null;
@@ -70,6 +97,12 @@ public class FileManager {
     return newFileName;
   }
 
+  /**
+   * Returns filePath of saved file on internal storage.
+   *
+   * @param urlString Url as string to create fileName.
+   * @return filePath as String.
+   */
   public String getFilePath(String urlString) {
     if (urlString == null) {
       return null;
@@ -78,6 +111,12 @@ public class FileManager {
     return String.format("%s/%s", mContext.getFilesDir().getAbsolutePath(), getFileName(urlString));
   }
 
+  /**
+   * Remove query from url.
+   *
+   * @param urlString Url of file as string.
+   * @return Url without query parameters.
+   */
   public static String removeQuery(String urlString) {
     if (urlString == null) {
       return null;
