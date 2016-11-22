@@ -54,6 +54,8 @@ public class DownloadManager {
     for (DownloadTask task : mDownloadTasks) {
       task.execute();
     }
+
+    mDownloadTasks.clear();
   }
 
   public interface OnDownloadManagerCompleted {

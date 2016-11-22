@@ -104,6 +104,7 @@ public class DownloadManagerTest {
 
     manager.downloadQueriedTasks();
 
+    Assert.assertEquals(0, manager.getDownloadTasks().size());
     Mockito.verify(mockedTask).execute();
   }
 }
