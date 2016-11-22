@@ -6,6 +6,7 @@ import com.xamoom.android.xamoomsdk.BuildConfig;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.Spot;
+import com.xamoom.android.xamoomsdk.Storage.Database.SpotDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.OfflineStorageManager;
 import com.xamoom.android.xamoomsdk.Storage.OfflineStorageTagModule;
 
@@ -148,15 +149,20 @@ public class OfflineStorageTagModuleTest {
     Spot spot1 = new Spot();
     spot1.setId("3");
     spot1.setTags(tags1);
+    spot1.setContent(content1);
     spots.add(spot1);
 
     Spot spot12 = new Spot();
     spot12.setId("4");
     spot12.setTags(tags12);
+    spot12.setContent(content12);
     spots.add(spot12);
 
     mOfflineStorageTagModule.getOfflineTags().addAll(tags12);
 
+    SpotDatabaseAdapter mockedSpotDatabaseAdapter = Mockito.mock(SpotDatabaseAdapter.class);
+    Mockito.stub(mockedSpotDatabaseAdapter.getAllSpots()).toReturn(spots);
+    Mockito.stub(mMockedManager.getSpotDatabaseAdapter()).toReturn(mockedSpotDatabaseAdapter);
     doAnswer(new Answer() {
       @Override
       public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -167,17 +173,6 @@ public class OfflineStorageTagModuleTest {
       }
     }).when(mMockedManager).getSpotsByTags(any(ArrayList.class), anyInt(), anyString(),
         any(EnumSet.class), (APIListCallback<List<Spot>, List<Error>>) any());
-
-    doAnswer(new Answer() {
-      @Override
-      public Object answer(InvocationOnMock invocation) throws Throwable {
-        APIListCallback<List<Content>, List<Error>> callback =
-            (APIListCallback<List<Content>, List<Error>>) invocation.getArguments()[4];
-        callback.finished(contents, null, false);
-        return null;
-      }
-    }).when(mMockedManager).getContentByTags(any(ArrayList.class), anyInt(), anyString(),
-        any(EnumSet.class), (APIListCallback<List<Content>, List<Error>>) any());
 
     mOfflineStorageTagModule.deleteWithTags(tags1);
 
@@ -212,15 +207,21 @@ public class OfflineStorageTagModuleTest {
     Spot spot1 = new Spot();
     spot1.setId("3");
     spot1.setTags(tags1);
+    spot1.setContent(content1);
     spot1.setPublicImageUrl("www.xamoom.com/file.jpg");
     spots.add(spot1);
 
     Spot spot12 = new Spot();
     spot12.setId("4");
     spot12.setTags(tags12);
+    spot12.setContent(content12);
     spots.add(spot12);
 
     mOfflineStorageTagModule.getOfflineTags().addAll(tags12);
+
+    SpotDatabaseAdapter mockedSpotDatabaseAdapter = Mockito.mock(SpotDatabaseAdapter.class);
+    Mockito.stub(mockedSpotDatabaseAdapter.getAllSpots()).toReturn(spots);
+    Mockito.stub(mMockedManager.getSpotDatabaseAdapter()).toReturn(mockedSpotDatabaseAdapter);
 
     doAnswer(new Answer() {
       @Override
@@ -232,17 +233,6 @@ public class OfflineStorageTagModuleTest {
       }
     }).when(mMockedManager).getSpotsByTags(any(ArrayList.class), anyInt(), anyString(),
         any(EnumSet.class), (APIListCallback<List<Spot>, List<Error>>) any());
-
-    doAnswer(new Answer() {
-      @Override
-      public Object answer(InvocationOnMock invocation) throws Throwable {
-        APIListCallback<List<Content>, List<Error>> callback =
-            (APIListCallback<List<Content>, List<Error>>) invocation.getArguments()[4];
-        callback.finished(contents, null, false);
-        return null;
-      }
-    }).when(mMockedManager).getContentByTags(any(ArrayList.class), anyInt(), anyString(),
-        any(EnumSet.class), (APIListCallback<List<Content>, List<Error>>) any());
 
     mOfflineStorageTagModule.deleteWithTags(tags12);
 

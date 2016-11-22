@@ -620,6 +620,38 @@ public class OfflineStorageManager {
     mMarkerDatabaseAdapter = markerDatabaseAdapter;
   }
 
+  public ContentDatabaseAdapter getContentDatabaseAdapter() {
+    return mContentDatabaseAdapter;
+  }
+
+  public ContentBlockDatabaseAdapter getContentBlockDatabaseAdapter() {
+    return mContentBlockDatabaseAdapter;
+  }
+
+  public SpotDatabaseAdapter getSpotDatabaseAdapter() {
+    return mSpotDatabaseAdapter;
+  }
+
+  public SystemDatabaseAdapter getSystemDatabaseAdapter() {
+    return mSystemDatabaseAdapter;
+  }
+
+  public StyleDatabaseAdapter getStyleDatabaseAdapter() {
+    return mStyleDatabaseAdapter;
+  }
+
+  public SettingDatabaseAdapter getSettingDatabaseAdapter() {
+    return mSettingDatabaseAdapter;
+  }
+
+  public MenuDatabaseAdapter getMenuDatabaseAdapter() {
+    return mMenuDatabaseAdapter;
+  }
+
+  public MarkerDatabaseAdapter getMarkerDatabaseAdapter() {
+    return mMarkerDatabaseAdapter;
+  }
+
   public void setFileManager(FileManager fileManager) {
     mFileManager = fileManager;
   }

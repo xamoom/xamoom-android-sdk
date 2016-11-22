@@ -45,10 +45,11 @@ public class OfflineStorageTagModule {
   }
 
   /**
+   * Will download all spots with tag and their content and save entities and files.
    *
-   * @param tags
-   * @param downloadCallback
-   * @param callback
+   * @param tags ArrayList<String> of tags.
+   * @param downloadCallback Download callback for file downloads.
+   * @param callback Callback when finished saving to database.
    */
   public void downloadAndSaveWithTags(ArrayList<String> tags,
                                       final DownloadManager.OnDownloadManagerCompleted downloadCallback,
@@ -149,11 +150,14 @@ public class OfflineStorageTagModule {
   }
 
   /**
+   * Deletes all spots and connected content with tag, when there is no dependency to another tag.
    *
    * @param tags
    */
   public void deleteWithTags(final ArrayList<String> tags) {
     mOfflineTags.removeAll(tags);
+
+    final ArrayList<Spot> spotsToDelete = new ArrayList<>();
 
     getAllSpotsWithTags(tags, null, new APIListCallback<List<Spot>, List<Error>>() {
       @Override
@@ -170,38 +174,28 @@ public class OfflineStorageTagModule {
             if (spot.getPublicImageUrl() != null) {
               queueSpotFilesForDeletion(spot.getPublicImageUrl());
             }
-            mOfflineStorageManager.deleteSpot(spot.getId());
+            spotsToDelete.add(spot);
           }
         }
-      }
 
-      @Override
-      public void error(List<Error> error) {
-        return;
-      }
-    });
+        for (Spot spot : spotsToDelete) {
+          mOfflineStorageManager.deleteSpot(spot.getId());
 
-    getAllContentsWithTags(tags, null, new APIListCallback<List<Content>, List<Error>>() {
-      @Override
-      public void finished(List<Content> result, String cursor, boolean hasMore) {
-        for (Content content : result) {
-          boolean shouldDelete = true;
-          for (String tag : content.getTags()) {
-            if (mOfflineTags.contains(tag)) {
-              shouldDelete = false;
+          if (spot.getContent() != null) {
+            ArrayList<Spot> spotsWithThatContent = getSpotsWithContent(spot.getContent().getId());
+            spotsWithThatContent.removeAll(spotsToDelete);
+
+            if (spotsWithThatContent.size() == 0) {
+              mOfflineStorageManager.deleteContent(spot.getContent().getId());
+              queueContentFilesForDeletion(spot.getContent());
             }
-          }
-
-          if (shouldDelete) {
-            queueContentFilesForDeletion(content);
-            mOfflineStorageManager.deleteContent(content.getId());
           }
         }
 
         try {
           mOfflineStorageManager.deleteFilesWithSafetyCheck();
         } catch (IOException e) {
-          Log.e(TAG, "File deletion with safety check throw exception: " + e);
+          Log.e(TAG, "File not found to delete.");
         }
       }
 
@@ -233,25 +227,15 @@ public class OfflineStorageTagModule {
     });
   }
 
-  private void getAllContentsWithTags(final ArrayList<String> tags, String cursor,
-                                      final APIListCallback<List<Content>, List<Error>> callback) {
-    mAllContents.clear();
-    mOfflineStorageManager.getContentByTags(tags, PAGE_SIZE, cursor, null, new APIListCallback<List<Content>, List<Error>>() {
-      @Override
-      public void finished(List<Content> result, String cursor, boolean hasMore) {
-        mAllContents.addAll(result);
-        if (hasMore) {
-          getAllContentsWithTags(tags, cursor, callback);
-        } else {
-          callback.finished(mAllContents, null, false);
-        }
+  private ArrayList<Spot> getSpotsWithContent(String contentId) {
+    ArrayList<Spot> spotsWithContent = new ArrayList<>();
+    ArrayList<Spot> allSpots = mOfflineStorageManager.getSpotDatabaseAdapter().getAllSpots();
+    for (Spot spot : allSpots) {
+      if (spot.getContent() != null && spot.getContent().getId() == contentId) {
+        spotsWithContent.add(spot);
       }
-
-      @Override
-      public void error(List<Error> error) {
-        callback.error(error);
-      }
-    });
+    }
+    return spotsWithContent;
   }
 
   private void queueSpotFilesForDeletion(String urlString) {
