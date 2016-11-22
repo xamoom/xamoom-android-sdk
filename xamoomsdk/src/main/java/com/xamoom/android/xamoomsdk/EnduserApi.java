@@ -53,6 +53,9 @@ import static okhttp3.internal.Internal.logger;
  *
  * Change the requested language by  setting {@link #language}. The users language is saved
  * in {@link #systemLanguage}.
+ *
+ * Get local saved data by setting {@link #setOffline(boolean)} to true. Data must be saved
+ * using {@link com.xamoom.android.xamoomsdk.Storage.OfflineStorageManager}.
  */
 public class EnduserApi implements Parcelable {
   public static final String SDK_VERSION = "2.2.4";
@@ -635,6 +638,10 @@ public class EnduserApi implements Parcelable {
     return offline;
   }
 
+  /**
+   * Set offline to true to get data saved in local database.
+   * @param offline
+   */
   public void setOffline(boolean offline) {
     this.offline = offline;
   }
