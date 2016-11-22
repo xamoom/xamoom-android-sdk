@@ -103,7 +103,7 @@ public class OfflineStorageTagModuleTest {
     }).when(mMockedApi).getContent(anyString(), (APICallback<Content, List<Error>>) any());
 
     final Semaphore semaphore = new Semaphore(0);
-    mOfflineStorageTagModule.downloadAndSaveWithTags(tags, null,
+    mOfflineStorageTagModule.downloadAndSaveWithTags(tags, false,
         new APIListCallback<List<Spot>, List<Error>>() {
       @Override
       public void finished(List<Spot> result, String cursor, boolean hasMore) {
@@ -114,7 +114,7 @@ public class OfflineStorageTagModuleTest {
       public void error(List<Error> error) {
 
       }
-    });
+    }, null);
     semaphore.acquire();
 
     Assert.assertEquals(1, mOfflineStorageTagModule.getOfflineTags().size());

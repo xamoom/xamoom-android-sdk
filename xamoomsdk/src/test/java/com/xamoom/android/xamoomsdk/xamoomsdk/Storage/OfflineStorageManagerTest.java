@@ -113,7 +113,7 @@ public class OfflineStorageManagerTest {
 
     boolean saved = false;
     try {
-      saved = mOfflineStorageManager.saveContent(content, null);
+      saved = mOfflineStorageManager.saveContent(content, false, null);
     } catch (MalformedURLException e) {
       Assert.fail();
     }
@@ -158,7 +158,7 @@ public class OfflineStorageManagerTest {
 
     boolean saved = false;
     try {
-      saved = mOfflineStorageManager.saveSpot(spot, null);
+      saved = mOfflineStorageManager.saveSpot(spot, false, null);
     } catch (MalformedURLException e) {
       Assert.fail();
     }

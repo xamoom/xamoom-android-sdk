@@ -46,14 +46,15 @@ public class OfflineStorageTagModule {
 
   /**
    * Will download all spots with tag and their content and save entities and files.
-   *
-   * @param tags ArrayList<String> of tags.
-   * @param downloadCallback Download callback for file downloads.
+   *  @param tags ArrayList<String> of tags.
+   * @param queueDownloads Queue downloads to load all at once. Use
+   * {@link DownloadManager#downloadQueriedTasks()} to start downloads.
    * @param callback Callback when finished saving to database.
+   * @param downloadCallback Download callback for file downloads.
    */
-  public void downloadAndSaveWithTags(ArrayList<String> tags,
-                                      final DownloadManager.OnDownloadManagerCompleted downloadCallback,
-                                      final APIListCallback<List<Spot>, List<Error>> callback) {
+  public void downloadAndSaveWithTags(ArrayList<String> tags, final boolean queueDownloads,
+                                      final APIListCallback<List<Spot>, List<Error>> callback,
+                                      final DownloadManager.OnDownloadManagerCompleted downloadCallback) {
     mAllSpots.clear();
     mOfflineTags.addAll(tags);
     downloadAllSpots(tags, null, new APIListCallback<List<Spot>, List<Error>>() {
@@ -61,7 +62,7 @@ public class OfflineStorageTagModule {
       public void finished(List<Spot> result, String cursor, boolean hasMore) {
         for (Spot spot : result) {
           try {
-            mOfflineStorageManager.saveSpot(spot, downloadCallback);
+            mOfflineStorageManager.saveSpot(spot, queueDownloads, downloadCallback);
           } catch (MalformedURLException e) {
             e.printStackTrace();
           }
@@ -72,7 +73,7 @@ public class OfflineStorageTagModule {
           public void finished(List<Content> result, String cursor, boolean hasMore) {
             for (Content content : result) {
               try {
-                mOfflineStorageManager.saveContent(content, downloadCallback);
+                mOfflineStorageManager.saveContent(content, queueDownloads, downloadCallback);
               } catch (MalformedURLException e) {
                 e.printStackTrace();
               }

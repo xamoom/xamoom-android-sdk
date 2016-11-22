@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -25,27 +24,20 @@ import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
 import com.xamoom.android.xamoomsdk.Resource.*;
 import com.xamoom.android.xamoomsdk.Resource.System;
-import com.xamoom.android.xamoomsdk.Storage.Database.ContentBlockDatabaseAdapter;
-import com.xamoom.android.xamoomsdk.Storage.Database.ContentDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.MenuDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.SpotDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.SystemDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.DownloadError;
 import com.xamoom.android.xamoomsdk.Storage.DownloadManager;
-import com.xamoom.android.xamoomsdk.Storage.DownloadTask;
-import com.xamoom.android.xamoomsdk.Storage.FileManager;
 import com.xamoom.android.xamoomsdk.Storage.OfflineStorageManager;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
 import at.rags.morpheus.Error;
-import at.rags.morpheus.Resource;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -196,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
         OfflineStorageManager manager =
             OfflineStorageManager.getInstance(getApplicationContext());
         try {
-          manager.saveContent(result, new DownloadManager.OnDownloadManagerCompleted() {
+          manager.saveContent(result, , new DownloadManager.OnDownloadManagerCompleted() {
             @Override
             public void completed(String urlString) {
               Log.v(TAG, "File saved: " + urlString);

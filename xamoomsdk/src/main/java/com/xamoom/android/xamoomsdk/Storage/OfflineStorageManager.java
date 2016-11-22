@@ -84,24 +84,25 @@ public class OfflineStorageManager {
    * content image and media files from contentblocks (images, videos, audio).
    *
    * @param content Content object to save.
-   * @param completion DownloadCompletion.
-   * @return true if successfully saved to database.
+   * @param queueDownload True to queue download. Use {@link DownloadManager#downloadQueriedTasks()}
+   *                      to start download.
+   * @param completion DownloadCompletion.  @return true if successfully saved to database.
    * @throws MalformedURLException
    */
-  public boolean saveContent(Content content, DownloadManager.OnDownloadManagerCompleted completion)
+  public boolean saveContent(Content content, boolean queueDownload, DownloadManager.OnDownloadManagerCompleted completion)
       throws MalformedURLException {
     long row = mContentDatabaseAdapter.insertOrUpdateContent(content, false, -1);
 
     if (content.getPublicImageUrl() != null) {
       mDownloadManager.saveFileFromUrl(new URL(content.getPublicImageUrl()),
-          false, completion);
+          queueDownload, completion);
     }
 
     if (content.getContentBlocks() != null) {
       for (ContentBlock contentBlock : content.getContentBlocks()) {
         if (contentBlock.getFileId() != null) {
           mDownloadManager.saveFileFromUrl(new URL(contentBlock.getFileId()),
-              false, completion);
+              queueDownload, completion);
         }
 
         if (contentBlock.getVideoUrl() != null) {
@@ -109,7 +110,7 @@ public class OfflineStorageManager {
               !contentBlock.getVideoUrl().contains("youtu.be") ||
               !contentBlock.getVideoUrl().contains("vimeo.com")) {
             mDownloadManager.saveFileFromUrl(new URL(contentBlock.getVideoUrl()),
-                false, completion);
+                queueDownload, completion);
           }
         }
       }
@@ -143,16 +144,19 @@ public class OfflineStorageManager {
    * Saves spot and automatically downloads spot image.
    *
    * @param spot Spot object to save.
-   * @param completion Callback for download.
-   * @return true if successfully saved to database.
+   * @param queryDownloads True to queue download. Use {@link DownloadManager#downloadQueriedTasks()}
+   *                      to start download.
+   * @param completion Callback for download.  @return true if successfully saved to database.
    * @throws MalformedURLException
    */
-  public boolean saveSpot(Spot spot, DownloadManager.OnDownloadManagerCompleted completion) throws MalformedURLException {
+  public boolean saveSpot(Spot spot, boolean queryDownloads,
+                          DownloadManager.OnDownloadManagerCompleted completion)
+      throws MalformedURLException {
     long row = mSpotDatabaseAdapter.insertOrUpdateSpot(spot);
 
     if (spot.getPublicImageUrl() != null) {
       mDownloadManager.saveFileFromUrl(new URL(spot.getPublicImageUrl()),
-          false, completion);
+          queryDownloads, completion);
     }
 
     return row != -1;
