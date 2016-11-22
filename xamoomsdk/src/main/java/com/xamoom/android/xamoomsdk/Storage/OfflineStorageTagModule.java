@@ -1,12 +1,16 @@
 package com.xamoom.android.xamoomsdk.Storage;
 
+import android.util.Log;
+
 import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.APIListCallback;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
 import com.xamoom.android.xamoomsdk.Resource.Content;
+import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Resource.Spot;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -15,9 +19,16 @@ import java.util.List;
 import at.rags.morpheus.Error;
 
 /**
+ * OfflineStorageTagModule is used to download and delete spots marked with special tags.
+ * Use this if you want to download e.g. tours.
  *
+ * This module will automatically save everything needed to show data when downloading spots with
+ * a custom tag.
+ *
+ * This module will automatically check if there are dependencies between entities and files.
  */
 public class OfflineStorageTagModule {
+  private static final String TAG = OfflineStorageTagModule.class.getSimpleName();
   private static final int PAGE_SIZE = 100;
 
   private OfflineStorageManager mOfflineStorageManager;
@@ -33,6 +44,12 @@ public class OfflineStorageTagModule {
     mEnduserApi = api;
   }
 
+  /**
+   *
+   * @param tags
+   * @param downloadCallback
+   * @param callback
+   */
   public void downloadAndSaveWithTags(ArrayList<String> tags,
                                       final DownloadManager.OnDownloadManagerCompleted downloadCallback,
                                       final APIListCallback<List<Spot>, List<Error>> callback) {
@@ -131,6 +148,10 @@ public class OfflineStorageTagModule {
     }
   }
 
+  /**
+   *
+   * @param tags
+   */
   public void deleteWithTags(final ArrayList<String> tags) {
     mOfflineTags.removeAll(tags);
 
@@ -146,6 +167,9 @@ public class OfflineStorageTagModule {
           }
 
           if (shouldDelete) {
+            if (spot.getPublicImageUrl() != null) {
+              queueSpotFilesForDeletion(spot.getPublicImageUrl());
+            }
             mOfflineStorageManager.deleteSpot(spot.getId());
           }
         }
@@ -169,8 +193,15 @@ public class OfflineStorageTagModule {
           }
 
           if (shouldDelete) {
+            queueContentFilesForDeletion(content);
             mOfflineStorageManager.deleteContent(content.getId());
           }
+        }
+
+        try {
+          mOfflineStorageManager.deleteFilesWithSafetyCheck();
+        } catch (IOException e) {
+          Log.e(TAG, "File deletion with safety check throw exception: " + e);
         }
       }
 
@@ -221,6 +252,44 @@ public class OfflineStorageTagModule {
         callback.error(error);
       }
     });
+  }
+
+  private void queueSpotFilesForDeletion(String urlString) {
+    try {
+      mOfflineStorageManager.deleteFile(urlString, true);
+    } catch (IOException e) {
+      Log.e(TAG, urlString + " not found in internal storage");
+    }
+  }
+
+  private void queueContentFilesForDeletion(Content content) {
+    if (content.getPublicImageUrl() != null) {
+      try {
+        mOfflineStorageManager.deleteFile(content.getPublicImageUrl(), true);
+      } catch (IOException e) {
+        Log.e(TAG, content.getPublicImageUrl() + " not found in internal storage");
+      }
+    }
+
+    if (content.getContentBlocks() != null) {
+      for (ContentBlock block : content.getContentBlocks()) {
+        if (block.getVideoUrl() != null) {
+          try {
+            mOfflineStorageManager.deleteFile(block.getVideoUrl(), true);
+          } catch (IOException e) {
+            Log.e(TAG, block.getVideoUrl() + " not found in internal storage");
+          }
+        }
+
+        if (block.getFileId() != null) {
+          try {
+            mOfflineStorageManager.deleteFile(block.getFileId(), true);
+          } catch (IOException e) {
+            Log.e(TAG, block.getFileId() + " not found in internal storage");
+          }
+        }
+      }
+    }
   }
 
   // getter & setter

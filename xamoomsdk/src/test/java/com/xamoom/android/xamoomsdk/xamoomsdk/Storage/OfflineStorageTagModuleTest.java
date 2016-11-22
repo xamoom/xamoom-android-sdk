@@ -20,6 +20,7 @@ import org.mockito.stubbing.Answer;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -187,7 +188,7 @@ public class OfflineStorageTagModuleTest {
   }
 
   @Test
-  public void testDeleteWithTagsAll() {
+  public void testDeleteWithTagsAll() throws IOException {
     final ArrayList<Spot> spots = new ArrayList<>();
     final ArrayList<Content> contents = new ArrayList<>();
 
@@ -211,6 +212,7 @@ public class OfflineStorageTagModuleTest {
     Spot spot1 = new Spot();
     spot1.setId("3");
     spot1.setTags(tags1);
+    spot1.setPublicImageUrl("www.xamoom.com/file.jpg");
     spots.add(spot1);
 
     Spot spot12 = new Spot();
@@ -248,5 +250,6 @@ public class OfflineStorageTagModuleTest {
     Mockito.verify(mMockedManager, times(1)).deleteSpot(eq("4"));
     Mockito.verify(mMockedManager, times(1)).deleteContent(eq("1"));
     Mockito.verify(mMockedManager, times(1)).deleteContent(eq("2"));
+    Mockito.verify(mMockedManager, times(1)).deleteFile(eq(spot1.getPublicImageUrl()), eq(true));
   }
 }
