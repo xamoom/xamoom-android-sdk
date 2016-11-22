@@ -90,6 +90,44 @@ mEnduserApi.getContentByBeacon(MAJOR, MINOR, new APICallback<Content, List<Error
     });
 ```
 
+## Offline
+
+### Save & get entities offline
+
+You can save your entities offline and use them even if you are not connected
+to the internet.
+
+To save entities offline use `OfflineStorageManager` methods for saving.
+For example to save a content works like this:
+
+```java
+OfflineStorageManager manager =
+OfflineStorageManager.getInstance(getApplicationContext());
+       try {
+         manager.saveContent(result, false, new DownloadManager.OnDownloadManagerCompleted() {
+           @Override
+           public void completed(String urlString) {
+             Log.v(TAG, "Content image saved: " + urlString);
+           }
+
+           @Override
+           public void failed(String urlString, DownloadError downloadError) {
+             Log.v(TAG, "Failed saving: " + urlString);
+           }
+         });
+       } catch (MalformedURLException e) {
+         e.printStackTrace();
+       }
+```
+
+To get offline saved entities use the `EnduserApi` and set the offline property
+to true:
+```java
+mEnduserApi.setOffline(true);
+```
+All `EnduserApi` calls will now return you the offline saved entities.
+
+
 ### Documentation
 
 Here you can find the full java   [documentation](http://xamoom.github.io/xamoom-android-sdk/docs/com/xamoom/android/xamoomsdk/EnduserApi.html).
