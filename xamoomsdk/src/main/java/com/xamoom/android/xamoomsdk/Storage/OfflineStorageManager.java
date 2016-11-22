@@ -268,7 +268,6 @@ public class OfflineStorageManager {
   }
 
   public void getSpotsByLocation(Location location, int radius, int pageSize, @Nullable String cursor,
-                                 @Nullable EnumSet<SpotFlags> spotFlags,
                                  @Nullable EnumSet<SpotSortFlags> sortFlags,
                                  APIListCallback<List<Spot>, List<Error>> callback) {
 
@@ -287,7 +286,6 @@ public class OfflineStorageManager {
   }
 
   public void getSpotsByTags(List<String> tags, int pageSize, @Nullable String cursor,
-                             @Nullable EnumSet<SpotFlags> spotFlags,
                              @Nullable EnumSet<SpotSortFlags> sortFlags,
                              APIListCallback<List<Spot>, List<Error>> callback) {
     ArrayList<Spot> allSpots = mSpotDatabaseAdapter.getAllSpots();
@@ -305,7 +303,6 @@ public class OfflineStorageManager {
   }
 
   public void searchSpotsByName(String name, int pageSize, @Nullable String cursor,
-                                @Nullable EnumSet<SpotFlags> spotFlags,
                                 @Nullable EnumSet<SpotSortFlags> sortFlags,
                                 APIListCallback<List<Spot>, List<Error>> callback) {
     ArrayList<Spot> spots = mSpotDatabaseAdapter.getSpots(name);

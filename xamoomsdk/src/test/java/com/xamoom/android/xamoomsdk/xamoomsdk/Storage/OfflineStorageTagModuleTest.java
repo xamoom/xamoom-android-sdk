@@ -20,7 +20,6 @@ import org.mockito.stubbing.Answer;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -161,12 +160,12 @@ public class OfflineStorageTagModuleTest {
       @Override
       public Object answer(InvocationOnMock invocation) throws Throwable {
         APIListCallback<List<Spot>, List<Error>> callback =
-            (APIListCallback<List<Spot>, List<Error>>) invocation.getArguments()[5];
+            (APIListCallback<List<Spot>, List<Error>>) invocation.getArguments()[4];
         callback.finished(spots, null, false);
         return null;
       }
     }).when(mMockedManager).getSpotsByTags(any(ArrayList.class), anyInt(), anyString(),
-        any(EnumSet.class), any(EnumSet.class), (APIListCallback<List<Spot>, List<Error>>) any());
+        any(EnumSet.class), (APIListCallback<List<Spot>, List<Error>>) any());
 
     doAnswer(new Answer() {
       @Override
@@ -225,12 +224,12 @@ public class OfflineStorageTagModuleTest {
       @Override
       public Object answer(InvocationOnMock invocation) throws Throwable {
         APIListCallback<List<Spot>, List<Error>> callback =
-            (APIListCallback<List<Spot>, List<Error>>) invocation.getArguments()[5];
+            (APIListCallback<List<Spot>, List<Error>>) invocation.getArguments()[4];
         callback.finished(spots, null, false);
         return null;
       }
     }).when(mMockedManager).getSpotsByTags(any(ArrayList.class), anyInt(), anyString(),
-        any(EnumSet.class), any(EnumSet.class), (APIListCallback<List<Spot>, List<Error>>) any());
+        any(EnumSet.class), (APIListCallback<List<Spot>, List<Error>>) any());
 
     doAnswer(new Answer() {
       @Override

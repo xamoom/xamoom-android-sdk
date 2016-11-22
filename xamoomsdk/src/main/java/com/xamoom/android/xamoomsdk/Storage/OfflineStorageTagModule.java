@@ -7,7 +7,6 @@ import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.Spot;
 
-import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -15,6 +14,9 @@ import java.util.List;
 
 import at.rags.morpheus.Error;
 
+/**
+ *
+ */
 public class OfflineStorageTagModule {
   private static final int PAGE_SIZE = 100;
 
@@ -182,7 +184,7 @@ public class OfflineStorageTagModule {
   private void getAllSpotsWithTags(final ArrayList<String> tags, String cursor,
                                    final APIListCallback<List<Spot>, List<Error>> callback) {
     mAllSpots.clear();
-    mOfflineStorageManager.getSpotsByTags(tags, PAGE_SIZE, cursor, null, null, new APIListCallback<List<Spot>, List<Error>>() {
+    mOfflineStorageManager.getSpotsByTags(tags, PAGE_SIZE, cursor, null, new APIListCallback<List<Spot>, List<Error>>() {
       @Override
       public void finished(List<Spot> result, String cursor, boolean hasMore) {
         mAllSpots.addAll(result);

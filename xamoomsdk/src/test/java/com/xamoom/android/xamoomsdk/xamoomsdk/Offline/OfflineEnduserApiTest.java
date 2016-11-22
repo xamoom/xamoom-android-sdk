@@ -5,7 +5,6 @@ import android.location.Location;
 import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.APIListCallback;
 import com.xamoom.android.xamoomsdk.BuildConfig;
-import com.xamoom.android.xamoomsdk.Enums.ContentSortFlags;
 import com.xamoom.android.xamoomsdk.Offline.OfflineEnduserApi;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.Menu;
@@ -19,13 +18,11 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.concurrent.Semaphore;
@@ -36,9 +33,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.contains;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.matches;
 import static org.mockito.Matchers.notNull;
 
 @RunWith(RobolectricTestRunner.class)
@@ -202,7 +197,7 @@ public class OfflineEnduserApiTest {
     mOfflineEnduserApi.getSpotsByLocation(null, 1, 10, null, null, null, null);
 
     Mockito.verify(mMockedOfflineStorageManager).getSpotsByLocation(any(Location.class), anyInt(),
-        anyInt(), anyString(), any(EnumSet.class), any(EnumSet.class),
+        anyInt(), anyString(), any(EnumSet.class),
         (APIListCallback<List<Spot>, List<Error>>) any(APICallback.class));
   }
 
@@ -211,7 +206,7 @@ public class OfflineEnduserApiTest {
     mOfflineEnduserApi.getSpotsByLocation(null, 1, null, null, null);
 
     Mockito.verify(mMockedOfflineStorageManager).getSpotsByLocation(any(Location.class), anyInt(),
-        anyInt(), anyString(), any(EnumSet.class), any(EnumSet.class),
+        anyInt(), anyString(), any(EnumSet.class),
         (APIListCallback<List<Spot>, List<Error>>) any(APICallback.class));
   }
 
@@ -220,7 +215,7 @@ public class OfflineEnduserApiTest {
     mOfflineEnduserApi.getSpotsByTags(null, null, null, null);
 
     Mockito.verify(mMockedOfflineStorageManager).getSpotsByTags(anyList(), anyInt(), anyString(),
-        any(EnumSet.class), any(EnumSet.class),
+        any(EnumSet.class),
         (APIListCallback<List<Spot>, List<Error>>) any(APICallback.class));
   }
 
@@ -229,7 +224,7 @@ public class OfflineEnduserApiTest {
     mOfflineEnduserApi.getSpotsByTags(null, 10, null, null, null, null);
 
     Mockito.verify(mMockedOfflineStorageManager).getSpotsByTags(anyList(), anyInt(), anyString(),
-        any(EnumSet.class), any(EnumSet.class),
+        any(EnumSet.class),
         (APIListCallback<List<Spot>, List<Error>>) any(APICallback.class));
   }
 
@@ -238,7 +233,7 @@ public class OfflineEnduserApiTest {
     mOfflineEnduserApi.searchSpotsByName("1", 10, null, null, null, null);
 
     Mockito.verify(mMockedOfflineStorageManager).searchSpotsByName(anyString(), anyInt(),
-        anyString(),any(EnumSet.class), any(EnumSet.class),
+        anyString(), any(EnumSet.class),
         (APIListCallback<List<Spot>, List<Error>>) any(APICallback.class));
   }
 

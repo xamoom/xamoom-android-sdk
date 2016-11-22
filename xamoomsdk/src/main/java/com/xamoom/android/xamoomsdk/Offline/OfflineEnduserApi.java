@@ -7,29 +7,21 @@ import android.support.annotation.Nullable;
 
 import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.APIListCallback;
-import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
 import com.xamoom.android.xamoomsdk.Enums.ContentSortFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotSortFlags;
 import com.xamoom.android.xamoomsdk.Resource.Content;
-import com.xamoom.android.xamoomsdk.Resource.Marker;
 import com.xamoom.android.xamoomsdk.Resource.Menu;
 import com.xamoom.android.xamoomsdk.Resource.Spot;
 import com.xamoom.android.xamoomsdk.Resource.Style;
 import com.xamoom.android.xamoomsdk.Resource.System;
 import com.xamoom.android.xamoomsdk.Resource.SystemSetting;
 import com.xamoom.android.xamoomsdk.Storage.OfflineStorageManager;
-import com.xamoom.android.xamoomsdk.Utils.JsonListUtil;
-import com.xamoom.android.xamoomsdk.Utils.UrlUtil;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Map;
 
 import at.rags.morpheus.Error;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
 
 public class OfflineEnduserApi {
   private OfflineStorageManager mOfflineStorageManager;
@@ -90,7 +82,7 @@ public class OfflineEnduserApi {
   public void getSpotsByLocation(Location location, int radius, EnumSet<SpotFlags> spotFlags,
                                  @Nullable EnumSet<SpotSortFlags> sortFlags,
                                  APIListCallback<List<Spot>, List<Error>> callback) {
-    mOfflineStorageManager.getSpotsByLocation(location, radius, 100, null, spotFlags, sortFlags,
+    mOfflineStorageManager.getSpotsByLocation(location, radius, 100, null, sortFlags,
         callback);
   }
 
@@ -98,28 +90,28 @@ public class OfflineEnduserApi {
                                  @Nullable EnumSet<SpotFlags> spotFlags,
                                  @Nullable EnumSet<SpotSortFlags> sortFlags,
                                  APIListCallback<List<Spot>, List<Error>> callback) {
-    mOfflineStorageManager.getSpotsByLocation(location, radius, pageSize, cursor, spotFlags, sortFlags,
+    mOfflineStorageManager.getSpotsByLocation(location, radius, pageSize, cursor, sortFlags,
         callback);
   }
 
   public void getSpotsByTags(List<String> tags, @Nullable EnumSet<SpotFlags> spotFlags,
                              @Nullable EnumSet<SpotSortFlags> sortFlags,
                              APIListCallback<List<Spot>, List<Error>> callback) {
-    mOfflineStorageManager.getSpotsByTags(tags, 100, null, spotFlags, sortFlags, callback);
+    mOfflineStorageManager.getSpotsByTags(tags, 100, null, sortFlags, callback);
   }
 
   public void getSpotsByTags(List<String> tags, int pageSize, @Nullable String cursor,
                              @Nullable EnumSet<SpotFlags> spotFlags,
                              @Nullable EnumSet<SpotSortFlags> sortFlags,
                              APIListCallback<List<Spot>, List<Error>> callback) {
-    mOfflineStorageManager.getSpotsByTags(tags, pageSize, cursor, spotFlags, sortFlags, callback);
+    mOfflineStorageManager.getSpotsByTags(tags, pageSize, cursor, sortFlags, callback);
   }
 
   public void searchSpotsByName(String name, int pageSize, @Nullable String cursor,
                                 @Nullable EnumSet<SpotFlags> spotFlags,
                                 @Nullable EnumSet<SpotSortFlags> sortFlags,
                                 APIListCallback<List<Spot>, List<Error>> callback) {
-    mOfflineStorageManager.searchSpotsByName(name, pageSize, cursor, spotFlags, sortFlags, callback);
+    mOfflineStorageManager.searchSpotsByName(name, pageSize, cursor, sortFlags, callback);
   }
 
   public void getSystem(final APICallback<System, List<Error>> callback) {

@@ -466,7 +466,7 @@ public class OfflineStorageManagerTest {
     Mockito.stub(mMockedSpotDatabaseAdapter.getAllSpots()).toReturn(spots);
 
     final Semaphore semaphore = new Semaphore(0);
-    mOfflineStorageManager.getSpotsByLocation(location, 100, 10, null, null,
+    mOfflineStorageManager.getSpotsByLocation(location, 100, 10, null,
         null, new APIListCallback<List<Spot>, List<Error>>() {
       @Override
       public void finished(List<Spot> result, String cursor, boolean hasMore) {
@@ -504,7 +504,7 @@ public class OfflineStorageManagerTest {
     Mockito.stub(mMockedSpotDatabaseAdapter.getAllSpots()).toReturn(spots);
 
     final Semaphore semaphore = new Semaphore(0);
-    mOfflineStorageManager.getSpotsByLocation(location, 100, 10, null, null,
+    mOfflineStorageManager.getSpotsByLocation(location, 100, 10, null,
         EnumSet.of(SpotSortFlags.DISTANCE_DESC), new APIListCallback<List<Spot>, List<Error>>() {
           @Override
           public void finished(List<Spot> result, String cursor, boolean hasMore) {
@@ -543,7 +543,7 @@ public class OfflineStorageManagerTest {
     Mockito.stub(mMockedSpotDatabaseAdapter.getAllSpots()).toReturn(spots);
 
     final Semaphore semaphore = new Semaphore(0);
-    mOfflineStorageManager.getSpotsByTags(tags1, 10, null, null, null, new APIListCallback<List<Spot>, List<Error>>() {
+    mOfflineStorageManager.getSpotsByTags(tags1, 10, null, null, new APIListCallback<List<Spot>, List<Error>>() {
       @Override
       public void finished(List<Spot> result, String cursor, boolean hasMore) {
         Assert.assertNotNull(result);
@@ -574,7 +574,7 @@ public class OfflineStorageManagerTest {
     Mockito.stub(mMockedSpotDatabaseAdapter.getSpots(anyString())).toReturn(spots);
 
     final Semaphore semaphore = new Semaphore(0);
-    mOfflineStorageManager.searchSpotsByName("test", 10, null, null, null, new APIListCallback<List<Spot>, List<Error>>() {
+    mOfflineStorageManager.searchSpotsByName("test", 10, null, null, new APIListCallback<List<Spot>, List<Error>>() {
       @Override
       public void finished(List<Spot> result, String cursor, boolean hasMore) {
         Assert.assertEquals(1, result.size());
