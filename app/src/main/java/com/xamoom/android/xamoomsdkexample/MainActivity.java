@@ -188,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
         OfflineStorageManager manager =
             OfflineStorageManager.getInstance(getApplicationContext());
         try {
-          manager.saveContent(result, , new DownloadManager.OnDownloadManagerCompleted() {
+          manager.saveContent(result, false, new DownloadManager.OnDownloadManagerCompleted() {
             @Override
             public void completed(String urlString) {
               Log.v(TAG, "File saved: " + urlString);
@@ -224,7 +224,7 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
             XamoomContentFragment xamoomFragment = XamoomContentFragment.newInstance(getResources().getString(R.string.youtube_key)); //create new instance
             xamoomFragment.setEnduserApi(mEnduserApi);
             xamoomFragment.setDisplayAllStoreLinks(true);
-            xamoomFragment.setContent(result, false);
+            xamoomFragment.setContent(result, false, false);
             xamoomFragment.setShowSpotMapContentLinks(true);
             //xamoomFragment.setStyle(mStyle);
             xamoomFragment.setBackgroundColor(Color.TRANSPARENT);
