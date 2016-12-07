@@ -1,0 +1,29 @@
+{
+  "included": [
+  ],
+  "data": {
+    "relationships": {
+      "system": {
+        "data": {
+          "type": "systems",
+          "id": "5755996320301056"
+        }
+      }
+    },
+    "attributes": {
+      "category": "58",
+      "description": "",
+      "location": {
+        "lat": "46.615031299999998",
+        "lon": "14.261887000000002"
+      },
+      "name": "APP | Spot 2",
+      "tags": [
+        "spot2",
+        "allspots"
+      ]
+    },
+    "type": "spots",
+    "id": "5755996320301056|5673385510043648"
+  }
+}

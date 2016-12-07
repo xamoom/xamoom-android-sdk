@@ -1,0 +1,162 @@
+{
+  "included": [
+    {
+      "attributes": {
+        "text": "<p><br></p>",
+        "is-public": true,
+        "block-type": "0",
+        "title": "Welcome to the land of testing"
+      },
+      "type": "contentblocks",
+      "id": "7cf2c58e6d374ce3888c32eb80be53b5|0"
+    },
+    {
+      "attributes": {
+        "content-id": "5f6a24e9ec5e4090890b7911c791a0c7",
+        "block-type": "6",
+        "is-public": true
+      },
+      "type": "contentblocks",
+      "id": "7cf2c58e6d374ce3888c32eb80be53b5|1"
+    },
+    {
+      "attributes": {
+        "content-id": "2dacd9944946484b9df2b822c475a90c",
+        "block-type": "6",
+        "is-public": true
+      },
+      "type": "contentblocks",
+      "id": "7cf2c58e6d374ce3888c32eb80be53b5|2"
+    },
+    {
+      "attributes": {
+        "content-id": "6b4102f6fd0c40eba7398e4012069d1d",
+        "block-type": "6",
+        "is-public": true
+      },
+      "type": "contentblocks",
+      "id": "7cf2c58e6d374ce3888c32eb80be53b5|3"
+    },
+    {
+      "attributes": {
+        "content-id": "49c8f22408b047598c2b00507aed04db",
+        "block-type": "6",
+        "is-public": true
+      },
+      "type": "contentblocks",
+      "id": "7cf2c58e6d374ce3888c32eb80be53b5|4"
+    },
+    {
+      "attributes": {
+        "content-id": "2570fd0d2a0a48c39112bc9913461f5d",
+        "block-type": "6",
+        "is-public": true
+      },
+      "type": "contentblocks",
+      "id": "7cf2c58e6d374ce3888c32eb80be53b5|5"
+    },
+    {
+      "attributes": {
+        "content-id": "0737f96b520645cab6d71242cd43cdad",
+        "block-type": "6",
+        "is-public": true
+      },
+      "type": "contentblocks",
+      "id": "7cf2c58e6d374ce3888c32eb80be53b5|6"
+    },
+    {
+      "attributes": {
+        "content-id": "1d4f6152baa5418098d12cbf14e20275",
+        "block-type": "6",
+        "is-public": true
+      },
+      "type": "contentblocks",
+      "id": "7cf2c58e6d374ce3888c32eb80be53b5|7"
+    },
+    {
+      "attributes": {
+        "content-id": "1d966300bb304a199a7ba5d9ff295269",
+        "block-type": "6",
+        "is-public": true
+      },
+      "type": "contentblocks",
+      "id": "7cf2c58e6d374ce3888c32eb80be53b5|8"
+    },
+    {
+      "attributes": {
+        "content-id": "3092bce1dbef409c8943ab43afa2c938",
+        "block-type": "6",
+        "is-public": true
+      },
+      "type": "contentblocks",
+      "id": "7cf2c58e6d374ce3888c32eb80be53b5|9"
+    }
+  ],
+  "data": {
+    "relationships": {
+      "blocks": {
+        "data": [
+          {
+            "type": "contentblocks",
+            "id": "7cf2c58e6d374ce3888c32eb80be53b5|0"
+          },
+          {
+            "type": "contentblocks",
+            "id": "7cf2c58e6d374ce3888c32eb80be53b5|1"
+          },
+          {
+            "type": "contentblocks",
+            "id": "7cf2c58e6d374ce3888c32eb80be53b5|2"
+          },
+          {
+            "type": "contentblocks",
+            "id": "7cf2c58e6d374ce3888c32eb80be53b5|3"
+          },
+          {
+            "type": "contentblocks",
+            "id": "7cf2c58e6d374ce3888c32eb80be53b5|4"
+          },
+          {
+            "type": "contentblocks",
+            "id": "7cf2c58e6d374ce3888c32eb80be53b5|5"
+          },
+          {
+            "type": "contentblocks",
+            "id": "7cf2c58e6d374ce3888c32eb80be53b5|6"
+          },
+          {
+            "type": "contentblocks",
+            "id": "7cf2c58e6d374ce3888c32eb80be53b5|7"
+          },
+          {
+            "type": "contentblocks",
+            "id": "7cf2c58e6d374ce3888c32eb80be53b5|8"
+          },
+          {
+            "type": "contentblocks",
+            "id": "7cf2c58e6d374ce3888c32eb80be53b5|9"
+          }
+        ]
+      },
+      "system": {
+        "data": {
+          "type": "systems",
+          "id": "5755996320301056"
+        }
+      }
+    },
+    "attributes": {
+      "category": "58",
+      "description": "Testing Hub excerpt.",
+      "language": "de",
+      "tags": [
+        "tests",
+        "Wörthersee"
+      ],
+      "cover-image-url": "https://storage.googleapis.com/xamoom-files-dev/mobile/d8baa2bad1ce4d9da21297098ce4ff00.jpg?v=b87374bc207bd8267e5e89e439b3e475eb90b63fd974fbe338421cdd63944370e98dd495fab54ceaf3efef6b9223f7de9f44097a39c630c08a969d1545c4aa63",
+      "display-name": "APP | Testing Hub"
+    },
+    "type": "contents",
+    "id": "7cf2c58e6d374ce3888c32eb80be53b5"
+  }
+}

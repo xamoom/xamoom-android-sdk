@@ -1,0 +1,49 @@
+{
+  "included": [
+    {
+      "attributes": {
+        "display-name": "Testseite"
+      },
+      "type": "contents",
+      "id": "28d13571a9614cc19d624528ed7c2bb8"
+    },
+    {
+      "attributes": {
+        "category": "58",
+        "display-name": "APP | Testing Hub"
+      },
+      "type": "contents",
+      "id": "7cf2c58e6d374ce3888c32eb80be53b5"
+    },
+    {
+      "attributes": {
+        "category": "49",
+        "display-name": "APP | Test Spotmap"
+      },
+      "type": "contents",
+      "id": "3092bce1dbef409c8943ab43afa2c938"
+    }
+  ],
+  "data": {
+    "relationships": {
+      "items": {
+        "data": [
+          {
+            "type": "contents",
+            "id": "28d13571a9614cc19d624528ed7c2bb8"
+          },
+          {
+            "type": "contents",
+            "id": "7cf2c58e6d374ce3888c32eb80be53b5"
+          },
+          {
+            "type": "contents",
+            "id": "3092bce1dbef409c8943ab43afa2c938"
+          }
+        ]
+      }
+    },
+    "type": "menus",
+    "id": "5755996320301056"
+  }
+}

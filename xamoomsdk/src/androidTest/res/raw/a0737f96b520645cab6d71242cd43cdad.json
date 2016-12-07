@@ -1,0 +1,125 @@
+{
+  "included": [
+    {
+      "attributes": {
+        "scale-x": "100.0",
+        "file-id": "https://storage.googleapis.com/xamoom-files-dev/mobile/62a7d76c4a14446bbc8e3155b8db025f.png",
+        "is-public": true,
+        "block-type": "3",
+        "title": "Image 1 | 100%"
+      },
+      "type": "contentblocks",
+      "id": "0737f96b520645cab6d71242cd43cdad|0"
+    },
+    {
+      "attributes": {
+        "scale-x": "50.0",
+        "file-id": "https://storage.googleapis.com/xamoom-files-dev/mobile/62a7d76c4a14446bbc8e3155b8db025f.png",
+        "is-public": true,
+        "block-type": "3",
+        "title": "Image 2 | 50%"
+      },
+      "type": "contentblocks",
+      "id": "0737f96b520645cab6d71242cd43cdad|1"
+    },
+    {
+      "attributes": {
+        "scale-x": "10.0",
+        "file-id": "https://storage.googleapis.com/xamoom-files-dev/mobile/62a7d76c4a14446bbc8e3155b8db025f.png",
+        "is-public": true,
+        "block-type": "3",
+        "title": "Image 3 | 10%"
+      },
+      "type": "contentblocks",
+      "id": "0737f96b520645cab6d71242cd43cdad|2"
+    },
+    {
+      "attributes": {
+        "scale-x": "100.0",
+        "alt-text": "Das ist ein altes Fernsehtestbild.",
+        "title": "Image 4 | 100% | alternativ text",
+        "file-id": "https://storage.googleapis.com/xamoom-files-dev/mobile/62a7d76c4a14446bbc8e3155b8db025f.png",
+        "is-public": true,
+        "block-type": "3"
+      },
+      "type": "contentblocks",
+      "id": "0737f96b520645cab6d71242cd43cdad|3"
+    },
+    {
+      "attributes": {
+        "scale-x": "100.0",
+        "alt-text": "Don't click on this link",
+        "title": "Image 5 | 100% | Link | alternative text",
+        "file-id": "https://storage.googleapis.com/xamoom-files-dev/mobile/c4e6336f8e3e4532bec67ca5fcb10806.jpg",
+        "is-public": true,
+        "link-url": "http://www.xamoom.com",
+        "block-type": "3"
+      },
+      "type": "contentblocks",
+      "id": "0737f96b520645cab6d71242cd43cdad|4"
+    },
+    {
+      "attributes": {
+        "scale-x": "100.0",
+        "alt-text": "Alternativtext mit Überlänge Alternativtext mit Überlänge Alternativtext mit Überlänge Alternativtext mit Überlänge Alternativtext mit Überlänge Alternativtext mit Überlänge Alternativtext mit Überlänge Alternativtext mit Überlänge Alternativtext mit Überlänge Alternativtext mit Überlänge Alternativtext mit Überlänge Alternativtext mit Überlänge Alternativtext mit Überlänge Alternativtext mit Überlänge Alternativtext mit Überlänge Alternativtext mit Überlänge Alternativtext mit Überlänge Alternativtext mit Überlänge Alternativtext mit Überlänge Alternativtext mit Überlänge Alternativtext mit Überlänge Alternativtext mit Überlänge Alternativtext mit Überlänge Alternativtext mit Überlänge Alternativtext mit Überlänge Alternativtext mit Überlänge Alternativtext mit Überlänge Alternativtext mit Überlänge Alternativtext mit Überlänge Alternativtext mit Überlänge Alternativtext mit Überlänge Alternativtext mit Überlänge Alternativtext mit Überlänge",
+        "title": "Image 6 | 100% | SVG | Titel mit Überlänge Titel mit Überlänge Titel mit Überlänge Titel mit Überlänge Titel mit Überlänge Titel mit Überlänge Titel mit Überlänge Titel mit Überlänge",
+        "file-id": "https://storage.googleapis.com/xamoom-files-dev/75cb04aed1ee4028b3588bcf388cff58.svg",
+        "is-public": true,
+        "block-type": "3"
+      },
+      "type": "contentblocks",
+      "id": "0737f96b520645cab6d71242cd43cdad|5"
+    }
+  ],
+  "data": {
+    "relationships": {
+      "blocks": {
+        "data": [
+          {
+            "type": "contentblocks",
+            "id": "0737f96b520645cab6d71242cd43cdad|0"
+          },
+          {
+            "type": "contentblocks",
+            "id": "0737f96b520645cab6d71242cd43cdad|1"
+          },
+          {
+            "type": "contentblocks",
+            "id": "0737f96b520645cab6d71242cd43cdad|2"
+          },
+          {
+            "type": "contentblocks",
+            "id": "0737f96b520645cab6d71242cd43cdad|3"
+          },
+          {
+            "type": "contentblocks",
+            "id": "0737f96b520645cab6d71242cd43cdad|4"
+          },
+          {
+            "type": "contentblocks",
+            "id": "0737f96b520645cab6d71242cd43cdad|5"
+          }
+        ]
+      },
+      "system": {
+        "data": {
+          "type": "systems",
+          "id": "5755996320301056"
+        }
+      }
+    },
+    "attributes": {
+      "description": "APP | Test Image Excerpt",
+      "language": "de",
+      "tags": [
+        "tests"
+      ],
+      "cover-image-url": "https://storage.googleapis.com/xamoom-files-dev/mobile/62a7d76c4a14446bbc8e3155b8db025f.png?v=6d4d4f69c6fb9be6355df39c8b7b7987822b7440023087c122f880b15ce1b52b958bfd38be7fcdb84f0a087a26cf56af3315c62d30c6afdc27ed9a0b3e7169d7",
+      "custom-meta": [
+      ],
+      "display-name": "APP | Test Image"
+    },
+    "type": "contents",
+    "id": "0737f96b520645cab6d71242cd43cdad"
+  }
+}

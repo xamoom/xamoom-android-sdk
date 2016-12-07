@@ -1,0 +1,32 @@
+{
+  "included": [
+  ],
+  "data": {
+    "relationships": {
+      "menu": {
+        "data": {
+          "type": "menus",
+          "id": "5755996320301056"
+        }
+      },
+      "style": {
+        "data": {
+          "type": "styles",
+          "id": "5755996320301056"
+        }
+      },
+      "setting": {
+        "data": {
+          "type": "settings",
+          "id": "5755996320301056"
+        }
+      }
+    },
+    "attributes": {
+      "url": "http://testpavol.at",
+      "display-name": "Dev xamoom testing UMGEBUNG"
+    },
+    "type": "systems",
+    "id": "5755996320301056"
+  }
+}

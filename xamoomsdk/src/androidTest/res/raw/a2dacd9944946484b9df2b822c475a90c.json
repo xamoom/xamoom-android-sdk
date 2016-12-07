@@ -1,0 +1,59 @@
+{
+  "included": [
+    {
+      "attributes": {
+        "file-id": "https://storage.googleapis.com/xamoom-files-dev/93b258c0c2d543759471cec6f102118d.mp3",
+        "is-public": true,
+        "artists": "Artist",
+        "block-type": "1",
+        "title": "Audio 1 | mp3"
+      },
+      "type": "contentblocks",
+      "id": "2dacd9944946484b9df2b822c475a90c|0"
+    },
+    {
+      "attributes": {
+        "file-id": "https://storage.googleapis.com/xamoom-files-dev/a0c24620780147c486801ac70bf46b51.m4a",
+        "is-public": true,
+        "artists": "Artist mit Überlänge Artist mit Überlänge Artist mit Überlänge Artist mit Überlänge Artist mit Überlänge Artist mit Überlänge Artist mit Überlänge Artist mit Überlänge ",
+        "block-type": "1",
+        "title": "Audio 2 | m4a | Titel mit Überlänge Titel mit Überlänge Titel mit Überlänge Titel mit Überlänge Titel mit Überlänge Titel mit Überlänge Titel mit Überlänge "
+      },
+      "type": "contentblocks",
+      "id": "2dacd9944946484b9df2b822c475a90c|1"
+    }
+  ],
+  "data": {
+    "relationships": {
+      "blocks": {
+        "data": [
+          {
+            "type": "contentblocks",
+            "id": "2dacd9944946484b9df2b822c475a90c|0"
+          },
+          {
+            "type": "contentblocks",
+            "id": "2dacd9944946484b9df2b822c475a90c|1"
+          }
+        ]
+      },
+      "system": {
+        "data": {
+          "type": "systems",
+          "id": "5755996320301056"
+        }
+      }
+    },
+    "attributes": {
+      "cover-image-url": "https://storage.googleapis.com/xamoom-files-dev/mobile/214d106207ae4ccc827a39ebabba09a5.jpg?v=4f19f036d9a65caea59f12081c95d7d673f8337fa078845209d4ed582bc4ef53eb5394f7710ac6b600a47e278fa18791a6d86f5b3e0ced9ace763e6b575cdc99",
+      "tags": [
+        "tests"
+      ],
+      "display-name": "APP | Test Audio",
+      "language": "de",
+      "description": "APP | Test Audio Excerpt"
+    },
+    "type": "contents",
+    "id": "2dacd9944946484b9df2b822c475a90c"
+  }
+}

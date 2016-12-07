@@ -1,0 +1,81 @@
+{
+  "included": [
+    {
+      "attributes": {
+        "spot-map-tags": [
+          "spot1"
+        ],
+        "is-public": true,
+        "block-type": "9",
+        "should-show-content-on-spotmap": true,
+        "title": "TestMap | TAG SPOT1"
+      },
+      "type": "contentblocks",
+      "id": "3092bce1dbef409c8943ab43afa2c938|0"
+    },
+    {
+      "attributes": {
+        "spot-map-tags": [
+          "spot2"
+        ],
+        "is-public": true,
+        "block-type": "9",
+        "should-show-content-on-spotmap": true,
+        "title": "TestMap | TAG SPOT1"
+      },
+      "type": "contentblocks",
+      "id": "3092bce1dbef409c8943ab43afa2c938|1"
+    },
+    {
+      "attributes": {
+        "spot-map-tags": [
+          "showAllTheSpots"
+        ],
+        "is-public": true,
+        "block-type": "9",
+        "should-show-content-on-spotmap": true,
+        "title": "TestMap | TAG showAllTheSpots | Title mit Überlänge Title mit Überlänge Title mit Überlänge Title mit Überlänge Title mit Überlänge Title mit Überlänge "
+      },
+      "type": "contentblocks",
+      "id": "3092bce1dbef409c8943ab43afa2c938|2"
+    }
+  ],
+  "data": {
+    "relationships": {
+      "blocks": {
+        "data": [
+          {
+            "type": "contentblocks",
+            "id": "3092bce1dbef409c8943ab43afa2c938|0"
+          },
+          {
+            "type": "contentblocks",
+            "id": "3092bce1dbef409c8943ab43afa2c938|1"
+          },
+          {
+            "type": "contentblocks",
+            "id": "3092bce1dbef409c8943ab43afa2c938|2"
+          }
+        ]
+      },
+      "system": {
+        "data": {
+          "type": "systems",
+          "id": "5755996320301056"
+        }
+      }
+    },
+    "attributes": {
+      "category": "49",
+      "description": "APP | Test Spotmap Excerpt",
+      "language": "de",
+      "tags": [
+        "tests"
+      ],
+      "cover-image-url": "https://storage.googleapis.com/xamoom-files-dev/mobile/c25fcf4e52a843c6ad26cd58f684426a.jpg?v=d2e9a6f1cde62f39f6f8cecacbf7afe1ab96c23051a93f5d9de9c10f9c9b65be78a259459554c13dd20714c78b08c5520a7d0e1b8bb459c706f8afaa1e08a29e",
+      "display-name": "APP | Test Spotmap"
+    },
+    "type": "contents",
+    "id": "3092bce1dbef409c8943ab43afa2c938"
+  }
+}

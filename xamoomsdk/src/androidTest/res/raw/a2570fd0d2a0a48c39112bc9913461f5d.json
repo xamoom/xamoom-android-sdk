@@ -1,0 +1,317 @@
+{
+  "included": [
+    {
+      "attributes": {
+        "title": "Amazon",
+        "text": "Amazon Text",
+        "link-type": "3",
+        "is-public": true,
+        "link-url": "http://www.amazon.de/Stupid-Hobbit-Gedruckt-Frauen-T-Shirt/dp/B013PHYR5S/ref=sr_1_15?ie=UTF8&qid=1452180457&sr=8-15&keywords=Stupid",
+        "block-type": "4"
+      },
+      "type": "contentblocks",
+      "id": "2570fd0d2a0a48c39112bc9913461f5d|0"
+    },
+    {
+      "attributes": {
+        "title": "Email",
+        "text": "Email Text",
+        "link-type": "12",
+        "is-public": true,
+        "link-url": "mailto:yolo@xamoom.com",
+        "block-type": "4"
+      },
+      "type": "contentblocks",
+      "id": "2570fd0d2a0a48c39112bc9913461f5d|1"
+    },
+    {
+      "attributes": {
+        "title": "Facebook",
+        "text": "Facebook Text",
+        "link-type": "0",
+        "is-public": true,
+        "link-url": "https://de-de.facebook.com/xamoom",
+        "block-type": "4"
+      },
+      "type": "contentblocks",
+      "id": "2570fd0d2a0a48c39112bc9913461f5d|2"
+    },
+    {
+      "attributes": {
+        "title": "Flickr",
+        "text": "Flickr Text",
+        "link-type": "6",
+        "is-public": true,
+        "link-url": "https://www.flickr.com/photos/salendron/",
+        "block-type": "4"
+      },
+      "type": "contentblocks",
+      "id": "2570fd0d2a0a48c39112bc9913461f5d|3"
+    },
+    {
+      "attributes": {
+        "title": "GooglePlus",
+        "text": "GooglePlus Text",
+        "link-type": "10",
+        "is-public": true,
+        "link-url": "https://plus.google.com/+Xamoom",
+        "block-type": "4"
+      },
+      "type": "contentblocks",
+      "id": "2570fd0d2a0a48c39112bc9913461f5d|4"
+    },
+    {
+      "attributes": {
+        "title": "GoogleMaps",
+        "text": "GoogleMaps Text",
+        "link-type": "14",
+        "is-public": true,
+        "link-url": "https://www.google.at/maps/place/xamoom+GmbH/@46.6150736,14.2603349,17z/data=!3m1!4b1!4m2!3m1!1s0x4770746a59ac29e5:0x190d58609dba3bdc",
+        "block-type": "4"
+      },
+      "type": "contentblocks",
+      "id": "2570fd0d2a0a48c39112bc9913461f5d|5"
+    },
+    {
+      "attributes": {
+        "title": "GooglePlay",
+        "text": "GooglePlayText",
+        "link-type": "16",
+        "is-public": true,
+        "link-url": "https://play.google.com/store/apps/developer?id=xamoom+GmbH",
+        "block-type": "4"
+      },
+      "type": "contentblocks",
+      "id": "2570fd0d2a0a48c39112bc9913461f5d|6"
+    },
+    {
+      "attributes": {
+        "title": "Itunes",
+        "text": "Itunes Text",
+        "link-type": "8",
+        "is-public": true,
+        "link-url": "https://itunes.apple.com/at/album/7-years/id1001066187?i=1001066188&v0=WWW-EUAT-ITSTOP100-SONGS&l=de&ign-mpt=uo%3D4",
+        "block-type": "4"
+      },
+      "type": "contentblocks",
+      "id": "2570fd0d2a0a48c39112bc9913461f5d|7"
+    },
+    {
+      "attributes": {
+        "title": "ItunesApp",
+        "text": "ItunesApp Text",
+        "link-type": "15",
+        "is-public": true,
+        "link-url": "https://itunes.apple.com/at/app/pingeb.org/id998504165?mt=8",
+        "block-type": "4"
+      },
+      "type": "contentblocks",
+      "id": "2570fd0d2a0a48c39112bc9913461f5d|8"
+    },
+    {
+      "attributes": {
+        "title": "Linkedin",
+        "text": "Linkedin Text",
+        "link-type": "5",
+        "is-public": true,
+        "link-url": "https://www.linkedin.com/company/xamoom",
+        "block-type": "4"
+      },
+      "type": "contentblocks",
+      "id": "2570fd0d2a0a48c39112bc9913461f5d|9"
+    },
+    {
+      "attributes": {
+        "title": "Soundcloud",
+        "text": "Soundcloud Text",
+        "link-type": "7",
+        "is-public": true,
+        "link-url": "https://soundcloud.com/npr",
+        "block-type": "4"
+      },
+      "type": "contentblocks",
+      "id": "2570fd0d2a0a48c39112bc9913461f5d|10"
+    },
+    {
+      "attributes": {
+        "title": "Spotify",
+        "text": "Spotify Text",
+        "link-type": "13",
+        "is-public": true,
+        "link-url": "https://open.spotify.com/track/5qcxwhVTg06mnMqi0JW0er",
+        "block-type": "4"
+      },
+      "type": "contentblocks",
+      "id": "2570fd0d2a0a48c39112bc9913461f5d|11"
+    },
+    {
+      "attributes": {
+        "title": "Telefon",
+        "text": "Telefon Text",
+        "link-type": "11",
+        "is-public": true,
+        "link-url": "tel:+43-463-930 330",
+        "block-type": "4"
+      },
+      "type": "contentblocks",
+      "id": "2570fd0d2a0a48c39112bc9913461f5d|12"
+    },
+    {
+      "attributes": {
+        "title": "Twitter",
+        "text": "Twitter Text",
+        "link-type": "1",
+        "is-public": true,
+        "link-url": "https://twitter.com/xamoom",
+        "block-type": "4"
+      },
+      "type": "contentblocks",
+      "id": "2570fd0d2a0a48c39112bc9913461f5d|13"
+    },
+    {
+      "attributes": {
+        "title": "Web",
+        "text": "Web Text",
+        "link-type": "2",
+        "is-public": true,
+        "link-url": "http://www.xamoom.com",
+        "block-type": "4"
+      },
+      "type": "contentblocks",
+      "id": "2570fd0d2a0a48c39112bc9913461f5d|14"
+    },
+    {
+      "attributes": {
+        "title": "Wikipedia",
+        "text": "Wikipedia",
+        "link-type": "4",
+        "is-public": true,
+        "link-url": "https://de.wikipedia.org/wiki/Klagenfurt_am_W%C3%B6rthersee",
+        "block-type": "4"
+      },
+      "type": "contentblocks",
+      "id": "2570fd0d2a0a48c39112bc9913461f5d|15"
+    },
+    {
+      "attributes": {
+        "title": "WindowsStore",
+        "text": "WindowsStore Text",
+        "link-type": "17",
+        "is-public": true,
+        "link-url": "https://www.microsoft.com/de-at/store/apps/wikipedia/9wzdncrfhwm4",
+        "block-type": "4"
+      },
+      "type": "contentblocks",
+      "id": "2570fd0d2a0a48c39112bc9913461f5d|16"
+    },
+    {
+      "attributes": {
+        "title": "Youtube",
+        "text": "Youtube Text",
+        "link-type": "9",
+        "is-public": true,
+        "link-url": "https://www.youtube.com/watch?v=sv2eCJpuxyM",
+        "block-type": "4"
+      },
+      "type": "contentblocks",
+      "id": "2570fd0d2a0a48c39112bc9913461f5d|17"
+    }
+  ],
+  "data": {
+    "relationships": {
+      "blocks": {
+        "data": [
+          {
+            "type": "contentblocks",
+            "id": "2570fd0d2a0a48c39112bc9913461f5d|0"
+          },
+          {
+            "type": "contentblocks",
+            "id": "2570fd0d2a0a48c39112bc9913461f5d|1"
+          },
+          {
+            "type": "contentblocks",
+            "id": "2570fd0d2a0a48c39112bc9913461f5d|2"
+          },
+          {
+            "type": "contentblocks",
+            "id": "2570fd0d2a0a48c39112bc9913461f5d|3"
+          },
+          {
+            "type": "contentblocks",
+            "id": "2570fd0d2a0a48c39112bc9913461f5d|4"
+          },
+          {
+            "type": "contentblocks",
+            "id": "2570fd0d2a0a48c39112bc9913461f5d|5"
+          },
+          {
+            "type": "contentblocks",
+            "id": "2570fd0d2a0a48c39112bc9913461f5d|6"
+          },
+          {
+            "type": "contentblocks",
+            "id": "2570fd0d2a0a48c39112bc9913461f5d|7"
+          },
+          {
+            "type": "contentblocks",
+            "id": "2570fd0d2a0a48c39112bc9913461f5d|8"
+          },
+          {
+            "type": "contentblocks",
+            "id": "2570fd0d2a0a48c39112bc9913461f5d|9"
+          },
+          {
+            "type": "contentblocks",
+            "id": "2570fd0d2a0a48c39112bc9913461f5d|10"
+          },
+          {
+            "type": "contentblocks",
+            "id": "2570fd0d2a0a48c39112bc9913461f5d|11"
+          },
+          {
+            "type": "contentblocks",
+            "id": "2570fd0d2a0a48c39112bc9913461f5d|12"
+          },
+          {
+            "type": "contentblocks",
+            "id": "2570fd0d2a0a48c39112bc9913461f5d|13"
+          },
+          {
+            "type": "contentblocks",
+            "id": "2570fd0d2a0a48c39112bc9913461f5d|14"
+          },
+          {
+            "type": "contentblocks",
+            "id": "2570fd0d2a0a48c39112bc9913461f5d|15"
+          },
+          {
+            "type": "contentblocks",
+            "id": "2570fd0d2a0a48c39112bc9913461f5d|16"
+          },
+          {
+            "type": "contentblocks",
+            "id": "2570fd0d2a0a48c39112bc9913461f5d|17"
+          }
+        ]
+      },
+      "system": {
+        "data": {
+          "type": "systems",
+          "id": "5755996320301056"
+        }
+      }
+    },
+    "attributes": {
+      "cover-image-url": "https://storage.googleapis.com/xamoom-files-dev/mobile/5c57675d23024c5a854e108ee1f8a8d6.jpg?v=3ef446c96feb7b3822ca78b335619fc92e90e3ee655b104bb5055f08209fd9b3694537c84139f1a0e941a1682e9089b82d7470ad53ebead928a8d66fd86b7419",
+      "tags": [
+        "tests"
+      ],
+      "display-name": "APP | Test Link",
+      "language": "de",
+      "description": "APP | Test Link Excerpt"
+    },
+    "type": "contents",
+    "id": "2570fd0d2a0a48c39112bc9913461f5d"
+  }
+}

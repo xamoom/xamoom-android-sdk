@@ -1,0 +1,56 @@
+{
+  "included": [
+    {
+      "attributes": {
+        "soundcloud-url": "https://soundcloud.com/istdochmiregal/ok-kid-verschwende-mich",
+        "is-public": true,
+        "block-type": "7",
+        "title": "Soundcloud 1"
+      },
+      "type": "contentblocks",
+      "id": "6b4102f6fd0c40eba7398e4012069d1d|0"
+    },
+    {
+      "attributes": {
+        "soundcloud-url": "https://soundcloud.com/whoisccharly/lieblingsmensch-namika-cover-von-charly",
+        "is-public": true,
+        "block-type": "7",
+        "title": "Soundcloud 2 | Titel mit Überlänge Titel mit Überlänge Titel mit Überlänge Titel mit Überlänge Titel mit Überlänge Titel mit Überlänge "
+      },
+      "type": "contentblocks",
+      "id": "6b4102f6fd0c40eba7398e4012069d1d|1"
+    }
+  ],
+  "data": {
+    "relationships": {
+      "blocks": {
+        "data": [
+          {
+            "type": "contentblocks",
+            "id": "6b4102f6fd0c40eba7398e4012069d1d|0"
+          },
+          {
+            "type": "contentblocks",
+            "id": "6b4102f6fd0c40eba7398e4012069d1d|1"
+          }
+        ]
+      },
+      "system": {
+        "data": {
+          "type": "systems",
+          "id": "5755996320301056"
+        }
+      }
+    },
+    "attributes": {
+      "display-name": "APP | Test Soundcloud",
+      "description": "APP | Test Soundcloud Excerpt",
+      "language": "de",
+      "tags": [
+        "tests"
+      ]
+    },
+    "type": "contents",
+    "id": "6b4102f6fd0c40eba7398e4012069d1d"
+  }
+}

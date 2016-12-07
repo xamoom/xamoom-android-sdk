@@ -1,0 +1,74 @@
+{
+  "included": [
+    {
+      "attributes": {
+        "file-id": "https://storage.googleapis.com/xamoom-files-dev/10d652eeed9849d1bd6cb9168c69eecd.epub",
+        "is-public": true,
+        "artists": "Book 1 Text",
+        "block-type": "5",
+        "title": "Book 1| Epub"
+      },
+      "type": "contentblocks",
+      "id": "1d4f6152baa5418098d12cbf14e20275|0"
+    },
+    {
+      "attributes": {
+        "file-id": "https://storage.googleapis.com/xamoom-files-dev/698be346fae746f1a47de4b7de13e872.mobi",
+        "is-public": true,
+        "artists": "Book 2 Text",
+        "block-type": "5",
+        "title": "Book 2 | Mobi"
+      },
+      "type": "contentblocks",
+      "id": "1d4f6152baa5418098d12cbf14e20275|1"
+    },
+    {
+      "attributes": {
+        "file-id": "https://storage.googleapis.com/xamoom-files-dev/28979bcf7d484c568a67eca41a922c30.pdf",
+        "is-public": true,
+        "artists": "Book 3 Text | Text mit Überlänge Text mit Überlänge Text mit Überlänge Text mit Überlänge Text mit Überlänge Text mit Überlänge ",
+        "block-type": "5",
+        "title": "Book 3 | PDF | Titel mit Überlänge Titel mit Überlänge Titel mit Überlänge Titel mit Überlänge Titel mit Überlänge Titel mit Überlänge Titel mit Überlänge "
+      },
+      "type": "contentblocks",
+      "id": "1d4f6152baa5418098d12cbf14e20275|2"
+    }
+  ],
+  "data": {
+    "relationships": {
+      "blocks": {
+        "data": [
+          {
+            "type": "contentblocks",
+            "id": "1d4f6152baa5418098d12cbf14e20275|0"
+          },
+          {
+            "type": "contentblocks",
+            "id": "1d4f6152baa5418098d12cbf14e20275|1"
+          },
+          {
+            "type": "contentblocks",
+            "id": "1d4f6152baa5418098d12cbf14e20275|2"
+          }
+        ]
+      },
+      "system": {
+        "data": {
+          "type": "systems",
+          "id": "5755996320301056"
+        }
+      }
+    },
+    "attributes": {
+      "cover-image-url": "https://storage.googleapis.com/xamoom-files-dev/mobile/9f2484e015264eb0a2ab7a0894faaabc.jpg?v=de09094f73d16007b8550967393fedfbaa9adaa6082a140df39251402f585b05dfc019d14471c6a4b44da635bc56d8451f14b63224ef9882fcf94b1d002b30ba",
+      "tags": [
+        "tests"
+      ],
+      "display-name": "APP | Test Ebook",
+      "language": "de",
+      "description": "APP | Test Ebook Excerpt"
+    },
+    "type": "contents",
+    "id": "1d4f6152baa5418098d12cbf14e20275"
+  }
+}

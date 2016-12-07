@@ -1,0 +1,61 @@
+{
+  "included": [
+    {
+      "attributes": {
+        "title": "VCard",
+        "download-type": "0",
+        "text": "VCard Description",
+        "file-id": "https://storage.googleapis.com/xamoom-files-dev/862be8b5c7854986bb4cf9269e4fa0b9.vcf",
+        "is-public": true,
+        "block-type": "8"
+      },
+      "type": "contentblocks",
+      "id": "1d966300bb304a199a7ba5d9ff295269|0"
+    },
+    {
+      "attributes": {
+        "title": "ICAL | Title mit Überlänge Title mit Überlänge Title mit Überlänge Title mit Überlänge Title mit Überlänge Title mit Überlänge Title mit Überlänge Title mit Überlänge Title mit Überlänge Title mit Überlänge Title mit Überlänge Title mit Überlänge ",
+        "download-type": "1",
+        "text": "ICAL Description | Description mit Überlänge Description mit Überlänge Description mit Überlänge Description mit Überlänge Description mit Überlänge Description mit Überlänge Description mit Überlänge Description mit Überlänge Description mit Überlänge Description mit Überlänge Description mit Überlänge Description mit Überlänge Description mit Überlänge Description mit Überlänge Description mit Überlänge Description mit Überlänge Description mit Überlänge ",
+        "file-id": "https://storage.googleapis.com/xamoom-files-dev/2099d46f0423427f95b930aea6c941b0.ics",
+        "is-public": true,
+        "block-type": "8"
+      },
+      "type": "contentblocks",
+      "id": "1d966300bb304a199a7ba5d9ff295269|1"
+    }
+  ],
+  "data": {
+    "relationships": {
+      "blocks": {
+        "data": [
+          {
+            "type": "contentblocks",
+            "id": "1d966300bb304a199a7ba5d9ff295269|0"
+          },
+          {
+            "type": "contentblocks",
+            "id": "1d966300bb304a199a7ba5d9ff295269|1"
+          }
+        ]
+      },
+      "system": {
+        "data": {
+          "type": "systems",
+          "id": "5755996320301056"
+        }
+      }
+    },
+    "attributes": {
+      "cover-image-url": "https://storage.googleapis.com/xamoom-files-dev/mobile/f2722c01b022495d85e70c690978e3bb.jpg?v=e93df8e5b345ec78727686ab9583db74c448c68de08c5eb8f0db34ea71593d88d409e089b6cff3d3b72e1a5f21cabc64e320e8bd749e515695621efb4c11374d",
+      "tags": [
+        "tests"
+      ],
+      "display-name": "APP | Test Download ",
+      "language": "de",
+      "description": "APP | Test Download Exerpt"
+    },
+    "type": "contents",
+    "id": "1d966300bb304a199a7ba5d9ff295269"
+  }
+}

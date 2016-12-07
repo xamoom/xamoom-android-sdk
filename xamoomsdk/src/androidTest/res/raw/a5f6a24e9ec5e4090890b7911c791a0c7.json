@@ -1,0 +1,77 @@
+{
+  "included": [
+    {
+      "attributes": {
+        "text": "<p>Text 1</p>",
+        "is-public": true,
+        "block-type": "0",
+        "title": "Titel 1"
+      },
+      "type": "contentblocks",
+      "id": "5f6a24e9ec5e4090890b7911c791a0c7|0"
+    },
+    {
+      "attributes": {
+        "text": "<p style=\"line-height: 20px;\"><span style=\"font-weight: bold;\">A too long texts because<span style=\"font-style: italic;\">&nbsp;</span></span><span style=\"font-style: italic;\">of too long texts entered</span>&nbsp;<span style=\"text-decoration: underline;\">by a too long texts loving&nbsp;</span>person.</p><p style=\"line-height: 20px;\"><span style=\"font-weight: bold; font-style: italic; text-decoration: underline;\">A too long texts because of too long texts entered by a too long texts loving person</span></p><p style=\"line-height: 20px;\"><span style=\"font-size: 8px;\">A too long texts because of too long texts entered by a too long texts loving person</span></p><p style=\"line-height: 20px;\">A too long texts because of&nbsp;<span style=\"font-size: 36px;\"><span style=\"font-weight: bold; font-style: italic; text-decoration: underline;\">too long</span>&nbsp;</span>texts entered by a&nbsp;<span style=\"font-size: 8px; font-weight: bold; font-style: italic; text-decoration: underline;\">too long</span>&nbsp;texts loving person</p><p style=\"line-height: 20px;\"><a href=\"http://www.google.com/\" target=\"_blank\">A too long texts because of too long texts entered by a too long texts loving person</a></p><ul style=\"line-height: 20px;\"><li><span style=\"font-size: 18px; font-weight: bold;\">A too long texts because of too long texts entered by a too long texts loving person</span></li><li><span style=\"font-size: 18px; font-style: italic;\">A too long texts because of too long texts entered by a too long texts loving person</span></li><li><span style=\"font-size: 18px; text-decoration: underline;\">A too long texts because of too long texts entered by a too long texts loving person</span></li><li><span style=\"font-size: 18px; font-weight: bold; font-style: italic; text-decoration: underline;\">A too long texts because of too long texts entered by a too long texts loving&nbsp;</span><a href=\"http://www.google.com/\" target=\"_blank\">person</a></li></ul>",
+        "is-public": true,
+        "block-type": "0",
+        "title": "Titel 2 | Formatted"
+      },
+      "type": "contentblocks",
+      "id": "5f6a24e9ec5e4090890b7911c791a0c7|1"
+    },
+    {
+      "attributes": {
+        "text": "<p><span style=\"line-height: 20px;\">Text 3 mit Überlänge&nbsp;</span><span style=\"line-height: 20px;\">Text 2 mit Überlänge&nbsp;</span><span style=\"line-height: 20px;\">Text 2 mit Überlänge&nbsp;</span><span style=\"line-height: 20px;\">Text 2 mit Überlänge&nbsp;</span><span style=\"line-height: 20px;\">Text 2 mit Überlänge&nbsp;</span><span style=\"line-height: 20px;\">Text 2 mit Überlänge&nbsp;</span><span style=\"line-height: 20px;\">Text 2 mit Überlänge&nbsp;</span><span style=\"line-height: 20px;\">Text 2 mit Überlänge&nbsp;</span><span style=\"line-height: 20px;\">Text 2 mit Überlänge&nbsp;</span><span style=\"line-height: 20px;\">Text 2 mit Überlänge&nbsp;</span><span style=\"line-height: 20px;\">Text 2 mit Überlänge&nbsp;</span><span style=\"line-height: 20px;\">Text 2 mit Überlänge&nbsp;</span><span style=\"line-height: 20px;\">Text 2 mit Überlänge&nbsp;</span><span style=\"line-height: 20px;\">Text 2 mit Überlänge&nbsp;</span><span style=\"line-height: 20px;\">Text 2 mit Überlänge&nbsp;</span><span style=\"line-height: 20px;\">Text 2 mit Überlänge&nbsp;</span><span style=\"line-height: 20px;\">Text 2 mit Überlänge&nbsp;</span><span style=\"line-height: 20px;\">Text 2 mit Überlänge&nbsp;</span><span style=\"line-height: 20px;\">Text 2 mit Überlänge&nbsp;</span><span style=\"line-height: 20px;\">Text 2 mit Überlänge&nbsp;</span><span style=\"line-height: 20px;\">Text 2 mit Überlänge&nbsp;</span><span style=\"line-height: 20px;\">Text 2 mit Überlänge&nbsp;</span><span style=\"line-height: 20px;\">Text 2 mit Überlänge&nbsp;</span><span style=\"line-height: 20px;\">Text 2 mit Überlänge&nbsp;</span><span style=\"line-height: 20px;\">Text 2 mit Überlänge&nbsp;</span><span style=\"line-height: 20px;\">Text 2 mit Überlänge&nbsp;</span><span style=\"line-height: 20px;\">Text 2 mit Überlänge&nbsp;</span><span style=\"line-height: 20px;\">Text 2 mit Überlänge&nbsp;</span><span style=\"line-height: 20px;\">Text 2 mit Überlänge&nbsp;</span><span style=\"line-height: 20px;\">Text 2 mit Überlänge&nbsp;</span><span style=\"line-height: 20px;\">Text 2 mit Überlänge&nbsp;</span><span style=\"line-height: 20px;\">Text 2 mit Überlänge&nbsp;</span><span style=\"line-height: 20px;\">Text 2 mit Überlänge&nbsp;</span><span style=\"line-height: 20px;\">Text 2 mit Überlänge&nbsp;</span><span style=\"line-height: 20px;\">Text 2 mit Überlänge&nbsp;</span><span style=\"line-height: 20px;\">Text 2 mit Überlänge&nbsp;</span><span style=\"line-height: 20px;\">Text 2 mit Überlänge&nbsp;</span><span style=\"line-height: 20px;\">Text 2 mit Überlänge&nbsp;</span><span style=\"line-height: 20px;\">Text 2 mit Überlänge&nbsp;</span><span style=\"line-height: 20px;\">Text 2 mit Überlänge&nbsp;</span><span style=\"line-height: 20px;\">Text 2 mit Überlänge&nbsp;</span><span style=\"line-height: 20px;\">Text 2 mit Überlänge&nbsp;</span><br></p>",
+        "is-public": true,
+        "block-type": "0",
+        "title": "Titel 3 | Titel mit Überlänge Titel mit Überlänge Titel mit Überlänge Titel mit Überlänge Titel mit Überlänge Titel mit Überlänge Titel mit Überlänge "
+      },
+      "type": "contentblocks",
+      "id": "5f6a24e9ec5e4090890b7911c791a0c7|2"
+    }
+  ],
+  "data": {
+    "relationships": {
+      "blocks": {
+        "data": [
+          {
+            "type": "contentblocks",
+            "id": "5f6a24e9ec5e4090890b7911c791a0c7|0"
+          },
+          {
+            "type": "contentblocks",
+            "id": "5f6a24e9ec5e4090890b7911c791a0c7|1"
+          },
+          {
+            "type": "contentblocks",
+            "id": "5f6a24e9ec5e4090890b7911c791a0c7|2"
+          }
+        ]
+      },
+      "system": {
+        "data": {
+          "type": "systems",
+          "id": "5755996320301056"
+        }
+      }
+    },
+    "attributes": {
+      "description": "APP | Test Text Excerpt",
+      "language": "de",
+      "tags": [
+        "tests"
+      ],
+      "cover-image-url": "https://storage.googleapis.com/xamoom-files-dev/mobile/e7db53fe77734ff9ba31de6cf8a92844.jpg?v=b497bc245e3f2ea3e8b659f49bd5c8cdf59c7399217ab72aef5208e93e377cc580f6a28d4c76bb5dd219fc42c429b71c18c46a15261d394bb44869aa3edde32c",
+      "custom-meta": [
+        {
+          "key": "key",
+          "value": "value"
+        }
+      ],
+      "display-name": "APP | Test Text"
+    },
+    "type": "contents",
+    "id": "5f6a24e9ec5e4090890b7911c791a0c7"
+  }
+}
