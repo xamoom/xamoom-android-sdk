@@ -43,6 +43,7 @@ public class CallHandler <T extends Resource> {
             callback.error(jsonApiObject.getErrors());
           }
         } catch (Exception e) {
+          // TODO error handling
           e.printStackTrace();
         }
       }

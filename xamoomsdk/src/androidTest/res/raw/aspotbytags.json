@@ -1,36 +1,136 @@
 {
+  "included": [
+               {
+               "relationships": {
+               "blocks": {
+               "data": [
+                        {
+                        "type": "contentblocks",
+                        "id": "7cf2c58e6d374ce3888c32eb80be53b5|0"
+                        },
+                        {
+                        "type": "contentblocks",
+                        "id": "7cf2c58e6d374ce3888c32eb80be53b5|1"
+                        },
+                        {
+                        "type": "contentblocks",
+                        "id": "7cf2c58e6d374ce3888c32eb80be53b5|2"
+                        },
+                        {
+                        "type": "contentblocks",
+                        "id": "7cf2c58e6d374ce3888c32eb80be53b5|3"
+                        },
+                        {
+                        "type": "contentblocks",
+                        "id": "7cf2c58e6d374ce3888c32eb80be53b5|4"
+                        },
+                        {
+                        "type": "contentblocks",
+                        "id": "7cf2c58e6d374ce3888c32eb80be53b5|5"
+                        },
+                        {
+                        "type": "contentblocks",
+                        "id": "7cf2c58e6d374ce3888c32eb80be53b5|6"
+                        },
+                        {
+                        "type": "contentblocks",
+                        "id": "7cf2c58e6d374ce3888c32eb80be53b5|7"
+                        },
+                        {
+                        "type": "contentblocks",
+                        "id": "7cf2c58e6d374ce3888c32eb80be53b5|8"
+                        },
+                        {
+                        "type": "contentblocks",
+                        "id": "7cf2c58e6d374ce3888c32eb80be53b5|9"
+                        }
+                        ]
+               },
+               "system": {
+               "data": {
+               "type": "systems",
+               "id": "5755996320301056"
+               }
+               }
+               },
+               "attributes": {
+               "category": "58",
+               "description": "Testing Hub excerpt.",
+               "language": "de",
+               "tags": [
+                        "tests",
+                        "Wörthersee"
+                        ],
+               "cover-image-url": "https://storage.googleapis.com/xamoom-files-dev/mobile/d8baa2bad1ce4d9da21297098ce4ff00.jpg?v=e3450d7de94f20b0d89fdfe328a254478ef7f193211faa33e6db888f1f92f4bc5dc487da226baefac66209182971cacbe1b63be9c6551854e4d04da58b5465d9",
+               "display-name": "APP | Testing Hub"
+               },
+               "type": "contents",
+               "id": "7cf2c58e6d374ce3888c32eb80be53b5"
+               },
+               {
+               "attributes": {
+               "eddystone-url": "dev.xm.gl/32lf0x",
+               "qr": "b5v2p",
+               "nfc": "0c0horvyze9d",
+               "ibeacon-region-uid": "de2b94ae-ed98-11e4-3432-78616d6f6f6d",
+               "ibeacon-minor": "29521",
+               "ibacon-major": "8843",
+               "ibeacon-major": "8843",
+               "ibacon-minor": "29521",
+               "ibacon-region-uid": "de2b94ae-ed98-11e4-3432-78616d6f6f6d"
+               },
+               "type": "markers",
+               "id": "b5v2p"
+               }
+               ],
   "meta": {
     "cursor": "",
     "total": "1",
     "has-more": false
   },
   "data": [
-    {
-      "relationships": {
-        "system": {
-          "data": {
-            "type": "systems",
-            "id": "5755996320301056"
-          }
-        }
-      },
-      "attributes": {
-        "category": "0",
-        "description": "Thats the spot excerpt.",
-        "tags": [
-          "spot1",
-          "allSpots",
-          "Wörthersee"
-        ],
-        "image": "https://storage.googleapis.com/xamoom-files-dev/mobile/9bee8ab135bc41f392aab58dff07a8de.jpg?v=d1106a5e6ef70e769eb283a9b01570674ebd88fbf7268ea2c97d1032211bf8e60cfd034bb1f13573f161d6e95a521b3cdfd8b4c41e944c8e0afa661e96a8b092",
-        "location": {
-          "lat": "46.615031299999998",
-          "lon": "14.261887000000002"
-        },
-        "name": "APP | Spot 1"
-      },
-      "type": "spots",
-      "id": "5755996320301056|5700735861784576"
-    }
-  ]
+           {
+           "relationships": {
+           "content": {
+           "data": {
+           "type": "contents",
+           "id": "7cf2c58e6d374ce3888c32eb80be53b5"
+           }
+           },
+           "system": {
+           "data": {
+           "type": "systems",
+           "id": "5755996320301056"
+           }
+           },
+           "markers": {
+           "data": [
+                    {
+                    "type": "markers",
+                    "id": "b5v2p"
+                    }
+                    ]
+           }
+           },
+           "attributes": {
+           "category": "0",
+           "name": "APP | Spot 1",
+           "tags": [
+                    "spot1",
+                    "allSpots",
+                    "Wörthersee"
+                    ],
+           "image": "https://storage.googleapis.com/xamoom-files-dev/mobile/9bee8ab135bc41f392aab58dff07a8de.jpg?v=2cd9bbdc0d25b399deec11fcfd97b89614774102229b844662f08889de50f4d5ead08b76dc78c0124e7ef90e0023f96127fcab6a53bc1f87cdee24b25a576819",
+           "custom-meta": [
+           ],
+           "location": {
+           "lat": "46.615031299999998",
+           "lon": "14.261887000000002"
+           },
+           "description": "Thats the spot excerpt."
+           },
+           "type": "spots",
+           "id": "5755996320301056|5700735861784576"
+           }
+           ]
 }

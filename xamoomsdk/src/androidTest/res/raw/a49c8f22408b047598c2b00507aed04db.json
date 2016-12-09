@@ -1,0 +1,100 @@
+{
+  "included": [
+    {
+      "attributes": {
+        "video-url": "https://www.youtube.com/watch?v=dtm_tIkEbMc",
+        "is-public": true,
+        "block-type": "2",
+        "title": "Youtube Video 1"
+      },
+      "type": "contentblocks",
+      "id": "49c8f22408b047598c2b00507aed04db|0"
+    },
+    {
+      "attributes": {
+        "video-url": "https://www.youtube.com/watch?v=Dx0MGYe4jR4",
+        "is-public": true,
+        "block-type": "2",
+        "title": "Youtube Video 2"
+      },
+      "type": "contentblocks",
+      "id": "49c8f22408b047598c2b00507aed04db|1"
+    },
+    {
+      "attributes": {
+        "video-url": "https://storage.googleapis.com/xamoom-public-resources/testing_pingeborg.mp4",
+        "is-public": true,
+        "block-type": "2",
+        "title": "Local File 1 | https"
+      },
+      "type": "contentblocks",
+      "id": "49c8f22408b047598c2b00507aed04db|2"
+    },
+    {
+      "attributes": {
+        "video-url": "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4",
+        "is-public": true,
+        "block-type": "2",
+        "title": "Local File 2 | http | Title mit Überlänge Title mit Überlänge Title mit Überlänge Title mit Überlänge Title mit Überlänge Title mit Überlänge "
+      },
+      "type": "contentblocks",
+      "id": "49c8f22408b047598c2b00507aed04db|3"
+    },
+    {
+      "attributes": {
+        "video-url": "https://vimeo.com/10262243",
+        "is-public": true,
+        "block-type": "2",
+        "title": "Vimeo"
+      },
+      "type": "contentblocks",
+      "id": "49c8f22408b047598c2b00507aed04db|4"
+    }
+  ],
+  "data": {
+    "relationships": {
+      "blocks": {
+        "data": [
+          {
+            "type": "contentblocks",
+            "id": "49c8f22408b047598c2b00507aed04db|0"
+          },
+          {
+            "type": "contentblocks",
+            "id": "49c8f22408b047598c2b00507aed04db|1"
+          },
+          {
+            "type": "contentblocks",
+            "id": "49c8f22408b047598c2b00507aed04db|2"
+          },
+          {
+            "type": "contentblocks",
+            "id": "49c8f22408b047598c2b00507aed04db|3"
+          },
+          {
+            "type": "contentblocks",
+            "id": "49c8f22408b047598c2b00507aed04db|4"
+          }
+        ]
+      },
+      "system": {
+        "data": {
+          "type": "systems",
+          "id": "5755996320301056"
+        }
+      }
+    },
+    "attributes": {
+      "category": "33",
+      "description": "APP | Test Video Excerpt",
+      "language": "de",
+      "tags": [
+        "tests"
+      ],
+      "cover-image-url": "https://storage.googleapis.com/xamoom-files-dev/mobile/2b7a9445f3194410adc5f0fd85616607.jpg?v=355c5a16927d67d3f7f52dea7d18919c9621617b7a93136bc1ebc4963a2153972c4d53ea4d19995ce3b6b41f0695b39abf5748bcf4f272a2bfae0c1e19eede34",
+      "display-name": "APP | Test Video"
+    },
+    "type": "contents",
+    "id": "49c8f22408b047598c2b00507aed04db"
+  }
+}
