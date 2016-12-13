@@ -5,6 +5,7 @@ import android.os.Parcel;
 
 import com.xamoom.android.xamoomsdk.BuildConfig;
 import com.xamoom.android.xamoomsdk.Resource.Content;
+import com.xamoom.android.xamoomsdk.Resource.KeyValueObject;
 import com.xamoom.android.xamoomsdk.Resource.Location;
 import com.xamoom.android.xamoomsdk.Resource.Marker;
 import com.xamoom.android.xamoomsdk.Resource.Spot;
@@ -17,6 +18,7 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
@@ -83,4 +85,34 @@ public class SpotTest {
     assertEquals(mSpot.getCategory(), createdFromParcel.getCategory());
   }
 
+
+  @Test
+  public void testGetCustomMeta() {
+    Content content = new Content();
+    ArrayList<KeyValueObject> customMetaList = new ArrayList<>();
+    customMetaList.add(new KeyValueObject("key", "value"));
+    customMetaList.add(new KeyValueObject("key2", "value2"));
+    content.setCustomMeta(customMetaList);
+
+    HashMap<String, String> checkCustomMeta = new HashMap<>();
+    checkCustomMeta.put("key", "value");
+    checkCustomMeta.put("key2", "value2");
+
+    HashMap<String, String> customMeta = content.getCustomMeta();
+
+    assertEquals(customMeta, checkCustomMeta);
+  }
+
+  @Test
+  public void testSetCustomMeta() {
+    Content content = new Content();
+
+    HashMap<String, String> customMeta = new HashMap<>();
+    customMeta.put("key", "value");
+    customMeta.put("key2", "value2");
+
+    content.setCustomMeta(customMeta);
+
+    assertEquals(content.getCustomMeta(), customMeta);
+  }
 }

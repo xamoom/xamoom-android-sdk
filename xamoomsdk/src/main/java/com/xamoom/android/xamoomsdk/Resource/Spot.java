@@ -5,7 +5,10 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import at.rags.morpheus.Annotations.Relationship;
 import at.rags.morpheus.Resource;
@@ -27,6 +30,8 @@ public class Spot extends Resource implements Parcelable {
   @Relationship("content")
   private Content content;
   private int category;
+  @SerializedName("custom-meta")
+  private ArrayList<KeyValueObject> customMeta;
 
   public Spot() {
   }
@@ -126,6 +131,30 @@ public class Spot extends Resource implements Parcelable {
 
   public int getCategory() {
     return category;
+  }
+
+  public HashMap<String, String> getCustomMeta() {
+    HashMap<String, String> customMetaMap = new HashMap<>();
+    for (KeyValueObject meta : customMeta) {
+      customMetaMap.put(meta.getKey(), meta.getValue());
+    }
+    return customMetaMap;
+  }
+
+  public void setCustomMeta(HashMap<String, String> customMeta) {
+    ArrayList<KeyValueObject> customMetaList = new ArrayList<>();
+
+    for (Object o : customMeta.entrySet()) {
+      Map.Entry pair = (Map.Entry) o;
+      customMetaList.add(new KeyValueObject(pair.getKey().toString(),
+          pair.getValue().toString()));
+    }
+
+    this.customMeta = customMetaList;
+  }
+
+  public void setCustomMeta(ArrayList<KeyValueObject> customMeta) {
+    this.customMeta = customMeta;
   }
 
   @Override

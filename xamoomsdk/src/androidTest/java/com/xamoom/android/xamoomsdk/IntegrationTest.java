@@ -30,6 +30,7 @@ import java.io.InputStreamReader;
 import java.io.InterruptedIOException;
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
@@ -88,6 +89,10 @@ public class IntegrationTest extends InstrumentationTestCase {
     checkTags.add("tests");
     checkTags.add("Wörthersee");
 
+    final HashMap<String, String> checkCustomMeta = new HashMap<>();
+    checkCustomMeta.put("test-key", "test-value");
+    checkCustomMeta.put("test-key2", "test-value2");
+
     final Content[] content = {null};
     api.getContent(mContentId, new APICallback<Content, List<at.rags.morpheus.Error>>() {
       @Override
@@ -100,6 +105,7 @@ public class IntegrationTest extends InstrumentationTestCase {
         assertEquals(result.getTags(), checkTags);
         assertEquals(result.getPublicImageUrl(), "https://storage.googleapis.com/xamoom-files-dev/mobile/d8baa2bad1ce4d9da21297098ce4ff00.jpg?v=b87374bc207bd8267e5e89e439b3e475eb90b63fd974fbe338421cdd63944370e98dd495fab54ceaf3efef6b9223f7de9f44097a39c630c08a969d1545c4aa63");
         assertEquals(result.getTitle(), "APP | Testing Hub");
+        assertEquals(result.getCustomMeta(), checkCustomMeta);
 
         assertEquals(result.getSystem().getId(), "5755996320301056");
 
@@ -112,6 +118,7 @@ public class IntegrationTest extends InstrumentationTestCase {
       @Override
       public void error(List<Error> error) {
         fail();
+        signal.countDown();
       }
     });
 
@@ -170,6 +177,33 @@ public class IntegrationTest extends InstrumentationTestCase {
     signal.await();
 
     testContentBlocks(content[0].getContentBlocks());
+  }
+
+  @Test
+  public void testSpotWithId() throws InterruptedException {
+    mMockWebServer.enqueue(new MockResponse().setBody(loadJsonFile("spotbyid")));
+
+    final HashMap<String, String> checkCustomMeta = new HashMap<>();
+    checkCustomMeta.put("test-key", "test-value");
+    checkCustomMeta.put("test-key2", "test-value2");
+
+    final CountDownLatch signal = new CountDownLatch(1);
+
+    api.getSpot("5755996320301056|5673385510043648", new APICallback<Spot, List<Error>>() {
+      @Override
+      public void finished(Spot result) {
+        assertEquals(result.getCustomMeta(), checkCustomMeta);
+        signal.countDown();
+      }
+
+      @Override
+      public void error(List<Error> error) {
+        fail();
+        signal.countDown();
+      }
+    });
+
+    signal.await();
   }
 
   @Test
