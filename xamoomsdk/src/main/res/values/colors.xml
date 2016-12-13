@@ -19,4 +19,5 @@
     <color name="black">#000000</color>
     <color name="vcf_downloadBlock_background_color">#AA3F41</color>
     <color name="ical_downloadBlock_background_color">#3b5998</color>
+    <color name="instagram_background_color">#bc2a8d</color>
 </resources>

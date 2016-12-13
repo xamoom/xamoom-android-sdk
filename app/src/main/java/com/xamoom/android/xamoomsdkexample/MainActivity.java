@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
 
     setupEnduserApi();
 
-    getContent();
+    //getContent();
     /*
     getContentOption();
     getContentLocationIdentifier();
@@ -216,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
   }
 
   public void getContentOption() {
-    EnduserApi.getSharedInstance().getContent("e5be72be162d44b189893a406aff5227", EnumSet.of(ContentFlags.PREVIEW, ContentFlags.PRIVATE),
+    EnduserApi.getSharedInstance().getContent("7cf2c58e6d374ce3888c32eb80be53b5", EnumSet.of(ContentFlags.PREVIEW, ContentFlags.PRIVATE),
         new APICallback<Content, List<Error>>() {
           @Override
           public void finished(Content result) {
@@ -236,7 +236,7 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
 
           @Override
           public void error(List<Error> error) {
-
+            Log.e(TAG, "Error: " + error);
           }
         });
   }

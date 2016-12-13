@@ -164,6 +164,12 @@ public class ContentBlock4ViewHolder extends RecyclerView.ViewHolder {
         mTitleTextView.setTextColor(Color.WHITE);
         mContentTextView.setTextColor(Color.WHITE);
         break;
+      case 18:
+        mRootLayout.setBackgroundResource(R.color.instagram_background_color);
+        mIcon.setImageResource(R.drawable.ic_instagram);
+        mTitleTextView.setTextColor(Color.WHITE);
+        mContentTextView.setTextColor(Color.WHITE);
+        break;
       default:
         mRootLayout.setBackgroundResource(R.color.default_linkblock_background_color);
         mIcon.setImageResource(R.drawable.ic_web);
@@ -171,5 +177,21 @@ public class ContentBlock4ViewHolder extends RecyclerView.ViewHolder {
         mContentTextView.setTextColor(Color.parseColor("#333333"));
         break;
     }
+  }
+
+  public LinearLayout getRootLayout() {
+    return mRootLayout;
+  }
+
+  public TextView getTitleTextView() {
+    return mTitleTextView;
+  }
+
+  public TextView getContentTextView() {
+    return mContentTextView;
+  }
+
+  public ImageView getIcon() {
+    return mIcon;
   }
 }
