@@ -1,9 +1,11 @@
 package com.xamoom.android.xamoomsdk;
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -58,8 +60,6 @@ import static okhttp3.internal.Internal.logger;
  * using {@link com.xamoom.android.xamoomsdk.Storage.OfflineStorageManager}.
  */
 public class EnduserApi implements Parcelable {
-  public static final String SDK_VERSION = "2.2.4";
-
   private static final String TAG = EnduserApi.class.getSimpleName();
   private static final String API_URL = "https://xamoom-cloud.appspot.com/";
 
@@ -553,12 +553,24 @@ public class EnduserApi implements Parcelable {
       return "Xamoom SDK Android";
     }
 
+    String sdkversion = "";
+    try {
+      ApplicationInfo ai = context.getPackageManager().getApplicationInfo(context.getPackageName(),
+          PackageManager.GET_META_DATA);
+      Bundle bundle = ai.metaData;
+      sdkversion = bundle.getString("com.xamoom.android.xamoomsdk.version");
+    } catch (PackageManager.NameNotFoundException e) {
+      Log.e(TAG, "Failed to load meta-data, NameNotFound: " + e.getMessage());
+    } catch (NullPointerException e) {
+      Log.e(TAG, "Failed to load meta-data, NullPointer: " + e.getMessage());
+    }
+
     StringBuilder builder = new StringBuilder();
     builder.append("Xamoom SDK Android");
     builder.append("|");
     builder.append(context.getApplicationInfo().loadLabel(context.getPackageManager()));
     builder.append("|");
-    builder.append(SDK_VERSION);
+    builder.append(sdkversion);
 
     return builder.toString();
   }

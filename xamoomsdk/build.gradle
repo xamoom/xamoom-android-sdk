@@ -1,6 +1,8 @@
 apply plugin: 'com.android.library'
 
-version = "2.2.4"
+def versionString = "3.0.0"
+
+version = versionString
 group = "com.xamoom.android"
 
 android {
@@ -10,12 +12,17 @@ android {
 	defaultConfig {
 		minSdkVersion 18
 		targetSdkVersion 24
-		versionCode 4
-		versionName "2.2.4"
+		versionCode 5
+		versionName versionString
 	}
 
 	buildTypes {
+		debug {
+			manifestPlaceholders = [xamoomSDKVersion:versionString]
+		}
 		release {
+			manifestPlaceholders = [xamoomSDKVersion:versionString]
+
 			minifyEnabled false
 			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 		}
@@ -72,7 +79,7 @@ ext {
 	siteUrl = 'https://github.com/xamoom/xamoom-android-sdk'
 	gitUrl = 'https://github.com/xamoom/xamoom-android-sdk.git'
 
-	libraryVersion = '2.2.4'
+	libraryVersion = versionString
 	developerId = 'xamoom-raphael'
 	developerName = 'Raphael Seher'
 	developerEmail = 'raphael@xamoom.com'
