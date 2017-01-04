@@ -37,6 +37,7 @@ import at.rags.morpheus.Error;
  */
 public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements OnMapReadyCallback {
   private static final String TAG = ContentBlock9ViewHolder.class.getSimpleName();
+  private static final int PAGE_SIZE = 100;
 
   private Fragment mFragment;
   private Context mContext;
@@ -82,11 +83,7 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
   public void onMapReady(GoogleMap googleMap) {
     mGoogleMap = googleMap;
 
-    EnumSet<SpotFlags> spotOptions = EnumSet.of(SpotFlags.HAS_LOCATION);
-    if (showContentLinks) {
-      spotOptions = EnumSet.of(SpotFlags.INCLUDE_CONTENT, SpotFlags.HAS_LOCATION);
-    }
-
+    /*
     mEnduserApi.getSpotsByTags(mContentBlock.getSpotMapTags(), spotOptions, null, new APIListCallback<List<Spot>, List<at.rags.morpheus.Error>>() {
       @Override
       public void finished(List<Spot> result, String cursor, boolean hasMore) {
@@ -100,7 +97,7 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
         Log.e(TAG, "Error:" + error);
       }
     });
-
+    */
     mGoogleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
       @Override
       public void onMapClick(LatLng latLng) {
@@ -113,6 +110,26 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
       public boolean onMarkerClick(Marker marker) {
         openMapFragment(marker);
         return true;
+      }
+    });
+  }
+
+  private void downloadAllSpots(ArrayList<String> tags, String cursor,
+                                final APIListCallback<List<Spot>, List<at.rags.morpheus.Error>> callback) {
+    EnumSet<SpotFlags> spotOptions = EnumSet.of(SpotFlags.HAS_LOCATION);
+    if (showContentLinks) {
+      spotOptions = EnumSet.of(SpotFlags.INCLUDE_CONTENT, SpotFlags.HAS_LOCATION);
+    }
+
+    mEnduserApi.getSpotsByTags(tags, PAGE_SIZE, cursor, spotOptions, null, new APIListCallback<List<Spot>, List<Error>>() {
+      @Override
+      public void finished(List<Spot> result, String cursor, boolean hasMore) {
+
+      }
+
+      @Override
+      public void error(List<Error> error) {
+        callback.error(error);
       }
     });
   }
