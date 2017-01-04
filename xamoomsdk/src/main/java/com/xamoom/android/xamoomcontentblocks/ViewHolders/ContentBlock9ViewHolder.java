@@ -50,6 +50,7 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
   private String mBase64Icon;
   private ArrayList<Spot> mSpotList;
   private int mTextColor;
+  private boolean isStyleLoaded = false;
 
   public boolean showContentLinks;
 
@@ -65,6 +66,8 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
 
   public void setupContentBlock(ContentBlock contentBlock, boolean offline) {
     mMapView.onCreate(null);
+
+    mSpotList = new ArrayList<>();
 
     mTitleTextView.setVisibility(View.VISIBLE);
     if (contentBlock.getTitle() != null && !contentBlock.getTitle().equalsIgnoreCase("")) {
@@ -83,12 +86,9 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
   public void onMapReady(GoogleMap googleMap) {
     mGoogleMap = googleMap;
 
-    /*
-    mEnduserApi.getSpotsByTags(mContentBlock.getSpotMapTags(), spotOptions, null, new APIListCallback<List<Spot>, List<at.rags.morpheus.Error>>() {
+    downloadAllSpots(mContentBlock.getSpotMapTags(), null, new APIListCallback<List<Spot>, List<Error>>() {
       @Override
       public void finished(List<Spot> result, String cursor, boolean hasMore) {
-        mSpotList = (ArrayList<Spot>) result;
-        getStyle(result.get(0).getSystem().getId());
         addMarkerToMap(result);
       }
 
@@ -97,7 +97,7 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
         Log.e(TAG, "Error:" + error);
       }
     });
-    */
+
     mGoogleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
       @Override
       public void onMapClick(LatLng latLng) {
@@ -114,8 +114,9 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
     });
   }
 
-  private void downloadAllSpots(ArrayList<String> tags, String cursor,
-                                final APIListCallback<List<Spot>, List<at.rags.morpheus.Error>> callback) {
+  private void downloadAllSpots(final List<String> tags, String cursor,
+                                final APIListCallback<List<Spot>, List<Error>> callback) {
+
     EnumSet<SpotFlags> spotOptions = EnumSet.of(SpotFlags.HAS_LOCATION);
     if (showContentLinks) {
       spotOptions = EnumSet.of(SpotFlags.INCLUDE_CONTENT, SpotFlags.HAS_LOCATION);
@@ -124,7 +125,18 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
     mEnduserApi.getSpotsByTags(tags, PAGE_SIZE, cursor, spotOptions, null, new APIListCallback<List<Spot>, List<Error>>() {
       @Override
       public void finished(List<Spot> result, String cursor, boolean hasMore) {
+        mSpotList.addAll(result);
 
+        if (!isStyleLoaded) {
+          isStyleLoaded = true;
+          getStyle(result.get(0).getSystem().getId());
+        }
+
+        if (hasMore) {
+          downloadAllSpots(tags, cursor, callback);
+        } else {
+          callback.finished(mSpotList, "", false);
+        }
       }
 
       @Override
@@ -178,9 +190,19 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
         .commit();
   }
 
+  public void setContentBlock(ContentBlock contentBlock) {
+    mContentBlock = contentBlock;
+  }
+
   public void setStyle(Style style) {
-    if (style != null && style.getForegroundFontColor() != null) {
-      mTextColor = Color.parseColor(style.getForegroundFontColor());
+    if (style != null) {
+      isStyleLoaded = true;
+      if (style.getForegroundFontColor() != null) {
+        mTextColor = Color.parseColor(style.getForegroundFontColor());
+      }
+      if (style.getCustomMarker() != null) {
+        mBase64Icon = style.getCustomMarker();
+      }
     }
   }
 }

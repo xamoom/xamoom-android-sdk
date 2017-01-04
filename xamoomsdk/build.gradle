@@ -36,25 +36,6 @@ android {
 	}
 }
 
-task copyFilesDebug(type: Copy) {
-	description = 'Fix Robolectric looks wrong place for AndroidManifest.xml by copying file...'
-	from 'build/intermediates/manifests/aapt/debug'
-	into 'build/intermediates/manifests/full/debug'
-	include 'AndroidManifest.xml'
-}
-
-task copyFilesRelease(type: Copy) {
-	description = 'Fix Robolectric looks wrong place for AndroidManifest.xml by copying file...'
-	from 'build/intermediates/manifests/aapt/release'
-	into 'build/intermediates/manifests/full/release'
-	include 'AndroidManifest.xml'
-}
-
-project.afterEvaluate {
-	generateDebugSources.dependsOn copyFilesDebug
-	generateDebugSources.dependsOn copyFilesRelease
-}
-
 dependencies {
 	compile fileTree(include: ['*.jar'], dir: 'libs')
 	testCompile 'junit:junit:4.12'
@@ -62,6 +43,8 @@ dependencies {
 	testCompile 'com.squareup.okhttp3:mockwebserver:3.2.0'
 	testCompile 'org.robolectric:robolectric:3.1.4'
 	testCompile 'org.robolectric:shadows-support-v4:3.1.4'
+	testCompile 'org.robolectric:shadows-maps:3.0'
+	testCompile 'org.robolectric:shadows-play-services:3.0'
 	androidTestCompile 'com.android.support.test:runner:0.4'
 	androidTestCompile 'com.squareup.okhttp3:mockwebserver:3.2.0'
 	compile files('libs/androidsvg-1.2.1.jar')
