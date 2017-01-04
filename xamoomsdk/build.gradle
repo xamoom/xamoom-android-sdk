@@ -34,8 +34,25 @@ android {
 	lintOptions {
 		abortOnError false
 	}
+}
 
+task copyFilesDebug(type: Copy) {
+	description = 'Fix Robolectric looks wrong place for AndroidManifest.xml by copying file...'
+	from 'build/intermediates/manifests/aapt/debug'
+	into 'build/intermediates/manifests/full/debug'
+	include 'AndroidManifest.xml'
+}
 
+task copyFilesRelease(type: Copy) {
+	description = 'Fix Robolectric looks wrong place for AndroidManifest.xml by copying file...'
+	from 'build/intermediates/manifests/aapt/release'
+	into 'build/intermediates/manifests/full/release'
+	include 'AndroidManifest.xml'
+}
+
+project.afterEvaluate {
+	generateDebugSources.dependsOn copyFilesDebug
+	generateDebugSources.dependsOn copyFilesRelease
 }
 
 dependencies {
