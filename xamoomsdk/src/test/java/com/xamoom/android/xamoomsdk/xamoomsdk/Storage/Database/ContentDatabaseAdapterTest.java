@@ -22,6 +22,10 @@ import com.xamoom.android.xamoomsdk.Storage.TableContracts.OfflineEnduserContrac
 import junit.framework.Assert;
 
 import org.apache.maven.plugin.registry.RuntimeInfo;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeMatcher;
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,12 +36,15 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import static junit.framework.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyChar;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -79,6 +86,11 @@ public class ContentDatabaseAdapterTest {
 
     Mockito.stub(mockedCursor.getCount()).toReturn(1);
     Mockito.stub(mockedCursor.moveToNext()).toReturn(true).toReturn(false);
+    Mockito.stub(mockedCursor.getColumnIndex(OfflineEnduserContract.ContentEntry.COLUMN_NAME_CUSTOM_META)).toReturn(1);
+    Mockito.stub(mockedCursor.getString(eq(1))).toReturn("{\"key\":\"value\"}");
+
+    HashMap<String, String> customMeta = new HashMap<>();
+    customMeta.put("key", "value");
 
     Content savedContent = mContentDatabaseAdapter.getContent("1");
 
@@ -86,6 +98,7 @@ public class ContentDatabaseAdapterTest {
 
     Assert.assertNotNull(savedContent);
     Assert.assertNotNull(savedContent.getContentBlocks());
+    assertTrue(savedContent.getCustomMeta().values().containsAll(customMeta.values()));
   }
 
   @Test
@@ -100,15 +113,58 @@ public class ContentDatabaseAdapterTest {
     content.setId("1");
     content.setContentBlocks(contentBlocks);
 
+    HashMap<String, String> customMeta = new HashMap<>();
+    customMeta.put("key", "value");
+    content.setCustomMeta(customMeta);
+
+    ContentValues checkValues = new ContentValues();
+    checkValues.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_JSON_ID, content.getId());
+    checkValues.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_TITLE, content.getTitle());
+    checkValues.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_DESCRIPTION, content.getDescription());
+    checkValues.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_LANGUAGE, content.getLanguage());
+    checkValues.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_CATEGORY, content.getCategory());
+    checkValues.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_PUBLIC_IMAGE_URL, content.getPublicImageUrl());
+    checkValues.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_CUSTOM_META,
+        new JSONObject(content.getCustomMeta()).toString());
+
     mContentDatabaseAdapter.insertOrUpdateContent(content, false, 0);
 
     Mockito.verify(mMockedDatabase)
         .insert(Mockito.eq(OfflineEnduserContract.ContentEntry.TABLE_NAME),
             Mockito.isNull(String.class),
-            Mockito.any(ContentValues.class));
+            argThat(contentValuesMatchesValues(checkValues)));
 
     Mockito.verify(mMockedContentBlockAdapter)
         .insertOrUpdate(Mockito.eq(block), anyInt());
+  }
+
+  Matcher<ContentValues> contentValuesMatchesValues(final ContentValues checkValues) {
+    return new TypeSafeMatcher<ContentValues>() {
+      public boolean matchesSafely(ContentValues values) {
+        boolean matching = true;
+        for (String key : checkValues.keySet()) {
+          if (values.containsKey(key)) {
+            String valueString = values.getAsString(key);
+            String checkValueString = checkValues.getAsString(key);
+            if (valueString == null && checkValueString == null) {
+              continue;
+            }
+            if (valueString == null || checkValueString == null ||
+                !valueString.equalsIgnoreCase(checkValueString)) {
+              matching = false;
+              break;
+            }
+          } else {
+            matching = false;
+            break;
+          }
+        }
+        return matching;
+      }
+      public void describeTo(Description description) {
+        description.appendText("contentValues matching");
+      }
+    };
   }
 
   @Test
@@ -244,7 +300,7 @@ public class ContentDatabaseAdapterTest {
 
     boolean deleted = mContentDatabaseAdapter.deleteContent("1");
 
-    Assert.assertTrue(deleted);
+    assertTrue(deleted);
   }
 
   @Test

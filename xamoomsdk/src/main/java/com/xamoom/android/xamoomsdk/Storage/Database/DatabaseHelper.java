@@ -26,7 +26,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
   }
 
   @Override
-  public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVesion) {
+  public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
     // TODO: implement upgrading when needed
   }
 }

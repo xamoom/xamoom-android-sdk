@@ -4,16 +4,22 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Storage.TableContracts.OfflineEnduserContract;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
 
 public class ContentDatabaseAdapter extends DatabaseAdapter {
   private static ContentDatabaseAdapter mSharedInstance;
@@ -118,6 +124,12 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
     if (content.getTags() != null) {
       values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_TAGS,
           TextUtils.join(",", content.getTags()));
+    }
+
+    if (content.getCustomMeta() != null) {
+      String json = new JSONObject(content.getCustomMeta()).toString();
+      values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_CUSTOM_META,
+          json);
     }
 
     if (hasMenu) {
@@ -227,8 +239,28 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
           OfflineEnduserContract.ContentEntry.COLUMN_NAME_CATEGORY)));
       String tags = cursor.getString(cursor
           .getColumnIndex(OfflineEnduserContract.ContentEntry.COLUMN_NAME_TAGS));
+
       if (tags != null) {
         content.setTags(Arrays.asList(tags.split(",")));
+      }
+
+      String customMetaJson = cursor.getString(cursor.getColumnIndex(
+          OfflineEnduserContract.ContentEntry.COLUMN_NAME_CUSTOM_META));
+      if (customMetaJson != null) {
+        try {
+          JSONObject jsonData = new JSONObject(customMetaJson);
+          HashMap<String, String> outMap = new HashMap<String, String>();
+          Iterator<String> iter = jsonData.keys();
+          while (iter.hasNext()) {
+            String name = iter.next();
+            outMap.put(name, jsonData.getString(name));
+          }
+          content.setCustomMeta(outMap);
+        } catch (JSONException e) {
+          // customMeta will be null
+          Log.e(ContentDatabaseAdapter.class.getSimpleName(),
+              "Cannot parse customMetaJson from sqlite. Error: " + e.toString());
+        }
       }
       content.setPublicImageUrl(cursor.getString(cursor.getColumnIndex(
           OfflineEnduserContract.ContentEntry.COLUMN_NAME_PUBLIC_IMAGE_URL)));

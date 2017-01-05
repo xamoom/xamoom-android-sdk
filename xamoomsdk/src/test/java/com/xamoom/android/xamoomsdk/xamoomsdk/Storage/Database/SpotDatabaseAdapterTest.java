@@ -18,6 +18,10 @@ import com.xamoom.android.xamoomsdk.Storage.Database.SystemDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.TableContracts.OfflineEnduserContract;
 
 import org.bouncycastle.asn1.dvcs.Data;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeMatcher;
+import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,12 +34,15 @@ import org.robolectric.annotation.Config;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -77,6 +84,11 @@ public class SpotDatabaseAdapterTest {
   public void testGetSpot() {
     Mockito.stub(mMockedCursor.getCount()).toReturn(1);
     Mockito.stub(mMockedCursor.moveToNext()).toReturn(true).toReturn(false);
+    Mockito.stub(mMockedCursor.getColumnIndex(OfflineEnduserContract.SpotEntry.COLUMN_NAME_CUSTOM_META)).toReturn(1);
+    Mockito.stub(mMockedCursor.getString(eq(1))).toReturn("{\"key\":\"value\"}");
+
+    HashMap<String, String> customMeta = new HashMap<>();
+    customMeta.put("key", "value");
 
     Spot spot = mSpotDatabaseAdapter.getSpot("1");
 
@@ -86,6 +98,7 @@ public class SpotDatabaseAdapterTest {
         anyString(), anyString());
 
     Assert.assertNotNull(spot);
+    Assert.assertTrue(spot.getCustomMeta().values().containsAll(customMeta.values()));
   }
 
   @Test
@@ -125,6 +138,21 @@ public class SpotDatabaseAdapterTest {
     markers.add(marker);
     spot.setMarkers(markers);
 
+    HashMap<String, String> customMeta = new HashMap<>();
+    customMeta.put("key", "value");
+    spot.setCustomMeta(customMeta);
+
+    ContentValues checkValues = new ContentValues();
+    checkValues.put(OfflineEnduserContract.SpotEntry.COLUMN_NAME_JSON_ID, spot.getId());
+    checkValues.put(OfflineEnduserContract.SpotEntry.COLUMN_NAME_NAME, spot.getName());
+    checkValues.put(OfflineEnduserContract.SpotEntry.COLUMN_NAME_DESCRIPTION, spot.getDescription());
+    checkValues.put(OfflineEnduserContract.SpotEntry.COLUMN_NAME_PUBLIC_IMAGE_URL, spot.getPublicImageUrl());
+    checkValues.put(OfflineEnduserContract.SpotEntry.COLUMN_NAME_CATEGORY, spot.getCategory());
+    checkValues.put(OfflineEnduserContract.SpotEntry.COLUMN_NAME_RELATION_SYSTEM, 0);
+    checkValues.put(OfflineEnduserContract.SpotEntry.COLUMN_NAME_RELATION_CONTENT, 0);
+    checkValues.put(OfflineEnduserContract.SpotEntry.COLUMN_NAME_CUSTOM_META,
+        new JSONObject(spot.getCustomMeta()).toString());
+
     long row = mSpotDatabaseAdapter.insertOrUpdateSpot(spot);
 
     Mockito.verify(mMockedDatabase).query(
@@ -134,7 +162,7 @@ public class SpotDatabaseAdapterTest {
 
     Mockito.verify(mMockedDatabase).insert(
         Mockito.eq(OfflineEnduserContract.SpotEntry.TABLE_NAME),
-        anyString(), any(ContentValues.class));
+          anyString(), argThat(contentValuesMatchesValues(checkValues)));
 
     Mockito.verify(mMockedContentDatabaseadapter).insertOrUpdateContent(
         Mockito.eq(content), anyBoolean(), anyLong());
@@ -143,6 +171,35 @@ public class SpotDatabaseAdapterTest {
         Mockito.eq(system));
 
     Mockito.verify(mMockedMarkerDatabaseAdapter).insertOrUpdateMarker(eq(marker), anyLong());
+  }
+
+  Matcher<ContentValues> contentValuesMatchesValues(final ContentValues checkValues) {
+    return new TypeSafeMatcher<ContentValues>() {
+      public boolean matchesSafely(ContentValues values) {
+        boolean matching = true;
+        for (String key : checkValues.keySet()) {
+          if (values.containsKey(key)) {
+            String valueString = values.getAsString(key);
+            String checkValueString = checkValues.getAsString(key);
+            if (valueString == null && checkValueString == null) {
+              continue;
+            }
+            if (valueString == null || checkValueString == null ||
+                !valueString.equalsIgnoreCase(checkValueString)) {
+              matching = false;
+              break;
+            }
+          } else {
+            matching = false;
+            break;
+          }
+        }
+        return matching;
+      }
+      public void describeTo(Description description) {
+        description.appendText("contentValues matching");
+      }
+    };
   }
 
   @Test

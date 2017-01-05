@@ -126,6 +126,10 @@ public class Content extends Resource implements Parcelable {
   }
 
   public HashMap<String, String> getCustomMeta() {
+    if (customMeta == null) {
+      return null;
+    }
+
     HashMap<String, String> customMetaMap = new HashMap<>();
     for (KeyValueObject meta : customMeta) {
       customMetaMap.put(meta.getKey(), meta.getValue());

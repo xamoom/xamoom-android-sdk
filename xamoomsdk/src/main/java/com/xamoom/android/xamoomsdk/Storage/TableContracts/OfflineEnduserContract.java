@@ -119,6 +119,7 @@ public class OfflineEnduserContract {
     public static final String COLUMN_NAME_LOCATION_LON = "locationLon";
     public static final String COLUMN_NAME_TAGS = "tags";
     public static final String COLUMN_NAME_CATEGORY = "category";
+    public static final String COLUMN_NAME_CUSTOM_META = "customMeta";
 
     public static final String CREATE_TABLE =
         "CREATE TABLE " + SpotEntry.TABLE_NAME + " (" +
@@ -132,7 +133,8 @@ public class OfflineEnduserContract {
             SpotEntry.COLUMN_NAME_TAGS + TEXT_TYPE + COMMA_SEP +
             SpotEntry.COLUMN_NAME_CATEGORY + INTEGER_TYPE + COMMA_SEP +
             SpotEntry.COLUMN_NAME_RELATION_SYSTEM + INTEGER_TYPE + COMMA_SEP +
-            SpotEntry.COLUMN_NAME_RELATION_CONTENT + INTEGER_TYPE + " )";
+            SpotEntry.COLUMN_NAME_RELATION_CONTENT + INTEGER_TYPE + COMMA_SEP +
+            SpotEntry.COLUMN_NAME_CUSTOM_META + TEXT_TYPE + " )";
 
     public static final String[] PROJECTION = {
         _ID,
@@ -145,7 +147,8 @@ public class OfflineEnduserContract {
         COLUMN_NAME_TAGS,
         COLUMN_NAME_CATEGORY,
         COLUMN_NAME_RELATION_SYSTEM,
-        COLUMN_NAME_RELATION_CONTENT
+        COLUMN_NAME_RELATION_CONTENT,
+        COLUMN_NAME_CUSTOM_META
     };
   }
 
@@ -223,6 +226,7 @@ public class OfflineEnduserContract {
     public static final String COLUMN_NAME_CATEGORY = "category";
     public static final String COLUMN_NAME_TAGS = "tags";
     public static final String COLUMN_NAME_PUBLIC_IMAGE_URL = "imageUrl";
+    public static final String COLUMN_NAME_CUSTOM_META = "customMeta";
 
     public static final String CREATE_TABLE =
         "CREATE TABLE " + ContentEntry.TABLE_NAME + " (" +
@@ -235,7 +239,8 @@ public class OfflineEnduserContract {
             ContentEntry.COLUMN_NAME_LANGUAGE + TEXT_TYPE + COMMA_SEP +
             ContentEntry.COLUMN_NAME_CATEGORY + INTEGER_TYPE + COMMA_SEP +
             ContentEntry.COLUMN_NAME_TAGS + TEXT_TYPE + COMMA_SEP +
-            ContentEntry.COLUMN_NAME_PUBLIC_IMAGE_URL + TEXT_TYPE + " )";
+            ContentEntry.COLUMN_NAME_PUBLIC_IMAGE_URL + TEXT_TYPE + COMMA_SEP +
+            ContentEntry.COLUMN_NAME_CUSTOM_META + TEXT_TYPE + " )";
 
     public static final String[] PROJECTION = {
         ContentEntry._ID,
@@ -246,7 +251,8 @@ public class OfflineEnduserContract {
         ContentEntry.COLUMN_NAME_LANGUAGE,
         ContentEntry.COLUMN_NAME_CATEGORY,
         ContentEntry.COLUMN_NAME_TAGS,
-        ContentEntry.COLUMN_NAME_PUBLIC_IMAGE_URL
+        ContentEntry.COLUMN_NAME_PUBLIC_IMAGE_URL,
+        ContentEntry.COLUMN_NAME_CUSTOM_META
     };
   }
 

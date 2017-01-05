@@ -5,14 +5,21 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.text.TextUtils;
+import android.util.Log;
 
+import com.google.gson.Gson;
 import com.xamoom.android.xamoomsdk.Resource.Location;
 import com.xamoom.android.xamoomsdk.Resource.Marker;
 import com.xamoom.android.xamoomsdk.Resource.Spot;
 import com.xamoom.android.xamoomsdk.Storage.TableContracts.OfflineEnduserContract;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
 
 public class SpotDatabaseAdapter extends DatabaseAdapter {
   private static SpotDatabaseAdapter mSharedInstance;
@@ -99,15 +106,23 @@ public class SpotDatabaseAdapter extends DatabaseAdapter {
     values.put(OfflineEnduserContract.SpotEntry.COLUMN_NAME_NAME, spot.getName());
     values.put(OfflineEnduserContract.SpotEntry.COLUMN_NAME_DESCRIPTION, spot.getDescription());
     values.put(OfflineEnduserContract.SpotEntry.COLUMN_NAME_PUBLIC_IMAGE_URL, spot.getPublicImageUrl());
+    values.put(OfflineEnduserContract.SpotEntry.COLUMN_NAME_CATEGORY, spot.getCategory());
+
     if (spot.getLocation() != null) {
       values.put(OfflineEnduserContract.SpotEntry.COLUMN_NAME_LOCATION_LAT, spot.getLocation().getLatitude());
       values.put(OfflineEnduserContract.SpotEntry.COLUMN_NAME_LOCATION_LON, spot.getLocation().getLongitude());
     }
+
     if (spot.getTags() != null) {
       values.put(OfflineEnduserContract.SpotEntry.COLUMN_NAME_TAGS,
           TextUtils.join(",", spot.getTags()));
     }
-    values.put(OfflineEnduserContract.SpotEntry.COLUMN_NAME_CATEGORY, spot.getCategory());
+
+    if (spot.getCustomMeta() != null) {
+      String json = new JSONObject(spot.getCustomMeta()).toString();
+      values.put(OfflineEnduserContract.SpotEntry.COLUMN_NAME_CUSTOM_META,
+          json);
+    }
 
     if (spot.getSystem() != null) {
       values.put(OfflineEnduserContract.SpotEntry.COLUMN_NAME_RELATION_SYSTEM,
@@ -178,6 +193,11 @@ public class SpotDatabaseAdapter extends DatabaseAdapter {
     return -1;
   }
 
+  public SpotDatabaseAdapter(Context context, SystemDatabaseAdapter systemDatabaseAdapter) {
+    super(context);
+    mSystemDatabaseAdapter = systemDatabaseAdapter;
+  }
+
   private ArrayList<Spot> cursorToSpots(Cursor cursor) {
     ArrayList<Spot> spots = new ArrayList<>();
     while (cursor.moveToNext()) {
@@ -202,6 +222,25 @@ public class SpotDatabaseAdapter extends DatabaseAdapter {
       }
       spot.setCategory(cursor.getInt(cursor.getColumnIndex(
           OfflineEnduserContract.SpotEntry.COLUMN_NAME_CATEGORY)));
+
+      String customMetaJson = cursor.getString(cursor.getColumnIndex(
+          OfflineEnduserContract.SpotEntry.COLUMN_NAME_CUSTOM_META));
+      if (customMetaJson != null) {
+        try {
+          JSONObject jsonData = new JSONObject(customMetaJson);
+          HashMap<String, String> outMap = new HashMap<String, String>();
+          Iterator<String> iter = jsonData.keys();
+          while (iter.hasNext()) {
+            String name = iter.next();
+            outMap.put(name, jsonData.getString(name));
+          }
+          spot.setCustomMeta(outMap);
+        } catch (JSONException e) {
+          // customMeta will be null
+          Log.e(SpotDatabaseAdapter.class.getSimpleName(),
+              "Cannot parse customMetaJson from sqlite. Error: " + e.toString());
+        }
+      }
 
       long systemRow = cursor.getLong(cursor.getColumnIndex(
           OfflineEnduserContract.SpotEntry.COLUMN_NAME_RELATION_SYSTEM));
