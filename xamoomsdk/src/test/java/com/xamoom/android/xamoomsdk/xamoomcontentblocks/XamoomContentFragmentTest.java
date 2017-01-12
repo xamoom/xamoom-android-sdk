@@ -222,6 +222,29 @@ public class XamoomContentFragmentTest {
   }
 
   @Test
+  public void testOnDestroyWithNullRecyclerView() {
+    XamoomContentFragment fragment = XamoomContentFragment.newInstance("api");
+
+    ContentFragmentActivity activity = Robolectric.buildActivity( ContentFragmentActivity.class )
+        .create()
+        .start()
+        .resume()
+        .get();
+
+    FragmentManager fragmentManager = activity.getSupportFragmentManager();
+    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+    fragmentTransaction.add(fragment, null);
+    fragmentTransaction.commit();
+
+    fragment.setRecyclerView(null);
+
+    fragmentManager.beginTransaction().remove(fragment).commit();
+
+    assertNull(fragment.getRecyclerView());
+    assertNull(fragment.getContentBlocks());
+  }
+
+  @Test
   public void testWithAnimation() {
     com.xamoom.android.xamoomsdk.Resource.Content content = new com.xamoom.android.xamoomsdk.Resource.Content();
     content.setTitle("Test Content");
