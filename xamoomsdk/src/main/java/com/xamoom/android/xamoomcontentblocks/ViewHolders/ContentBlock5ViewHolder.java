@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.xamoom.android.xamoomcontentblocks.Config;
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Storage.FileManager;
@@ -82,7 +83,7 @@ public class ContentBlock5ViewHolder extends RecyclerView.ViewHolder {
     }
 
     Uri fileUri = FileProvider.getUriForFile(mFragment.getContext(),
-        "com.xamoom.android.xamoomsdk.fileprovider", file);
+        Config.AUTHORITY, file);
     Intent shareIntent = ShareCompat.IntentBuilder.from(mFragment.getActivity())
         .setType(mFragment.getContext().getContentResolver().getType(fileUri))
         .setStream(fileUri)
