@@ -3,6 +3,7 @@ package com.xamoom.android.xamoomsdk.Storage.Database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.xamoom.android.xamoomsdk.Storage.TableContracts.OfflineEnduserContract;
 
@@ -27,6 +28,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
   @Override
   public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
-    // TODO: implement upgrading when needed
+    switch (oldVersion) {
+      case 1:
+        // add copyright column to ContentBlock
+        sqLiteDatabase.execSQL("ALTER TABLE " +
+            OfflineEnduserContract.ContentBlockEntry.TABLE_NAME +
+            " ADD " +
+            OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_COPYRIGHT
+            + OfflineEnduserContract.TEXT_TYPE);
+    }
   }
 }

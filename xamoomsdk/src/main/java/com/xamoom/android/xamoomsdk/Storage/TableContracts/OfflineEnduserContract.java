@@ -2,8 +2,10 @@ package com.xamoom.android.xamoomsdk.Storage.TableContracts;
 
 import android.provider.BaseColumns;
 
+import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
+
 public class OfflineEnduserContract {
-  public static final int DATABASE_VERSION = 1;
+  public static final int DATABASE_VERSION = 2;
   public static final String DATABASE_NAME = "OfflineEnduser.db";
 
   public static final String TEXT_TYPE = " TEXT";
@@ -279,6 +281,7 @@ public class OfflineEnduserContract {
     public static final String COLUMN_NAME_VIDEO_URL = "videoUrl";
     public static final String COLUMN_NAME_SHOW_CONTENT_ON_SPOTMAP = "showContentOnSpotmap";
     public static final String COLUMN_NAME_ALT_TEXT = "altText";
+    public static final String COLUMN_NAME_COPYRIGHT = "copyright";
 
     public static final String CREATE_TABLE =
         "CREATE TABLE " + ContentBlockEntry.TABLE_NAME + " (" +
@@ -300,7 +303,9 @@ public class OfflineEnduserContract {
             ContentBlockEntry.COLUMN_NAME_SCALE_X + REAL_TYPE + COMMA_SEP +
             ContentBlockEntry.COLUMN_NAME_VIDEO_URL + TEXT_TYPE + COMMA_SEP +
             ContentBlockEntry.COLUMN_NAME_SHOW_CONTENT_ON_SPOTMAP + INTEGER_TYPE + COMMA_SEP +
-            ContentBlockEntry.COLUMN_NAME_ALT_TEXT + TEXT_TYPE +  " )";
+            ContentBlockEntry.COLUMN_NAME_ALT_TEXT + TEXT_TYPE + COMMA_SEP +
+            ContentBlockEntry.COLUMN_NAME_COPYRIGHT + TEXT_TYPE +
+            " )";
 
     public static final String[] PROJECTION = {
         ContentBlockEntry._ID,
@@ -320,6 +325,8 @@ public class OfflineEnduserContract {
         ContentBlockEntry.COLUMN_NAME_SCALE_X,
         ContentBlockEntry.COLUMN_NAME_VIDEO_URL,
         ContentBlockEntry.COLUMN_NAME_SHOW_CONTENT_ON_SPOTMAP,
-        ContentBlockEntry.COLUMN_NAME_ALT_TEXT };
+        ContentBlockEntry.COLUMN_NAME_ALT_TEXT,
+        ContentBlockEntry.COLUMN_NAME_COPYRIGHT
+    };
   }
 }
