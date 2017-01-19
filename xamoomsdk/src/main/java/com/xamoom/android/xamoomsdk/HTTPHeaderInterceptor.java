@@ -28,11 +28,9 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * Created by raphaelseher on 27/09/2016.
+ * Interceptor for retrofit to change the header.
  */
-
 public class HTTPHeaderInterceptor implements Interceptor {
-
   private String userAgent;
   private String apiKey;
 

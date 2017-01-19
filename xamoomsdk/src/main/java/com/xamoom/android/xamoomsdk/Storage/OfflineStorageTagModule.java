@@ -174,7 +174,7 @@ public class OfflineStorageTagModule {
   /**
    * Deletes all spots and connected content with tag, when there is no dependency to another tag.
    *
-   * @param tags
+   * @param tags List of tags to delete.
    */
   public void deleteWithTags(final ArrayList<String> tags) {
     mOfflineTags.removeAll(tags);

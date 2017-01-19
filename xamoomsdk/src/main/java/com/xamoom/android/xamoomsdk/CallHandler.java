@@ -96,7 +96,7 @@ public class CallHandler <T extends Resource> {
           JsonApiObject jsonApiObject = morpheus.parse(json);
 
           if (jsonApiObject.getResources() != null) {
-            List<T> contents = (List<T>) (List<?>) jsonApiObject.getResources();
+            List<T> contents = (List<T>) jsonApiObject.getResources();
             String cursor = jsonApiObject.getMeta().get("cursor").toString();
             boolean hasMore = (boolean) jsonApiObject.getMeta().get("has-more");
             callback.finished(contents, cursor, hasMore);

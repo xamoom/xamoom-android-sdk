@@ -673,7 +673,7 @@ public class EnduserApi implements Parcelable {
 
   /**
    * Set offline to true to get data saved in local database.
-   * @param offline
+   * @param offline Boolean to set the enduserapi to offline.
    */
   public void setOffline(boolean offline) {
     this.offline = offline;
