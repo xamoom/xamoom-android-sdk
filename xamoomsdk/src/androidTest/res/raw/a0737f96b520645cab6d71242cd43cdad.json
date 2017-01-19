@@ -6,7 +6,8 @@
         "file-id": "https://storage.googleapis.com/xamoom-files-dev/mobile/62a7d76c4a14446bbc8e3155b8db025f.png",
         "is-public": true,
         "block-type": "3",
-        "title": "Image 1 | 100%"
+        "title": "Image 1 | 100%",
+        "copyright": "copyright by someone"
       },
       "type": "contentblocks",
       "id": "0737f96b520645cab6d71242cd43cdad|0"

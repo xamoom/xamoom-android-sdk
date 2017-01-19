@@ -395,6 +395,7 @@ public class IntegrationTest extends InstrumentationTestCase {
             assertEquals("https://storage.googleapis.com/xamoom-files-dev/mobile/62a7d76c4a14446bbc8e3155b8db025f.png",
                 result.getContentBlocks().get(0).getFileId());
             assertEquals(100.0, result.getContentBlocks().get(0).getScaleX());
+            assertEquals("copyright by someone", result.getContentBlocks().get(0).getCopyright());
           }
 
           if (result.getId().equalsIgnoreCase("1d4f6152baa5418098d12cbf14e20275")) {
