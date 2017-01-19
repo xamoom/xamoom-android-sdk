@@ -28,7 +28,9 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-
+/**
+ * DownloadTask for downloading data from URL.
+ */
 public class DownloadTask extends AsyncTask<Void, Integer, ByteArrayOutputStream> {
   private OnDownloadTaskCompleted mListener;
   private URL mURL;

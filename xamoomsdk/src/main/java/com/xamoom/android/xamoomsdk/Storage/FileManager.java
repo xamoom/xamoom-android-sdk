@@ -36,6 +36,9 @@ import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+/**
+ * FileManager to save and retriev data from disk.
+ */
 public class FileManager {
   private static FileManager mInstance;
   private Context mContext;

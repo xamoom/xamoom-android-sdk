@@ -78,6 +78,12 @@ public class OfflineStorageManager {
 
   private ArrayList<String> mSaveDeletionFiles = new ArrayList<>();
 
+  /**
+   * Get instance with context.
+   *
+   * @param context Android application context.
+   * @return OfflineStorageManager instance.
+   */
   public static OfflineStorageManager getInstance(Context context) {
     if (mInstance == null) {
       mInstance = new OfflineStorageManager(context);

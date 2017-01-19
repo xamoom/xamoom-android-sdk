@@ -21,6 +21,9 @@
 
 package com.xamoom.android.xamoomsdk.Storage;
 
+/**
+ * Errors for DownloadTask.
+ */
 public class DownloadError {
   public static final int CONNECTION_FAILED_ERROR_CODE = 0;
   public static final String CONNECTION_FAILED_ERROR = "connectionFailedError";

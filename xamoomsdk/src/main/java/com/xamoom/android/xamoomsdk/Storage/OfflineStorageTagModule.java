@@ -59,7 +59,11 @@ public class OfflineStorageTagModule {
   private ArrayList<Spot> mAllSpots = new ArrayList<>();
   private ArrayList<Content> mAllContents = new ArrayList<>();
 
-
+  /**
+   * Construct with your storagemanager and already setup enduserApi.
+   * @param manager OfflineStorageAdapter instance.
+   * @param api With api key setup enduserApi instance.
+   */
   public OfflineStorageTagModule(OfflineStorageManager manager, EnduserApi api) {
     mOfflineStorageManager = manager;
     mEnduserApi = api;
