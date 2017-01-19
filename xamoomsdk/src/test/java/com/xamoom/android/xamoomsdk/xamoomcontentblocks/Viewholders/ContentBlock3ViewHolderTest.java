@@ -24,6 +24,7 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -64,6 +65,22 @@ public class ContentBlock3ViewHolderTest {
         mActivity, null);
 
     assertNotNull(viewHolder);
+  }
+
+  @Test
+  public void testSetupContentBlock() {
+    View itemView = View.inflate(mActivity, R.layout.content_block_3_layout, null);
+    ContentBlock3ViewHolder viewHolder = new ContentBlock3ViewHolder(itemView,
+        mXamoomContentFragment.getContext(), null);
+
+    ContentBlock block = new ContentBlock();
+    block.setTitle("title");
+    block.setCopyright("copyright");
+
+    viewHolder.setupContentBlock(block, false);
+
+    assertEquals("title", viewHolder.getTitleTextView().getText().toString());
+    assertEquals("copyright", viewHolder.getCopyrightTextView().getText().toString());
   }
 
   @Test

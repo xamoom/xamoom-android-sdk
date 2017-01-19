@@ -44,6 +44,7 @@ import java.io.InputStream;
 public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
   private Context mContext;
   private TextView mTitleTextView;
+  private TextView mCopyrightTextView;
   private ProgressBar mImageProgressBar;
   private ImageView mImageView;
   private int mTextColor = Color.BLACK;
@@ -57,6 +58,7 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
     super(itemView);
     mContext = context;
     mTitleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
+    mCopyrightTextView = (TextView) itemView.findViewById(R.id.copyrightTextView);
     mImageView = (ImageView) itemView.findViewById(R.id.imageImageView);
     mImageProgressBar = (ProgressBar) itemView.findViewById(R.id.imageProgressBar);
     mListener = listener;
@@ -78,10 +80,14 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
   }
 
   public void setupContentBlock(final ContentBlock contentBlock, boolean offline) {
+    mTitleTextView.setTextColor(mTextColor);
+    mCopyrightTextView.setTextColor(mTextColor);
+
     mTitleTextView.setVisibility(View.VISIBLE);
+    mCopyrightTextView.setVisibility(View.VISIBLE);
+
     if(contentBlock.getTitle() != null && !contentBlock.getTitle().equalsIgnoreCase("")) {
       mTitleTextView.setText(contentBlock.getTitle());
-      mTitleTextView.setTextColor(mTextColor);
     } else {
       mTitleTextView.setVisibility(View.GONE);
       LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mImageView.getLayoutParams();
@@ -90,6 +96,7 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
     }
 
     setImageViewContentDescription(contentBlock);
+    setCopyright(contentBlock.getCopyright());
 
     String fileId = null;
     if (offline) {
@@ -180,6 +187,14 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
     }
   }
 
+  private void setCopyright(String copyright) {
+    if (copyright != null && !copyright.equalsIgnoreCase("")) {
+      mCopyrightTextView.setText(copyright);
+    } else {
+      mCopyrightTextView.setVisibility(View.GONE);
+    }
+  }
+
   private void resizeImageViewWithScaling(ImageView imageView, double scaleX) {
     int deviceWidth = mContext.getResources().getDisplayMetrics().widthPixels;
     double margin = 0;
@@ -200,6 +215,22 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
     if (style != null && style.getForegroundFontColor() != null) {
       mTextColor = Color.parseColor(style.getForegroundFontColor());
     }
+  }
+
+  public TextView getTitleTextView() {
+    return mTitleTextView;
+  }
+
+  public TextView getCopyrightTextView() {
+    return mCopyrightTextView;
+  }
+
+  public ProgressBar getImageProgressBar() {
+    return mImageProgressBar;
+  }
+
+  public ImageView getImageView() {
+    return mImageView;
   }
 
   public void setFileManager(FileManager fileManager) {

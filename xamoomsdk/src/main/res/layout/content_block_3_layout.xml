@@ -30,4 +30,13 @@
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
         android:layout_gravity="center|center_horizontal"/>
+
+    <TextView
+        android:id="@+id/copyrightTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="viewEnd"
+        android:layout_marginStart="@dimen/standard_contentblock_padding"
+        android:layout_marginEnd="@dimen/standard_contentblock_padding"
+        />
 </LinearLayout>
