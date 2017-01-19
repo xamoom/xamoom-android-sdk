@@ -46,6 +46,7 @@ public class ContentBlockTest {
     mContentBlock.setVideoUrl("www.video.url");
     mContentBlock.setShowContentOnSpotmap(true);
     mContentBlock.setAltText("alttext");
+    mContentBlock.setCopyright("copyright");
   }
 
   @Test
@@ -79,5 +80,6 @@ public class ContentBlockTest {
     assertEquals(mContentBlock.getVideoUrl(), createdFromParcel.getVideoUrl());
     assertEquals(mContentBlock.isShowContentOnSpotmap(), createdFromParcel.isShowContentOnSpotmap());
     assertEquals(mContentBlock.getAltText(), createdFromParcel.getAltText());
+    assertEquals(mContentBlock.getCopyright(), createdFromParcel.getCopyright());
   }
 }

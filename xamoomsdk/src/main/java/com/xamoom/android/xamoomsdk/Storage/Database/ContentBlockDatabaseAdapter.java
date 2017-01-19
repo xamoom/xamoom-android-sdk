@@ -111,6 +111,8 @@ public class ContentBlockDatabaseAdapter extends DatabaseAdapter {
         contentBlock.isShowContentOnSpotmap());
     values.put(OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_ALT_TEXT,
         contentBlock.getAltText());
+    values.put(OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_COPYRIGHT,
+        contentBlock.getCopyright());
     values.put(OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_CONTENT_RELATION, parentRow);
 
     long row = getPrimaryKey(contentBlock.getId());
@@ -196,8 +198,9 @@ public class ContentBlockDatabaseAdapter extends DatabaseAdapter {
           .getColumnIndex(OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_CONTENT_ID)));
       contentBlock.setDownloadType(cursor.getInt(cursor
           .getColumnIndex(OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_DOWNLOAD_TYPE)));
-      String tags = cursor.getString(cursor
-          .getColumnIndex(OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_SPOT_MAP_TAGS));
+      int index = cursor
+          .getColumnIndex(OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_SPOT_MAP_TAGS);
+      String tags = cursor.getString(index);
       if (tags != null) {
         contentBlock.setSpotMapTags(Arrays.asList(tags.split(",")));
       }
@@ -209,6 +212,8 @@ public class ContentBlockDatabaseAdapter extends DatabaseAdapter {
           .getColumnIndex(OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_SHOW_CONTENT_ON_SPOTMAP)) == 1));
       contentBlock.setAltText(cursor.getString(cursor
           .getColumnIndex(OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_ALT_TEXT)));
+      contentBlock.setCopyright(cursor.getString(cursor
+          .getColumnIndex(OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_COPYRIGHT)));
       contentBlocks.add(contentBlock);
     }
 

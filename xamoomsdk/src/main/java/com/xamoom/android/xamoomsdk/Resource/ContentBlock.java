@@ -42,6 +42,8 @@ public class ContentBlock extends Resource implements Parcelable {
   private boolean showContentOnSpotmap;
   @SerializedName("alt-text")
   private String altText;
+  @SerializedName("copyright")
+  private String copyright;
 
   public ContentBlock() {
   }
@@ -64,6 +66,7 @@ public class ContentBlock extends Resource implements Parcelable {
     videoUrl = in.readString();
     showContentOnSpotmap = in.readByte() != 0;
     altText = in.readString();
+    copyright = in.readString();
   }
 
   public static final Creator<ContentBlock> CREATOR = new Creator<ContentBlock>() {
@@ -206,6 +209,14 @@ public class ContentBlock extends Resource implements Parcelable {
     this.altText = altText;
   }
 
+  public String getCopyright() {
+    return copyright;
+  }
+
+  public void setCopyright(String copyright) {
+    this.copyright = copyright;
+  }
+
   @Override
   public int describeContents() {
     return 0;
@@ -230,5 +241,6 @@ public class ContentBlock extends Resource implements Parcelable {
     dest.writeString(videoUrl);
     dest.writeByte((byte) (showContentOnSpotmap ? 1 : 0));
     dest.writeString(altText);
+    dest.writeString(copyright);
   }
 }
