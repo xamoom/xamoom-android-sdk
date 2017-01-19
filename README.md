@@ -10,7 +10,7 @@ More informations about xamoom and how xamoom works? Visit our Github page [xamo
 # Getting Started
 
 * Read the ["Getting Started"](https://github.com/xamoom/xamoom-android-sdk/wiki#getting-started) guide in the wiki (not up to date)
-* Check out the [documentation](http://xamoom.github.io/xamoom-android-sdk/docs/com/xamoom/android/XamoomEndUserApi.html) (not up to date)
+* Check out the [documentation](https://xamoom.github.io/xamoom-android-sdk/3.1.0/) (not up to date)
 * Check out our sample app: ["pingeborg App"](https://github.com/xamoom/xamoom-pingeborg-android)
 
 # Installation
@@ -130,7 +130,7 @@ All `EnduserApi` calls will now return you the offline saved entities.
 
 ### Documentation
 
-Here you can find the full java   [documentation](http://xamoom.github.io/xamoom-android-sdk/docs/com/xamoom/android/xamoomsdk/EnduserApi.html).
+Here you can find the full java [documentation](https://xamoom.github.io/xamoom-android-sdk/3.1.0/).
 
 # Requirements
 
