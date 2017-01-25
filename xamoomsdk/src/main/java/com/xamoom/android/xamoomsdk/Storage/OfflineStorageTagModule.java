@@ -21,6 +21,7 @@
 
 package com.xamoom.android.xamoomsdk.Storage;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.xamoom.android.xamoomsdk.APICallback;
@@ -54,7 +55,8 @@ public class OfflineStorageTagModule {
 
   private OfflineStorageManager mOfflineStorageManager;
   private EnduserApi mEnduserApi;
-  private ArrayList<String> mOfflineTags = new ArrayList<>();
+  private ArrayList<String> mOfflineTags;
+  private SimpleTagStorage mSimpleTagStorage;
 
   private ArrayList<Spot> mAllSpots = new ArrayList<>();
   private ArrayList<Content> mAllContents = new ArrayList<>();
@@ -64,9 +66,10 @@ public class OfflineStorageTagModule {
    * @param manager OfflineStorageAdapter instance.
    * @param api With api key setup enduserApi instance.
    */
-  public OfflineStorageTagModule(OfflineStorageManager manager, EnduserApi api) {
+  public OfflineStorageTagModule(OfflineStorageManager manager, EnduserApi api, Context context) {
     mOfflineStorageManager = manager;
     mEnduserApi = api;
+    mSimpleTagStorage = new SimpleTagStorage(context);
   }
 
   /**
@@ -81,7 +84,10 @@ public class OfflineStorageTagModule {
                                       final APIListCallback<List<Spot>, List<Error>> callback,
                                       final DownloadManager.OnDownloadManagerCompleted downloadCallback) {
     mAllSpots.clear();
-    mOfflineTags.addAll(tags);
+    mOfflineTags = mSimpleTagStorage.getTags();
+    addOfflineTags(tags);
+    mSimpleTagStorage.saveTags(mOfflineTags);
+
     downloadAllSpots(tags, null, new APIListCallback<List<Spot>, List<Error>>() {
       @Override
       public void finished(List<Spot> result, String cursor, boolean hasMore) {
@@ -181,7 +187,9 @@ public class OfflineStorageTagModule {
    * @param tags List of tags to delete.
    */
   public void deleteWithTags(final ArrayList<String> tags) {
+    mOfflineTags = mSimpleTagStorage.getTags();
     mOfflineTags.removeAll(tags);
+    mSimpleTagStorage.saveTags(mOfflineTags);
 
     final ArrayList<Spot> spotsToDelete = new ArrayList<>();
 
@@ -302,6 +310,14 @@ public class OfflineStorageTagModule {
     }
   }
 
+  private void addOfflineTags(ArrayList<String> tags) {
+    for (String tag : tags) {
+      if (!mOfflineTags.contains(tag)) {
+        mOfflineTags.add(tag);
+      }
+    }
+  }
+
   // getter & setter
 
   public EnduserApi getEnduserApi() {
@@ -318,6 +334,10 @@ public class OfflineStorageTagModule {
 
   public void setOfflineStorageManager(OfflineStorageManager offlineStorageManager) {
     mOfflineStorageManager = offlineStorageManager;
+  }
+
+  public void setSimpleTagStorage(SimpleTagStorage simpleTagStorage) {
+    mSimpleTagStorage = simpleTagStorage;
   }
 
   public ArrayList<String> getOfflineTags() {

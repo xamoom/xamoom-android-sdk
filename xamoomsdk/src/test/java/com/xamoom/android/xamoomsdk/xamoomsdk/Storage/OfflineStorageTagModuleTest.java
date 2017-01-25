@@ -21,6 +21,8 @@
 
 package com.xamoom.android.xamoomsdk.xamoomsdk.Storage;
 
+import android.content.Context;
+
 import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.APIListCallback;
 import com.xamoom.android.xamoomsdk.BuildConfig;
@@ -30,6 +32,7 @@ import com.xamoom.android.xamoomsdk.Resource.Spot;
 import com.xamoom.android.xamoomsdk.Storage.Database.SpotDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.OfflineStorageManager;
 import com.xamoom.android.xamoomsdk.Storage.OfflineStorageTagModule;
+import com.xamoom.android.xamoomsdk.Storage.SimpleTagStorage;
 
 import junit.framework.Assert;
 
@@ -40,6 +43,7 @@ import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import java.io.IOException;
@@ -66,21 +70,26 @@ public class OfflineStorageTagModuleTest {
   private OfflineStorageTagModule mOfflineStorageTagModule;
   private OfflineStorageManager mMockedManager;
   private EnduserApi mMockedApi;
+  private SimpleTagStorage mMockedTagStorage;
 
   @Before
   public void setup() {
     mMockedManager = mock(OfflineStorageManager.class);
     mMockedApi = mock(EnduserApi.class);
-    mOfflineStorageTagModule = new OfflineStorageTagModule(mMockedManager, mMockedApi);
+    mMockedTagStorage = mock(SimpleTagStorage.class);
+
+    mOfflineStorageTagModule = new OfflineStorageTagModule(mMockedManager, mMockedApi,
+        RuntimeEnvironment.application.getApplicationContext());
+    mOfflineStorageTagModule.setSimpleTagStorage(mMockedTagStorage);
   }
 
   @Test
   public void testConstructor() {
-    OfflineStorageTagModule module = new OfflineStorageTagModule(mMockedManager, mMockedApi);
+    OfflineStorageTagModule module = new OfflineStorageTagModule(mMockedManager, mMockedApi,
+        RuntimeEnvironment.application.getApplicationContext());
 
     Assert.assertEquals(mMockedManager, module.getOfflineStorageManager());
     Assert.assertEquals(mMockedApi, module.getEnduserApi());
-    Assert.assertNotNull(module.getOfflineTags());
   }
 
   @Test
@@ -179,7 +188,7 @@ public class OfflineStorageTagModuleTest {
     spot12.setContent(content12);
     spots.add(spot12);
 
-    mOfflineStorageTagModule.getOfflineTags().addAll(tags12);
+    Mockito.stub(mMockedTagStorage.getTags()).toReturn(tags12);
 
     SpotDatabaseAdapter mockedSpotDatabaseAdapter = Mockito.mock(SpotDatabaseAdapter.class);
     Mockito.stub(mockedSpotDatabaseAdapter.getAllSpots()).toReturn(spots);
@@ -238,7 +247,7 @@ public class OfflineStorageTagModuleTest {
     spot12.setContent(content12);
     spots.add(spot12);
 
-    mOfflineStorageTagModule.getOfflineTags().addAll(tags12);
+    Mockito.stub(mMockedTagStorage.getTags()).toReturn(tags12);
 
     SpotDatabaseAdapter mockedSpotDatabaseAdapter = Mockito.mock(SpotDatabaseAdapter.class);
     Mockito.stub(mockedSpotDatabaseAdapter.getAllSpots()).toReturn(spots);

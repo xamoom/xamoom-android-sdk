@@ -5,6 +5,8 @@
 - Added copyright to ContentBlock
 - Added copyrightTextView to ContentBlock3ViewHolder
 
+- Fixed offlineTags in `OfflineStorageTagModule` were not saved. These are now saved to SharedPreferences.
+
 ## [3.0.0](https://github.com/xamoom/xamoom-android-sdk/compare/v2.2.3...v3.0.0)
 
 - Added offline saving
