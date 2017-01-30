@@ -2,6 +2,8 @@
 
 ## development
 
+## [3.1.0](https://github.com/xamoom/xamoom-android-sdk/compare/v3.0.0...v3.1.0)
+
 - Added copyright to ContentBlock
 - Added copyrightTextView to ContentBlock3ViewHolder
 
