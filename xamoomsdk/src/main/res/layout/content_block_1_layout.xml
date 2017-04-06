@@ -60,6 +60,7 @@
             />
 
         <LinearLayout
+            xmlns:custom="http://schemas.android.com/apk/res/com.example.customviews"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -105,11 +106,12 @@
                 android:layout_height="30dp"
                 android:layout_weight="100"></View>
 
-            <View
+            <com.xamoom.android.xamoomcontentblocks.Views.MovingBarsView
+                android:id="@+id/moving_bars_view"
                 android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@color/black">
-            </View>
+                android:layout_height="30dp">
+
+            </com.xamoom.android.xamoomcontentblocks.Views.MovingBarsView>
 
         </LinearLayout>
 

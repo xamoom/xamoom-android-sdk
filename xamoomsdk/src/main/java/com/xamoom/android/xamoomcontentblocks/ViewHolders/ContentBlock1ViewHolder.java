@@ -34,6 +34,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.xamoom.android.xamoomcontentblocks.Views.MovingBarsView;
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Storage.FileManager;
@@ -56,6 +57,7 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
   private Button mBackwardButton;
   private MediaPlayer mMediaPlayer;
   private ProgressBar mSongProgressBar;
+  private MovingBarsView mMovingBarsView;
   private final Handler mHandler = new Handler();
   private Runnable mRunnable;
   private FileManager mFileManager;
@@ -72,6 +74,7 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
     mRemainingSongTimeTextView = (TextView) itemView.findViewById(R.id.remaining_song_time_text_view);
     mSongProgressBar = (ProgressBar) itemView.findViewById(R.id.song_progress_bar);
     mFileManager = FileManager.getInstance(fragment.getContext());
+    mMovingBarsView = (MovingBarsView) itemView.findViewById(R.id.moving_bars_view);
 
     mForwardButton.setOnClickListener(mForwardButtonClickListener);
     mBackwardButton.setOnClickListener(mBackwardButtonClickListener);
@@ -140,6 +143,7 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
             mMediaPlayer.pause();
             mPlayPauseButton.setBackgroundResource(R.drawable.ic_play);
           } else {
+            mMovingBarsView.startAnimation();
             mMediaPlayer.start();
             mPlayPauseButton.setBackgroundResource(R.drawable.ic_pause);
             startUpdatingProgress();
