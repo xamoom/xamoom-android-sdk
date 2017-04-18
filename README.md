@@ -43,7 +43,7 @@ a geo api key.
 Grab a contentId from your [xamoom-system](https://xamoom.net/) (open a page and copy id from url) and make your first call like this:
 
 ```java
-EnduserApi mEnduserApi = new EnduserApi(API_KEY);
+EnduserApi mEnduserApi = new EnduserApi(API_KEY, context);
 mEnduserApi.getContent(CONTENT_ID, new APICallback<Content, List<Error>>() {
   @Override
   public void finished(Content result) {
