@@ -108,8 +108,8 @@
 
             <com.xamoom.android.xamoomcontentblocks.Views.MovingBarsView
                 android:id="@+id/moving_bars_view"
-                android:layout_width="30dp"
-                android:layout_height="30dp">
+                android:layout_width="50dp"
+                android:layout_height="25dp">
 
             </com.xamoom.android.xamoomcontentblocks.Views.MovingBarsView>
 

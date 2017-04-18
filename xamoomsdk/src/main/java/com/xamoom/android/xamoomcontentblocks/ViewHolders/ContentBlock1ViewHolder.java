@@ -140,6 +140,7 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
           }
 
           if (mMediaPlayer.isPlaying()) {
+            mMovingBarsView.stopAnimation();
             mMediaPlayer.pause();
             mPlayPauseButton.setBackgroundResource(R.drawable.ic_play);
           } else {
@@ -150,8 +151,6 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
           }
         }
       });
-
-      // dumer kak, stürzt ab und zu ab, wenn zu viel forwardest.
     }
   }
 
@@ -164,6 +163,7 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
 
     mPrepared = false;
     stopUpdatingProgress();
+    mMovingBarsView.stopAnimation();
     if (!mPrepared) {
       mMediaPlayer.prepareAsync();
     }

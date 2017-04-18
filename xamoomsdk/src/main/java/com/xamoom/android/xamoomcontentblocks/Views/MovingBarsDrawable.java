@@ -33,44 +33,104 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 public class MovingBarsDrawable extends Drawable implements ValueAnimator.AnimatorUpdateListener {
-  private Path mPath;
-  private Paint mPaint;
-  private ArrayList<Path> mPaths = new ArrayList<>(3);
+  private static final String TAG = MovingBarsDrawable.class.getSimpleName();
+  private static final int DURATION = 600;
+  private static final int MARGIN = 10;
+  private static final int STROKE_WIDTH = 25;
+  private static final int START_HEIGHT = 20;
 
-  private ValueAnimator mAnimator;
-  private int mHeight;
+  private HashMap<ValueAnimator, Path> mValueAnimators = new HashMap<>(3);
+  private ArrayList<Path> mPaths = new ArrayList<>(3);
+  private HashMap<Path, Integer> mHeights = new HashMap<>(3);
+  private Paint mPaint;
+  private Rect mBounds;
+  private boolean shouldStop;
 
   public MovingBarsDrawable() {
-    mPath = new Path();
-    mPaths.add(mPath);
-
     mPaint = new Paint();
     mPaint.setColor(0xff000000);
-    mPaint.setStrokeWidth(30);
+    mPaint.setStrokeWidth(STROKE_WIDTH);
     mPaint.setStyle(Paint.Style.STROKE);
-    mHeight = 20;
+
+    for (int i = 0; i < 3; i++) {
+      Path path = new Path();
+      mPaths.add(path);
+      mHeights.put(path, START_HEIGHT);
+    }
   }
 
   public void startAnimating() {
-    Rect b = getBounds();
-    mAnimator = ValueAnimator.ofInt(mHeight, b.height());
-    mAnimator.setDuration(800);
-    mAnimator.addUpdateListener(this);
-    mAnimator.addListener(mAnimatorListener);
-    mAnimator.start();
+    shouldStop = false;
+    mBounds = getBounds();
+
+    for (Path path : mPaths) {
+      ValueAnimator valueAnimator = createAnimator(path, false);
+      valueAnimator.start();
+    }
+  }
+
+  public void stopAnimation() {
+    shouldStop = true;
+    for (ValueAnimator animator : mValueAnimators.keySet()) {
+      animator.end();
+      onAnimationUpdate(animator);
+    }
+
+    startEndAnimation();
+  }
+
+  private void restartAnimator(Path path) {
+    ValueAnimator valueAnimator = createAnimator(path, false);
+    valueAnimator.start();
+  }
+
+  private void startEndAnimation() {
+    for (Path path : mPaths) {
+      ValueAnimator valueAnimator = createAnimator(path, true);
+      valueAnimator.start();
+    }
+  }
+
+  private ValueAnimator createAnimator(Path path, boolean end) {
+    int height = mHeights.get(path);
+    int maxHeight = mBounds.height();
+
+    int animHeight = START_HEIGHT;
+    if (!end) {
+      Random r = new Random();
+      animHeight = r.nextInt(maxHeight);
+    }
+
+    ValueAnimator valueAnimator = ValueAnimator.ofInt(height,
+        animHeight);
+    valueAnimator.setDuration(DURATION);
+    valueAnimator.addUpdateListener(this);
+    valueAnimator.addListener(mAnimatorListener);
+    mValueAnimators.put(valueAnimator, path);
+
+    return valueAnimator;
   }
 
   @Override
   public void draw(@NonNull Canvas canvas) {
-    mPath.moveTo(5, 0);
-    mPath.lineTo(5, mHeight);
-    canvas.drawPath(mPath, mPaint);
+    int count = 0;
+    for (Path path : mPaths) {
+      int x = (STROKE_WIDTH/2) + (STROKE_WIDTH * count) + (MARGIN * count);
+      x = getBounds().width() - x; // right to left
+      int height = getBounds().height() - mHeights.get(path);
+
+      path.moveTo(x, getBounds().height());
+      path.lineTo(x, height);
+      canvas.drawPath(path, mPaint);
+
+      count = count + 1;
+    }
   }
 
   @Override
@@ -96,6 +156,11 @@ public class MovingBarsDrawable extends Drawable implements ValueAnimator.Animat
 
     @Override
     public void onAnimationEnd(Animator animation) {
+      Path path = mValueAnimators.get(animation);
+
+      if (!shouldStop) {
+        restartAnimator(path);
+      }
     }
 
     @Override
@@ -111,9 +176,11 @@ public class MovingBarsDrawable extends Drawable implements ValueAnimator.Animat
 
   @Override
   public void onAnimationUpdate(ValueAnimator animator) {
-    mPath.reset();
-    mHeight = (int) mAnimator.getAnimatedValue();
+    Path path = mValueAnimators.get(animator);
+    path.reset();
 
+    int height = (int) animator.getAnimatedValue();
+    mHeights.put(path, height);
     invalidateSelf();
   }
 }

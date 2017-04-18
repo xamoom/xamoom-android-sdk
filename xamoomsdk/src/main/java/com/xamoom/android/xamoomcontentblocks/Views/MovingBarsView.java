@@ -44,4 +44,8 @@ public class MovingBarsView extends View {
   public void startAnimation() {
     mMovingBarsDrawable.startAnimating();
   }
+
+  public void stopAnimation() {
+    mMovingBarsDrawable.stopAnimation();
+  }
 }
