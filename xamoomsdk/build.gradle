@@ -1,13 +1,13 @@
 apply plugin: 'com.android.library'
 
-def versionString = "3.1.0"
+def versionString = "3.2.0"
 
 version = versionString
 group = "com.xamoom.android"
 
 android {
 	compileSdkVersion 24
-	buildToolsVersion "24.0.1"
+	buildToolsVersion '25'
 
 	defaultConfig {
 		minSdkVersion 18

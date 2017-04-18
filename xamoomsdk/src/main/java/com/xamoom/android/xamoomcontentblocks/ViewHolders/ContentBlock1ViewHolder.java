@@ -28,11 +28,13 @@ import android.net.Uri;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.xamoom.android.xamoomcontentblocks.Views.MovingBarsView;
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Storage.FileManager;
@@ -44,26 +46,38 @@ import java.util.concurrent.TimeUnit;
  * Displays audio content blocks.
  */
 public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
+  private final static int SEEK_TIME = 5000;
+
   private Fragment mFragment;
   private TextView mTitleTextView;
   private TextView mArtistTextView;
   private TextView mRemainingSongTimeTextView;
   private Button mPlayPauseButton;
+  private Button mForwardButton;
+  private Button mBackwardButton;
   private MediaPlayer mMediaPlayer;
   private ProgressBar mSongProgressBar;
+  private MovingBarsView mMovingBarsView;
   private final Handler mHandler = new Handler();
   private Runnable mRunnable;
   private FileManager mFileManager;
+  private boolean mPrepared = false;
 
   public ContentBlock1ViewHolder(View itemView, Fragment fragment) {
     super(itemView);
     mFragment = fragment;
-    mTitleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
-    mArtistTextView = (TextView) itemView.findViewById(R.id.artistTextView);
-    mPlayPauseButton = (Button) itemView.findViewById(R.id.playPauseButton);
-    mRemainingSongTimeTextView = (TextView) itemView.findViewById(R.id.remainingSongTimeTextView);
-    mSongProgressBar = (ProgressBar) itemView.findViewById(R.id.songProgressBar);
+    mTitleTextView = (TextView) itemView.findViewById(R.id.title_text_view);
+    mArtistTextView = (TextView) itemView.findViewById(R.id.artist_text_view);
+    mPlayPauseButton = (Button) itemView.findViewById(R.id.play_pause_button);
+    mForwardButton = (Button) itemView.findViewById(R.id.forward_button);
+    mBackwardButton = (Button) itemView.findViewById(R.id.backward_button);
+    mRemainingSongTimeTextView = (TextView) itemView.findViewById(R.id.remaining_song_time_text_view);
+    mSongProgressBar = (ProgressBar) itemView.findViewById(R.id.song_progress_bar);
     mFileManager = FileManager.getInstance(fragment.getContext());
+    mMovingBarsView = (MovingBarsView) itemView.findViewById(R.id.moving_bars_view);
+
+    mForwardButton.setOnClickListener(mForwardButtonClickListener);
+    mBackwardButton.setOnClickListener(mBackwardButtonClickListener);
   }
 
   public void setupContentBlock(ContentBlock contentBlock, boolean offline) {
@@ -97,6 +111,7 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
   private void setupMusicPlayer(final Uri fileUrl) {
     if(mMediaPlayer == null) {
       mMediaPlayer = new MediaPlayer();
+      mMediaPlayer.setOnCompletionListener(mOnCompletionListener);
 
       mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
       try {
@@ -109,36 +124,57 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
       mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
         @Override
         public void onPrepared(MediaPlayer mp) {
+          mPrepared = true;
+          mMediaPlayer.seekTo(0);
           mSongProgressBar.setMax(mMediaPlayer.getDuration());
+          mSongProgressBar.setProgress(0);
           mRemainingSongTimeTextView.setText(getTimeString(mMediaPlayer.getDuration()));
+        }
+      });
 
-          mPlayPauseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-              if (mMediaPlayer.isPlaying()) {
-                mMediaPlayer.pause();
-                mPlayPauseButton.setBackgroundResource(R.drawable.ic_play);
-              } else {
-                mMediaPlayer.start();
-                mPlayPauseButton.setBackgroundResource(R.drawable.ic_pause);
-                startUpdatingProgress();
-              }
-            }
-          });
+      mPlayPauseButton.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          if (!mPrepared) {
+            return;
+          }
 
-          mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-              stopUpdatingProgress();
-              if (mFragment.getActivity() != null) {
-                setupMusicPlayer(fileUrl);
-              }
-            }
-          });
+          if (mMediaPlayer.isPlaying()) {
+            mMovingBarsView.stopAnimation();
+            mMediaPlayer.pause();
+            mPlayPauseButton.setBackgroundResource(R.drawable.ic_play);
+          } else {
+            mMovingBarsView.startAnimation();
+            mMediaPlayer.start();
+            mPlayPauseButton.setBackgroundResource(R.drawable.ic_pause);
+            startUpdatingProgress();
+          }
         }
       });
     }
   }
+
+  private void resetMediaPlayer() {
+    // if the play button is pressed to times fast, it could happen to be in the wrong state
+    // when calling the prepareAsync() method.
+    if (!mPrepared) {
+      return;
+    }
+
+    mPrepared = false;
+    stopUpdatingProgress();
+    mMovingBarsView.stopAnimation();
+    if (!mPrepared) {
+      mMediaPlayer.prepareAsync();
+    }
+  }
+
+  private MediaPlayer.OnCompletionListener mOnCompletionListener = new MediaPlayer.OnCompletionListener() {
+    @Override
+    public void onCompletion(MediaPlayer mp) {
+      resetMediaPlayer();
+    }
+  };
 
   @SuppressLint("DefaultLocale")
   private String getTimeString(int milliseconds) {
@@ -156,6 +192,36 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
     return output;
   }
 
+  private View.OnClickListener mForwardButtonClickListener = new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+      Log.v("MediaPlayer", "Forward");
+      if (mMediaPlayer != null && mPrepared) {
+        int seekTime = mMediaPlayer.getCurrentPosition() + SEEK_TIME;
+        if (seekTime > mMediaPlayer.getCurrentPosition()) {
+          seekTime = mMediaPlayer.getDuration();
+        }
+        mMediaPlayer.seekTo(seekTime);
+        updateProgress();
+      }
+    }
+  };
+
+  private View.OnClickListener mBackwardButtonClickListener = new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+      Log.v("MediaPlayer", "Backward");
+      if (mMediaPlayer != null && mPrepared) {
+        int seekTime = mMediaPlayer.getCurrentPosition() - SEEK_TIME;
+        if (seekTime < 0) {
+          seekTime = 0;
+        }
+        mMediaPlayer.seekTo(seekTime);
+        updateProgress();
+      }
+    }
+  };
+
   private void startUpdatingProgress() {
     //Make sure you update Seekbar on UI thread
     mRunnable = new Runnable() {
@@ -166,9 +232,7 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
         }
 
         if (mMediaPlayer != null) {
-          int mCurrentPosition = mMediaPlayer.getCurrentPosition();
-          mSongProgressBar.setProgress(mCurrentPosition);
-          mRemainingSongTimeTextView.setText(getTimeString((mMediaPlayer.getDuration() - mCurrentPosition)));
+          updateProgress();
         } else {
           mHandler.removeCallbacks(this);
         }
@@ -177,6 +241,12 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
     };
 
     mFragment.getActivity().runOnUiThread(mRunnable);
+  }
+
+  private void updateProgress() {
+    int currentPosition = mMediaPlayer.getCurrentPosition();
+    mSongProgressBar.setProgress(currentPosition);
+    mRemainingSongTimeTextView.setText(getTimeString((mMediaPlayer.getDuration() - currentPosition)));
   }
 
   private void stopUpdatingProgress() {

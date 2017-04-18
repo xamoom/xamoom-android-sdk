@@ -2,6 +2,11 @@
 
 ## development
 
+## [3.2.0](https://github.com/xamoom/xamoom-android-sdk/compare/v3.1.0...v3.2.0)
+
+- Changed image title position to display below image (caption).
+- Changed audio player. New design, forward backward seeking und playing indicator.
+
 ## [3.1.0](https://github.com/xamoom/xamoom-android-sdk/compare/v3.0.0...v3.1.0)
 
 - Added copyright to ContentBlock
