@@ -122,12 +122,16 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
 
       @Override
       public void error(List<Error> error) {
-        mProgressBar.setVisibility(View.GONE);
         if (error != null && error.get(0) != null) {
           Log.e("XamoomContentBlocks", error.get(0).getCode() +
               "\n Error Title: " + error.get(0).getTitle() +
               "\n Detail: " + error.get(0).getDetail() +
               "\n ContentId: " + contentId);
+
+          if (error.get(0).getCode().equalsIgnoreCase("10000")) { // return when canceled
+            return;
+          }
+          mProgressBar.setVisibility(View.GONE);
         }
       }
     });
