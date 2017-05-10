@@ -49,6 +49,7 @@ import java.util.EnumSet;
 import java.util.List;
 
 import at.rags.morpheus.Error;
+import retrofit2.Call;
 
 /**
  * ContentBlock
@@ -65,6 +66,7 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
   private int mTextColor = Color.BLACK;
   private FileManager mFileManager;
   private LruCache<String, Content> mContentCache;
+  private Call mCall;
 
   public ContentBlock6ViewHolder(View itemView, Context context, EnduserApi enduserApi,
                                  LruCache<String, Content> contentCache,
@@ -87,6 +89,9 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
     mContentThumbnailImageView.setImageDrawable(null);
     mTitleTextView.setText(null);
     mDescriptionTextView.setText(null);
+    if (mCall != null) {
+      mCall.cancel();
+    }
 
     mProgressBar.setVisibility(View.VISIBLE);
 
@@ -106,7 +111,7 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
       throw new NullPointerException("EnduserApi is null.");
     }
 
-    mEnduserApi.getContent(contentId, EnumSet.of(ContentFlags.PREVIEW),new APICallback<Content, List<at.rags.morpheus.Error>>() {
+    mCall = mEnduserApi.getContent(contentId, EnumSet.of(ContentFlags.PREVIEW),new APICallback<Content, List<at.rags.morpheus.Error>>() {
       @Override
       public void finished(Content result) {
         mProgressBar.setVisibility(View.GONE);
