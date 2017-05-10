@@ -161,25 +161,27 @@ public class EnduserApi implements Parcelable {
   /**
    * Get a content for a specific contentID.
    *
-   * @param contentID ContentID from xamoom-cloud.
-   * @param callback {@link APICallback}.
+   * @param contentID ContentID from xamoom-cloud
+   * @param callback {@link APICallback}
+   * @return Used call object
    */
-  public void getContent(String contentID, APICallback<Content, List<Error>> callback) {
-    getContent(contentID, null, callback);
+  public Call getContent(String contentID, APICallback<Content, List<Error>> callback) {
+    return getContent(contentID, null, callback);
   }
 
   /**
    * Get a content for a specific contentID with possible flags.
    *
-   * @param contentID ContentID from xamoom-cloud.
-   * @param contentFlags Different flags {@link ContentFlags}.
-   * @param callback {@link APICallback}.
+   * @param contentID ContentID from xamoom-cloud
+   * @param contentFlags Different flags {@link ContentFlags}
+   * @param callback {@link APICallback}
+   * @return Used call object
    */
-  public void getContent(String contentID, EnumSet<ContentFlags> contentFlags, APICallback<Content,
+  public Call getContent(String contentID, EnumSet<ContentFlags> contentFlags, APICallback<Content,
       List<at.rags.morpheus.Error>> callback) {
     if (offline) {
       offlineEnduserApi.getContent(contentID, callback);
-      return;
+      return null;
     }
 
     Map<String, String> params = UrlUtil.addContentParameter(UrlUtil.getUrlParameter(language),
@@ -187,32 +189,35 @@ public class EnduserApi implements Parcelable {
 
     Call<ResponseBody> call = enduserApiInterface.getContent(contentID, params);
     callHandler.enqueCall(call, callback);
+    return call;
   }
 
   /**
    * Get a content for a specific LocationIdentifier.
    *
-   * @param locationIdentifier LocationIdentifier from QR or NFC.
-   * @param callback {@link APICallback}.
+   * @param locationIdentifier LocationIdentifier from QR or NFC
+   * @param callback {@link APICallback}
+   * @return Used call object
    */
-  public void getContentByLocationIdentifier(String locationIdentifier, APICallback<Content,
+  public Call getContentByLocationIdentifier(String locationIdentifier, APICallback<Content,
       List<Error>> callback) {
-    getContentByLocationIdentifier(locationIdentifier, null, callback);
+    return getContentByLocationIdentifier(locationIdentifier, null, callback);
   }
 
   /**
    *  Get a content for a specific LocationIdentifier with flags.
    *
-   * @param locationIdentifier LocationIdentifier from QR or NFC.
-   * @param contentFlags Different flags {@link ContentFlags}.
-   * @param callback {@link APICallback}.
+   * @param locationIdentifier LocationIdentifier from QR or NFC
+   * @param contentFlags Different flags {@link ContentFlags}
+   * @param callback {@link APICallback}
+   * @return Used call object
    */
-  public void getContentByLocationIdentifier(String locationIdentifier,
+  public Call getContentByLocationIdentifier(String locationIdentifier,
                                              EnumSet<ContentFlags> contentFlags,
                                              APICallback<Content, List<Error>> callback) {
     if (offline) {
       offlineEnduserApi.getContentByLocationIdentifier(locationIdentifier, callback);
-      return;
+      return null;
     }
 
     Map<String, String> params = UrlUtil.getUrlParameter(language);
@@ -221,50 +226,54 @@ public class EnduserApi implements Parcelable {
 
     Call<ResponseBody> call = enduserApiInterface.getContents(params);
     callHandler.enqueCall(call, callback);
+    return call;
   }
 
   /**
    * Get content for a specific beacon.
    *
-   * @param major Beacon major ID.
-   * @param minor Beacon minor ID.
-   * @param callback {@link APICallback}.
+   * @param major Beacon major ID
+   * @param minor Beacon minor ID
+   * @param callback {@link APICallback}
+   * @return Used call object
    */
-  public void getContentByBeacon(int major, int minor, APICallback<Content, List<Error>>
+  public Call getContentByBeacon(int major, int minor, APICallback<Content, List<Error>>
       callback) {
-    getContentByLocationIdentifier(String.format("%s|%s", major, minor), callback);
+    return getContentByLocationIdentifier(String.format("%s|%s", major, minor), callback);
   }
 
   /**
    * Get content for a specific beacon.
    *
-   * @param major Beacon major ID.
-   * @param minor Beacon minor ID.
-   * @param contentFlags Different flags {@link ContentFlags}.
-   * @param callback {@link APICallback}.
+   * @param major Beacon major ID
+   * @param minor Beacon minor ID
+   * @param contentFlags Different flags {@link ContentFlags}
+   * @param callback {@link APICallback}
+   * @return Used call object
    */
-  public void getContentByBeacon(int major, int minor, EnumSet<ContentFlags> contentFlags,
+  public Call getContentByBeacon(int major, int minor, EnumSet<ContentFlags> contentFlags,
                                  APICallback<Content, List<Error>> callback) {
-    getContentByLocationIdentifier(String.format("%s|%s", major, minor), contentFlags, callback);
+    return getContentByLocationIdentifier(String.format("%s|%s", major, minor), contentFlags, callback);
   }
 
   /**
    * Get list of contents with your location. Geofence radius is 40m.
    *
-   * @param location Users location.
-   * @param pageSize PageSize for returned contents (max 100).
-   * @param cursor Cursor for paging.
-   * @param sortFlags {@link ContentSortFlags} to sort results.
-   * @param callback {@link APIListCallback}.
+   * @param location Users location
+   * @param pageSize PageSize for returned contents (max 100)
+   * @param cursor Cursor for paging
+   * @param sortFlags {@link ContentSortFlags} to sort results
+   * @param callback {@link APIListCallback}
+   * @return Used call object
    */
-  public void getContentsByLocation(Location location, int pageSize, @Nullable String cursor,
+  public Call getContentsByLocation(Location location, int pageSize, @Nullable String cursor,
                                     final EnumSet<ContentSortFlags> sortFlags,
                                     APIListCallback<List<Content>,
       List<Error>> callback) {
 
     if (offline) {
       offlineEnduserApi.getContentsByLocation(location, 10, null, null, null);
-      return;
+      return null;
     }
 
     Map<String, String> params = UrlUtil.addContentSortingParameter(UrlUtil.getUrlParameter(language),
@@ -275,23 +284,25 @@ public class EnduserApi implements Parcelable {
 
     Call<ResponseBody> call = enduserApiInterface.getContents(params);
     callHandler.enqueListCall(call, callback);
+    return call;
   }
 
   /**
    * Get list of contents with a specific tag.
    *
-   * @param tags List of strings.
-   * @param pageSize PageSize for returned contents (max 100).
-   * @param cursor Cursor for paging.
-   * @param sortFlags {@link ContentSortFlags} to sort results.
-   * @param callback {@link APIListCallback}.
+   * @param tags List of strings
+   * @param pageSize PageSize for returned contents (max 100)
+   * @param cursor Cursor for paging
+   * @param sortFlags {@link ContentSortFlags} to sort results
+   * @param callback {@link APIListCallback}
+   * @return Used call object
    */
-  public void getContentsByTags(List<String> tags, int pageSize, @Nullable String cursor,
+  public Call getContentsByTags(List<String> tags, int pageSize, @Nullable String cursor,
                                 EnumSet<ContentSortFlags> sortFlags,
                                 APIListCallback<List<Content>, List<Error>> callback) {
     if (offline) {
       offlineEnduserApi.getContentsByTags(tags, pageSize, cursor, sortFlags, callback);
-      return;
+      return null;
     }
 
     Map<String, String> params = UrlUtil.addContentSortingParameter(UrlUtil.getUrlParameter(language),
@@ -301,24 +312,26 @@ public class EnduserApi implements Parcelable {
 
     Call<ResponseBody> call = enduserApiInterface.getContents(params);
     callHandler.enqueListCall(call, callback);
+    return call;
   }
 
   /**
    * Get list of contents with full-text name search.
    *
-   * @param name Name to search for.
-   * @param pageSize PageSize for returned contents (max 100).
-   * @param cursor Cursor for paging.
-   * @param sortFlags {@link ContentSortFlags} to sort results.
-   * @param callback {@link APIListCallback}.
+   * @param name Name to search for
+   * @param pageSize PageSize for returned contents (max 100)
+   * @param cursor Cursor for paging
+   * @param sortFlags {@link ContentSortFlags} to sort results
+   * @param callback {@link APIListCallback}
+   * @return Used call object
    */
-  public void searchContentsByName(String name, int pageSize, @Nullable String cursor,
+  public Call searchContentsByName(String name, int pageSize, @Nullable String cursor,
                                    EnumSet<ContentSortFlags> sortFlags,
                                    APIListCallback<List<Content>, List<Error>> callback) {
     if (offline) {
       offlineEnduserApi.searchContentsByName(name, pageSize, cursor, sortFlags,
           callback);
-      return;
+      return null;
     }
 
     Map<String, String> params = UrlUtil.addContentSortingParameter(UrlUtil.getUrlParameter(language),
@@ -328,21 +341,32 @@ public class EnduserApi implements Parcelable {
 
     Call<ResponseBody> call = enduserApiInterface.getContents(params);
     callHandler.enqueListCall(call, callback);
+    return call;
   }
 
   /**
    * Get spot with specific id.
    *
-   * @param spotId Id of the spot.
-   * @param callback {@link APICallback}.
+   * @param spotId Id of the spot
+   * @param callback {@link APICallback}
+   * @return Used call object
    */
-  public void getSpot(String spotId, APICallback<Spot, List<Error>> callback) {
-    getSpot(spotId, null, callback);
+  public Call getSpot(String spotId, APICallback<Spot, List<Error>> callback) {
+    return getSpot(spotId, null, callback);
   }
 
-  public void getSpot(String spotId, EnumSet<SpotFlags> spotFlags, APICallback<Spot, List<Error>> callback) {
+  /**
+   * Get spot with specific id.
+   *
+   * @param spotId Id of the spot
+   * @param spotFlags {@link SpotFlags}
+   * @param callback {@link APICallback}
+   * @return Used call object
+   */
+  public Call getSpot(String spotId, EnumSet<SpotFlags> spotFlags, APICallback<Spot, List<Error>> callback) {
     if (offline) {
       offlineEnduserApi.getSpot(spotId, callback);
+      return null;
     }
 
     Map<String, String> params = UrlUtil.getUrlParameter(this.language);
@@ -350,42 +374,45 @@ public class EnduserApi implements Parcelable {
 
     Call<ResponseBody> call = enduserApiInterface.getSpot(spotId, params);
     callHandler.enqueCall(call, callback);
+    return call;
   }
 
   /**
    * Get list of spots inside radius of a location.
    *
-   * @param location User location.
-   * @param radius Radius to search in meter (max 5000).
-   * @param spotFlags {@link SpotFlags}.
+   * @param location User location
+   * @param radius Radius to search in meter (max 5000)
+   * @param spotFlags {@link SpotFlags}
    * @param sortFlags {@link SpotSortFlags}
    * @param callback {@link APIListCallback}
+   * @return Used call object
    */
-  public void getSpotsByLocation(Location location, int radius, EnumSet<SpotFlags> spotFlags,
+  public Call getSpotsByLocation(Location location, int radius, EnumSet<SpotFlags> spotFlags,
                                  @Nullable EnumSet<SpotSortFlags> sortFlags,
                                  APIListCallback<List<Spot>, List<Error>> callback) {
-    getSpotsByLocation(location, radius, 0, null, spotFlags, sortFlags, callback);
+    return getSpotsByLocation(location, radius, 0, null, spotFlags, sortFlags, callback);
   }
 
   /**
    * Get list of spots inside radius of a location.
    *
-   * @param location User location.
-   * @param radius Radius to search in meter (max 5000).
+   * @param location User location
+   * @param radius Radius to search in meter (max 5000)
    * @param pageSize Size for pages. (max 100)
-   * @param cursor Cursor of last search.
-   * @param spotFlags {@link SpotFlags}.
+   * @param cursor Cursor of last search
+   * @param spotFlags {@link SpotFlags}
    * @param sortFlags {@link SpotSortFlags}
    * @param callback {@link APIListCallback}
+   * @return Used call object
    */
-  public void getSpotsByLocation(Location location, int radius, int pageSize, @Nullable String cursor,
+  public Call getSpotsByLocation(Location location, int radius, int pageSize, @Nullable String cursor,
                                  @Nullable EnumSet<SpotFlags> spotFlags,
                                  @Nullable EnumSet<SpotSortFlags> sortFlags,
                                  APIListCallback<List<Spot>, List<Error>> callback) {
     if (offline) {
       offlineEnduserApi.getSpotsByLocation(location, radius, pageSize, cursor,
           spotFlags, sortFlags, callback);
-      return;
+      return null;
     }
 
     Map<String, String> params = UrlUtil.addSpotParameter(UrlUtil.getUrlParameter(language),
@@ -398,6 +425,7 @@ public class EnduserApi implements Parcelable {
 
     Call<ResponseBody> call = enduserApiInterface.getSpots(params);
     callHandler.enqueListCall(call, callback);
+    return call;
   }
 
   /**
@@ -405,35 +433,37 @@ public class EnduserApi implements Parcelable {
    * Or operation used when searching with tags.
    *
    * @param tags List with tag names
-   * @param spotFlags {@link SpotFlags}.
+   * @param spotFlags {@link SpotFlags}
    * @param sortFlags {@link SpotSortFlags}
    * @param callback {@link APIListCallback}
+   * @return Used call object
    */
-  public void getSpotsByTags(List<String> tags, @Nullable EnumSet<SpotFlags> spotFlags,
+  public Call getSpotsByTags(List<String> tags, @Nullable EnumSet<SpotFlags> spotFlags,
                              @Nullable EnumSet<SpotSortFlags> sortFlags,
                              APIListCallback<List<Spot>, List<Error>> callback) {
-    getSpotsByTags(tags, 0, null, spotFlags, sortFlags, callback);
+    return getSpotsByTags(tags, 0, null, spotFlags, sortFlags, callback);
   }
 
   /**
    * Get list of spots with with tags.
    * Or operation used when searching with tags.
    *
-   * @param tags List with tag names.
-   * @param pageSize Size for pages. (max 100)
-   * @param cursor Cursor of last search.
-   * @param spotFlags {@link SpotFlags}.
+   * @param tags List with tag names
+   * @param pageSize Size for pages (max 100)
+   * @param cursor Cursor of last search
+   * @param spotFlags {@link SpotFlags}
    * @param sortFlags {@link SpotSortFlags}
    * @param callback {@link APIListCallback}
+   * @return Used call object
    */
-  public void getSpotsByTags(List<String> tags, int pageSize, @Nullable String cursor,
+  public Call getSpotsByTags(List<String> tags, int pageSize, @Nullable String cursor,
                              @Nullable EnumSet<SpotFlags> spotFlags,
                              @Nullable EnumSet<SpotSortFlags> sortFlags,
                              APIListCallback<List<Spot>, List<Error>> callback) {
     if (offline) {
       offlineEnduserApi.getSpotsByTags(tags, pageSize, cursor, spotFlags, sortFlags,
           callback);
-      return;
+      return null;
     }
 
     Map<String, String> params = UrlUtil.addSpotParameter(UrlUtil.getUrlParameter(language),
@@ -444,26 +474,28 @@ public class EnduserApi implements Parcelable {
 
     Call<ResponseBody> call = enduserApiInterface.getSpots(params);
     callHandler.enqueListCall(call, callback);
+    return call;
   }
 
   /**
    * Get list of spots with full-text name search.
    *
-   * @param name Name to searchfor.
-   * @param pageSize Size for pages. (max 100)
-   * @param cursor Cursor of last search.
-   * @param spotFlags {@link SpotFlags}.
+   * @param name Name to searchfor
+   * @param pageSize Size for pages (max 100)
+   * @param cursor Cursor of last search
+   * @param spotFlags {@link SpotFlags}
    * @param sortFlags {@link SpotSortFlags}
    * @param callback {@link APIListCallback}
+   * @return Used call object
    */
-  public void searchSpotsByName(String name, int pageSize, @Nullable String cursor,
+  public Call searchSpotsByName(String name, int pageSize, @Nullable String cursor,
                                 @Nullable EnumSet<SpotFlags> spotFlags,
                                 @Nullable EnumSet<SpotSortFlags> sortFlags,
                                 APIListCallback<List<Spot>, List<Error>> callback) {
     if (offline) {
       offlineEnduserApi.searchSpotsByName(name, pageSize, cursor, spotFlags,
           sortFlags, callback);
-      return;
+      return null;
     }
 
     Map<String, String> params = UrlUtil.addSpotParameter(UrlUtil.getUrlParameter(language),
@@ -474,73 +506,82 @@ public class EnduserApi implements Parcelable {
 
     Call<ResponseBody> call = enduserApiInterface.getSpots(params);
     callHandler.enqueListCall(call, callback);
+    return call;
   }
 
   /**
    * Get the system connected to your api key.
    *
-   * @param callback {@link APIListCallback}.
+   * @param callback {@link APIListCallback}
+   * @return Used call object
    */
-  public void getSystem(final APICallback<System, List<Error>> callback) {
+  public Call getSystem(final APICallback<System, List<Error>> callback) {
     if (offline) {
       offlineEnduserApi.getSystem(callback);
-      return;
+      return null;
     }
 
     Map<String, String> params = UrlUtil.getUrlParameter(language);
     Call<ResponseBody> call = enduserApiInterface.getSystem(params);
     callHandler.enqueCall(call, callback);
+    return call;
   }
 
   /**
    * Get the menu to your system.
    *
-   * @param systemId Systems systemId.
-   * @param callback {@link APIListCallback}.
+   * @param systemId Systems systemId
+   * @param callback {@link APIListCallback}
+   * @return Used call object
    */
-  public void getMenu(String systemId, final APICallback<Menu, List<Error>> callback) {
+  public Call getMenu(String systemId, final APICallback<Menu, List<Error>> callback) {
     if (offline) {
       offlineEnduserApi.getMenu(systemId, callback);
-      return;
+      return null;
     }
 
     Map<String, String> params = UrlUtil.getUrlParameter(language);
     Call<ResponseBody> call = enduserApiInterface.getMenu(systemId, params);
     callHandler.enqueCall(call, callback);
+    return call;
   }
 
   /**
    * Get the systemSettings to your system.
    *
-   * @param systemId Systems systemId.
-   * @param callback {@link APIListCallback}.
+   * @param systemId Systems systemId
+   * @param callback {@link APIListCallback}
+   * @return Used call object
    */
-  public void getSystemSetting(String systemId, final APICallback<SystemSetting, List<Error>> callback) {
+  public Call getSystemSetting(String systemId, final APICallback<SystemSetting, List<Error>> callback) {
     if (offline) {
       offlineEnduserApi.getSystemSetting(systemId, callback);
-      return;
+      return null;
     }
 
     Map<String, String> params = UrlUtil.getUrlParameter(language);
     Call<ResponseBody> call = enduserApiInterface.getSetting(systemId, params);
     callHandler.enqueCall(call, callback);
+    return call;
   }
 
   /**
    * Get the style to your system.
    *
-   * @param systemId Systems systemId.
-   * @param callback {@link APIListCallback}.
+   * @param systemId Systems systemId
+   * @param callback {@link APIListCallback}
+   * @return Used call object
    */
-  public void getStyle(String systemId, final APICallback<Style, List<Error>> callback) {
+  public Call getStyle(String systemId, final APICallback<Style, List<Error>> callback) {
     if (offline) {
       offlineEnduserApi.getStyle(systemId, callback);
-      return;
+      return null;
     }
 
     Map<String, String> params = UrlUtil.getUrlParameter(language);
     Call<ResponseBody> call = enduserApiInterface.getStyle(systemId, params);
     callHandler.enqueCall(call, callback);
+    return call;
   }
 
   //parcelable
@@ -679,4 +720,3 @@ public class EnduserApi implements Parcelable {
     this.offline = offline;
   }
 }
-
