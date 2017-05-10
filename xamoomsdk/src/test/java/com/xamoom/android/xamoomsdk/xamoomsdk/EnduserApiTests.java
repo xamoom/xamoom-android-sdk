@@ -64,6 +64,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
+import retrofit2.Call;
 import retrofit2.Retrofit;
 
 import static org.junit.Assert.assertEquals;
@@ -182,7 +183,7 @@ public class EnduserApiTests {
 
     final Semaphore semaphore = new Semaphore(0);
 
-    mEnduserApi.getContent("123456", new APICallback<Content, List<Error>>() {
+    Call call = mEnduserApi.getContent("123456", new APICallback<Content, List<Error>>() {
       @Override
       public void finished(Content result) {
         checkContent[0] = result;
@@ -197,6 +198,7 @@ public class EnduserApiTests {
 
     semaphore.acquire();
 
+    assertNotNull(call);
     assertTrue(checkContent[0].getTitle().equals("Test"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
     assertEquals("/_api/v2/consumer/contents/123456?lang=en", request1.getPath());
