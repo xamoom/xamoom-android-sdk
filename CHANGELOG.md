@@ -2,6 +2,12 @@
 
 ## development
 
+## [3.2.2](https://github.com/xamoom/xamoom-android-sdk/compare/v3.2.1...v3.2.2)
+
+- Fixed showing of progressview in ContentBlock6ViewHolder
+
+- Added call as return value to all api calls
+
 ## [3.2.1](https://github.com/xamoom/xamoom-android-sdk/compare/v3.2.0...v3.2.1)
 
 - Added call as return value to all api calls
