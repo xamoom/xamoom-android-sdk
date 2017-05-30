@@ -15,6 +15,7 @@
         android:textColor="@color/black"
         android:layout_marginStart="@dimen/standard_contentblock_padding"
         android:layout_marginEnd="@dimen/standard_contentblock_padding"
+        android:layout_marginBottom="@dimen/contentblock_children_margin"
         />
 
     <com.google.android.gms.maps.MapView
