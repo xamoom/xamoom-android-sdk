@@ -31,6 +31,7 @@
             android:ellipsize="end"
             android:textStyle="bold"
             android:textColor="@color/white"
+            android:textSize="15sp"
             />
 
         <TextView
@@ -40,6 +41,7 @@
             android:maxLines="1"
             android:ellipsize="end"
             android:textColor="@color/white"
+            android:textSize="14sp"
             />
 
     </LinearLayout>
