@@ -122,8 +122,8 @@ public class ContentBlock4ViewHolder extends RecyclerView.ViewHolder {
       case 7:
         mRootLayout.setBackgroundResource(R.color.soundcloud_linkblock_background_color);
         mIcon.setImageResource(R.drawable.ic_soundcloud);
-        mTitleTextView.setTextColor(Color.WHITE);
-        mContentTextView.setTextColor(Color.WHITE);
+        mTitleTextView.setTextColor(Color.BLACK);
+        mContentTextView.setTextColor(Color.BLACK);
         break;
       case 8:
         mRootLayout.setBackgroundResource(R.color.default_linkblock_background_color);
@@ -158,8 +158,8 @@ public class ContentBlock4ViewHolder extends RecyclerView.ViewHolder {
       case 13:
         mRootLayout.setBackgroundResource(R.color.spotify_linkblock_background_color);
         mIcon.setImageResource(R.drawable.ic_spotify);
-        mTitleTextView.setTextColor(Color.WHITE);
-        mContentTextView.setTextColor(Color.WHITE);
+        mTitleTextView.setTextColor(Color.BLACK);
+        mContentTextView.setTextColor(Color.BLACK);
         break;
       case 14:
         mRootLayout.setBackgroundResource(R.color.googlemaps_linkblock_background_color);
