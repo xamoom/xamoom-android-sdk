@@ -71,18 +71,20 @@
                 android:id="@+id/backward_button"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:layout_gravity="center"
                 android:background="@drawable/ic_backward"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:text="30"
                 android:textColor="@color/black"/>
 
             <Button
                 android:id="@+id/play_pause_button"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_gravity="center"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
@@ -92,6 +94,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="30"
+                android:layout_gravity="center"
                 android:textColor="@color/black"/>
 
             <Button
@@ -109,7 +112,8 @@
             <com.xamoom.android.xamoomcontentblocks.Views.MovingBarsView
                 android:id="@+id/moving_bars_view"
                 android:layout_width="50dp"
-                android:layout_height="25dp">
+                android:layout_height="25dp"
+                android:layout_gravity="center">
 
             </com.xamoom.android.xamoomcontentblocks.Views.MovingBarsView>
 
