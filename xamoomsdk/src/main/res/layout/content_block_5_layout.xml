@@ -13,9 +13,10 @@
     <ImageView
         android:id="@+id/iconImageView"
         android:layout_width="70dp"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_gravity="center"
-        android:src="@drawable/ic_book" />
+        android:src="@drawable/ic_book"
+        android:tint="@android:color/white"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,6 +32,7 @@
             android:ellipsize="end"
             android:textStyle="bold"
             android:textColor="@color/white"
+            android:textSize="15sp"
             />
 
         <TextView
@@ -40,6 +42,7 @@
             android:maxLines="1"
             android:ellipsize="end"
             android:textColor="@color/white"
+            android:textSize="14sp"
             />
 
     </LinearLayout>

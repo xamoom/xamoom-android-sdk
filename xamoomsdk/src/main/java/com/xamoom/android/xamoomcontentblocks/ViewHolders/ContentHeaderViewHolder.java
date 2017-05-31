@@ -26,6 +26,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
@@ -33,6 +34,7 @@ import android.widget.TextView;
 
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
+import com.xamoom.android.xamoomsdk.Resource.Style;
 
 /**
  * Displays the content heading.
@@ -41,6 +43,8 @@ public class ContentHeaderViewHolder extends RecyclerView.ViewHolder {
   private TextView mTitleTextView;
   private WebView mWebView;
   private String mLinkColor = "00F";
+  private Style mStyle;
+  private float mTextSize = 23.0f;
 
   public ContentHeaderViewHolder(View itemView) {
     super(itemView);
@@ -59,7 +63,7 @@ public class ContentHeaderViewHolder extends RecyclerView.ViewHolder {
   }
 
 
-  public void setupContentBlock(ContentBlock contentblock){
+  public void setupContentBlock(ContentBlock contentblock, boolean offline){
     mTitleTextView.setVisibility(View.VISIBLE);
     mWebView.setVisibility(View.VISIBLE);
 
@@ -75,6 +79,8 @@ public class ContentHeaderViewHolder extends RecyclerView.ViewHolder {
     if((contentblock.getText() != null) && !(contentblock.getText().equalsIgnoreCase("<p><br></p>"))) {
       String style = "<style type=\"text/css\">html, body {margin: 0; padding: 0dp;} a {color: #"+mLinkColor+"}</style>";
       String htmlAsString = String.format("%s%s", style, contentblock.getText());
+      WebSettings webSettings = mWebView.getSettings();
+      webSettings.setDefaultFontSize(webSettings.getDefaultFontSize() + 2);
       mWebView.loadDataWithBaseURL(null, htmlAsString, "text/html", "UTF-8", null);
     } else {
       mWebView.setVisibility(View.GONE);
@@ -83,5 +89,13 @@ public class ContentHeaderViewHolder extends RecyclerView.ViewHolder {
 
   public void setLinkColor(String mLinkColor) {
     this.mLinkColor = mLinkColor;
+  }
+
+  public void setTextSize(float textSize) {
+    mTextSize = textSize;
+  }
+
+  public void setStyle(Style style) {
+    mStyle = style;
   }
 }

@@ -13,7 +13,7 @@
     <color name="googlemaps_linkblock_background_color">#0f9d58</color>
     <color name="ebook_contentblock_color">#058b8c</color>
     <color name="appstore_linkblock_background_color">#000000</color>
-    <color name="playstore_downloadBlock_background_color">#A4C639</color>
+    <color name="playstore_downloadBlock_background_color">#516c00</color>
     <color name="windowsstore_downloadBlock_background_color">#2d89ef</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>

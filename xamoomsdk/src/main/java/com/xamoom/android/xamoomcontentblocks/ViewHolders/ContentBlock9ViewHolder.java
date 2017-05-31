@@ -70,7 +70,7 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
   private ArrayMap<Marker, Spot> mMarkerArray;
   private String mBase64Icon;
   private ArrayList<Spot> mSpotList;
-  private int mTextColor;
+  private int mTextColor = Color.BLACK;
   private boolean isStyleLoaded = false;
 
   public boolean showContentLinks;

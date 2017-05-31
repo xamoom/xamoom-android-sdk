@@ -39,7 +39,8 @@
         android:layout_marginEnd="@dimen/standard_contentblock_padding"
         android:layout_marginStart="@dimen/standard_contentblock_padding"
         android:textColor="@color/black"
-        android:textSize="@dimen/contentblock_title_size"
+        android:textSize="16sp"
+        android:textStyle="bold"
         />
 
 </LinearLayout>

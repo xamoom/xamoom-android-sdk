@@ -143,7 +143,7 @@ public class XamoomContentFragmentTest {
     fragment.setContent(content);
 
     List<ContentBlock> contentBlocks = fragment.getContentBlocks();
-    assertEquals(contentBlocks.size(), 3);
+    assertEquals(3, contentBlocks.size());
     assertEquals(contentBlocks.get(0).getTitle(), "Test Content");
     assertEquals(contentBlocks.get(0).getText(), "some excerpt");
     assertEquals(contentBlocks.get(1).getFileId(), "www.xamoom.com/logo.png");

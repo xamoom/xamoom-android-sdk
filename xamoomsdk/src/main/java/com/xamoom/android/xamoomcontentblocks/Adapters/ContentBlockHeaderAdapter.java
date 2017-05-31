@@ -31,6 +31,7 @@ import android.view.ViewGroup;
 
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock0ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
+import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentHeaderViewHolder;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.R;
@@ -56,15 +57,15 @@ public class ContentBlockHeaderAdapter implements AdapterDelegate<List<ContentBl
       ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener onContentBlock3ViewHolderInteractionListener,
       XamoomContentFragment.OnXamoomContentFragmentInteractionListener onXamoomContentFragmentInteractionListener) {
     View view = LayoutInflater.from(parent.getContext())
-        .inflate(R.layout.content_block_0_layout, parent, false);
-    return new ContentBlock0ViewHolder(view);
+        .inflate(R.layout.content_header_layout, parent, false);
+    return new ContentHeaderViewHolder(view);
   }
 
   @Override
   public void onBindViewHolder(@NonNull List<ContentBlock> items, int position,
                                @NonNull RecyclerView.ViewHolder holder, Style style, boolean offline) {
     ContentBlock cb = items.get(position);
-    ContentBlock0ViewHolder newHolder = (ContentBlock0ViewHolder) holder;
+    ContentHeaderViewHolder newHolder = (ContentHeaderViewHolder) holder;
     newHolder.setStyle(style);
     newHolder.setTextSize(26.0f);
     newHolder.setupContentBlock(cb, offline);

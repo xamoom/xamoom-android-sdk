@@ -14,11 +14,12 @@
         android:textSize="@dimen/contentblock_title_size"
         android:textColor="@color/black"
         android:layout_marginStart="@dimen/standard_contentblock_padding"
-        android:layout_marginEnd="@dimen/standard_contentblock_padding"/>
+        android:layout_marginEnd="@dimen/standard_contentblock_padding"
+        android:layout_marginBottom="@dimen/contentblock_children_margin"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="260dp">
+        android:layout_height="wrap_content">
 
         <VideoView
             android:id="@+id/videoView"
@@ -56,7 +57,8 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:layout_centerInParent="true"
-            android:src="@drawable/ic_videoplay"/>
+            android:src="@drawable/ic_play"
+            android:tint="@android:color/white"/>
 
         <ProgressBar
             android:id="@+id/video_progress_bar"
