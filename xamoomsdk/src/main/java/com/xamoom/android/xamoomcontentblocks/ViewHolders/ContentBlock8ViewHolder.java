@@ -95,18 +95,21 @@ public class ContentBlock8ViewHolder extends RecyclerView.ViewHolder {
       case 0:
         mRootLayout.setBackgroundResource(R.color.vcf_downloadBlock_background_color);
         mIconImageView.setImageResource(R.drawable.ic_account_plus);
+        mIconImageView.setColorFilter(Color.WHITE);
         mTitleTextView.setTextColor(Color.WHITE);
         mContentTextView.setTextColor(Color.WHITE);
         break;
       case 1:
         mRootLayout.setBackgroundResource(R.color.ical_downloadBlock_background_color);
         mIconImageView.setImageResource(R.drawable.ic_calendar);
+        mIconImageView.setColorFilter(Color.WHITE);
         mTitleTextView.setTextColor(Color.WHITE);
         mContentTextView.setTextColor(Color.WHITE);
         break;
       default:
         mRootLayout.setBackgroundResource(R.color.default_linkblock_background_color);
         mIconImageView.setImageResource(R.drawable.ic_web);
+        mIconImageView.setColorFilter(Color.parseColor("#333333"));
         mTitleTextView.setTextColor(Color.parseColor("#333333"));
         mContentTextView.setTextColor(Color.parseColor("#333333"));
         break;

@@ -75,23 +75,28 @@ public class ContentBlock4ViewHolder extends RecyclerView.ViewHolder {
       }
     });
 
+    mIcon.setColorFilter(Color.BLACK);
+
     mRootLayout.setVisibility(View.VISIBLE);
     switch (contentBlock.getLinkType()) {
       case 0:
         mRootLayout.setBackgroundResource(R.color.facebook_linkblock_background_color);
         mIcon.setImageResource(R.drawable.ic_facebook);
+        mIcon.setColorFilter(Color.WHITE);
         mTitleTextView.setTextColor(Color.WHITE);
         mContentTextView.setTextColor(Color.WHITE);
         break;
       case 1:
         mRootLayout.setBackgroundResource(R.color.twitter_linkblock_background_color);
         mIcon.setImageResource(R.drawable.ic_twitter);
+        mIcon.setColorFilter(Color.WHITE);
         mTitleTextView.setTextColor(Color.WHITE);
         mContentTextView.setTextColor(Color.WHITE);
         break;
       case 2:
         mRootLayout.setBackgroundResource(R.color.default_linkblock_background_color);
         mIcon.setImageResource(R.drawable.ic_web);
+        mIcon.setColorFilter(Color.parseColor("#333333"));
         mTitleTextView.setTextColor(Color.parseColor("#333333"));
         mContentTextView.setTextColor(Color.parseColor("#333333"));
         break;
@@ -104,18 +109,21 @@ public class ContentBlock4ViewHolder extends RecyclerView.ViewHolder {
       case 4:
         mRootLayout.setBackgroundResource(R.color.default_linkblock_background_color);
         mIcon.setImageResource(R.drawable.ic_wikipedia);
-        mTitleTextView.setTextColor(Color.BLACK);
-        mContentTextView.setTextColor(Color.BLACK);
+        mIcon.setColorFilter(Color.parseColor("#333333"));
+        mTitleTextView.setTextColor(Color.parseColor("#333333"));
+        mContentTextView.setTextColor(Color.parseColor("#333333"));
         break;
       case 5:
         mRootLayout.setBackgroundResource(R.color.linkedin_linkblock_background_color);
         mIcon.setImageResource(R.drawable.ic_linkedin_box);
+        mIcon.setColorFilter(Color.WHITE);
         mTitleTextView.setTextColor(Color.WHITE);
         mContentTextView.setTextColor(Color.WHITE);
         break;
       case 6:
         mRootLayout.setBackgroundResource(R.color.flickr_linkblock_background_color);
         mIcon.setImageResource(R.drawable.ic_flickr9);
+        mIcon.setColorFilter(Color.WHITE);
         mTitleTextView.setTextColor(Color.WHITE);
         mContentTextView.setTextColor(Color.WHITE);
         break;
@@ -128,30 +136,35 @@ public class ContentBlock4ViewHolder extends RecyclerView.ViewHolder {
       case 8:
         mRootLayout.setBackgroundResource(R.color.default_linkblock_background_color);
         mIcon.setImageResource(R.drawable.ic_itunes);
+        mIcon.setColorFilter(Color.parseColor("#333333"));
         mTitleTextView.setTextColor(Color.parseColor("#333333"));
         mContentTextView.setTextColor(Color.parseColor("#333333"));
         break;
       case 9:
         mRootLayout.setBackgroundResource(R.color.youtube_linkblock_background_color);
         mIcon.setImageResource(R.drawable.ic_youtube_play);
+        mIcon.setColorFilter(Color.WHITE);
         mTitleTextView.setTextColor(Color.WHITE);
         mContentTextView.setTextColor(Color.WHITE);
         break;
       case 10:
         mRootLayout.setBackgroundResource(R.color.googleplus_linkblock_background_color);
         mIcon.setImageResource(R.drawable.ic_google_plus);
+        mIcon.setColorFilter(Color.WHITE);
         mTitleTextView.setTextColor(Color.WHITE);
         mContentTextView.setTextColor(Color.WHITE);
         break;
       case 11:
         mRootLayout.setBackgroundResource(R.color.default_linkblock_background_color);
         mIcon.setImageResource(R.drawable.ic_phone);
+        mIcon.setColorFilter(Color.parseColor("#333333"));
         mTitleTextView.setTextColor(Color.parseColor("#333333"));
         mContentTextView.setTextColor(Color.parseColor("#333333"));
         break;
       case 12:
         mRootLayout.setBackgroundResource(R.color.default_linkblock_background_color);
         mIcon.setImageResource(R.drawable.ic_email);
+        mIcon.setColorFilter(Color.parseColor("#333333"));
         mTitleTextView.setTextColor(Color.parseColor("#333333"));
         mContentTextView.setTextColor(Color.parseColor("#333333"));
         break;
@@ -164,36 +177,42 @@ public class ContentBlock4ViewHolder extends RecyclerView.ViewHolder {
       case 14:
         mRootLayout.setBackgroundResource(R.color.googlemaps_linkblock_background_color);
         mIcon.setImageResource(R.drawable.ic_navigation);
+        mIcon.setColorFilter(Color.WHITE);
         mTitleTextView.setTextColor(Color.WHITE);
         mContentTextView.setTextColor(Color.WHITE);
         break;
       case 15:
         mRootLayout.setBackgroundResource(R.color.appstore_linkblock_background_color);
         mIcon.setImageResource(R.drawable.ic_apple);
+        mIcon.setColorFilter(Color.WHITE);
         mTitleTextView.setTextColor(Color.WHITE);
         mContentTextView.setTextColor(Color.WHITE);
         break;
       case 16:
         mRootLayout.setBackgroundResource(R.color.playstore_downloadBlock_background_color);
         mIcon.setImageResource(R.drawable.ic_android);
+        mIcon.setColorFilter(Color.WHITE);
         mTitleTextView.setTextColor(Color.WHITE);
         mContentTextView.setTextColor(Color.WHITE);
         break;
       case 17:
         mRootLayout.setBackgroundResource(R.color.windowsstore_downloadBlock_background_color);
         mIcon.setImageResource(R.drawable.ic_windows);
+        mIcon.setColorFilter(Color.WHITE);
         mTitleTextView.setTextColor(Color.WHITE);
         mContentTextView.setTextColor(Color.WHITE);
         break;
       case 18:
         mRootLayout.setBackgroundResource(R.color.instagram_background_color);
         mIcon.setImageResource(R.drawable.ic_instagram);
+        mIcon.setColorFilter(Color.WHITE);
         mTitleTextView.setTextColor(Color.WHITE);
         mContentTextView.setTextColor(Color.WHITE);
         break;
       default:
         mRootLayout.setBackgroundResource(R.color.default_linkblock_background_color);
         mIcon.setImageResource(R.drawable.ic_web);
+        mIcon.setColorFilter(Color.parseColor("#333333"));
         mTitleTextView.setTextColor(Color.parseColor("#333333"));
         mContentTextView.setTextColor(Color.parseColor("#333333"));
         break;

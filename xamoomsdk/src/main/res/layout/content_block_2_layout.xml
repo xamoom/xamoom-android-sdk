@@ -57,7 +57,8 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:layout_centerInParent="true"
-            android:src="@drawable/ic_videoplay"/>
+            android:src="@drawable/ic_play"
+            android:tint="@android:color/white"/>
 
         <ProgressBar
             android:id="@+id/video_progress_bar"
