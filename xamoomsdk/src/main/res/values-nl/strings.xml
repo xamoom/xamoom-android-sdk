@@ -8,4 +8,5 @@
     <string name="meterLabel">meter</string>
     <string name="noLocation">Zoekt naar locatie</string>
     <string name="open">Openen</string>
+    <string name="file_not_found">Bestand niet gevonden</string>
 </resources>

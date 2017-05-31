@@ -8,4 +8,5 @@
     <string name="noLocation">Location wird gesucht</string>
     <string name="open">Öffnen</string>
     <string name="close_map">Karte schließen</string>
+    <string name="file_not_found">Datei nicht gefunden</string>
 </resources>

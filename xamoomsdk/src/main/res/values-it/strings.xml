@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="close_map">Chiudi Mappa</string>
-    <string name="file_not_found"></string>
+    <string name="file_not_found">File non trovato</string>
     <string name="distanceLabel">Distanza</string>
     <string name="header_picture_alt_text">Primo piano del volto</string>
     <string name="image_saved_text">Salva in Foto?</string>
