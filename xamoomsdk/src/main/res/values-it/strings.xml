@@ -4,7 +4,7 @@
     <string name="file_not_found">File non trovato</string>
     <string name="distanceLabel">Distanza</string>
     <string name="header_picture_alt_text">Primo piano del volto</string>
-    <string name="image_saved_text">Salva in Foto?</string>
+    <string name="image_saved_text">foto salvata</string>
     <string name="meterLabel">metro</string>
     <string name="open">Apri</string>
     <string name="cannot_save_image">SVGs e GIFs non possono essere salvate.</string>
