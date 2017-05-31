@@ -2,6 +2,12 @@
 
 ## development
 
+## [3.2.3](https://github.com/xamoom/xamoom-android-sdk/compare/v3.2.2...v3.2.3)
+
+- Added italian translations
+
+- Changed design of multiple contentBlockViewHolders
+
 ## [3.2.2](https://github.com/xamoom/xamoom-android-sdk/compare/v3.2.1...v3.2.2)
 
 - Fixed showing of progressview in ContentBlock6ViewHolder
