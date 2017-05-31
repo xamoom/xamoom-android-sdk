@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
 
-def versionString = "3.2.2"
+def versionString = "3.2.3"
 
 version = versionString
 group = "com.xamoom.android"
@@ -12,7 +12,7 @@ android {
 	defaultConfig {
 		minSdkVersion 18
 		targetSdkVersion 24
-		versionCode 5
+		versionCode 6
 		versionName versionString
 	}
 
