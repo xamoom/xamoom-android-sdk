@@ -26,6 +26,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.xamoom.android.xamoomcontentblocks.Adapters.ContentBlock0Adapter;
 import com.xamoom.android.xamoomcontentblocks.Adapters.ContentBlockHeaderAdapter;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock0ViewHolder;
 import com.xamoom.android.xamoomsdk.BuildConfig;
@@ -82,10 +83,10 @@ public class ContentBlockHeaderAdapterTest {
   public void testOnCreateViewHolder() {
     List<ContentBlock> contentBlocks = new ArrayList();
     ContentBlock contentBlock = new ContentBlock();
-    contentBlock.setBlockType(-1);
+    contentBlock.setBlockType(0);
     contentBlocks.add(contentBlock);
 
-    ContentBlockHeaderAdapter adapter = new ContentBlockHeaderAdapter();
+    ContentBlock0Adapter adapter = new ContentBlock0Adapter();
     ViewGroup recycleView = (ViewGroup) View.inflate(activity, R.layout.content_block_0_layout, null);
 
     RecyclerView.ViewHolder vh = adapter.onCreateViewHolder(recycleView, null, null, null, null, null, false, null, null);
@@ -103,7 +104,7 @@ public class ContentBlockHeaderAdapterTest {
     Style style = new Style();
     style.setForegroundFontColor("#000000");
     ContentBlock0ViewHolder mockViewholder = Mockito.mock(ContentBlock0ViewHolder.class);
-    ContentBlockHeaderAdapter adapter = new ContentBlockHeaderAdapter();
+    ContentBlock0Adapter adapter = new ContentBlock0Adapter();
 
     adapter.onBindViewHolder(contentBlocks, 0, mockViewholder, style, false);
 

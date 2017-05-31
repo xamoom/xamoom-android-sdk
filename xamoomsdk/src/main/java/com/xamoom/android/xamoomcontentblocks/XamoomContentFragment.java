@@ -260,6 +260,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
       contentBlock3.setPublicStatus(true);
       contentBlock3.setFileId(mContent.getPublicImageUrl());
       contentBlock3.setScaleX(0);
+      mContentBlocks.add(1, contentBlock3);
     }
   }
 
