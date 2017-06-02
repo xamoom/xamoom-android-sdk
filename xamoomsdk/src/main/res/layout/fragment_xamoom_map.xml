@@ -76,6 +76,7 @@
         app:layout_anchor="@id/bottom_sheet"
         app:layout_anchorGravity="right|end"
         android:src="@drawable/ic_navigation"
+        android:tint="@android:color/white"
         app:rippleColor="@color/facebook_linkblock_background_color"
         android:layout_marginEnd="16dp"
         />
