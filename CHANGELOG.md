@@ -2,6 +2,13 @@
 
 ## development
 
+## [3.2.4](https://github.com/xamoom/xamoom-android-sdk/compare/v3.2.3...v3.2.4)
+
+- Added error handling on Media Player respoding to MEDIA_ERROR_SYSTEM
+
+- Fixed wrong seeking on Media Player
+
+
 ## [3.2.3](https://github.com/xamoom/xamoom-android-sdk/compare/v3.2.2...v3.2.3)
 
 - Added italian translations

@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
 
-def versionString = "3.2.3"
+def versionString = "3.2.4"
 
 version = versionString
 group = "com.xamoom.android"
