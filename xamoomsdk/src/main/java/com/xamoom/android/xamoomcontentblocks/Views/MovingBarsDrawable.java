@@ -63,11 +63,12 @@ public class MovingBarsDrawable extends Drawable implements ValueAnimator.Animat
       mPaths.add(path);
       mHeights.put(path, START_HEIGHT);
     }
+
+    mBounds = getBounds();
   }
 
   public void startAnimating() {
     shouldStop = false;
-    mBounds = getBounds();
 
     for (Path path : mPaths) {
       ValueAnimator valueAnimator = createAnimator(path, false);
