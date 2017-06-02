@@ -46,7 +46,8 @@ import java.util.concurrent.TimeUnit;
  * Displays audio content blocks.
  */
 public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
-  private final static int SEEK_TIME = 5000;
+  private final static int SEEK_TIME = 50000;
+  private final static int MEDIA_LOW_LEVEL_ERROR = -2147483648;
 
   private Fragment mFragment;
   private TextView mTitleTextView;
@@ -62,6 +63,7 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
   private Runnable mRunnable;
   private FileManager mFileManager;
   private boolean mPrepared = false;
+  private boolean mError = false;
 
   public ContentBlock1ViewHolder(View itemView, Fragment fragment) {
     super(itemView);
@@ -81,6 +83,11 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
   }
 
   public void setupContentBlock(ContentBlock contentBlock, boolean offline) {
+    mError = false;
+    mPlayPauseButton.setEnabled(true);
+    mForwardButton.setEnabled(true);
+    mBackwardButton.setEnabled(true);
+
     if (contentBlock.getTitle() != null)
       mTitleTextView.setText(contentBlock.getTitle());
     else {
@@ -112,8 +119,8 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
     if(mMediaPlayer == null) {
       mMediaPlayer = new MediaPlayer();
       mMediaPlayer.setOnCompletionListener(mOnCompletionListener);
-
       mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
       try {
         mMediaPlayer.setDataSource(mFragment.getActivity(), fileUrl);
         mMediaPlayer.prepareAsync();
@@ -121,9 +128,27 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
         e.printStackTrace();
       }
 
+      mMediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+        @Override
+        public boolean onError(MediaPlayer mp, int what, int extra) {
+          if (what == MEDIA_LOW_LEVEL_ERROR) {
+            mError = true;
+            mRemainingSongTimeTextView.setText("-");
+            mPlayPauseButton.setEnabled(false);
+            mForwardButton.setEnabled(false);
+            mBackwardButton.setEnabled(false);
+          }
+          return false;
+        }
+      });
+
       mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
         @Override
         public void onPrepared(MediaPlayer mp) {
+          if (mError) {
+            return;
+          }
+
           mPrepared = true;
           mMediaPlayer.seekTo(0);
           mSongProgressBar.setMax(mMediaPlayer.getDuration());
@@ -157,16 +182,14 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
   private void resetMediaPlayer() {
     // if the play button is pressed to times fast, it could happen to be in the wrong state
     // when calling the prepareAsync() method.
-    if (!mPrepared) {
+    if (!mPrepared || mError) {
       return;
     }
 
     mPrepared = false;
     stopUpdatingProgress();
     mMovingBarsView.stopAnimation();
-    if (!mPrepared) {
-      mMediaPlayer.prepareAsync();
-    }
+    mMediaPlayer.prepareAsync();
   }
 
   private MediaPlayer.OnCompletionListener mOnCompletionListener = new MediaPlayer.OnCompletionListener() {
@@ -198,7 +221,7 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
       Log.v("MediaPlayer", "Forward");
       if (mMediaPlayer != null && mPrepared) {
         int seekTime = mMediaPlayer.getCurrentPosition() + SEEK_TIME;
-        if (seekTime > mMediaPlayer.getCurrentPosition()) {
+        if (seekTime > mMediaPlayer.getDuration()) {
           seekTime = mMediaPlayer.getDuration();
         }
         mMediaPlayer.seekTo(seekTime);
