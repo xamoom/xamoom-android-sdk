@@ -52,6 +52,9 @@ public class ContentHeaderViewHolder extends RecyclerView.ViewHolder {
     mWebView = (WebView) itemView.findViewById(R.id.webView);
     mWebView.setBackgroundColor(Color.TRANSPARENT);
 
+    WebSettings webSettings = mWebView.getSettings();
+    webSettings.setDefaultFontSize(webSettings.getDefaultFontSize() + 2);
+    
     //override to open links in Webbrowser
     mWebView.setWebViewClient(new WebViewClient() {
       public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -79,8 +82,7 @@ public class ContentHeaderViewHolder extends RecyclerView.ViewHolder {
     if((contentblock.getText() != null) && !(contentblock.getText().equalsIgnoreCase("<p><br></p>"))) {
       String style = "<style type=\"text/css\">html, body {margin: 0; padding: 0dp;} a {color: #"+mLinkColor+"}</style>";
       String htmlAsString = String.format("%s%s", style, contentblock.getText());
-      WebSettings webSettings = mWebView.getSettings();
-      webSettings.setDefaultFontSize(webSettings.getDefaultFontSize() + 2);
+
       mWebView.loadDataWithBaseURL(null, htmlAsString, "text/html", "UTF-8", null);
     } else {
       mWebView.setVisibility(View.GONE);
