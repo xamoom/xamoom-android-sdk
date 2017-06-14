@@ -2,6 +2,10 @@
 
 ## development
 
+## [3.2.5](https://github.com/xamoom/xamoom-android-sdk/compare/v3.2.4...v3.2.5)
+
+- Fixed excerpt size getting bigger on every reuse
+
 ## [3.2.4](https://github.com/xamoom/xamoom-android-sdk/compare/v3.2.3...v3.2.4)
 
 - Added error handling on Media Player respoding to MEDIA_ERROR_SYSTEM
