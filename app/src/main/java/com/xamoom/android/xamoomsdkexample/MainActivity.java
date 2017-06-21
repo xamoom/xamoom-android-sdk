@@ -24,6 +24,7 @@ package com.xamoom.android.xamoomsdkexample;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -37,6 +38,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.pushwoosh.fragment.PushEventListener;
+import com.pushwoosh.fragment.PushFragment;
+import com.xamoom.android.pushnotifications.PushManager;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.APIListCallback;
@@ -66,7 +70,9 @@ import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 
-public class MainActivity extends AppCompatActivity implements XamoomContentFragment.OnXamoomContentFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity
+    implements XamoomContentFragment.OnXamoomContentFragmentInteractionListener,
+    PushEventListener {
   private static final String TAG = MainActivity.class.getSimpleName();
   private static final String API_URL = "https://xamoom-cloud-dev.appspot.com/";
   private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
@@ -86,6 +92,9 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
     setupEnduserApi();
 
     getContentOption();
+
+    PushFragment.init(this);
+
     /*
     getContent();
     getContentOption();
@@ -520,5 +529,36 @@ public class MainActivity extends AppCompatActivity implements XamoomContentFrag
         }
       }
     }
+  }
+
+  @Override
+  protected void onNewIntent(Intent intent) {
+    super.onNewIntent(intent);
+    PushFragment.onNewIntent(this, intent);
+  }
+
+  @Override
+  public void doOnUnregisteredError(String s) {
+    Log.v(TAG, "doOnUnregisteredError: " + s);
+  }
+
+  @Override
+  public void doOnRegisteredError(String s) {
+    Log.v(TAG, "doOnRegisteredError: " + s);
+  }
+
+  @Override
+  public void doOnRegistered(String s) {
+    Log.v(TAG, "doOnRegistered: " + s);
+  }
+
+  @Override
+  public void doOnMessageReceive(String s) {
+    Log.v(TAG, "doOnMessageReceive: " + s);
+  }
+
+  @Override
+  public void doOnUnregistered(String s) {
+    Log.v(TAG, "doOnUnregistered: " + s);
   }
 }

@@ -186,7 +186,7 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
   private void addMarkerToMap(List<Spot> spotList) {
     for (Spot s : spotList) {
       Marker marker = mGoogleMap.addMarker(new MarkerOptions()
-          .icon(BitmapDescriptorFactory.fromBitmap(ContentBlock9ViewHolderUtils.getIcon(mBase64Icon,
+           .icon(BitmapDescriptorFactory.fromBitmap(ContentBlock9ViewHolderUtils.getIcon(mBase64Icon,
               mContext)))
           .anchor(0.0f, 1.0f) // Anchors the marker on the bottom left
           .title(s.getName())
