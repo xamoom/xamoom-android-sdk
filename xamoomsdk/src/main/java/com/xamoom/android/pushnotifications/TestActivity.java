@@ -1,14 +1,25 @@
 package com.xamoom.android.pushnotifications;
 
 import android.content.Intent;
+import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.pushwoosh.fragment.PushEventListener;
 import com.pushwoosh.fragment.PushFragment;
 
-public class TestActivity extends FragmentActivity implements PushEventListener {
+public class TestActivity extends AppCompatActivity implements PushEventListener {
   private static final String TAG = TestActivity.class.getSimpleName();
+
+
+  @Override
+  protected void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    PushFragment.init(this);
+  }
 
   @Override
   protected void onNewIntent(Intent intent) {
