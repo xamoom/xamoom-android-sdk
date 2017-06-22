@@ -3,6 +3,7 @@
           xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
         android:allowBackup="true"
@@ -19,11 +20,13 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBNZUh3-dj4YYY9-csOtQeHG_MpoE8x69Q" />
 
+        <!-- PushWoosh -->
         <meta-data android:name="PW_APPID" android:value="8AF88-DDD2D" />
         <meta-data android:name="PW_PROJECT_ID" android:value="A166892001074" />
 
-        <receiver android:name="com.xamoom.android.xamoomsdkexample.NotificationReceiver" />
+        <receiver android:name=".NotificationReceiver" />
         <meta-data android:name="PW_NOTIFICATION_RECEIVER" android:value="com.xamoom.android.xamoomsdkexample.NotificationReceiver"/>
+        <!-- PushWoosh End -->
 
         <activity
             android:name=".MainActivity"

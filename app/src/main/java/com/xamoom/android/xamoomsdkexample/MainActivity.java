@@ -24,7 +24,6 @@ package com.xamoom.android.xamoomsdkexample;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -32,16 +31,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.pushwoosh.fragment.PushEventListener;
-import com.pushwoosh.fragment.PushFragment;
-import com.xamoom.android.pushnotifications.PushManager;
-import com.xamoom.android.pushnotifications.TestActivity;
+import com.xamoom.android.pushnotifications.XamoomNotificationFactory;
+import com.xamoom.android.pushnotifications.XamoomPushActivity;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.APIListCallback;
@@ -71,7 +67,7 @@ import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 
-public class MainActivity extends TestActivity
+public class MainActivity extends XamoomPushActivity
     implements XamoomContentFragment.OnXamoomContentFragmentInteractionListener {
   private static final String TAG = MainActivity.class.getSimpleName();
   private static final String API_URL = "https://xamoom-cloud-dev.appspot.com/";
@@ -94,6 +90,8 @@ public class MainActivity extends TestActivity
     getContentOption();
 
 
+    // register custom notification factory
+    registerNotificationFactory(new CustomNotification());
 
     /*
     getContent();
