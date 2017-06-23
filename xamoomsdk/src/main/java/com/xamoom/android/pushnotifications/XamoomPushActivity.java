@@ -1,6 +1,9 @@
 package com.xamoom.android.pushnotifications;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -11,7 +14,9 @@ import com.pushwoosh.fragment.PushEventListener;
 import com.pushwoosh.fragment.PushFragment;
 
 public class XamoomPushActivity extends AppCompatActivity implements PushEventListener {
+  public static final String PUSH_NOTIFICATION_HANDLER_NAME="XAMOOM_PUSH_HANDLER";
   private static final String TAG = XamoomPushActivity.class.getSimpleName();
+
 
   public void registerNotificationFactory(XamoomNotificationFactory factory) {
     PushManager.getInstance(getApplicationContext()).setNotificationFactory(factory);

@@ -3,7 +3,6 @@
           xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
         android:allowBackup="true"
@@ -24,9 +23,14 @@
         <meta-data android:name="PW_APPID" android:value="8AF88-DDD2D" />
         <meta-data android:name="PW_PROJECT_ID" android:value="A166892001074" />
 
-        <receiver android:name=".NotificationReceiver" />
-        <meta-data android:name="PW_NOTIFICATION_RECEIVER" android:value="com.xamoom.android.xamoomsdkexample.NotificationReceiver"/>
         <!-- PushWoosh End -->
+
+        <receiver android:name=".NotificationHandler">
+            <intent-filter>
+                <action android:name="XAMOOM_PUSH_HANDLER"></action>
+            </intent-filter>
+            </receiver>
+        <meta-data android:name="XAMOOM_PUSH_HANDLE" android:value="NotificationHandler"/>
 
         <activity
             android:name=".MainActivity"

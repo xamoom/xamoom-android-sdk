@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
         android:allowBackup="true"
@@ -20,6 +21,9 @@
         <meta-data
             android:name="com.xamoom.android.xamoomsdk.version"
             android:value="${xamoomSDKVersion}"/>
+
+        <receiver android:name="com.xamoom.android.pushnotifications.NotificationReceiver" />
+        <meta-data android:name="PW_NOTIFICATION_RECEIVER" android:value="com.xamoom.android.pushnotifications.NotificationReceiver"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"
