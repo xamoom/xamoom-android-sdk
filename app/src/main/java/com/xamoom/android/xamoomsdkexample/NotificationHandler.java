@@ -16,7 +16,7 @@ public class NotificationHandler extends BroadcastReceiver {
 
   @Override
   public void onReceive(Context context, Intent intent) {
-    Log.v("NotificationHandler", "Got it!");
+    Log.v("NotificationHandler", "Got it! " + intent.getExtras().getString("content_id"));
 
     context.startActivity(new Intent(android.provider.Settings.ACTION_SETTINGS));
   }

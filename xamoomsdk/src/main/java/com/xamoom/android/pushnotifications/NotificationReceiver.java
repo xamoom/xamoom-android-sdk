@@ -73,11 +73,20 @@ public class NotificationReceiver extends BroadcastReceiver {
   }
 
   private void prepareIntentData(Intent intent, JSONObject dataObject) {
+    String userDataJsonString = null;
+    try {
+      userDataJsonString = (String) dataObject.get("u");
+    } catch (JSONException e) {
+      Log.i(TAG, "Push does not contain custom userdata.");
+      return;
+    }
+
     JSONObject userData = null;
     try {
-      userData = (JSONObject) dataObject.get("u");
+      userData = new JSONObject(userDataJsonString);
     } catch (JSONException e) {
-      Log.i(TAG, "Userdata is not an JSONObject.");
+      Log.i(TAG, "Userdata is not a JSON String");
+      return;
     }
 
     String contentId = null;
@@ -85,6 +94,7 @@ public class NotificationReceiver extends BroadcastReceiver {
       contentId = userData.getString("content_id");
     } catch (JSONException e) {
       Log.i(TAG, "Userdata does not contain content_id.");
+      return;
     }
 
     intent.putExtra("content_id", contentId);
