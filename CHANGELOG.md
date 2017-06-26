@@ -2,6 +2,8 @@
 
 ## development
 
+- Added push service
+
 ## [3.2.5](https://github.com/xamoom/xamoom-android-sdk/compare/v3.2.4...v3.2.5)
 
 - Fixed excerpt size getting bigger on every reuse
