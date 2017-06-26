@@ -1,10 +1,8 @@
 package com.xamoom.android.pushnotifications;
 
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
@@ -12,15 +10,14 @@ import android.util.Log;
 
 import com.pushwoosh.PushManager;
 import com.pushwoosh.internal.PushManagerImpl;
-import com.xamoom.android.xamoomsdk.Resource.Content;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
 
-public class NotificationReceiver extends BroadcastReceiver {
-  private static final String TAG = NotificationReceiver.class.getSimpleName();
+public class XamoomNotificationReceiver extends BroadcastReceiver {
+  private static final String TAG = XamoomNotificationReceiver.class.getSimpleName();
 
   @Override
   public void onReceive(Context context, Intent intent) {
@@ -36,8 +33,10 @@ public class NotificationReceiver extends BroadcastReceiver {
     //get push bundle as JSON object
     JSONObject dataObject = PushManagerImpl.bundleToJSON(pushBundle);
 
+    // send PUSH_NOTIFICATION_HANDLER_NAME broadcast if registered
     Intent customNotificationIntent = new Intent(XamoomPushActivity.PUSH_NOTIFICATION_HANDLER_NAME);
     if (isCustomNotificationHandlerRegistered(context, customNotificationIntent)) {
+      customNotificationIntent.putExtras(pushBundle);
       sendCustomHandlerBroadcast(context, customNotificationIntent, dataObject);
       PushManagerImpl.postHandlePush(context, intent);
       return;
@@ -72,6 +71,12 @@ public class NotificationReceiver extends BroadcastReceiver {
     context.sendBroadcast(intent);
   }
 
+  /**
+   * Checks if there is a contentid set and adds it to the intent.
+   *
+   * @param intent Intent with XamoomPushActivity.PUSH_NOTIFICATION_HANDLER_NAME action
+   * @param dataObject JsonData from pushwoosh bundle.
+   */
   private void prepareIntentData(Intent intent, JSONObject dataObject) {
     String userDataJsonString = null;
     try {
@@ -91,14 +96,15 @@ public class NotificationReceiver extends BroadcastReceiver {
 
     String contentId = null;
     try {
-      contentId = userData.getString("content_id");
+      contentId = userData.getString(XamoomPushActivity.CONTENT_ID_NAME);
     } catch (JSONException e) {
       Log.i(TAG, "Userdata does not contain content_id.");
       return;
     }
 
-    intent.putExtra("content_id", contentId);
+    intent.putExtra(XamoomPushActivity.CONTENT_ID_NAME, contentId);
   }
+
 
   private void openDefaultActivity(Context context, Intent intent, JSONObject dataObject, Bundle pushBundle) {
     //Get default launcher intent for clarity

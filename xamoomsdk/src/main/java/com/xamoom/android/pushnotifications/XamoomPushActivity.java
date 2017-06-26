@@ -14,7 +14,8 @@ import com.pushwoosh.fragment.PushEventListener;
 import com.pushwoosh.fragment.PushFragment;
 
 public class XamoomPushActivity extends AppCompatActivity implements PushEventListener {
-  public static final String PUSH_NOTIFICATION_HANDLER_NAME="XAMOOM_PUSH_HANDLER";
+  public static final String PUSH_NOTIFICATION_HANDLER_NAME = "XAMOOM_PUSH_HANDLER";
+  public static final String CONTENT_ID_NAME = "content_id";
   private static final String TAG = XamoomPushActivity.class.getSimpleName();
 
 

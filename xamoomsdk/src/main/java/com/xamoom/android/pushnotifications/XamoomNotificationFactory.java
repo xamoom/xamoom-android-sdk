@@ -24,6 +24,7 @@ import android.util.Log;
 import java.util.List;
 
 public class XamoomNotificationFactory extends AbsNotificationFactory {
+  private static final String TAG = XamoomNotificationFactory.class.getSimpleName();
 
   @Override
   public Notification onGenerateNotification(PushData pushData) {
@@ -68,10 +69,12 @@ public class XamoomNotificationFactory extends AbsNotificationFactory {
           String title = json.getString("title");
           String url = json.getString("url");
           Intent actionIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-          notificationBuilder.addAction(new NotificationCompat.Action(0, title, PendingIntent.getActivity(getContext(), 0, actionIntent, PendingIntent.FLAG_UPDATE_CURRENT)));
+          notificationBuilder.addAction(new NotificationCompat.Action(0, title,
+              PendingIntent.getActivity(getContext(), 0, actionIntent,
+                  PendingIntent.FLAG_UPDATE_CURRENT)));
         }
       } catch (JSONException e) {
-        e.printStackTrace();
+        Log.v(TAG, "my_actions is not an json array.");
       }
     }
   }
