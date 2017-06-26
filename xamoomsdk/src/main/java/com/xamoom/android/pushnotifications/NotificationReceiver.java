@@ -14,15 +14,13 @@ import com.pushwoosh.PushManager;
 import com.pushwoosh.internal.PushManagerImpl;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
 
-/**
- * Created by raphaelseher on 20/06/2017.
- */
-
 public class NotificationReceiver extends BroadcastReceiver {
+  private static final String TAG = NotificationReceiver.class.getSimpleName();
 
   @Override
   public void onReceive(Context context, Intent intent) {
@@ -50,7 +48,7 @@ public class NotificationReceiver extends BroadcastReceiver {
   }
 
   /**
-   * Checks if there is a broadcastreceiver entered for the
+   * Checks if there is a broadcastreceiver registered for the
    * XamoomPushActivity.PUSH_NOTIFICATION_HANDLER_NAME.
    *
    * @param context Android context
@@ -70,7 +68,26 @@ public class NotificationReceiver extends BroadcastReceiver {
   }
 
   private void sendCustomHandlerBroadcast(Context context, Intent intent, JSONObject dataObject) {
-    // TODO: send custom broadcast
+    prepareIntentData(intent, dataObject);
+    context.sendBroadcast(intent);
+  }
+
+  private void prepareIntentData(Intent intent, JSONObject dataObject) {
+    JSONObject userData = null;
+    try {
+      userData = (JSONObject) dataObject.get("u");
+    } catch (JSONException e) {
+      Log.i(TAG, "Userdata is not an JSONObject.");
+    }
+
+    String contentId = null;
+    try {
+      contentId = userData.getString("content_id");
+    } catch (JSONException e) {
+      Log.i(TAG, "Userdata does not contain content_id.");
+    }
+
+    intent.putExtra("content_id", contentId);
   }
 
   private void openDefaultActivity(Context context, Intent intent, JSONObject dataObject, Bundle pushBundle) {
