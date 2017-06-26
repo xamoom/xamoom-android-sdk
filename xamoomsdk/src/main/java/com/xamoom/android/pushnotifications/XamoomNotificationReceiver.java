@@ -116,6 +116,7 @@ public class XamoomNotificationReceiver extends BroadcastReceiver {
     //Put push notifications payload in Intent
     launchIntent.putExtras(pushBundle);
     launchIntent.putExtra(PushManager.PUSH_RECEIVE_EVENT, dataObject.toString());
+    prepareIntentData(launchIntent, dataObject);
 
     //Start activity!
     context.startActivity(launchIntent);
