@@ -1,4 +1,4 @@
-![](https://xamoom.com/wp-inhalte/uploads/2015/02/logo-black-claim1.png)
+![](https://storage.googleapis.com/xamoom-files/cb9dcdd940f44b53baf5c27f331c4079.png)
 
 # xamoom-android-sdk
 [ ![Download](https://api.bintray.com/packages/xamoom/maven/xamoomsdk/images/download.svg) ](https://bintray.com/xamoom/maven/xamoomsdk/_latestVersion)
@@ -19,7 +19,7 @@ More informations about xamoom and how xamoom works? Visit our Github page [xamo
 
 Add in your Gradle in dependencies
 
-    compile 'com.xamoom.android:xamoomsdk:3.2.5'
+    compile 'com.xamoom.android:xamoomsdk:3.3.0'
 
 # Usage
 
@@ -126,6 +126,10 @@ to true:
 mEnduserApi.setOffline(true);
 ```
 All `EnduserApi` calls will now return you the offline saved entities.
+
+### Push Notification
+
+To use our Push Notifications please check our [Push Notification Documentation](https://github.com/xamoom/xamoom-android-sdk/wiki/Push-Notifications).
 
 
 ### Documentation

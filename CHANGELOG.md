@@ -1,8 +1,9 @@
 # Changelog
 
-## development
+## [3.3.0](https://github.com/xamoom/xamoom-android-sdk/compare/v3.2.5...v3.3.0)
 
 - Added push service
+- Changed to MIT license
 
 ## [3.2.5](https://github.com/xamoom/xamoom-android-sdk/compare/v3.2.4...v3.2.5)
 
