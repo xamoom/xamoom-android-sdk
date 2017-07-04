@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.3.1](https://github.com/xamoom/xamoom-android-sdk/compare/v3.3.0...v3.3.1)
+
+- Fixed push notificaion handler receiver
+
 ## [3.3.0](https://github.com/xamoom/xamoom-android-sdk/compare/v3.2.5...v3.3.0)
 
 - Added push service
