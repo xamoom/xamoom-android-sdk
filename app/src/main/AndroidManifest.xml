@@ -25,12 +25,9 @@
 
         <!-- PushWoosh End -->
 
-        <receiver android:name=".NotificationHandler">
-            <intent-filter>
-                <action android:name="XAMOOM_PUSH_HANDLER"></action>
-            </intent-filter>
-            </receiver>
-        <meta-data android:name="XAMOOM_PUSH_HANDLE" android:value="NotificationHandler"/>
+        <receiver android:name=".NotificationHandler"></receiver>
+        <meta-data android:name="XAMOOM_PUSH_HANDLE"
+                   android:value="com.xamoom.android.xamoomsdkexample.NotificationHandler"/>
 
         <activity
             android:name=".MainActivity"

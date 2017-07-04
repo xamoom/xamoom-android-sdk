@@ -11,6 +11,7 @@ package com.xamoom.android.pushnotifications;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
@@ -41,8 +42,22 @@ public class XamoomNotificationReceiver extends BroadcastReceiver {
     //get push bundle as JSON object
     JSONObject dataObject = PushManagerImpl.bundleToJSON(pushBundle);
 
+    Intent customNotificationIntent = null;
+    try {
+      ApplicationInfo ai = context.getPackageManager().getApplicationInfo(context.getPackageName(),
+          PackageManager.GET_META_DATA);
+      Bundle bundle = ai.metaData;
+      String pushHandler = bundle.getString("XAMOOM_PUSH_HANDLE");
+
+      Class<?> receiverClass = Class.forName(pushHandler);
+      customNotificationIntent = new Intent(context, receiverClass);
+    } catch (PackageManager.NameNotFoundException e) {
+      // ignore
+    } catch (ClassNotFoundException e) {
+      Log.e(TAG, "Could not find the receiver class.");
+    }
+
     // send PUSH_NOTIFICATION_HANDLER_NAME broadcast if registered
-    Intent customNotificationIntent = new Intent(XamoomPushActivity.PUSH_NOTIFICATION_HANDLER_NAME);
     if (isCustomNotificationHandlerRegistered(context, customNotificationIntent)) {
       customNotificationIntent.putExtras(pushBundle);
       sendCustomHandlerBroadcast(context, customNotificationIntent, dataObject);
