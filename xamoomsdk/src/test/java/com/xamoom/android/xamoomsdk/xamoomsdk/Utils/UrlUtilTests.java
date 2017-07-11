@@ -150,7 +150,7 @@ public class UrlUtilTests {
     checkParams.put("condition[string]", "string");
     checkParams.put("condition[number]", "1");
     checkParams.put("condition[float]", "2.0");
-    checkParams.put("condition[date]", "2017-07-10T13:18:49+02:00");
+    checkParams.put("condition[date]", "2017-07-10T11:18:49Z");
 
     DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
     Date date = null;

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 public class UrlUtil {
   public static Map<String, String> getUrlParameter(String language) {
@@ -154,7 +155,8 @@ public class UrlUtil {
     }
 
     if (condition instanceof Date) {
-      DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+      DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+      df.setTimeZone(TimeZone.getTimeZone("UTC"));
       Date date = (Date) condition;
       String dateString = df.format(date);
       return dateString;

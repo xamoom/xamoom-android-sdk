@@ -346,7 +346,7 @@ public class EnduserApiTests {
     RecordedRequest request1 = mMockWebServer.takeRequest();
     assertEquals("/_api/v2/consumer/contents?lang=en&filter[location-identifier]=1234" +
             "&condition[name]=myname" +
-            "&condition[date]=2017-07-10T13:18:49%2B02:00" +
+            "&condition[date]=2017-07-10T11:18:49Z" +
             "&condition[number]=5" +
             "&condition[float]=2.0" +
             "&condition[double]=1.0000023589235236",
@@ -522,7 +522,7 @@ public class EnduserApiTests {
     RecordedRequest request1 = mMockWebServer.takeRequest();
     assertEquals("/_api/v2/consumer/contents?lang=en&filter[location-identifier]=1|2" +
             "&condition[name]=myname" +
-            "&condition[date]=2017-07-10T13:18:49%2B02:00" +
+            "&condition[date]=2017-07-10T11:18:49Z" +
             "&condition[number]=5" +
             "&condition[float]=2.0" +
             "&condition[double]=1.0000023589235236",
