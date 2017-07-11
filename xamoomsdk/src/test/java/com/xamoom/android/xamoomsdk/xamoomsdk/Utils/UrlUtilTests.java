@@ -14,13 +14,20 @@ import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotSortFlags;
 import com.xamoom.android.xamoomsdk.Utils.UrlUtil;
 
+import junit.framework.Assert;
+
 import org.junit.Test;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.fail;
 import static junit.framework.TestCase.assertNotNull;
 
 public class UrlUtilTests {
@@ -137,4 +144,37 @@ public class UrlUtilTests {
     assertEquals(params, checkParams);
   }
 
+  @Test
+  public void testAddConditionsToUrl() {
+    Map<String, String> checkParams = new HashMap<>(4);
+    checkParams.put("condition[string]", "string");
+    checkParams.put("condition[number]", "1");
+    checkParams.put("condition[float]", "2.0");
+    checkParams.put("condition[date]", "2017-07-10T13:18:49+02:00");
+
+    DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+    Date date = null;
+    try {
+      date = df.parse("2017-07-10T13:18:49+02:00");
+    } catch (ParseException e) {
+      fail();
+    }
+
+    Map<String, Object> conditions = new HashMap<>(4);
+    conditions.put("string", "string");
+    conditions.put("number", 1);
+    conditions.put("float", 2.0);
+    conditions.put("date", date);
+
+    Map<String, String> params = UrlUtil.addConditionsToUrl(new HashMap<String, String>(), conditions);
+
+    assertEquals(checkParams, params);
+  }
+
+  @Test
+  public void testAddConditionsToUrlWithNull() {
+    Map<String, String> params = UrlUtil.addConditionsToUrl(new HashMap<String, String>(), null);
+
+    assertEquals(0, params.size());
+  }
 }

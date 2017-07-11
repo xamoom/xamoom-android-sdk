@@ -38,6 +38,7 @@ import com.xamoom.android.xamoomsdk.Utils.UrlUtil;
 
 import java.io.IOException;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -202,6 +203,23 @@ public class EnduserApi implements Parcelable {
   public Call getContentByLocationIdentifier(String locationIdentifier,
                                              EnumSet<ContentFlags> contentFlags,
                                              APICallback<Content, List<Error>> callback) {
+    return getContentByLocationIdentifier(locationIdentifier, contentFlags, null, callback);
+  }
+
+  /**
+   *  Get a content for a specific LocationIdentifier with flags.
+   *
+   * @param locationIdentifier LocationIdentifier from QR or NFC
+   * @param contentFlags Different flags {@link ContentFlags}
+   * @param conditions  HashMap with conditions to match. Allowed value types: Strings, ints, floats,
+   *                    doubles and dates.
+   * @param callback {@link APICallback}
+   * @return Used call object
+   */
+  public Call getContentByLocationIdentifier(String locationIdentifier,
+                                             EnumSet<ContentFlags> contentFlags,
+                                             HashMap<String, Object> conditions,
+                                             APICallback<Content, List<Error>> callback) {
     if (offline) {
       offlineEnduserApi.getContentByLocationIdentifier(locationIdentifier, callback);
       return null;
@@ -210,6 +228,7 @@ public class EnduserApi implements Parcelable {
     Map<String, String> params = UrlUtil.getUrlParameter(language);
     params.put("filter[location-identifier]", locationIdentifier);
     params = UrlUtil.addContentParameter(params, contentFlags);
+    params = UrlUtil.addConditionsToUrl(params, conditions);
 
     Call<ResponseBody> call = enduserApiInterface.getContents(params);
     callHandler.enqueCall(call, callback);
@@ -230,7 +249,25 @@ public class EnduserApi implements Parcelable {
   }
 
   /**
-   * Get content for a specific beacon.
+   * Get content for a specific beacon with options.
+   *
+   * @param major Beacon major ID
+   * @param minor Beacon minor ID
+   * @param contentFlags Different flags {@link ContentFlags}
+   * @param conditions  HashMap with conditions to match. Allowed value types: Strings, ints, floats,
+   *                    doubles and dates.
+   * @param callback {@link APICallback}
+   * @return Used call object
+   */
+  public Call getContentByBeacon(int major, int minor, EnumSet<ContentFlags> contentFlags,
+                                 HashMap<String, Object> conditions,
+                                 APICallback<Content, List<Error>> callback) {
+    return getContentByLocationIdentifier(String.format("%s|%s", major, minor), contentFlags,
+        conditions, callback);
+  }
+
+  /**
+   * Get content for a specific beacon with options and condition.
    *
    * @param major Beacon major ID
    * @param minor Beacon minor ID

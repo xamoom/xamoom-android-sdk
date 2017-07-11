@@ -35,6 +35,9 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.IOException;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -299,6 +302,58 @@ public class EnduserApiTests {
   }
 
   @Test
+  public void testGetContentWithLocationIdentifierAndConditionSuccess() throws Exception {
+    mMockWebServer.enqueue(new MockResponse().setBody(""));
+
+    DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
+    Date date = df.parse("2017-07-10T13:18:49+02:00");
+
+    HashMap<String, Object> conditions = new HashMap<>(3);
+    conditions.put("name", "myname");
+    conditions.put("number", 5);
+    conditions.put("float", 2.0f);
+    conditions.put("double", (double) 1.000002358923523523523523535);
+    conditions.put("date", date);
+
+    final Content[] checkContent = {null};
+
+    Content content = new Content();
+    content.setTitle("Test");
+
+    JsonApiObject jsonApiObject = new JsonApiObject();
+    jsonApiObject.setResource(content);
+
+    when(mMockMorpheus.parse(anyString())).thenReturn(jsonApiObject);
+
+    final Semaphore semaphore = new Semaphore(0);
+
+    mEnduserApi.getContentByLocationIdentifier("1234", null, conditions,
+        new APICallback<Content, List<Error>>() {
+          @Override
+          public void finished(Content result) {
+            checkContent[0] = result;
+            semaphore.release();
+          }
+
+          @Override
+          public void error(List<Error> error) {
+            semaphore.release();
+          }
+        });
+    semaphore.acquire();
+
+    assertTrue(checkContent[0].getTitle().equals("Test"));
+    RecordedRequest request1 = mMockWebServer.takeRequest();
+    assertEquals("/_api/v2/consumer/contents?lang=en&filter[location-identifier]=1234" +
+            "&condition[name]=myname" +
+            "&condition[date]=2017-07-10T13:18:49%2B02:00" +
+            "&condition[number]=5" +
+            "&condition[float]=2.0" +
+            "&condition[double]=1.0000023589235236",
+        request1.getPath());
+  }
+
+  @Test
   public void testGetContentWithLocationIdentifierFlagsSuccess() throws Exception {
     mMockWebServer.enqueue(new MockResponse().setBody(""));
 
@@ -402,23 +457,75 @@ public class EnduserApiTests {
 
     mEnduserApi.getContentByBeacon(1, 2, EnumSet.of(ContentFlags.PREVIEW, ContentFlags.PRIVATE),
         new APICallback<Content, List<Error>>() {
-      @Override
-      public void finished(Content result) {
-        checkContent[0] = result;
-        semaphore.release();
-      }
+          @Override
+          public void finished(Content result) {
+            checkContent[0] = result;
+            semaphore.release();
+          }
 
-      @Override
-      public void error(List<Error> error) {
-        semaphore.release();
-      }
-    });
+          @Override
+          public void error(List<Error> error) {
+            semaphore.release();
+          }
+        });
 
     semaphore.acquire();
 
     assertTrue(checkContent[0].getTitle().equals("Test"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
     assertEquals("/_api/v2/consumer/contents?lang=en&filter[location-identifier]=1|2&preview=true&public-only=true",
+        request1.getPath());
+  }
+
+  @Test
+  public void testGetContentWithBeaconAndConditionSuccess() throws Exception {
+    mMockWebServer.enqueue(new MockResponse().setBody(""));
+
+    DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
+    Date date = df.parse("2017-07-10T13:18:49+02:00");
+
+    HashMap<String, Object> conditions = new HashMap<>(3);
+    conditions.put("name", "myname");
+    conditions.put("number", 5);
+    conditions.put("float", 2.0f);
+    conditions.put("double", (double) 1.000002358923523523523523535);
+    conditions.put("date", date);
+
+    final Content[] checkContent = {null};
+
+    Content content = new Content();
+    content.setTitle("Test");
+
+    JsonApiObject jsonApiObject = new JsonApiObject();
+    jsonApiObject.setResource(content);
+
+    when(mMockMorpheus.parse(anyString())).thenReturn(jsonApiObject);
+
+    final Semaphore semaphore = new Semaphore(0);
+
+    mEnduserApi.getContentByBeacon(1, 2, null, conditions,
+        new APICallback<Content, List<Error>>() {
+          @Override
+          public void finished(Content result) {
+            checkContent[0] = result;
+            semaphore.release();
+          }
+
+          @Override
+          public void error(List<Error> error) {
+            semaphore.release();
+          }
+        });
+    semaphore.acquire();
+
+    assertTrue(checkContent[0].getTitle().equals("Test"));
+    RecordedRequest request1 = mMockWebServer.takeRequest();
+    assertEquals("/_api/v2/consumer/contents?lang=en&filter[location-identifier]=1|2" +
+            "&condition[name]=myname" +
+            "&condition[date]=2017-07-10T13:18:49%2B02:00" +
+            "&condition[number]=5" +
+            "&condition[float]=2.0" +
+            "&condition[double]=1.0000023589235236",
         request1.getPath());
   }
 
@@ -655,17 +762,17 @@ public class EnduserApiTests {
 
     mEnduserApi.getSpot("1234", EnumSet.of(SpotFlags.INCLUDE_CONTENT, SpotFlags.INCLUDE_MARKERS, SpotFlags.HAS_LOCATION),
         new APICallback<Spot, List<Error>>() {
-      @Override
-      public void finished(Spot result) {
-        checkSpot[0] = result;
-        semaphore.release();
-      }
+          @Override
+          public void finished(Spot result) {
+            checkSpot[0] = result;
+            semaphore.release();
+          }
 
-      @Override
-      public void error(List<Error> error) {
-        semaphore.release();
-      }
-    });
+          @Override
+          public void error(List<Error> error) {
+            semaphore.release();
+          }
+        });
 
     semaphore.acquire();
 

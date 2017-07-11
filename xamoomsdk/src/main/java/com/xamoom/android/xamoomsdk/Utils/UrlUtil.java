@@ -8,11 +8,16 @@
 
 package com.xamoom.android.xamoomsdk.Utils;
 
+import android.support.annotation.NonNull;
+
 import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
 import com.xamoom.android.xamoomsdk.Enums.ContentSortFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotSortFlags;
 
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.LinkedHashMap;
@@ -126,4 +131,35 @@ public class UrlUtil {
     return params;
   }
 
+
+  public static Map<String, String> addConditionsToUrl(@NonNull Map<String, String> params,
+                                                       @NonNull Map<String, Object> conditions) {
+    if (conditions == null || params == null) {
+      return params;
+    }
+
+    for (String key : conditions.keySet()) {
+      String value = conditionToString(conditions.get(key));
+      if (value != null) {
+        String paramKey = String.format("condition[%s]", key);
+        params.put(paramKey, value);
+      }
+    }
+    return params;
+  }
+
+  private static String conditionToString(Object condition) {
+    if (condition instanceof String) {
+      return (String) condition;
+    }
+
+    if (condition instanceof Date) {
+      DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+      Date date = (Date) condition;
+      String dateString = df.format(date);
+      return dateString;
+    }
+
+    return String.valueOf(condition);
+  }
 }

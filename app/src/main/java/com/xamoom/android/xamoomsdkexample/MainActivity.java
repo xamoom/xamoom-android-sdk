@@ -55,8 +55,12 @@ import com.xamoom.android.xamoomsdk.Storage.OfflineStorageManager;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
 
 import at.rags.morpheus.Error;
@@ -97,6 +101,9 @@ public class MainActivity extends XamoomPushActivity
     getContent();
     getContentOption();
     getContentLocationIdentifier();
+    */
+    getContentWithConditions();
+    /*
     getContentsLocation();
     searchContent();
     getSpot();
@@ -296,6 +303,27 @@ public class MainActivity extends XamoomPushActivity
 
           }
         });
+  }
+
+  private void getContentWithConditions() {
+    HashMap<String, Object> conditions = new HashMap<>(3);
+    conditions.put("name", "myname");
+    conditions.put("number", 5);
+    conditions.put("float", 2.0f);
+    conditions.put("double", (double) 1.000002358923523523523523535);
+    conditions.put("date", new Date());
+
+    mEnduserApi.getContentByLocationIdentifier("7qpqr", null, conditions, new APICallback<Content, List<Error>>() {
+      @Override
+      public void finished(Content result) {
+        Log.v(TAG, "getContentByLocationIdentifier: " + result);
+      }
+
+      @Override
+      public void error(List<Error> error) {
+        Log.e(TAG, "Error contentByLocationIdentifier: " + error);
+      }
+    });
   }
 
   public void getContentsLocation() {
