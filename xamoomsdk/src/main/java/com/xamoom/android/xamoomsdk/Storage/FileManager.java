@@ -47,7 +47,7 @@ public class FileManager {
    *
    * @param urlString Url as string to create fileName.
    * @param bytes Bytes to save.
-   * @throws IOException
+   * @throws IOException if not able to open file.
    */
   public void saveFile(String urlString, byte[] bytes) throws IOException {
     FileOutputStream outputStream;
@@ -63,7 +63,7 @@ public class FileManager {
    *
    * @param urlString Url as string to create fileName.
    * @return True if deleted.
-   * @throws IOException
+   * @throws IOException if not able to open file.
    */
   public boolean deleteFile(String urlString) throws IOException {
     File file = getFile(urlString);
@@ -77,7 +77,7 @@ public class FileManager {
    *
    * @param urlString Url as string to create fileName.
    * @return Saved file.
-   * @throws IOException
+   * @throws IOException if not able to open file.
    */
   public File getFile(String urlString) throws IOException {
     File file = new File(mContext.getFilesDir(), getFileName(urlString));

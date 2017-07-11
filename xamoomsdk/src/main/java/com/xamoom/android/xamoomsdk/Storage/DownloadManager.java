@@ -31,7 +31,7 @@ public class DownloadManager {
    * @param url Url from remote file.
    * @param queryTasks Boolean to queue files.
    * @param completedInterface Callback when finished or failed.
-   * @throws MalformedURLException
+   * @throws MalformedURLException if file url has a bad format.
    */
   public void saveFileFromUrl(final URL url, boolean queryTasks,
                               final OnDownloadManagerCompleted completedInterface) throws MalformedURLException {

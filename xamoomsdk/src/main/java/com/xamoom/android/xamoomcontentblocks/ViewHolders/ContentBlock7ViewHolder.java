@@ -8,6 +8,7 @@
 
 package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -39,6 +40,7 @@ public class ContentBlock7ViewHolder extends RecyclerView.ViewHolder {
 
   private static HashMap<String, WebView> mWebCache = new HashMap<>();
 
+  @SuppressLint("SetJavaScriptEnabled")
   public ContentBlock7ViewHolder(View itemView) {
     super(itemView);
     mTitleTextView = (TextView) itemView.findViewById(R.id.titleTextView);

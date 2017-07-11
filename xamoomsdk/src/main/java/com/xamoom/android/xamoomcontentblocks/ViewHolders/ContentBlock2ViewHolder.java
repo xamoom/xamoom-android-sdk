@@ -8,6 +8,7 @@
 
 package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -78,6 +79,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
   private int mTextColor = Color.BLACK;
   private FileManager mFileManager;
 
+  @SuppressLint("SetJavaScriptEnabled")
   public ContentBlock2ViewHolder(View itemView, Fragment fragment, String youtubeApiKey,
                                  LruCache<String, Bitmap> bitmapCache) {
     super(itemView);

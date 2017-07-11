@@ -101,7 +101,7 @@ public class OfflineStorageManager {
    * @param queueDownload True to queue download. Use {@link DownloadManager#downloadQueriedTasks()}
    *                      to start download.
    * @param completion DownloadCompletion.  @return true if successfully saved to database.
-   * @throws MalformedURLException
+   * @throws MalformedURLException if file url is badly formatted.
    */
   public boolean saveContent(Content content, boolean queueDownload, DownloadManager.OnDownloadManagerCompleted completion)
       throws MalformedURLException {
@@ -161,7 +161,7 @@ public class OfflineStorageManager {
    * @param queryDownloads True to queue download. Use {@link DownloadManager#downloadQueriedTasks()}
    *                      to start download.
    * @param completion Callback for download.  @return true if successfully saved to database.
-   * @throws MalformedURLException
+   * @throws MalformedURLException if file url is badly formatted.
    */
   public boolean saveSpot(Spot spot, boolean queryDownloads,
                           DownloadManager.OnDownloadManagerCompleted completion)
@@ -533,7 +533,7 @@ public class OfflineStorageManager {
    * @param url Url of the file.
    * @param saveDeletion True to save and delete a patch with check if the file is somewhere else.
    * @return true when deleted. False when not deleted or when saveDeletion is true.
-   * @throws IOException
+   * @throws IOException if file url is badly formatted.
    */
   public boolean deleteFile(String url, boolean saveDeletion) throws IOException {
     if (saveDeletion) {
@@ -547,7 +547,7 @@ public class OfflineStorageManager {
   /**
    * Deletes files saved for saveDeletion after checking for usage in other saved objects.
    *
-   * @throws IOException
+   * @throws IOException if note able to delete file.
    */
   public void deleteFilesWithSafetyCheck() throws IOException {
     for (String url : mSaveDeletionFiles) {
