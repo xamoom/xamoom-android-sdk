@@ -25,6 +25,13 @@ import retrofit2.Response;
  * Used to enque the retrofit2 calls and parse them via Morpheus.
  */
 public class CallHandler <T extends Resource> {
+  public static final String ERROR_CODE_CALL_FAILURE = "10000";
+  public static final String ERROR_CODE_PARSING_JSON_FAILED = "10001";
+  public static final String ERROR_CODE_RESPONSE_IS_NULL = "10002";
+  public static final String ERROR_MESSAGE_RESPONSE_IS_NULL = "Parsed response is null. " +
+      "Check if data really exists.";
+
+
   private Morpheus morpheus;
 
   public CallHandler(Morpheus morpheus) {
@@ -41,29 +48,30 @@ public class CallHandler <T extends Resource> {
       public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
         String json = getJsonFromResponse(response);
 
+        JsonApiObject jsonApiObject = null;
         try {
-          JsonApiObject jsonApiObject = morpheus.parse(json);
-
-          if (jsonApiObject.getResource() != null) {
-            T t = (T) jsonApiObject.getResource();
-            callback.finished(t);
-          } else if (jsonApiObject.getErrors() != null && jsonApiObject.getErrors().size() > 0) {
-            callback.error(jsonApiObject.getErrors());
-          }
+          jsonApiObject = morpheus.parse(json);
         } catch (Exception e) {
-          // TODO error handling
-          e.printStackTrace();
+          callback.error(createError(e.getMessage(), ERROR_CODE_PARSING_JSON_FAILED));
+          return;
+        }
+
+        if (jsonApiObject == null) {
+          callback.error(createError(ERROR_MESSAGE_RESPONSE_IS_NULL, ERROR_CODE_RESPONSE_IS_NULL));
+          return;
+        }
+
+        if (jsonApiObject.getResource() != null) {
+          T t = (T) jsonApiObject.getResource();
+          callback.finished(t);
+        } else if (jsonApiObject.getErrors() != null && jsonApiObject.getErrors().size() > 0) {
+          callback.error(jsonApiObject.getErrors());
         }
       }
 
       @Override
       public void onFailure(Call<ResponseBody> call, Throwable t) {
-        Error error = new Error();
-        error.setDetail(t.getMessage());
-        error.setCode("10000");
-        List<Error> errors = new ArrayList<Error>();
-        errors.add(error);
-        callback.error(errors);
+        callback.error(createError(t.getMessage(), ERROR_CODE_CALL_FAILURE));
       }
     });
   }
@@ -79,30 +87,32 @@ public class CallHandler <T extends Resource> {
       public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
         String json = getJsonFromResponse(response);
 
+        JsonApiObject jsonApiObject = null;
         try {
-          JsonApiObject jsonApiObject = morpheus.parse(json);
-
-          if (jsonApiObject.getResources() != null) {
-            List<T> contents = (List<T>) jsonApiObject.getResources();
-            String cursor = jsonApiObject.getMeta().get("cursor").toString();
-            boolean hasMore = (boolean) jsonApiObject.getMeta().get("has-more");
-            callback.finished(contents, cursor, hasMore);
-          } else if (jsonApiObject.getErrors() != null && jsonApiObject.getErrors().size() > 0) {
-            callback.error(jsonApiObject.getErrors());
-          }
+          jsonApiObject = morpheus.parse(json);
         } catch (Exception e) {
-          e.printStackTrace();
+          callback.error(createError(e.getMessage(), ERROR_CODE_PARSING_JSON_FAILED));
+          return;
+        }
+
+        if (jsonApiObject == null) {
+          callback.error(createError(ERROR_MESSAGE_RESPONSE_IS_NULL, ERROR_CODE_RESPONSE_IS_NULL));
+          return;
+        }
+
+        if (jsonApiObject.getResources() != null) {
+          List<T> contents = (List<T>) jsonApiObject.getResources();
+          String cursor = jsonApiObject.getMeta().get("cursor").toString();
+          boolean hasMore = (boolean) jsonApiObject.getMeta().get("has-more");
+          callback.finished(contents, cursor, hasMore);
+        } else if (jsonApiObject.getErrors() != null && jsonApiObject.getErrors().size() > 0) {
+          callback.error(jsonApiObject.getErrors());
         }
       }
 
       @Override
       public void onFailure(Call<ResponseBody> call, Throwable t) {
-        Error error = new Error();
-        error.setDetail(t.getMessage());
-        error.setCode("10000");
-        List<Error> errors = new ArrayList<Error>();
-        errors.add(error);
-        callback.error(errors);
+        callback.error(createError(t.getMessage(), ERROR_CODE_CALL_FAILURE));
       }
     });
   }
@@ -127,6 +137,15 @@ public class CallHandler <T extends Resource> {
     }
 
     return json;
+  }
+
+  private List<Error> createError(String message, String code) {
+    Error error = new Error();
+    error.setDetail(message);
+    error.setCode(code);
+    List<Error> errors = new ArrayList<Error>();
+    errors.add(error);
+    return errors;
   }
 
   public void setMorpheus(Morpheus morpheus) {
