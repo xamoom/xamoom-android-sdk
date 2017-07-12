@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.4.0](https://github.com/xamoom/xamoom-android-sdk/compare/v3.3.1...v3.4.0)
+
+- Added conditional content calls
+- Added missing content descriptions
+
+- Raised targetSDK & support libraries to 25
+
 ## [3.3.1](https://github.com/xamoom/xamoom-android-sdk/compare/v3.3.0...v3.3.1)
 
 - Fixed push notificaion handler receiver
