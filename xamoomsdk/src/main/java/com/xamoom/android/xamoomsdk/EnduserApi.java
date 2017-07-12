@@ -651,14 +651,13 @@ public class EnduserApi implements Parcelable {
       Log.e(TAG, "Failed to load meta-data, NullPointer: " + e.getMessage());
     }
 
-    StringBuilder builder = new StringBuilder();
-    builder.append("Xamoom SDK Android");
-    builder.append("|");
-    builder.append(context.getApplicationInfo().loadLabel(context.getPackageManager()));
-    builder.append("|");
-    builder.append(sdkversion);
+    String builder = "Xamoom SDK Android" +
+        "|" +
+        context.getApplicationInfo().loadLabel(context.getPackageManager()) +
+        "|" +
+        sdkversion;
 
-    return builder.toString();
+    return builder;
   }
 
   // getters & setters

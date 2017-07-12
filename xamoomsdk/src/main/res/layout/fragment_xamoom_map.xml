@@ -65,7 +65,8 @@
             <ImageView
                 android:id="@+id/spot_image_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/contentdescription_thumbnailimage_linked_spot"/>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 

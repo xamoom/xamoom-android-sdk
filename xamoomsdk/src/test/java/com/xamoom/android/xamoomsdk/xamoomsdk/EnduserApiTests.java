@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
 
@@ -305,14 +306,14 @@ public class EnduserApiTests {
   public void testGetContentWithLocationIdentifierAndConditionSuccess() throws Exception {
     mMockWebServer.enqueue(new MockResponse().setBody(""));
 
-    DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
+    DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX", Locale.getDefault());
     Date date = df.parse("2017-07-10T13:18:49+02:00");
 
     HashMap<String, Object> conditions = new HashMap<>(3);
     conditions.put("name", "myname");
     conditions.put("number", 5);
     conditions.put("float", 2.0f);
-    conditions.put("double", (double) 1.000002358923523523523523535);
+    conditions.put("double", 1.000002358923523523523523535);
     conditions.put("date", date);
 
     final Content[] checkContent = {null};
@@ -481,14 +482,14 @@ public class EnduserApiTests {
   public void testGetContentWithBeaconAndConditionSuccess() throws Exception {
     mMockWebServer.enqueue(new MockResponse().setBody(""));
 
-    DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
+    DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX", Locale.getDefault());
     Date date = df.parse("2017-07-10T13:18:49+02:00");
 
     HashMap<String, Object> conditions = new HashMap<>(3);
     conditions.put("name", "myname");
     conditions.put("number", 5);
     conditions.put("float", 2.0f);
-    conditions.put("double", (double) 1.000002358923523523523523535);
+    conditions.put("double", 1.000002358923523523523523535);
     conditions.put("date", date);
 
     final Content[] checkContent = {null};

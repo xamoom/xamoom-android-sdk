@@ -24,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
@@ -152,7 +153,7 @@ public class UrlUtilTests {
     checkParams.put("condition[float]", "2.0");
     checkParams.put("condition[date]", "2017-07-10T11:18:49Z");
 
-    DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+    DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.getDefault());
     Date date = null;
     try {
       date = df.parse("2017-07-10T13:18:49+02:00");

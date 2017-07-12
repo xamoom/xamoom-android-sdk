@@ -80,13 +80,7 @@ public class XamoomNotificationReceiver extends BroadcastReceiver {
   private boolean isCustomNotificationHandlerRegistered(Context context, Intent intent) {
     PackageManager pm = context.getPackageManager();
     List<ResolveInfo> listPkgs = pm.queryBroadcastReceivers(intent, 0);
-    if (listPkgs != null && listPkgs.size() > 0){
-      for (ResolveInfo resInfo : listPkgs) {
-        return true;
-      }
-    }
-
-    return false;
+    return listPkgs != null && listPkgs.size() > 0;
   }
 
   private void sendCustomHandlerBroadcast(Context context, Intent intent, JSONObject dataObject) {

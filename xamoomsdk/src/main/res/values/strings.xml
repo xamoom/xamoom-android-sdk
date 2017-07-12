@@ -10,4 +10,15 @@
     <string name="open">Open</string>
     <string name="close_map">Close map</string>
     <string name="file_not_found">File not found</string>
+
+    <string name="audioplayer_seek_time_text" translatable="false">30</string>
+
+    <string name="contentdescription_video_play_button" translatable="false">Play button for video</string>
+    <string name="contentdescription_image_without_description" translatable="false">A image without description</string>
+    <string name="contentdescription_link_icon" translatable="false">Icon for the link</string>
+    <string name="contentdescription_thumbnailimage_linked_content" translatable="false">Thumbnail of the linked content</string>
+    <string name="contentdescription_ebook_link_icon" translatable="false">Icon for the ebook link</string>
+    <string name="contentdescription_download_link_icon" translatable="false">Icon for the download link</string>
+    <string name="contentdescription_thumbnailimage_linked_spot" translatable="false">Thumbnail for the linked spot</string>
+    <string name="contentdescription_chevron_right" translatable="false">Chevron pointing to the right</string>
 </resources>

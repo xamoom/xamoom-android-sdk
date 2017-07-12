@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -155,7 +156,7 @@ public class UrlUtil {
     }
 
     if (condition instanceof Date) {
-      DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+      DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault());
       df.setTimeZone(TimeZone.getTimeZone("UTC"));
       Date date = (Date) condition;
       String dateString = df.format(date);

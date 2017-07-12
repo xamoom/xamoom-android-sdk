@@ -20,7 +20,8 @@
         android:id="@+id/contentThumbnailImageView"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:contentDescription="@string/contentdescription_thumbnailimage_linked_content"/>
 
     <LinearLayout
         android:layout_width="0dp"
@@ -56,6 +57,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center|end"
         android:layout_marginEnd="3dp"
-        android:src="@drawable/ic_chevron_right" />
+        android:src="@drawable/ic_chevron_right"
+        android:contentDescription="@string/contentdescription_chevron_right"/>
 
 </LinearLayout>

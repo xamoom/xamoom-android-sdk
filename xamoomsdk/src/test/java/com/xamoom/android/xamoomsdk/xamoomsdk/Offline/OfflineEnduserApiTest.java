@@ -8,6 +8,7 @@
 
 package com.xamoom.android.xamoomsdk.xamoomsdk.Offline;
 
+import android.annotation.SuppressLint;
 import android.location.Location;
 
 import com.xamoom.android.xamoomsdk.APICallback;
@@ -102,6 +103,7 @@ public class OfflineEnduserApiTest {
     });
   }
 
+  @SuppressLint("DefaultLocale")
   @Test
   public void testGetContentByLocationIdentifierBeacon() {
     final Content savedContent = new Content();

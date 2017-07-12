@@ -37,6 +37,7 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
+        <activity android:name="com.xamoom.android.pushnotifications.XamoomPushActivity"/>
     </application>
 
 </manifest>

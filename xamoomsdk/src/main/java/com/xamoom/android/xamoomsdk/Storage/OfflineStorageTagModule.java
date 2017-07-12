@@ -222,7 +222,7 @@ public class OfflineStorageTagModule {
 
       @Override
       public void error(List<Error> error) {
-        return;
+        Log.e(TAG, "Error getting all Spots: " + error);
       }
     });
   }

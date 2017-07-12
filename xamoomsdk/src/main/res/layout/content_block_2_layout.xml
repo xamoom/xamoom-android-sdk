@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
@@ -19,7 +20,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        tools:ignore="WebViewLayout">
 
         <VideoView
             android:id="@+id/videoView"
@@ -30,7 +32,8 @@
         <WebView
             android:id="@+id/videoWebView"
             android:layout_width="match_parent"
-            android:layout_height="260dp"/>
+            android:layout_height="260dp"
+            tools:ignore="WebViewLayout"/>
 
         <View
             android:id="@+id/webViewOverlay"
@@ -58,7 +61,8 @@
             android:layout_centerVertical="true"
             android:layout_centerInParent="true"
             android:src="@drawable/ic_play"
-            android:tint="@android:color/white"/>
+            android:tint="@android:color/white"
+            android:contentDescription="@string/contentdescription_video_play_button"/>
 
         <ProgressBar
             android:id="@+id/video_progress_bar"

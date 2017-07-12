@@ -77,8 +77,10 @@ public class DownloadTask extends AsyncTask<Void, Integer, ByteArrayOutputStream
       }
     } finally {
       if (connection == null) {
-        mListener.failed(null);
-        return null;
+        if (mListener != null) {
+          mListener.failed(null);
+          return null;
+        }
       }
 
       if (mListener != null) {
@@ -90,6 +92,7 @@ public class DownloadTask extends AsyncTask<Void, Integer, ByteArrayOutputStream
         connection.disconnect();
       }
     }
+
     return null;
   }
 

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_marginStart="@dimen/no_contentblock_padding"
               android:layout_marginEnd="@dimen/no_contentblock_padding"
-              android:layout_marginBottom="@dimen/contentblock_to_contentblock_margin">
+              android:layout_marginBottom="@dimen/contentblock_to_contentblock_margin"
+              tools:ignore="WebViewLayout">
 
     <TextView
         android:id="@+id/titleTextView"
@@ -22,6 +24,6 @@
         android:id="@+id/soundcloudWebview"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        />
+        tools:ignore="WebViewLayout"/>
 
 </LinearLayout>

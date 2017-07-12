@@ -102,7 +102,7 @@ public class MainActivity extends XamoomPushActivity
     getContentOption();
     getContentLocationIdentifier();
     */
-    getContentWithConditions();
+    //getContentWithConditions();
     /*
     getContentsLocation();
     searchContent();

@@ -8,6 +8,7 @@
 
 package com.xamoom.android.xamoomsdk.Offline;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.location.Location;
 import android.support.annotation.Nullable;
@@ -56,7 +57,7 @@ public class OfflineEnduserApi {
 
   public void getContentByBeacon(int major, int minor, APICallback<Content, List<Error>>
       callback) {
-    String beaconIds = String.format("%d|%d", major, minor);
+    @SuppressLint("DefaultLocale") String beaconIds = String.format("%d|%d", major, minor);
     getContentByLocationIdentifier(beaconIds, callback);
   }
 
