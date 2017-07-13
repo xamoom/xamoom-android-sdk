@@ -31,7 +31,7 @@ public class ContentHeaderViewHolder extends RecyclerView.ViewHolder {
   private WebView mWebView;
   private String mLinkColor = "00F";
   private Style mStyle;
-  private float mTextSize = 23.0f;
+  private float mTextSize = 18.0f;
 
   public ContentHeaderViewHolder(View itemView) {
     super(itemView);
@@ -40,8 +40,16 @@ public class ContentHeaderViewHolder extends RecyclerView.ViewHolder {
     mWebView.setBackgroundColor(Color.TRANSPARENT);
 
     WebSettings webSettings = mWebView.getSettings();
-    webSettings.setDefaultFontSize(webSettings.getDefaultFontSize() + 2);
-    
+    webSettings.setDefaultFontSize((int) (mTextSize));
+    webSettings.setRenderPriority(WebSettings.RenderPriority.HIGH);
+    webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+    webSettings.setAppCacheEnabled(false);
+    webSettings.setBlockNetworkImage(true);
+    webSettings.setLoadsImagesAutomatically(true);
+    webSettings.setGeolocationEnabled(false);
+    webSettings.setNeedInitialFocus(false);
+    webSettings.setSaveFormData(false);
+
     //override to open links in Webbrowser
     mWebView.setWebViewClient(new WebViewClient() {
       public boolean shouldOverrideUrlLoading(WebView view, String url) {
