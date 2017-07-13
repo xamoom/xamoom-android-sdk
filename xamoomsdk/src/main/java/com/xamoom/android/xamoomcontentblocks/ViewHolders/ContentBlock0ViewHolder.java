@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
@@ -40,12 +41,17 @@ public class ContentBlock0ViewHolder extends RecyclerView.ViewHolder {
     mWebView = (WebView) itemView.findViewById(R.id.webView);
     mWebView.setBackgroundColor(Color.TRANSPARENT);
 
-    if (Build.VERSION.SDK_INT >= 19) {
-      mWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-    }
-    else {
-      mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-    }
+    WebSettings webSettings = mWebView.getSettings();
+    webSettings.setRenderPriority(WebSettings.RenderPriority.HIGH);
+    webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+    webSettings.setAppCacheEnabled(false);
+    webSettings.setBlockNetworkImage(true);
+    webSettings.setLoadsImagesAutomatically(true);
+    webSettings.setGeolocationEnabled(false);
+    webSettings.setNeedInitialFocus(false);
+    webSettings.setSaveFormData(false);
+
+    mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 
     //override to open links in Webbrowser
     mWebView.setWebViewClient(new WebViewClient() {
