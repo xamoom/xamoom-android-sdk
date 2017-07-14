@@ -8,14 +8,10 @@
 
 package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
-import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -39,27 +35,8 @@ public class ContentHeaderViewHolder extends RecyclerView.ViewHolder {
     mWebView = (WebView) itemView.findViewById(R.id.webView);
     mWebView.setBackgroundColor(Color.TRANSPARENT);
 
-    WebSettings webSettings = mWebView.getSettings();
-    webSettings.setDefaultFontSize((int) (mTextSize));
-    webSettings.setRenderPriority(WebSettings.RenderPriority.HIGH);
-    webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
-    webSettings.setAppCacheEnabled(false);
-    webSettings.setBlockNetworkImage(true);
-    webSettings.setLoadsImagesAutomatically(true);
-    webSettings.setGeolocationEnabled(false);
-    webSettings.setNeedInitialFocus(false);
-    webSettings.setSaveFormData(false);
-
-    //override to open links in Webbrowser
-    mWebView.setWebViewClient(new WebViewClient() {
-      public boolean shouldOverrideUrlLoading(WebView view, String url) {
-        view.getContext().startActivity(
-            new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-        return true;
-      }
-    });
+    ContentBlock0ViewHolderUtil.prepareWebView(mWebView);
   }
-
 
   public void setupContentBlock(ContentBlock contentblock, boolean offline){
     mTitleTextView.setVisibility(View.VISIBLE);
