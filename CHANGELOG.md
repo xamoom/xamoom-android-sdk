@@ -7,6 +7,8 @@
 
 - Raised targetSDK & support libraries to 25
 
+- Fixed (quick) not loading webviews
+
 ## [3.3.1](https://github.com/xamoom/xamoom-android-sdk/compare/v3.3.0...v3.3.1)
 
 - Fixed push notificaion handler receiver
