@@ -60,6 +60,7 @@ import java.util.regex.Pattern;
 public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
   public final static String RESET_YOUTUBE = "ContentBlock2ViewHolder.RESET_YOUTUBE";
   private final static String youtubeRegex = "(?:youtube(?:-nocookie)?\\.com\\/(?:[^\\/\\n\\s]+\\/\\S+\\/|(?:v|e(?:mbed)?)\\/|\\S*?[?&]v=)|youtu\\.be\\/)([a-zA-Z0-9_-]{11})";
+  private final static String youtubeTimeRegex = "(&t=|\\?t=)(?:(\\d+h)?(\\d+m)?(\\d+s)?(\\d+)?)";
   private final static String vimeoRegex = "^.*(?:vimeo.com)\\/(?:channels\\/|groups\\/[^\\/]*\\/videos\\/|album\\/\\d+\\/video\\/|video\\/|)(\\d+)(?:$|\\/|\\?)";
 
   private Context mContext;
@@ -128,7 +129,10 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
       mVideoPlayImageView.setVisibility(View.VISIBLE);
       mYouTubeThumbnailView.setVisibility(View.VISIBLE);
       mProgressBar.setVisibility(View.VISIBLE);
-      setupYoutube(contentBlock);
+
+      int seekSeconds = getYoutubeVideoStart(contentBlock.getVideoUrl());
+
+      setupYoutube(contentBlock, seekSeconds);
     } else if (contentBlock.getVideoUrl().contains("vimeo.com/")) {
       mWebViewOverlay.setVisibility(View.VISIBLE);
       mVideoWebView.setVisibility(View.VISIBLE);
@@ -147,6 +151,41 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
         setupHTMLPlayer(contentBlock.getVideoUrl(), offline);
       }
     }
+  }
+
+  private int getYoutubeVideoStart(String videoUrl) {
+    Integer startInSeconds = 0;
+
+    if (videoUrl == null || videoUrl.trim().length() <= 0) {
+      return 0;
+    }
+
+    Pattern pattern = Pattern.compile(youtubeTimeRegex, Pattern.CASE_INSENSITIVE);
+    Matcher matcher = pattern.matcher(videoUrl);
+
+    if (matcher.find()) {
+      String hours = matcher.group(2);
+      if (hours != null) {
+        startInSeconds += Integer.valueOf(hours.replace("h", "")) * 60 * 60; // hours to seconds
+      }
+
+      String minutes = matcher.group(3);
+      if (minutes != null) {
+        startInSeconds += Integer.valueOf(minutes.replace("m", "")) * 60; // minutes to seconds
+      }
+
+      String seconds = matcher.group(4);
+      if (seconds != null) {
+        startInSeconds += Integer.valueOf(seconds.replace("s", ""));
+      }
+
+      String timeInSeconds = matcher.group(5);
+      if (timeInSeconds != null) {
+        startInSeconds = Integer.valueOf(timeInSeconds);
+      }
+    }
+
+    return startInSeconds;
   }
 
   @Override
@@ -205,7 +244,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
         mContext.getResources().getColor(R.color.black));
   }
 
-  private void setupYoutube(final ContentBlock contentBlock) {
+  private void setupYoutube(final ContentBlock contentBlock, final int seekSeconds) {
     final String youtubeVideoId = getYoutubeVideoId(contentBlock.getVideoUrl());
 
     Bitmap savedBitmap = mBitmapCache.get(youtubeVideoId);
@@ -279,7 +318,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
           public void onInitializationSuccess(YouTubePlayer.Provider provider, final YouTubePlayer youTubePlayer, boolean b) {
             youTubePlayer.setFullscreenControlFlags(YouTubePlayer.FULLSCREEN_FLAG_CUSTOM_LAYOUT);
 
-            youTubePlayer.loadVideo(youtubeVideoId);
+            youTubePlayer.loadVideo(youtubeVideoId, seekSeconds * 1000);
             mProgressBar.setVisibility(View.GONE);
 
             youTubePlayer.setOnFullscreenListener(new YouTubePlayer.OnFullscreenListener() {
