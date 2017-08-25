@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
-def versionString = "3.4.0"
+def versionString = "3.5.0"
 
 version = versionString
 group = "com.xamoom.android"
@@ -12,7 +13,7 @@ android {
 	defaultConfig {
 		minSdkVersion 18
 		targetSdkVersion 25
-		versionCode 8
+		versionCode 9
 		versionName versionString
 	}
 
@@ -56,8 +57,9 @@ dependencies {
 	androidTestCompile 'com.squareup.okhttp3:mockwebserver:3.2.0'
 	compile files('libs/androidsvg-1.2.1.jar')
 	compile files('libs/YouTubeAndroidPlayerApi.jar')
+	compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 	compile 'com.android.support:support-v13:25.3.1'
-	compile 'com.google.android.gms:play-services-maps:11.0.2'
+	compile 'com.google.android.gms:play-services-maps:11.0.4'
 	compile 'com.squareup.retrofit2:retrofit:2.0.0'
 	compile 'com.squareup.okhttp3:logging-interceptor:3.0.1'
 	compile 'com.xamoom.android:morpheus:0.4.3'
@@ -66,8 +68,9 @@ dependencies {
 	compile 'com.android.support:appcompat-v7:25.3.1'
 	compile 'com.android.support:design:25.3.1'
 	compile 'com.pushwoosh:pushwoosh:4.12.2'
-	compile 'com.google.android.gms:play-services-gcm:11.0.2'
-	compile 'com.google.android.gms:play-services-location:11.0.2'
+	compile 'com.google.android.gms:play-services-gcm:11.0.4'
+	compile 'com.google.android.gms:play-services-location:11.0.4'
+	compile 'com.xamoom.android:htmltextview:1.0.1'
 }
 
 ext {
@@ -91,6 +94,9 @@ ext {
 	licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
 	allLicenses = ["Apache-2.0"]
 }
+repositories {
+	mavenCentral()
+}
 
-//apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
-//apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
