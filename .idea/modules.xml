@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/htmltextview/htmltextview.iml" filepath="$PROJECT_DIR$/htmltextview/htmltextview.iml" />
       <module fileurl="file://$PROJECT_DIR$/xamoom-android-sdk.iml" filepath="$PROJECT_DIR$/xamoom-android-sdk.iml" />
       <module fileurl="file://$PROJECT_DIR$/xamoomsdk/xamoomsdk.iml" filepath="$PROJECT_DIR$/xamoomsdk/xamoomsdk.iml" />
     </modules>

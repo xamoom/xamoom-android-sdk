@@ -1,1 +1,1 @@
-include ':app', ':xamoomsdk', ':htmltextview'
+include ':app', ':xamoomsdk'
