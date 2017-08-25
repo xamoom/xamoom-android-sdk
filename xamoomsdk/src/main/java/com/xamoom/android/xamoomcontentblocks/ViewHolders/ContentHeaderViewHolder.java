@@ -24,7 +24,7 @@ import com.xamoom.android.xamoomsdk.Resource.Style;
  */
 public class ContentHeaderViewHolder extends RecyclerView.ViewHolder {
   private TextView mTitleTextView;
-  private WebView mWebView;
+  private TextView mTextView;
   private String mLinkColor = "00F";
   private Style mStyle;
   private float mTextSize = 18.0f;
@@ -32,32 +32,29 @@ public class ContentHeaderViewHolder extends RecyclerView.ViewHolder {
   public ContentHeaderViewHolder(View itemView) {
     super(itemView);
     mTitleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
-    mWebView = (WebView) itemView.findViewById(R.id.webView);
-    mWebView.setBackgroundColor(Color.TRANSPARENT);
+    mTextView = (TextView) itemView.findViewById(R.id.textView);
+    //mTextView.setBackgroundColor(Color.TRANSPARENT);
 
-    ContentBlock0ViewHolderUtil.prepareWebView(mWebView);
+    //ContentBlock0ViewHolderUtil.prepareWebView(mWebView);
   }
 
   public void setupContentBlock(ContentBlock contentblock, boolean offline){
     mTitleTextView.setVisibility(View.VISIBLE);
-    mWebView.setVisibility(View.VISIBLE);
+    mTextView.setVisibility(View.VISIBLE);
 
     if(contentblock.getTitle() != null) {
       mTitleTextView.setText(contentblock.getTitle());
     } else {
       mTitleTextView.setVisibility(View.GONE);
-      LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mWebView.getLayoutParams();
+      LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mTextView.getLayoutParams();
       params.setMargins(0,0,0,0);
-      mWebView.setLayoutParams(params);
+      mTextView.setLayoutParams(params);
     }
 
     if((contentblock.getText() != null) && !(contentblock.getText().equalsIgnoreCase("<p><br></p>"))) {
-      String style = "<style type=\"text/css\">html, body {margin: 0; padding: 0dp;} a {color: #"+mLinkColor+"}</style>";
-      String htmlAsString = String.format("%s%s", style, contentblock.getText());
-
-      mWebView.loadDataWithBaseURL(null, htmlAsString, "text/html", "UTF-8", null);
+      mTextView.setText(contentblock.getText());
     } else {
-      mWebView.setVisibility(View.GONE);
+      mTextView.setVisibility(View.GONE);
     }
   }
 

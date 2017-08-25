@@ -10,6 +10,7 @@ package com.xamoom.android.xamoomcontentblocks.Views;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
@@ -28,9 +29,9 @@ import java.util.Random;
 public class MovingBarsDrawable extends Drawable implements ValueAnimator.AnimatorUpdateListener {
   private static final String TAG = MovingBarsDrawable.class.getSimpleName();
   private static final int DURATION = 600;
-  private static final int MARGIN = 10;
-  private static final int STROKE_WIDTH = 25;
-  private static final int START_HEIGHT = 20;
+  private static final float MARGIN = 3.7f;
+  private static final float STROKE_WIDTH = 9.4f;
+  private static final float START_HEIGHT = 7.5f;
 
   private HashMap<ValueAnimator, Path> mValueAnimators = new HashMap<>(3);
   private ArrayList<Path> mPaths = new ArrayList<>(3);
@@ -39,19 +40,30 @@ public class MovingBarsDrawable extends Drawable implements ValueAnimator.Animat
   private Rect mBounds;
   private boolean shouldStop;
 
-  public MovingBarsDrawable() {
+  private int strokeWidth;
+  private int margin;
+  private int startHeight;
+
+  public MovingBarsDrawable(Context context) {
+    mBounds = getBounds();
+
+    float density = context.getResources().getDisplayMetrics().density;
+
+    strokeWidth = (int) (STROKE_WIDTH * density);
+    margin = (int) (MARGIN * density);
+    startHeight = (int) (START_HEIGHT * density);
+
     mPaint = new Paint();
     mPaint.setColor(0xff000000);
-    mPaint.setStrokeWidth(STROKE_WIDTH);
+    mPaint.setStrokeWidth(strokeWidth);
     mPaint.setStyle(Paint.Style.STROKE);
 
     for (int i = 0; i < 3; i++) {
       Path path = new Path();
       mPaths.add(path);
-      mHeights.put(path, START_HEIGHT);
+      mHeights.put(path, startHeight);
     }
 
-    mBounds = getBounds();
   }
 
   public void startAnimating() {
@@ -89,7 +101,7 @@ public class MovingBarsDrawable extends Drawable implements ValueAnimator.Animat
     int height = mHeights.get(path);
     int maxHeight = mBounds.height();
 
-    int animHeight = START_HEIGHT;
+    int animHeight = startHeight;
     if (!end) {
       Random r = new Random();
       animHeight = r.nextInt(maxHeight);
@@ -109,7 +121,7 @@ public class MovingBarsDrawable extends Drawable implements ValueAnimator.Animat
   public void draw(@NonNull Canvas canvas) {
     int count = 0;
     for (Path path : mPaths) {
-      int x = (STROKE_WIDTH/2) + (STROKE_WIDTH * count) + (MARGIN * count);
+      int x = (strokeWidth/2) + (strokeWidth * count) + (margin * count);
       x = getBounds().width() - x; // right to left
       int height = getBounds().height() - mHeights.get(path);
 

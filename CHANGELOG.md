@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.5.0](https://github.com/xamoom/xamoom-android-sdk/compare/v3.4.0...v3.5.0)
+
+- Added support for youtube timestamps
+- Added HtmlTextView to replace Webviews for formatted text
+
+- Fix wrong displaying of audio players moving bars on lower density phones
+
 ## [3.4.0](https://github.com/xamoom/xamoom-android-sdk/compare/v3.3.1...v3.4.0)
 
 - Added conditional content calls

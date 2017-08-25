@@ -24,7 +24,7 @@ public class MovingBarsView extends View {
   public MovingBarsView(Context context, @Nullable AttributeSet attrs) {
     super(context, attrs);
 
-    mMovingBarsDrawable= new MovingBarsDrawable();
+    mMovingBarsDrawable= new MovingBarsDrawable(context);
     this.setBackground(mMovingBarsDrawable);
   }
 
