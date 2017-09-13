@@ -37,6 +37,7 @@ import com.xamoom.android.xamoomsdk.Utils.JsonListUtil;
 import com.xamoom.android.xamoomsdk.Utils.UrlUtil;
 
 import java.io.IOException;
+import java.text.Normalizer;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
@@ -651,9 +652,12 @@ public class EnduserApi implements Parcelable {
       Log.e(TAG, "Failed to load meta-data, NullPointer: " + e.getMessage());
     }
 
+    String appName = (String) context.getApplicationInfo().loadLabel(context.getPackageManager());
+    appName = Normalizer.normalize(appName, Normalizer.Form.NFD);
+
     String builder = "Xamoom SDK Android" +
         "|" +
-        context.getApplicationInfo().loadLabel(context.getPackageManager()) +
+        appName +
         "|" +
         sdkversion;
 
