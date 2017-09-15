@@ -1,5 +1,15 @@
 # Changelog
 
+## [3.5.1](https://github.com/xamoom/xamoom-android-sdk/compare/v3.5.1..v3.5.2)
+
+* Fixed issue with global glide use in ContentBlocks
+
+* Updated htmltextview
+
+## [3.5.1](https://github.com/xamoom/xamoom-android-sdk/compare/v3.5.0...v3.5.1)
+
+* Added normalizing of User-Agent
+
 ## [3.5.0](https://github.com/xamoom/xamoom-android-sdk/compare/v3.4.0...v3.5.0)
 
 - Added support for youtube timestamps
