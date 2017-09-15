@@ -20,6 +20,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.APICallback;
@@ -54,6 +55,7 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
   private FileManager mFileManager;
   private LruCache<String, Content> mContentCache;
   private Call mCall;
+  private RequestManager mGlide;
 
   public ContentBlock6ViewHolder(View itemView, Context context, EnduserApi enduserApi,
                                  LruCache<String, Content> contentCache,
@@ -68,6 +70,7 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
     mEnduserApi = enduserApi;
     mContentCache = contentCache;
     mFileManager = FileManager.getInstance(context);
+    mGlide = Glide.with(context);
 
     itemView.setOnClickListener(this);
   }
@@ -140,8 +143,7 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
       filePath = content.getPublicImageUrl();
     }
 
-    Glide.with(mContext)
-        .load(filePath)
+    mGlide.load(filePath)
         .diskCacheStrategy(DiskCacheStrategy.ALL)
         .crossFade()
         .centerCrop()
