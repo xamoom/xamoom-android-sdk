@@ -36,7 +36,7 @@ import com.xamoom.android.xamoomsdk.Resource.SystemSetting;
 import com.xamoom.android.xamoomsdk.Utils.JsonListUtil;
 import com.xamoom.android.xamoomsdk.Utils.UrlUtil;
 
-import java.io.IOException;
+import java.util.Date;
 import java.text.Normalizer;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -47,15 +47,10 @@ import java.util.Map;
 import at.rags.morpheus.Deserializer;
 import at.rags.morpheus.Error;
 import at.rags.morpheus.Morpheus;
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Retrofit;
-
-import static okhttp3.internal.Internal.logger;
 
 /**
  * EnduserApi is the main part of the XamoomSDK. You can use it to send api request to
@@ -225,6 +220,11 @@ public class EnduserApi implements Parcelable {
       offlineEnduserApi.getContentByLocationIdentifier(locationIdentifier, callback);
       return null;
     }
+
+    if (conditions == null) {
+      conditions = new HashMap<>();
+    }
+    conditions.put("x-datetime", new Date());
 
     Map<String, String> params = UrlUtil.getUrlParameter(language);
     params.put("filter[location-identifier]", locationIdentifier);

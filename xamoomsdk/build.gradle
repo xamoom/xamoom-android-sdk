@@ -20,6 +20,7 @@ android {
 	buildTypes {
 		debug {
 			manifestPlaceholders = [xamoomSDKVersion:versionString]
+			multiDexEnabled true
 		}
 		release {
 			manifestPlaceholders = [xamoomSDKVersion:versionString]
