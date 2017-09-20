@@ -92,6 +92,7 @@ public class MainActivity extends XamoomPushActivity
     setupEnduserApi();
 
     getContentOption();
+    getContentLocationIdentifier();
 
 
     // register custom notification factory
