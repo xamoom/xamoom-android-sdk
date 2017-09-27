@@ -44,6 +44,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.concurrent.Semaphore;
 
 import at.rags.morpheus.Error;
@@ -299,7 +300,8 @@ public class EnduserApiTests {
 
     assertTrue(checkContent[0].getTitle().equals("Test"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
-    assertEquals("/_api/v2/consumer/contents?lang=en&filter[location-identifier]=1234", request1.getPath());
+    assertEquals("/_api/v2/consumer/contents?lang=en&filter[location-identifier]=1234&condition[x-datetime]="+ getISO8601Date()
+        , request1.getPath());
   }
 
   @Test
@@ -350,7 +352,8 @@ public class EnduserApiTests {
             "&condition[date]=2017-07-10T11:18:49Z" +
             "&condition[number]=5" +
             "&condition[float]=2.0" +
-            "&condition[double]=1.0000023589235236",
+            "&condition[double]=1.0000023589235236" +
+            "&condition[x-datetime]="+ getISO8601Date(),
         request1.getPath());
   }
 
@@ -388,7 +391,8 @@ public class EnduserApiTests {
 
     assertTrue(checkContent[0].getTitle().equals("Test"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
-    assertEquals("/_api/v2/consumer/contents?lang=en&filter[location-identifier]=1234&preview=true&public-only=true",
+    assertEquals("/_api/v2/consumer/contents?lang=en&filter[location-identifier]=1234&preview=true" +
+            "&public-only=true&condition[x-datetime]="+ getISO8601Date(),
         request1.getPath());
   }
 
@@ -437,7 +441,8 @@ public class EnduserApiTests {
 
     assertTrue(checkContent[0].getTitle().equals("Test"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
-    assertEquals("/_api/v2/consumer/contents?lang=en&filter[location-identifier]=1|2", request1.getPath());
+    assertEquals("/_api/v2/consumer/contents?lang=en&filter[location-identifier]=1|2" +
+        "&condition[x-datetime]="+ getISO8601Date(), request1.getPath());
   }
 
   @Test
@@ -474,7 +479,8 @@ public class EnduserApiTests {
 
     assertTrue(checkContent[0].getTitle().equals("Test"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
-    assertEquals("/_api/v2/consumer/contents?lang=en&filter[location-identifier]=1|2&preview=true&public-only=true",
+    assertEquals("/_api/v2/consumer/contents?lang=en&filter[location-identifier]=1|2&preview=true" +
+            "&public-only=true&condition[x-datetime]="+ getISO8601Date(),
         request1.getPath());
   }
 
@@ -526,7 +532,7 @@ public class EnduserApiTests {
             "&condition[date]=2017-07-10T11:18:49Z" +
             "&condition[number]=5" +
             "&condition[float]=2.0" +
-            "&condition[double]=1.0000023589235236",
+            "&condition[double]=1.0000023589235236&condition[x-datetime]="+ getISO8601Date(),
         request1.getPath());
   }
 
@@ -1218,5 +1224,12 @@ public class EnduserApiTests {
     Mockito.verify(mMockedOfflineEnduserApi).getStyle(anyString(),
         (APICallback<Style, List<Error>>) any());
     Mockito.verifyNoMoreInteractions(mMockMorpheus);
+  }
+
+  private String getISO8601Date() {
+    DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault());
+    df.setTimeZone(TimeZone.getTimeZone("UTC"));
+    Date date = new Date();
+    return df.format(date);
   }
 }

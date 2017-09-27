@@ -36,6 +36,7 @@ public class ContentBlock0ViewHolder extends RecyclerView.ViewHolder {
     super(itemView);
     mTitleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
     mHtmlTextView = (HtmlTextView) itemView.findViewById(R.id.htmlTextView);
+    mHtmlTextView.setRemoveTrailingNewLines(true);
     //mWebView.setBackgroundColor(Color.TRANSPARENT);
   }
 

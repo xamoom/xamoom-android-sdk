@@ -27,7 +27,7 @@
                    android:value="com.xamoom.android.pushnotifications.XamoomNotificationReceiver"/>
 
         <provider
-            android:name="android.support.v4.content.FileProvider"
+            android:name=".Storage.XamoomFileProvider"
             android:authorities="${applicationId}.xamoomsdk.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
