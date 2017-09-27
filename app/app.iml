@@ -116,6 +116,7 @@
     <orderEntry type="library" exported="" name="pushwoosh-4.12.2" level="project" />
     <orderEntry type="library" exported="" name="play-services-gcm-11.0.4" level="project" />
     <orderEntry type="library" exported="" name="morpheus-0.4.3" level="project" />
+    <orderEntry type="library" exported="" name="htmltextview-1.0.3" level="project" />
     <orderEntry type="library" exported="" name="support-v4-25.3.1" level="project" />
     <orderEntry type="library" exported="" name="support-media-compat-25.3.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="hamcrest-core-1.3" level="project" />
@@ -127,7 +128,6 @@
     <orderEntry type="library" exported="" name="support-compat-25.3.1" level="project" />
     <orderEntry type="library" exported="" name="animated-vector-drawable-25.3.1" level="project" />
     <orderEntry type="library" exported="" name="play-services-tasks-11.0.4" level="project" />
-    <orderEntry type="library" exported="" name="htmltextview-1.0.2" level="project" />
     <orderEntry type="library" exported="" name="play-services-iid-11.0.4" level="project" />
     <orderEntry type="module" module-name="xamoomsdk" exported="" />
     <orderEntry type="library" exported="" scope="TEST" name="backport-util-concurrent-3.1" level="project" />
@@ -148,9 +148,9 @@
     <orderEntry type="library" exported="" scope="TEST" name="maven-model-2.2.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="xmlpull-1.1.3.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="multidex-instrumentation-1.0.1" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="exposed-instrumentation-api-publish-0.5" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="robolectric-utils-3.1.4" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="shadows-play-services-3.0" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="exposed-instrumentation-api-publish-0.5" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="icu4j-53.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="robolectric-annotations-3.1.4" level="project" />
     <orderEntry type="library" exported="" name="YouTubeAndroidPlayerApi" level="project" />
