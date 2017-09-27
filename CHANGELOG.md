@@ -1,6 +1,14 @@
 # Changelog
 
-## [3.5.1](https://github.com/xamoom/xamoom-android-sdk/compare/v3.5.1..v3.5.2)
+## [3.5.3](https://github.com/xamoom/xamoom-android-sdk/compare/v3.5.2..v3.5.3)
+
+* Added x-datetime condition to all getByLocationIdentifier calls
+
+* Renamed FileProvider to XamoomFileProvider
+
+* Fixed cut off text in ContentBlock6
+
+## [3.5.2](https://github.com/xamoom/xamoom-android-sdk/compare/v3.5.1..v3.5.2)
 
 * Fixed issue with global glide use in ContentBlocks
 
