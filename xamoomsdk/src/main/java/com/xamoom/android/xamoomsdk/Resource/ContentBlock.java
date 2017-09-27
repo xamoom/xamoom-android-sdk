@@ -55,11 +55,12 @@ public class ContentBlock extends Resource implements Parcelable {
   @SerializedName("content-list-tag")
   private List<String> contentListTags;
   @SerializedName("content-list-sort-asc")
-  private Boolean contentListSortAsc;
+  private boolean contentListSortAsc;
   @SerializedName("content-list-page-size")
-  private Integer contentListPageSize;
+  private int contentListPageSize;
 
   public ContentBlock() {
+    contentListSortAsc = true;
   }
 
   protected ContentBlock(Parcel in) {
