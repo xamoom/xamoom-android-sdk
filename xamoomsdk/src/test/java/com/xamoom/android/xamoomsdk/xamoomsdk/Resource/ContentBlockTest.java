@@ -55,6 +55,9 @@ public class ContentBlockTest {
     mContentBlock.setShowContentOnSpotmap(true);
     mContentBlock.setAltText("alttext");
     mContentBlock.setCopyright("copyright");
+    mContentBlock.setContentListTags(tags);
+    mContentBlock.setContentListSortAsc(true);
+    mContentBlock.setContentListPageSize(10);
   }
 
   @Test
@@ -89,5 +92,8 @@ public class ContentBlockTest {
     assertEquals(mContentBlock.isShowContentOnSpotmap(), createdFromParcel.isShowContentOnSpotmap());
     assertEquals(mContentBlock.getAltText(), createdFromParcel.getAltText());
     assertEquals(mContentBlock.getCopyright(), createdFromParcel.getCopyright());
+    assertEquals(mContentBlock.getContentListPageSize(), createdFromParcel.getContentListPageSize());
+    assertEquals(mContentBlock.getContentListSortAsc(), createdFromParcel.getContentListSortAsc());
+    assertEquals(mContentBlock.getContentListTags(), createdFromParcel.getContentListTags());
   }
 }
