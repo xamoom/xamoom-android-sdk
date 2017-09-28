@@ -7,6 +7,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock11ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
@@ -33,7 +35,7 @@ public class ContentBlock11Adapter implements AdapterDelegate<List<ContentBlock>
   public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, Fragment fragment, EnduserApi enduserApi, String youtubeApiKey, LruCache bitmapCache, LruCache contentCache, boolean showContentLinks, ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener onContentBlock3ViewHolderInteractionListener, XamoomContentFragment.OnXamoomContentFragmentInteractionListener onXamoomContentFragmentInteractionListener) {
     View view = LayoutInflater.from(parent.getContext())
         .inflate(R.layout.content_block_11_layout, parent, false);
-    return new ContentBlock11ViewHolder(view, fragment, enduserApi, contentCache);
+    return new ContentBlock11ViewHolder(view, fragment, enduserApi, contentCache, onXamoomContentFragmentInteractionListener);
   }
 
   @Override

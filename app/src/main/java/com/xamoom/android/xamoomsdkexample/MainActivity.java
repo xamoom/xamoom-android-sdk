@@ -91,9 +91,34 @@ public class MainActivity extends XamoomPushActivity
 
     setupEnduserApi();
 
-    getContentOption();
-    getContentLocationIdentifier();
+    //getContentOption();
 
+    Content content = new Content();
+    content.setId("1");
+    content.setTitle("Test");
+    ContentBlock block = new ContentBlock();
+    block.setBlockType(11);
+    block.setTitle("Liste");
+    block.setContentListPageSize(10);
+    ArrayList<String> tags = new ArrayList();
+    tags.add("tests");
+    block.setContentListTags(tags);
+    block.setContentListSortAsc(true);
+    ArrayList<ContentBlock> blocks = new ArrayList<>();
+    blocks.add(block);
+    content.setContentBlocks(blocks);
+
+    XamoomContentFragment xamoomFragment = XamoomContentFragment.newInstance(getResources().getString(R.string.youtube_key)); //create new instance
+    xamoomFragment.setEnduserApi(mEnduserApi);
+    xamoomFragment.setDisplayAllStoreLinks(true);
+    xamoomFragment.setContent(content, false, false);
+    xamoomFragment.setShowSpotMapContentLinks(true);
+    //xamoomFragment.setStyle(mStyle);
+    xamoomFragment.setBackgroundColor(Color.TRANSPARENT);
+    //xamoomFragment.getContentBlockAdapter().getDelegatesManager().addDelegate(0, new CustomContentBlock0Adapter());
+    getSupportFragmentManager().beginTransaction()
+        .replace(R.id.main_frame, xamoomFragment, "XamoomFragment")
+        .commit(); //replace with xamoomFragment
 
     // register custom notification factory
     registerNotificationFactory(new CustomNotification());

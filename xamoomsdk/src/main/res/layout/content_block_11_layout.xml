@@ -4,4 +4,23 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/content_list_title_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Title"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/content_list_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </android.support.v7.widget.RecyclerView>
+
+    <Button
+        android:id="@+id/content_list_load_more_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Load more"/>
+
 </LinearLayout>
