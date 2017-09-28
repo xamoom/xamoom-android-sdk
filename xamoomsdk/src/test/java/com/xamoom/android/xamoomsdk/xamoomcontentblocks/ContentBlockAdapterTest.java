@@ -88,6 +88,10 @@ public class ContentBlockAdapterTest {
     contentBlockHeader.setBlockType(-1);
     contentBlockHeader.setText("Content Title");
     contentBlockList.add(contentBlockHeader);
+    ContentBlock contentBlockLists = new ContentBlock();
+    contentBlockLists.setBlockType(11);
+    contentBlockLists.setText("Content Title");
+    contentBlockList.add(contentBlockLists);
   }
 
   @Test
@@ -102,8 +106,17 @@ public class ContentBlockAdapterTest {
   public void testGetItemViewType() {
     ContentBlockAdapter adapter = new ContentBlockAdapter(null, contentBlockList, false, null, null);
 
-    assertEquals(adapter.getItemViewType(0), 0);
-    assertEquals(adapter.getItemViewType(1), 1);
+    assertEquals(0, adapter.getItemViewType(0));
+    assertEquals(1, adapter.getItemViewType(1));
+    assertEquals(2, adapter.getItemViewType(2));
+    assertEquals(3, adapter.getItemViewType(3));
+    assertEquals(4, adapter.getItemViewType(4));
+    assertEquals(5, adapter.getItemViewType(5));
+    assertEquals(6, adapter.getItemViewType(6));
+    assertEquals(7, adapter.getItemViewType(7));
+    assertEquals(8, adapter.getItemViewType(8));
+    assertEquals(9, adapter.getItemViewType(9));
+    assertEquals(11, adapter.getItemViewType(11));
   }
 
   @Test
