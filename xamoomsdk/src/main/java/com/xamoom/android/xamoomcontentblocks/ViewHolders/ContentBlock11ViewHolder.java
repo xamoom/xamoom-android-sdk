@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.xamoom.android.xamoomcontentblocks.Adapters.ContentBlockAdapter;
@@ -45,7 +46,10 @@ public class ContentBlock11ViewHolder extends RecyclerView.ViewHolder  {
     mTitleTextView = (TextView) view.findViewById(R.id.content_list_title_text_view);
 
     mRecyclerView = (RecyclerView) view.findViewById(R.id.content_list_recycler_view);
-    mRecyclerView.setLayoutManager(new LinearLayoutManager(fragment.getContext()));
+
+    RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(fragment.getContext());
+    layoutManager.setAutoMeasureEnabled(true);
+    mRecyclerView.setLayoutManager(layoutManager);
 
     adapter = new ContentBlockAdapter(fragment, new ArrayList<ContentBlock>(),
         false, "", null);

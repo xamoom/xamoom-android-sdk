@@ -2,18 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="@dimen/contentblock_to_contentblock_margin">
 
     <TextView
         android:id="@+id/content_list_title_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Title"/>
+        android:textSize="@dimen/contentblock_title_size"
+        android:textColor="@color/black"
+        android:text="Title"
+        android:layout_marginStart="@dimen/standard_contentblock_padding"
+        android:layout_marginEnd="@dimen/standard_contentblock_padding"
+        android:layout_marginBottom="@dimen/contentblock_children_margin"
+        />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/content_list_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        >
 
     </android.support.v7.widget.RecyclerView>
 
@@ -21,6 +29,9 @@
         android:id="@+id/content_list_load_more_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Load more"/>
+        android:text="Load more"
+        android:layout_marginStart="@dimen/standard_contentblock_padding"
+        android:layout_marginEnd="@dimen/standard_contentblock_padding"
+        />
 
 </LinearLayout>
