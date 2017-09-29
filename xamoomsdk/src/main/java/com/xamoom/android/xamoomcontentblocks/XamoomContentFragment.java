@@ -185,8 +185,9 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
       return;
     }
 
-    mRecyclerView.setLayoutManager(
-        new LinearLayoutManager(this.getActivity().getApplicationContext()));
+    LinearLayoutManager layoutManager = new LinearLayoutManager(this.getActivity().getApplicationContext());
+    layoutManager.setAutoMeasureEnabled(true);
+    mRecyclerView.setLayoutManager(layoutManager);
     mRecyclerView.setAdapter(mContentBlockAdapter);
   }
 
