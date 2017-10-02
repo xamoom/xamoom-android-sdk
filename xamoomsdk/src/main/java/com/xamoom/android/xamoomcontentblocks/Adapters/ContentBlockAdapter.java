@@ -14,6 +14,7 @@ import android.support.v4.util.LruCache;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
+import com.xamoom.android.xamoomcontentblocks.ListManager;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock2ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
@@ -38,6 +39,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   private Style mStyle;
   private String mYoutubeApiKey;
   private EnduserApi mEnduserApi;
+  private ListManager mListManager;
   private boolean showContentLinks;
   private boolean offline;
 
@@ -95,8 +97,8 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   @Override
   public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     return mDelegatesManager.onCreateViewHolder(parent, viewType, mFragment, mEnduserApi, mYoutubeApiKey,
-        mBitmapCache, mContentCache, showContentLinks, mOnContentBlock3ViewHolderInteractionListener,
-        mOnXamoomContentFragmentInteractionListener);
+        mBitmapCache, mContentCache, showContentLinks, mListManager,
+        mOnContentBlock3ViewHolderInteractionListener, mOnXamoomContentFragmentInteractionListener);
   }
 
   @Override
@@ -157,6 +159,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
   public void setEnduserApi(EnduserApi enduserApi) {
     mEnduserApi = enduserApi;
+    mListManager = new ListManager(mEnduserApi);
   }
 
   public void setStyle(Style style) {

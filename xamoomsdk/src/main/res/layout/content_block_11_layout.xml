@@ -25,13 +25,35 @@
 
     </android.support.v7.widget.RecyclerView>
 
-    <Button
-        android:id="@+id/content_list_load_more_button"
+    <TextView
+        android:id="@+id/content_list_error_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Load more"
-        android:layout_marginStart="@dimen/standard_contentblock_padding"
-        android:layout_marginEnd="@dimen/standard_contentblock_padding"
-        />
+        android:textAlignment="center"
+        android:visibility="gone"
+        android:text="@string/content_list_error_loading_text"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ProgressBar
+            android:id="@+id/content_list_progress_bar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_centerInParent="true"/>
+
+        <Button
+            android:id="@+id/content_list_load_more_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/standard_contentblock_padding"
+            android:layout_marginEnd="@dimen/standard_contentblock_padding"
+            style="?android:attr/borderlessButtonStyle"
+            android:text="@string/content_list_load_more_button_text"
+            />
+
+    </RelativeLayout>
 
 </LinearLayout>

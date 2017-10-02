@@ -271,18 +271,18 @@ public class MainActivity extends XamoomPushActivity
             block.setContentListSortAsc(true);
 
             result.getContentBlocks().add(block);
-            result.getContentBlocks().add(block);
-            result.getContentBlocks().add(block);
-            result.getContentBlocks().add(block);
-            result.getContentBlocks().add(block);
-            result.getContentBlocks().add(block);
-            result.getContentBlocks().add(block);
-            result.getContentBlocks().add(block);
-            result.getContentBlocks().add(block);
-            result.getContentBlocks().add(block);
-            result.getContentBlocks().add(block);
-            result.getContentBlocks().add(block);
 
+            result.getContentBlocks().add(block);
+            result.getContentBlocks().add(block);
+            result.getContentBlocks().add(block);
+            result.getContentBlocks().add(block);
+            result.getContentBlocks().add(block);
+            result.getContentBlocks().add(block);
+            result.getContentBlocks().add(block);
+            result.getContentBlocks().add(block);
+            result.getContentBlocks().add(block);
+            result.getContentBlocks().add(block);
+            result.getContentBlocks().add(block);
 
             xamoomFragment.setContent(result, false, false);
             xamoomFragment.setShowSpotMapContentLinks(true);

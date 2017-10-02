@@ -14,6 +14,7 @@ import android.support.v4.util.LruCache;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
+import com.xamoom.android.xamoomcontentblocks.ListManager;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.EnduserApi;
@@ -45,7 +46,7 @@ public interface AdapterDelegate<T> {
    */
   @NonNull RecyclerView.ViewHolder onCreateViewHolder(
       ViewGroup parent, Fragment fragment, EnduserApi enduserApi, String youtubeApiKey,
-      LruCache bitmapCache, LruCache contentCache, boolean showContentLinks,
+      LruCache bitmapCache, LruCache contentCache, boolean showContentLinks, ListManager listManager,
       ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener
           onContentBlock3ViewHolderInteractionListener,
       XamoomContentFragment.OnXamoomContentFragmentInteractionListener
