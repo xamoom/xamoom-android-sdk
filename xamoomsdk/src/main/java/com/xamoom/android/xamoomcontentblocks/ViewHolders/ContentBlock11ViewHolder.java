@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.graphics.ColorUtils;
 import android.support.v4.util.LruCache;
+import android.support.v7.widget.ContentFrameLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
@@ -92,8 +93,10 @@ public class ContentBlock11ViewHolder extends RecyclerView.ViewHolder  {
     layoutManager.setAutoMeasureEnabled(true);
     mRecyclerView.setLayoutManager(layoutManager);
 
+    XamoomContentFragment contentFragment = (XamoomContentFragment) fragment;
+
     adapter = new ContentBlockAdapter(fragment, new ArrayList<ContentBlock>(),
-        false, "", null);
+        contentFragment.isShowSpotMapContentLinks(), contentFragment.getYoutubeApiKey(), contentFragment);
     adapter.setEnduserApi(enduserApi);
     adapter.setOnXamoomContentFragmentInteractionListener(onXamoomContentFragmentInteractionListener);
     mRecyclerView.setAdapter(adapter);
