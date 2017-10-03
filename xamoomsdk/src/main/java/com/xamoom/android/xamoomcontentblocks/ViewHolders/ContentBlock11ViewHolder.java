@@ -183,5 +183,6 @@ public class ContentBlock11ViewHolder extends RecyclerView.ViewHolder  {
 
   public void setStyle(Style style) {
     mStyle = style;
+    adapter.setStyle(style);
   }
 }
