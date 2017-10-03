@@ -123,7 +123,7 @@ public class ContentBlockAdapterTest {
   public void testGetItemCount() {
     ContentBlockAdapter adapter = new ContentBlockAdapter(null, contentBlockList, false, null, null);
 
-    assertEquals(adapter.getItemCount(), 11);
+    assertEquals(adapter.getItemCount(), 12);
   }
 
   @Test
