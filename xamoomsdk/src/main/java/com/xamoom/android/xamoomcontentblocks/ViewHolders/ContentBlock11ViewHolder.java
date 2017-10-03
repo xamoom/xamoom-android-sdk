@@ -107,6 +107,8 @@ public class ContentBlock11ViewHolder extends RecyclerView.ViewHolder  {
     mErrorTextView.setVisibility(View.GONE);
     mLoadMoreButton.setVisibility(View.GONE);
 
+    adapter.setOffline(offline);
+
     clearContentBlocks();
 
     // set title text or remove the layoutParams to have same margins as when using a title
