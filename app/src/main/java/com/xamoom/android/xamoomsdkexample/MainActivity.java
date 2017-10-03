@@ -79,6 +79,7 @@ public class MainActivity extends XamoomPushActivity
 
   private EnduserApi mEnduserApi;
   private Style mStyle;
+  private boolean mOffline;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -160,6 +161,7 @@ public class MainActivity extends XamoomPushActivity
       Fragment currentFragment = getSupportFragmentManager().findFragmentByTag("XamoomFragment");
       getSupportFragmentManager().beginTransaction().remove(currentFragment).commit();
     } else if (id == R.id.action_open) {
+      mOffline = true;
       getContentOption();
     }
 
@@ -251,7 +253,8 @@ public class MainActivity extends XamoomPushActivity
   }
 
   public void getContentOption() {
-    EnduserApi.getSharedInstance().getContent("7cf2c58e6d374ce3888c32eb80be53b5", EnumSet.of(ContentFlags.PREVIEW, ContentFlags.PRIVATE),
+    mEnduserApi.setOffline(mOffline);
+    mEnduserApi.getContent("7cf2c58e6d374ce3888c32eb80be53b5", EnumSet.of(ContentFlags.PREVIEW, ContentFlags.PRIVATE),
         new APICallback<Content, List<Error>>() {
           @Override
           public void finished(Content result) {
@@ -259,7 +262,6 @@ public class MainActivity extends XamoomPushActivity
             XamoomContentFragment xamoomFragment = XamoomContentFragment.newInstance(getResources().getString(R.string.youtube_key)); //create new instance
             xamoomFragment.setEnduserApi(mEnduserApi);
             xamoomFragment.setDisplayAllStoreLinks(true);
-
 
             ContentBlock block = new ContentBlock();
             block.setBlockType(11);
@@ -284,7 +286,7 @@ public class MainActivity extends XamoomPushActivity
             result.getContentBlocks().add(block);
             result.getContentBlocks().add(block);
 
-            xamoomFragment.setContent(result, false, false);
+            xamoomFragment.setContent(result, false, mOffline);
             xamoomFragment.setShowSpotMapContentLinks(true);
             //xamoomFragment.setStyle(mStyle);
             xamoomFragment.setBackgroundColor(Color.TRANSPARENT);
