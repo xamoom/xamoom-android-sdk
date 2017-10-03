@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import com.xamoom.android.xamoomcontentblocks.Adapters.AdapterDelegate;
 import com.xamoom.android.xamoomcontentblocks.Adapters.AdapterDelegatesManager;
 import com.xamoom.android.xamoomcontentblocks.Adapters.ContentBlock0Adapter;
+import com.xamoom.android.xamoomcontentblocks.ListManager;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock0ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
@@ -63,7 +64,11 @@ public class AdapterDelegatesManagerTest {
 
       @NonNull
       @Override
-      public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, Fragment fragment, EnduserApi enduserApi, String youtubeApiKey, LruCache bitmapCache, LruCache contentCache, boolean showContentLinks, ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener onContentBlock3ViewHolderInteractionListener, XamoomContentFragment.OnXamoomContentFragmentInteractionListener onXamoomContentFragmentInteractionListener) {
+      public RecyclerView.ViewHolder onCreateViewHolder(
+          ViewGroup parent, Fragment fragment, EnduserApi enduserApi, String youtubeApiKey,
+          LruCache bitmapCache, LruCache contentCache, boolean showContentLinks, ListManager listManager,
+          ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener onContentBlock3ViewHolderInteractionListener,
+          XamoomContentFragment.OnXamoomContentFragmentInteractionListener onXamoomContentFragmentInteractionListener) {
         return null;
       }
 
@@ -89,11 +94,11 @@ public class AdapterDelegatesManagerTest {
 
     when(mockAdapter.onCreateViewHolder(any(ViewGroup.class), any(Fragment.class),
         any(EnduserApi.class), anyString(), any(LruCache.class),
-        any(LruCache.class), eq(false), any(ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener.class),
+        any(LruCache.class), eq(false), any(ListManager.class), any(ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener.class),
         any(XamoomContentFragment.OnXamoomContentFragmentInteractionListener.class)))
         .thenReturn(mockViewHolder);
 
-    RecyclerView.ViewHolder vh = manager.onCreateViewHolder(null, 0, null, null, "", null, null, false, null, null);
+    RecyclerView.ViewHolder vh = manager.onCreateViewHolder(null, 0, null, null, "", null, null, false, null, null, null);
 
 
     assertNotNull(vh);
@@ -109,11 +114,11 @@ public class AdapterDelegatesManagerTest {
 
     when(mockAdapter.onCreateViewHolder(any(ViewGroup.class), any(Fragment.class),
         any(EnduserApi.class), anyString(), any(LruCache.class),
-        any(LruCache.class), eq(false), any(ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener.class),
+        any(LruCache.class), eq(false), any(ListManager.class), any(ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener.class),
         any(XamoomContentFragment.OnXamoomContentFragmentInteractionListener.class)))
         .thenReturn(mockViewHolder);
 
-    RecyclerView.ViewHolder vh = manager.onCreateViewHolder(null, 0, null, null, "", null, null, false, null, null);
+    RecyclerView.ViewHolder vh = manager.onCreateViewHolder(null, 0, null, null, "", null, null, false, null, null, null);
 
     assertNotNull(vh);
     assertEquals(vh, mockViewHolder);
@@ -123,7 +128,7 @@ public class AdapterDelegatesManagerTest {
   public void testOnCreateException() {
     AdapterDelegatesManager<List<ContentBlock>> manager= new AdapterDelegatesManager();
 
-    RecyclerView.ViewHolder vh = manager.onCreateViewHolder(null, 0, null, null, "", null, null, false, null, null);
+    RecyclerView.ViewHolder vh = manager.onCreateViewHolder(null, 0, null, null, "", null, null, false, null, null, null);
   }
 
   @Test
