@@ -57,6 +57,14 @@ public class ListManager {
   }
 
 
+  public boolean hasMore(int position) {
+    ContentListItem contentListItem = mContentListItemHashMap.get(position);
+    if (contentListItem != null) {
+      return contentListItem.getHasMore();
+    }
+    return false;
+  }
+
   public ArrayList<Content> getContents(int position) {
     ContentListItem contentListItem = mContentListItemHashMap.get(position);
     if (contentListItem != null) {

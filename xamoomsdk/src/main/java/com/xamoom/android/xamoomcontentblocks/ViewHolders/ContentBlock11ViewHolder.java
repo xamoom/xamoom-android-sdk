@@ -123,6 +123,13 @@ public class ContentBlock11ViewHolder extends RecyclerView.ViewHolder  {
     ArrayList<Content> contents = mListManager.getContents(getAdapterPosition());
     if (contents != null) {
       hideLoading();
+
+      if (!mListManager.hasMore(getAdapterPosition())) {
+        mLoadMoreButton.setVisibility(View.GONE);
+      } else {
+        mLoadMoreButton.setVisibility(View.VISIBLE);
+      }
+      
       displayContents(contents);
     } else {
       showLoading();
@@ -136,6 +143,11 @@ public class ContentBlock11ViewHolder extends RecyclerView.ViewHolder  {
           @Override
           public void finished(List<Content> result, String cursor, boolean hasMore) {
             hideLoading();
+
+            if (!hasMore) {
+              mLoadMoreButton.setVisibility(View.GONE);
+            }
+
             displayContents((ArrayList<Content>) result);
           }
 
