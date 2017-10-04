@@ -264,6 +264,7 @@ public class MainActivity extends XamoomPushActivity
             xamoomFragment.setDisplayAllStoreLinks(true);
 
             ContentBlock block = new ContentBlock();
+            block.setId("38945u98243zut2435hkj234h5k2j34h5klj");
             block.setBlockType(11);
             block.setTitle("Liste");
             block.setContentListPageSize(3);

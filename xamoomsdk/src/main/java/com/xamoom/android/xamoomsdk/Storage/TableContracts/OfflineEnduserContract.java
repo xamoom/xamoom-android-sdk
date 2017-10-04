@@ -13,7 +13,7 @@ import android.provider.BaseColumns;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 
 public class OfflineEnduserContract {
-  public static final int DATABASE_VERSION = 2;
+  public static final int DATABASE_VERSION = 3;
   public static final String DATABASE_NAME = "OfflineEnduser.db";
 
   public static final String TEXT_TYPE = " TEXT";
@@ -290,6 +290,9 @@ public class OfflineEnduserContract {
     public static final String COLUMN_NAME_SHOW_CONTENT_ON_SPOTMAP = "showContentOnSpotmap";
     public static final String COLUMN_NAME_ALT_TEXT = "altText";
     public static final String COLUMN_NAME_COPYRIGHT = "copyright";
+    public static final String COLUMN_NAME_CONTENT_LIST_TAGS = "contentListTags";
+    public static final String COLUMN_NAME_CONTENT_LIST_PAGE_SIZE = "contentListPageSize";
+    public static final String COLUMN_NAME_CONTENT_LIST_SORT_ASC = "contentListSortAsc";
 
     public static final String CREATE_TABLE =
         "CREATE TABLE " + ContentBlockEntry.TABLE_NAME + " (" +
@@ -313,6 +316,9 @@ public class OfflineEnduserContract {
             ContentBlockEntry.COLUMN_NAME_SHOW_CONTENT_ON_SPOTMAP + INTEGER_TYPE + COMMA_SEP +
             ContentBlockEntry.COLUMN_NAME_ALT_TEXT + TEXT_TYPE + COMMA_SEP +
             ContentBlockEntry.COLUMN_NAME_COPYRIGHT + TEXT_TYPE +
+            ContentBlockEntry.COLUMN_NAME_CONTENT_LIST_TAGS + TEXT_TYPE + COMMA_SEP +
+            ContentBlockEntry.COLUMN_NAME_CONTENT_LIST_PAGE_SIZE + INTEGER_TYPE + COMMA_SEP +
+            ContentBlockEntry.COLUMN_NAME_CONTENT_LIST_SORT_ASC + INTEGER_TYPE +
             " )";
 
     public static final String[] PROJECTION = {
@@ -334,7 +340,10 @@ public class OfflineEnduserContract {
         ContentBlockEntry.COLUMN_NAME_VIDEO_URL,
         ContentBlockEntry.COLUMN_NAME_SHOW_CONTENT_ON_SPOTMAP,
         ContentBlockEntry.COLUMN_NAME_ALT_TEXT,
-        ContentBlockEntry.COLUMN_NAME_COPYRIGHT
+        ContentBlockEntry.COLUMN_NAME_COPYRIGHT,
+        ContentBlockEntry.COLUMN_NAME_CONTENT_LIST_TAGS,
+        ContentBlockEntry.COLUMN_NAME_CONTENT_LIST_PAGE_SIZE,
+        ContentBlockEntry.COLUMN_NAME_CONTENT_LIST_SORT_ASC
     };
   }
 }
