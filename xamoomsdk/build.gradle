@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
-def versionString = "3.5.3"
+def versionString = "3.6.0"
 
 version = versionString
 group = "com.xamoom.android"

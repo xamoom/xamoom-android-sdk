@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.xamoom.android.xamoomcontentblocks.ListManager;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock0ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentHeaderViewHolder;
@@ -40,7 +41,7 @@ public class ContentBlockHeaderAdapter implements AdapterDelegate<List<ContentBl
   @Override
   public RecyclerView.ViewHolder onCreateViewHolder(
       ViewGroup parent, Fragment fragment, EnduserApi enduserApi, String youtubeApiKey,
-      LruCache bitmapCache, LruCache contentCache, boolean showContentLinks,
+      LruCache bitmapCache, LruCache contentCache, boolean showContentLinks, ListManager listManager,
       ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener onContentBlock3ViewHolderInteractionListener,
       XamoomContentFragment.OnXamoomContentFragmentInteractionListener onXamoomContentFragmentInteractionListener) {
     View view = LayoutInflater.from(parent.getContext())

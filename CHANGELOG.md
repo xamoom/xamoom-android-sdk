@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.6.0](https://github.com/xamoom/xamoom-ios-sdk/compare/3.5.3...3.6.0) - 13.10.2017
+
+- Added new content block: content list
+
 ## [3.5.3](https://github.com/xamoom/xamoom-android-sdk/compare/v3.5.2..v3.5.3)
 
 * Added x-datetime condition to all getByLocationIdentifier calls

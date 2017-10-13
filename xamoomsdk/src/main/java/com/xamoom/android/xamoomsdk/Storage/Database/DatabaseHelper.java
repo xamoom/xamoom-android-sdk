@@ -44,6 +44,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             " ADD " +
             OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_COPYRIGHT
             + OfflineEnduserContract.TEXT_TYPE);
+      case 2:
+        // add content list columns
+        sqLiteDatabase.execSQL("ALTER TABLE " +
+            OfflineEnduserContract.ContentBlockEntry.TABLE_NAME +
+            " ADD " +
+            OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_CONTENT_LIST_TAGS + OfflineEnduserContract.TEXT_TYPE);
+        sqLiteDatabase.execSQL("ALTER TABLE " +
+            OfflineEnduserContract.ContentBlockEntry.TABLE_NAME +
+            " ADD " +
+            OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_CONTENT_LIST_PAGE_SIZE + OfflineEnduserContract.INTEGER_TYPE);
+        sqLiteDatabase.execSQL("ALTER TABLE " +
+            OfflineEnduserContract.ContentBlockEntry.TABLE_NAME +
+            " ADD " +
+            OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_CONTENT_LIST_SORT_ASC + OfflineEnduserContract.INTEGER_TYPE);
     }
   }
 }

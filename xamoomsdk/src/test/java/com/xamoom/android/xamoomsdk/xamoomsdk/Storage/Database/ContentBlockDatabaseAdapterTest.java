@@ -142,6 +142,18 @@ public class ContentBlockDatabaseAdapterTest {
         .getColumnIndex(OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_ALT_TEXT))
         .toReturn(18);
     Mockito.stub(mMockedCursor.getString(18)).toReturn("alt");
+    Mockito.stub(mMockedCursor
+        .getColumnIndex(OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_CONTENT_LIST_TAGS))
+        .toReturn(19);
+    Mockito.stub(mMockedCursor.getString(19)).toReturn("tag1,tag2");
+    Mockito.stub(mMockedCursor
+        .getColumnIndex(OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_CONTENT_LIST_SORT_ASC))
+        .toReturn(20);
+    Mockito.stub(mMockedCursor.getInt(20)).toReturn(1);
+    Mockito.stub(mMockedCursor
+        .getColumnIndex(OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_CONTENT_LIST_PAGE_SIZE))
+        .toReturn(21);
+    Mockito.stub(mMockedCursor.getInt(21)).toReturn(10);
 
     ArrayList<String> checkTags = new ArrayList<>();
     checkTags.add("tag1");
@@ -168,6 +180,9 @@ public class ContentBlockDatabaseAdapterTest {
     assertTrue(savedBlock.isShowContentOnSpotmap());
     assertEquals("alt", savedBlock.getAltText());
     assertEquals("copyright", savedBlock.getCopyright());
+    assertEquals(checkTags, savedBlock.getContentListTags());
+    assertTrue(true);
+    assertTrue(10 == savedBlock.getContentListPageSize());
   }
 
   @Test
