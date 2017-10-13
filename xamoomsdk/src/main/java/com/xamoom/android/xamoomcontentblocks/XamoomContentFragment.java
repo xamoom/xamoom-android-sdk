@@ -114,12 +114,13 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
     if (savedInstanceState != null) {
       mYoutubeApiKey = savedInstanceState.getString(YOUTUBE_API_KEY);
       mContentBlockAdapter.setYoutubeApiKey(mYoutubeApiKey);
+      mContentBlockAdapter.setContentBlocks(mContentBlocks);
+      mContentBlockAdapter.setEnduserApi(mEnduserApi);
+
       showSpotMapContentLinks = savedInstanceState.getBoolean(SHOW_SPOT_MAP_CONTENT_LINKS);
       mContent = savedInstanceState.getParcelable(CONTENT);
       mContentBlocks = savedInstanceState.getParcelableArrayList(CONTENT_BLOCKS);
-      mContentBlockAdapter.setContentBlocks(mContentBlocks);
       mEnduserApi = savedInstanceState.getParcelable(ENDUSER_API);
-      mContentBlockAdapter.setEnduserApi(mEnduserApi);
     }
   }
 
@@ -185,8 +186,9 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
       return;
     }
 
-    mRecyclerView.setLayoutManager(
-        new LinearLayoutManager(this.getActivity().getApplicationContext()));
+    LinearLayoutManager layoutManager = new LinearLayoutManager(this.getActivity().getApplicationContext());
+    layoutManager.setAutoMeasureEnabled(true);
+    mRecyclerView.setLayoutManager(layoutManager);
     mRecyclerView.setAdapter(mContentBlockAdapter);
   }
 
@@ -440,6 +442,12 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   public EnduserApi getEnduserApi() {
     return mEnduserApi;
   }
+
+  public String getYoutubeApiKey() {
+    return mYoutubeApiKey;
+  }
+
+
 
   public boolean isShowAllBlocksWhenOffline() {
     return showAllBlocksWhenOffline;

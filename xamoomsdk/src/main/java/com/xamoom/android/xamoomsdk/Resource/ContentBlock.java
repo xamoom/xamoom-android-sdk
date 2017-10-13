@@ -52,8 +52,15 @@ public class ContentBlock extends Resource implements Parcelable {
   private String altText;
   @SerializedName("copyright")
   private String copyright;
+  @SerializedName("content-list-tag")
+  private List<String> contentListTags;
+  @SerializedName("content-list-sort-asc")
+  private boolean contentListSortAsc;
+  @SerializedName("content-list-page-size")
+  private int contentListPageSize;
 
   public ContentBlock() {
+    contentListSortAsc = true;
   }
 
   protected ContentBlock(Parcel in) {
@@ -75,6 +82,9 @@ public class ContentBlock extends Resource implements Parcelable {
     showContentOnSpotmap = in.readByte() != 0;
     altText = in.readString();
     copyright = in.readString();
+    contentListTags = in.createStringArrayList();
+    contentListSortAsc = in.readByte() != 0;
+    contentListPageSize = in.readInt();
   }
 
   public static final Creator<ContentBlock> CREATOR = new Creator<ContentBlock>() {
@@ -225,6 +235,30 @@ public class ContentBlock extends Resource implements Parcelable {
     this.copyright = copyright;
   }
 
+  public List<String> getContentListTags() {
+    return contentListTags;
+  }
+
+  public void setContentListTags(List<String> contentListTags) {
+    this.contentListTags = contentListTags;
+  }
+
+  public Boolean getContentListSortAsc() {
+    return contentListSortAsc;
+  }
+
+  public void setContentListSortAsc(Boolean contentListSortAsc) {
+    this.contentListSortAsc = contentListSortAsc;
+  }
+
+  public Integer getContentListPageSize() {
+    return contentListPageSize;
+  }
+
+  public void setContentListPageSize(Integer contentListPageSize) {
+    this.contentListPageSize = contentListPageSize;
+  }
+
   @Override
   public int describeContents() {
     return 0;
@@ -250,5 +284,8 @@ public class ContentBlock extends Resource implements Parcelable {
     dest.writeByte((byte) (showContentOnSpotmap ? 1 : 0));
     dest.writeString(altText);
     dest.writeString(copyright);
+    dest.writeStringList(contentListTags);
+    dest.writeByte((byte) (contentListSortAsc ? 1 : 0));
+    dest.writeInt(contentListPageSize);
   }
 }

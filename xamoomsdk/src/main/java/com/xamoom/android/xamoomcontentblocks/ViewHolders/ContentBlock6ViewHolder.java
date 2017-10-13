@@ -104,9 +104,16 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
     mCall = mEnduserApi.getContent(contentId, EnumSet.of(ContentFlags.PREVIEW),new APICallback<Content, List<at.rags.morpheus.Error>>() {
       @Override
       public void finished(Content result) {
+        if (result == null) {
+          return;
+        }
+
         mProgressBar.setVisibility(View.GONE);
         mContent = result;
-        mContentCache.put(contentId, result);
+
+        if (contentId != null) {
+          mContentCache.put(contentId, result);
+        }
         displayContent(result, offline);
       }
 

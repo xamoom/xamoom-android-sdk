@@ -1,11 +1,3 @@
-/*
-* Copyright (c) 2017 xamoom GmbH <apps@xamoom.com>
-*
-* Licensed under the MIT License (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at the root of this project.
-*/
-
 package com.xamoom.android.xamoomsdk.xamoomcontentblocks.Adapters;
 
 import android.app.Activity;
@@ -16,8 +8,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.xamoom.android.xamoomcontentblocks.Adapters.ContentBlock7Adapter;
-import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock7ViewHolder;
+import com.xamoom.android.xamoomcontentblocks.Adapters.ContentBlock11Adapter;
+import com.xamoom.android.xamoomcontentblocks.Adapters.ContentBlock6Adapter;
+import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock11ViewHolder;
+import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock6ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.BuildConfig;
 import com.xamoom.android.xamoomsdk.Helper.ContentFragmentActivity;
@@ -28,7 +22,6 @@ import com.xamoom.android.xamoomsdk.Resource.Style;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -44,7 +37,7 @@ import static org.mockito.Matchers.eq;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21, manifest = "AndroidManifest.xml")
-public class ContentBlock7AdapterTest {
+public class ContentBlock11AdapterTest {
 
   Activity activity;
 
@@ -69,30 +62,30 @@ public class ContentBlock7AdapterTest {
 
   @Test
   public void testConstructor() {
-    assertNotNull(new ContentBlock7Adapter());
+    assertNotNull(new ContentBlock6Adapter());
   }
 
   @Test
   public void testIsForViewType() {
     List<ContentBlock> contentBlocks = new ArrayList();
     ContentBlock contentBlock = new ContentBlock();
-    contentBlock.setBlockType(7);
+    contentBlock.setBlockType(11);
     contentBlocks.add(contentBlock);
 
-    ContentBlock7Adapter ContentBlock7Adapter = new ContentBlock7Adapter();
+    ContentBlock11Adapter contentBlock11Adapter = new ContentBlock11Adapter();
 
-    assertTrue(ContentBlock7Adapter.isForViewType(contentBlocks, 0));
+    assertTrue(contentBlock11Adapter.isForViewType(contentBlocks, 0));
   }
 
   @Test
   public void testOnCreateViewHolder() {
     List<ContentBlock> contentBlocks = new ArrayList();
     ContentBlock contentBlock = new ContentBlock();
-    contentBlock.setBlockType(7);
+    contentBlock.setBlockType(11);
     contentBlocks.add(contentBlock);
 
-    ContentBlock7Adapter adapter = new ContentBlock7Adapter();
-    ViewGroup recycleView = (ViewGroup) View.inflate(activity, R.layout.content_block_7_layout, null);
+    ContentBlock11Adapter adapter = new ContentBlock11Adapter();
+    ViewGroup recycleView = (ViewGroup) View.inflate(activity, R.layout.content_block_11_layout, null);
 
     XamoomContentFragment fragment = XamoomContentFragment.newInstance("");
     addFragmentToActivity(fragment);
@@ -100,23 +93,22 @@ public class ContentBlock7AdapterTest {
     RecyclerView.ViewHolder vh = adapter.onCreateViewHolder(recycleView, fragment, null, null, null, null, false, null, null, null);
 
     assertNotNull(vh);
-    assertEquals(vh.getClass(), ContentBlock7ViewHolder.class);
+    assertEquals(vh.getClass(), ContentBlock11ViewHolder.class);
   }
 
   @Test
   public void testOnBindViewHolder() {
     List<ContentBlock> contentBlocks = new ArrayList();
     ContentBlock contentBlock = new ContentBlock();
-    contentBlock.setBlockType(7);
+    contentBlock.setBlockType(11);
     contentBlocks.add(contentBlock);
     Style style = new Style();
     style.setForegroundFontColor("#000000");
-    ContentBlock7ViewHolder mockViewholder = Mockito.mock(ContentBlock7ViewHolder.class);
-    ContentBlock7Adapter adapter = new ContentBlock7Adapter();
+    ContentBlock11ViewHolder mockViewholder = Mockito.mock(ContentBlock11ViewHolder.class);
+    ContentBlock11Adapter adapter = new ContentBlock11Adapter();
 
     adapter.onBindViewHolder(contentBlocks, 0, mockViewholder, style, false);
 
     Mockito.verify(mockViewholder).setupContentBlock(eq(contentBlock), eq(false));
-    Mockito.verify(mockViewholder).setStyle(eq(style));
   }
 }

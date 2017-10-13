@@ -122,6 +122,14 @@ public class ContentBlockDatabaseAdapter extends DatabaseAdapter {
     values.put(OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_COPYRIGHT,
         contentBlock.getCopyright());
     values.put(OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_CONTENT_RELATION, parentRow);
+    if (contentBlock.getContentListTags() != null) {
+      values.put(OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_CONTENT_LIST_TAGS,
+          TextUtils.join(",", contentBlock.getContentListTags()));
+    }
+    values.put(OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_CONTENT_LIST_SORT_ASC,
+        contentBlock.getContentListSortAsc());
+    values.put(OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_CONTENT_LIST_PAGE_SIZE,
+        contentBlock.getContentListPageSize());
 
     long row = getPrimaryKey(contentBlock.getId());
     if (row != -1) {
@@ -223,6 +231,16 @@ public class ContentBlockDatabaseAdapter extends DatabaseAdapter {
       contentBlock.setCopyright(cursor.getString(cursor
           .getColumnIndex(OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_COPYRIGHT)));
       contentBlocks.add(contentBlock);
+      index = cursor
+          .getColumnIndex(OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_CONTENT_LIST_TAGS);
+      tags = cursor.getString(index);
+      if (tags != null) {
+        contentBlock.setContentListTags(Arrays.asList(tags.split(",")));
+      }
+      contentBlock.setContentListSortAsc((cursor.getInt(cursor
+          .getColumnIndex(OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_CONTENT_LIST_SORT_ASC)) == 1));
+      contentBlock.setContentListPageSize((cursor.getInt(cursor
+          .getColumnIndex(OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_CONTENT_LIST_PAGE_SIZE))));
     }
 
     return contentBlocks;

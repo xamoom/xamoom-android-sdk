@@ -89,7 +89,7 @@ public class ContentBlock1AdapterTest {
 
     RecyclerView.ViewHolder vh = adapter.onCreateViewHolder(recycleView,
         mXamoomContentFragment, null, null, null,
-        null, false, null, null);
+        null, false, null, null, null);
 
     assertNotNull(vh);
     assertEquals(vh.getClass(), ContentBlock1ViewHolder.class);

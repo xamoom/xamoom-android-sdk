@@ -141,11 +141,12 @@ public class OfflineEnduserApiHelper {
     if (list.size() >= intCursor + pageSize) {
       pagedList.addAll(list.subList(intCursor, intCursor + pageSize));
     } else {
-      pagedList.addAll(list);
+      pagedList.addAll(list.subList(intCursor, list.size()));
     }
 
+    boolean hasMore = list.size() > intCursor + pageSize;
     PagedResult<E> pagedResult = new PagedResult<>(pagedList, String.valueOf(intCursor + pageSize),
-        (list.size() > intCursor+pageSize));
+        hasMore);
 
     return pagedResult;
   }
