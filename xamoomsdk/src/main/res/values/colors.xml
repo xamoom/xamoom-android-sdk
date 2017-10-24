@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="default_linkblock_background_color">#d1d1d1</color>
+    <color name="phone_linkblock_background_color">#3ed78b</color>
     <color name="amazon_linkblock_background_color">#ff9900</color>
     <color name="facebook_linkblock_background_color">#3b5998</color>
     <color name="twitter_linkblock_background_color">#55acee</color>
