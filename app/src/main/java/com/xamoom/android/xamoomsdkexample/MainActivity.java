@@ -92,17 +92,16 @@ public class MainActivity extends XamoomPushActivity
 
     setupEnduserApi();
 
-    getContentOption();
-
     // register custom notification factory
     registerNotificationFactory(new CustomNotification());
 
-    /*
+
     getContent();
-    getContentOption();
+    /*getContentOption();
     getContentLocationIdentifier();
     */
     //getContentWithConditions();
+    //getContentsWithTags();
     /*
     getContentsLocation();
     searchContent();
@@ -110,11 +109,11 @@ public class MainActivity extends XamoomPushActivity
     getSpotsWithLocation();
     getSpotsWithTags();
     searchSpots();
-    getSystem();
-    getMenu();
-    getRelatedSystemSetting();
-    getStyle();
     */
+    getSystem();
+    //getMenu();
+    getSystemSetting();
+    //getStyle();
   }
 
   @Override
@@ -218,10 +217,11 @@ public class MainActivity extends XamoomPushActivity
   }
 
   public void getContent() {
-    mEnduserApi.getContent("7cf2c58e6d374ce3888c32eb80be53b5", new APICallback<Content, List<at.rags.morpheus.Error>>() {
+    mEnduserApi.getContent("5f6a24e9ec5e4090890b7911c791a0c7", new APICallback<Content, List<at.rags.morpheus.Error>>() {
       @Override
       public void finished(Content result) {Log.v(TAG, "getContent: " + result);
-
+        Log.v(TAG, "Test: " + result);
+        /*
         OfflineStorageManager manager =
             OfflineStorageManager.getInstance(getApplicationContext());
         try {
@@ -241,8 +241,7 @@ public class MainActivity extends XamoomPushActivity
         }
 
         boolean deleted = manager.deleteContent(result.getId());
-
-        //getSystem();
+*/
       }
 
       @Override
@@ -374,6 +373,22 @@ public class MainActivity extends XamoomPushActivity
     });
   }
 
+  private void getContentsWithTags() {
+    ArrayList<String> tags = new ArrayList<>();
+    tags.add("tests");
+    mEnduserApi.getContentsByTags(tags, 10, null, null, new APIListCallback<List<Content>, List<Error>>() {
+      @Override
+      public void finished(List<Content> result, String cursor, boolean hasMore) {
+        Log.v(TAG, "byTags: " + result);
+      }
+
+      @Override
+      public void error(List<Error> error) {
+
+      }
+    });
+  }
+
   private void searchContent() {
     mEnduserApi.searchContentsByName("do not touch", 10, null, null, new APIListCallback<List<Content>, List<Error>>() {
       @Override
@@ -470,12 +485,12 @@ public class MainActivity extends XamoomPushActivity
       public void finished(System result) {
         Log.v(TAG, "getSystem: " + result.getId());
 
+        /*
         SystemDatabaseAdapter systemDatabaseAdapter = SystemDatabaseAdapter.getInstance(getApplicationContext());
         systemDatabaseAdapter.insertOrUpdateSystem(result);
         System savedSystem = systemDatabaseAdapter.getSystem(result.getId());
         Log.v(TAG, "Saved system: " + savedSystem);
-
-        getSpotsWithTags();
+        */
       }
 
       @Override

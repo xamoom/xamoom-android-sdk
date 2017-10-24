@@ -156,10 +156,8 @@ public class UrlUtil {
     }
 
     if (condition instanceof Date) {
-      DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault());
-      df.setTimeZone(TimeZone.getTimeZone("UTC"));
       Date date = (Date) condition;
-      String dateString = df.format(date);
+      String dateString = DateUtil.format(date);
       return dateString;
     }
 

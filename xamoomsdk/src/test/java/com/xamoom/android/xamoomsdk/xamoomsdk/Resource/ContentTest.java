@@ -14,6 +14,7 @@ import com.xamoom.android.xamoomsdk.BuildConfig;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Resource.KeyValueObject;
+import com.xamoom.android.xamoomsdk.Resource.Spot;
 import com.xamoom.android.xamoomsdk.Resource.System;
 
 import org.junit.Before;
@@ -22,8 +23,14 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
@@ -35,7 +42,7 @@ public class ContentTest {
   private Content mContent;
 
   @Before
-  public void setup() {
+  public void setup() throws ParseException {
     mContent = new Content();
     mContent.setId("id");
     mContent.setTitle("Title");
@@ -56,6 +63,17 @@ public class ContentTest {
     System system = new System();
     system.setName("SystemName");
     mContent.setSystem(system);
+    mContent.setSharingUrl("www.google.com");
+    Spot spot = new Spot();
+    spot.setId("1234");
+
+    DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault());
+    df.setTimeZone(TimeZone.getTimeZone("UTC"));
+    Date date = df.parse("2017-07-10T11:18:49Z");
+
+    mContent.setRelatedSpot(spot);
+    mContent.setFromDate(date);
+    mContent.setToDate(date);
   }
 
   @Test
@@ -81,6 +99,10 @@ public class ContentTest {
     assertEquals(mContent.getPublicImageUrl(), createdFromParcel.getPublicImageUrl());
     assertEquals(mContent.getContentBlocks().get(0).getTitle(), createdFromParcel.getContentBlocks().get(0).getTitle());
     assertEquals(mContent.getSystem().getName(), createdFromParcel.getSystem().getName());
+    assertEquals(mContent.getSharingUrl(), createdFromParcel.getSharingUrl());
+    assertEquals(mContent.getRelatedSpot().getId(), createdFromParcel.getRelatedSpot().getId());
+    assertEquals(mContent.getFromDate(), createdFromParcel.getFromDate());
+    assertEquals(mContent.getToDate(), createdFromParcel.getToDate());
   }
 
   @Test

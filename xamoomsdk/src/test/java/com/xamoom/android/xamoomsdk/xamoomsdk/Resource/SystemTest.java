@@ -46,6 +46,7 @@ public class SystemTest {
     Menu menu = new Menu();
     menu.setId("id");
     mSystem.setMenu(menu);
+    mSystem.setWebClientUrl("www.xamoom.com");
   }
 
   @Test
@@ -68,6 +69,7 @@ public class SystemTest {
     assertEquals(mSystem.getStyle().getId(), createdFromParcel.getStyle().getId());
     assertEquals(mSystem.getSystemSetting().getId(), createdFromParcel.getSystemSetting().getId());
     assertEquals(mSystem.getMenu().getId(), createdFromParcel.getMenu().getId());
+    assertEquals(mSystem.getWebClientUrl(), createdFromParcel.getWebClientUrl());
   }
 
 }

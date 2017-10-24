@@ -12,6 +12,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
+import com.xamoom.android.xamoomsdk.Utils.DateUtil;
 
 import java.security.Key;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Date;
 
 import at.rags.morpheus.Annotations.Relationship;
 import at.rags.morpheus.Resource;
@@ -41,6 +43,14 @@ public class Content extends Resource implements Parcelable {
   private System system;
   @SerializedName("custom-meta")
   private ArrayList<KeyValueObject> customMeta;
+  @SerializedName("social-sharing-url")
+  private String sharingUrl;
+  @Relationship("related-spot")
+  private Spot relatedSpot;
+  @SerializedName("meta-datetime-from")
+  private String fromDate;
+  @SerializedName("meta-datetime-to")
+  private String toDate;
 
   public Content() {
   }
@@ -55,6 +65,10 @@ public class Content extends Resource implements Parcelable {
     publicImageUrl = in.readString();
     contentBlocks = in.createTypedArrayList(ContentBlock.CREATOR);
     system = in.readParcelable(System.class.getClassLoader());
+    sharingUrl = in.readString();
+    relatedSpot = in.readParcelable(Spot.class.getClassLoader());
+    fromDate = in.readString();
+    toDate = in.readString();
   }
 
   public static final Creator<Content> CREATOR = new Creator<Content>() {
@@ -68,6 +82,23 @@ public class Content extends Resource implements Parcelable {
       return new Content[size];
     }
   };
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeString(this.getId());
+    dest.writeString(title);
+    dest.writeString(description);
+    dest.writeString(language);
+    dest.writeInt(category);
+    dest.writeStringList(tags);
+    dest.writeString(publicImageUrl);
+    dest.writeTypedList(contentBlocks);
+    dest.writeParcelable(system, flags);
+    dest.writeString(sharingUrl);
+    dest.writeParcelable(relatedSpot, flags);
+    dest.writeString(fromDate);
+    dest.writeString(toDate);
+  }
 
   public String getTitle() {
     return title;
@@ -161,22 +192,40 @@ public class Content extends Resource implements Parcelable {
     this.customMeta = customMeta;
   }
 
+  public String getSharingUrl() {
+    return sharingUrl;
+  }
+
+  public void setSharingUrl(String sharingUrl) {
+    this.sharingUrl = sharingUrl;
+  }
+
+  public Spot getRelatedSpot() {
+    return relatedSpot;
+  }
+
+  public void setRelatedSpot(Spot relatedSpot) {
+    this.relatedSpot = relatedSpot;
+  }
+
+  public Date getFromDate() {
+    return DateUtil.parse(fromDate);
+  }
+
+  public void setFromDate(Date fromDate) {
+    this.fromDate = DateUtil.format(fromDate);
+  }
+
+  public Date getToDate() {
+    return DateUtil.parse(toDate);
+  }
+
+  public void setToDate(Date toDate) {
+    this.toDate = DateUtil.format(toDate);
+  }
+
   @Override
   public int describeContents() {
     return 0;
   }
-
-  @Override
-  public void writeToParcel(Parcel dest, int flags) {
-    dest.writeString(this.getId());
-    dest.writeString(title);
-    dest.writeString(description);
-    dest.writeString(language);
-    dest.writeInt(category);
-    dest.writeStringList(tags);
-    dest.writeString(publicImageUrl);
-    dest.writeTypedList(contentBlocks);
-    dest.writeParcelable(system, flags);
-  }
-
 }
