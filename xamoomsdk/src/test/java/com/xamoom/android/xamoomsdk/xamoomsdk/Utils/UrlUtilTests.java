@@ -12,6 +12,8 @@ import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
 import com.xamoom.android.xamoomsdk.Enums.ContentSortFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotSortFlags;
+import com.xamoom.android.xamoomsdk.Filter;
+import com.xamoom.android.xamoomsdk.Utils.DateUtil;
 import com.xamoom.android.xamoomsdk.Utils.UrlUtil;
 
 import junit.framework.Assert;
@@ -21,6 +23,7 @@ import org.junit.Test;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -66,10 +69,11 @@ public class UrlUtilTests {
   public void testAddContentSortingParameter() throws Exception {
     Map<String, String> checkParams = new HashMap<>();
     checkParams.put("lang", "en");
-    checkParams.put("sort", "name,-name");
+    checkParams.put("sort", "name,-name,meta-datetime-from,-meta-datetime-from,meta-datetime-to,-meta-datetime-to");
 
     Map<String, String> params = UrlUtil.addContentSortingParameter(UrlUtil.getUrlParameter("en"),
-        EnumSet.of(ContentSortFlags.NAME, ContentSortFlags.NAME_DESC));
+        EnumSet.of(ContentSortFlags.NAME, ContentSortFlags.NAME_DESC, ContentSortFlags.FROM_DATE.FROM_DATE,
+            ContentSortFlags.FROM_DATE_DESC, ContentSortFlags.TO_DATE, ContentSortFlags.TO_DATE_DESC));
 
     assertEquals(params, checkParams);
   }
@@ -168,6 +172,75 @@ public class UrlUtilTests {
     conditions.put("date", date);
 
     Map<String, String> params = UrlUtil.addConditionsToUrl(new HashMap<String, String>(), conditions);
+
+    assertEquals(checkParams, params);
+  }
+
+  @Test
+  public void testAddNameFilter() {
+    Map<String, String> checkParams = new HashMap<>(1);
+    checkParams.put("filter[name]", "name");
+
+    Map<String, String> params = UrlUtil.addNameFilter(new HashMap<String, String>(), "name");
+
+    assertEquals(checkParams, params);
+  }
+
+  @Test
+  public void testAddDateFilter() {
+    Map<String, String> checkParams = new HashMap<>(2);
+    checkParams.put("filter[meta-datetime-from]", "2017-07-10T11:18:49Z");
+    checkParams.put("filter[meta-datetime-to]", "2017-07-10T11:18:50Z");
+
+    Map<String, String> params = UrlUtil.addDateFilter(new HashMap<String, String>(),
+        DateUtil.parse("2017-07-10T11:18:49Z"), DateUtil.parse("2017-07-10T11:18:50Z"));
+
+    assertEquals(checkParams, params);
+  }
+
+  @Test
+  public void testAddTagsFilter() {
+    Map<String, String> checkParams = new HashMap<>(1);
+    checkParams.put("filter[tags]", "['tag1','tag2']");
+
+    ArrayList<String> tags = new ArrayList<>();
+    tags.add("tag1");
+    tags.add("tag2");
+
+    Map<String, String> params = UrlUtil.addTagsFilter(new HashMap<String, String>(), tags);
+
+    assertEquals(checkParams, params);
+  }
+
+  @Test
+  public void testAddRelatedSpotIdFilter() {
+    Map<String, String> checkParams = new HashMap<>(1);
+    checkParams.put("filter[related-spot]", "1234");
+
+    Map<String, String> params = UrlUtil.addRelatedSpotIdFilter(new HashMap<String, String>(), "1234");
+
+    assertEquals(checkParams, params);
+  }
+
+  @Test
+  public void testAddFilters() {
+    Map<String, String> checkParams = new HashMap<>(1);
+    checkParams.put("filter[name]", "name");
+    checkParams.put("filter[tags]", "['tag1','tag2']");
+    checkParams.put("filter[meta-datetime-from]", "2017-07-10T11:18:49Z");
+    checkParams.put("filter[meta-datetime-to]", "2017-07-10T11:18:50Z");
+    checkParams.put("filter[related-spot]", "1234");
+
+    Filter filter = new Filter.FilterBuilder()
+        .name("name")
+        .addTag("tag1")
+        .addTag("tag2")
+        .fromDate(DateUtil.parse("2017-07-10T11:18:49Z"))
+        .toDate(DateUtil.parse("2017-07-10T11:18:50Z"))
+        .relatedSpotId("1234")
+        .build();
+
+    Map<String, String> params = UrlUtil.addFilters(new HashMap<String, String>(), filter);
 
     assertEquals(checkParams, params);
   }

@@ -9,11 +9,13 @@
 package com.xamoom.android.xamoomsdk.Utils;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
 import com.xamoom.android.xamoomsdk.Enums.ContentSortFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotSortFlags;
+import com.xamoom.android.xamoomsdk.Filter;
 
 import java.util.Date;
 import java.text.DateFormat;
@@ -65,6 +67,22 @@ public class UrlUtil {
 
     if (contentSortFlags.contains(ContentSortFlags.NAME_DESC)) {
       sortParams.add("-name");
+    }
+
+    if (contentSortFlags.contains(ContentSortFlags.FROM_DATE)) {
+      sortParams.add("meta-datetime-from");
+    }
+
+    if (contentSortFlags.contains(ContentSortFlags.FROM_DATE_DESC)) {
+      sortParams.add("-meta-datetime-from");
+    }
+
+    if (contentSortFlags.contains(ContentSortFlags.TO_DATE)) {
+      sortParams.add("meta-datetime-to");
+    }
+
+    if (contentSortFlags.contains(ContentSortFlags.TO_DATE_DESC)) {
+      sortParams.add("-meta-datetime-to");
     }
 
     params.put("sort", JsonListUtil.joinList(sortParams, ","));
@@ -147,6 +165,55 @@ public class UrlUtil {
         params.put(paramKey, value);
       }
     }
+    return params;
+  }
+
+  public static Map<String, String> addTagsFilter(@NonNull Map<String, String> params,
+                                                  @NonNull ArrayList<String> tags) {
+    params.put("filter[tags]", JsonListUtil.listToJsonArray(tags, ","));
+    return params;
+  }
+
+  public static Map<String, String> addNameFilter(@NonNull Map<String, String> params,
+                                                 @NonNull String name) {
+    params.put("filter[name]", name);
+    return params;
+  }
+
+  public static Map<String, String> addDateFilter(@NonNull Map<String, String> params, @Nullable Date fromDate, @Nullable Date toDate) {
+    if (fromDate != null) {
+      params.put("filter[meta-datetime-from]", DateUtil.format(fromDate));
+    }
+
+    if (toDate != null) {
+      params.put("filter[meta-datetime-to]", DateUtil.format(toDate));
+    }
+
+    return params;
+  }
+
+  public static Map<String, String> addRelatedSpotIdFilter(@NonNull Map<String, String> params,
+                                                           @NonNull String spotId) {
+    params.put("filter[related-spot]", spotId);
+    return params;
+  }
+
+  public static Map<String, String> addFilters(@NonNull Map<String, String> params,
+                                               @NonNull Filter filter) {
+    if (filter.getName() != null) {
+      params = addNameFilter(params, filter.getName());
+    }
+
+    if (filter.getTags() != null) {
+      params = addTagsFilter(params, filter.getTags());
+    }
+
+    params = addDateFilter(params, filter.getFromDate(), filter.getToDate());
+
+    if (filter.getRelatedSpotId() != null) {
+      params = addRelatedSpotIdFilter(params, filter.getRelatedSpotId());
+    }
+
     return params;
   }
 

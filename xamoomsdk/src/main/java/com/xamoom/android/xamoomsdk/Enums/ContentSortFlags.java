@@ -29,12 +29,20 @@ public enum ContentSortFlags {
    * Sort descending by name.
    */
   NAME_DESC,
-
+  /**
+   * Sort ascending by from date.
+   */
   FROM_DATE,
-
+  /**
+   * Sort descending by from date.
+   */
   FROM_DATE_DESC,
-
+  /**
+   * Sort ascending by to date.
+   */
   TO_DATE,
-
+  /**
+   * Sort descending by to date.
+   */
   TO_DATE_DESC
 }
