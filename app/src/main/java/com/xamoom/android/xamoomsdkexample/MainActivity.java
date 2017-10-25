@@ -104,9 +104,9 @@ public class MainActivity extends XamoomPushActivity
     //getContentLocationIdentifier();
     //getContentWithConditions();
     //getContentsWithTags();
-    getContentByDates();
+    //getContentByDates();
     //getContentsLocation();
-    //searchContent();
+    searchContent();
     //getSpot();
     //getSpotsWithLocation();
     //getSpotsWithTags();
@@ -418,10 +418,23 @@ public class MainActivity extends XamoomPushActivity
   }
 
   private void searchContent() {
-    mEnduserApi.searchContentsByName("do not touch", 10, null, null, new APIListCallback<List<Content>, List<Error>>() {
+    mEnduserApi.setOffline(true);
+
+    Filter filter = new Filter.FilterBuilder()
+        .addTag("Wörthersee")
+        .build();
+
+    mEnduserApi.searchContentsByName("Test", 10, null, null, filter, new APIListCallback<List<Content>, List<Error>>() {
       @Override
       public void finished(List<Content> result, String cursor, boolean hasMore) {
         Log.v(TAG, "searchContent: " + result.get(0));
+
+        ContentDatabaseAdapter databaseAdapter = ContentDatabaseAdapter.getInstance(getApplicationContext());
+        for (Content content : result) {
+          databaseAdapter.insertOrUpdateContent(content, false, 0);
+          Content savedContent = databaseAdapter.getContent(content.getId());
+          Log.v(TAG, "Saved Content: " + savedContent);
+        }
       }
 
       @Override
