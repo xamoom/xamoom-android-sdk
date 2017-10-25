@@ -47,6 +47,7 @@ import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
 import com.xamoom.android.xamoomsdk.Filter;
 import com.xamoom.android.xamoomsdk.Resource.*;
 import com.xamoom.android.xamoomsdk.Resource.System;
+import com.xamoom.android.xamoomsdk.Storage.Database.ContentDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.MenuDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.SpotDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.SystemDatabaseAdapter;
@@ -400,6 +401,13 @@ public class MainActivity extends XamoomPushActivity
       @Override
       public void finished(List<Content> result, String cursor, boolean hasMore) {
         Log.v(TAG, "byDates: " + result);
+
+        ContentDatabaseAdapter databaseAdapter = ContentDatabaseAdapter.getInstance(getApplicationContext());
+        for (Content content : result) {
+          databaseAdapter.insertOrUpdateContent(content, false, 0);
+          Content savedContent = databaseAdapter.getContent(content.getId());
+          Log.v(TAG, "Saved Content: " + savedContent);
+        }
       }
 
       @Override

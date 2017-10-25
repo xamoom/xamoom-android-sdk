@@ -21,11 +21,11 @@ import com.xamoom.android.xamoomsdk.Storage.TableContracts.OfflineEnduserContrac
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -33,6 +33,7 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
   private static ContentDatabaseAdapter mSharedInstance;
   private ContentBlockDatabaseAdapter mContentBlockDatabaseAdapter;
   private SystemDatabaseAdapter mSystemDatabaseAdapter;
+  private SpotDatabaseAdapter mSpotDatabaseAdapter;
 
   public static ContentDatabaseAdapter getInstance(Context context) {
     if (mSharedInstance == null) {
@@ -129,6 +130,10 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
     values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_LANGUAGE, content.getLanguage());
     values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_CATEGORY, content.getCategory());
     values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_PUBLIC_IMAGE_URL, content.getPublicImageUrl());
+    values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_SOCIAL_SHARING_URL, content.getSharingUrl());
+    values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_FROM_DATE, content.getFromDate().getTime());
+    values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_TO_DATE, content.getToDate().getTime());
+
     if (content.getTags() != null) {
       values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_TAGS,
           TextUtils.join(",", content.getTags()));
@@ -149,6 +154,13 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
       if (systemRow != -1) {
         values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_SYSTEM_RELATION,
             systemRow);
+      }
+    }
+
+    if (content.getRelatedSpot() != null) {
+      long relatedSpotRow = getSpotDatabaseDapter().insertOrUpdateSpot(content.getRelatedSpot());
+      if (relatedSpotRow != -1) {
+        values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_RELATED_SPOT, relatedSpotRow);
       }
     }
 
@@ -245,6 +257,13 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
           OfflineEnduserContract.ContentEntry.COLUMN_NAME_LANGUAGE)));
       content.setCategory(cursor.getInt(cursor.getColumnIndex(
           OfflineEnduserContract.ContentEntry.COLUMN_NAME_CATEGORY)));
+      content.setSharingUrl(cursor.getString(cursor.getColumnIndex(
+          OfflineEnduserContract.ContentEntry.COLUMN_NAME_SOCIAL_SHARING_URL)));
+      content.setFromDate(new Date(cursor.getLong(
+          cursor.getColumnIndex(OfflineEnduserContract.ContentEntry.COLUMN_NAME_FROM_DATE))));
+
+      content.setToDate(new Date(cursor.getLong(
+          cursor.getColumnIndex(OfflineEnduserContract.ContentEntry.COLUMN_NAME_TO_DATE))));
       String tags = cursor.getString(cursor
           .getColumnIndex(OfflineEnduserContract.ContentEntry.COLUMN_NAME_TAGS));
 
@@ -276,6 +295,8 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
           .getLong(cursor.getColumnIndex(OfflineEnduserContract.ContentEntry._ID))));
       content.setSystem(getSystemDatabaseAdapter().getSystem(cursor.getLong(
           cursor.getColumnIndex(OfflineEnduserContract.ContentEntry.COLUMN_NAME_SYSTEM_RELATION))));
+      content.setRelatedSpot(getSpotDatabaseDapter().getSpot(cursor.getLong(
+          cursor.getColumnIndex(OfflineEnduserContract.ContentEntry.COLUMN_NAME_RELATED_SPOT))));
       contents.add(content);
     }
 
@@ -312,4 +333,13 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
   public void setContentBlockDatabaseAdapter(ContentBlockDatabaseAdapter contentBlockDatabaseAdapter) {
     mContentBlockDatabaseAdapter = contentBlockDatabaseAdapter;
   }
+
+  private SpotDatabaseAdapter getSpotDatabaseDapter() {
+    if (mSpotDatabaseAdapter == null) {
+      mSpotDatabaseAdapter = SpotDatabaseAdapter.getInstance(mContext);
+    }
+
+    return mSpotDatabaseAdapter;
+  }
+
 }

@@ -16,6 +16,7 @@ import android.util.Log;
 import com.xamoom.android.xamoomsdk.Storage.TableContracts.OfflineEnduserContract;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
+  private static final String TAG = DatabaseHelper.class.getSimpleName();
 
   public DatabaseHelper(Context context) {
     super(context, OfflineEnduserContract.DATABASE_NAME, null,
@@ -58,6 +59,39 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             OfflineEnduserContract.ContentBlockEntry.TABLE_NAME +
             " ADD " +
             OfflineEnduserContract.ContentBlockEntry.COLUMN_NAME_CONTENT_LIST_SORT_ASC + OfflineEnduserContract.INTEGER_TYPE);
+      case 3:
+        // add content eventpackage & social sharing
+        sqLiteDatabase.execSQL("ALTER TABLE " +
+            OfflineEnduserContract.ContentEntry.TABLE_NAME +
+            " ADD " +
+            OfflineEnduserContract.ContentEntry.COLUMN_NAME_SOCIAL_SHARING_URL + OfflineEnduserContract.TEXT_TYPE);
+        sqLiteDatabase.execSQL("ALTER TABLE " +
+            OfflineEnduserContract.ContentEntry.TABLE_NAME +
+            " ADD " +
+            OfflineEnduserContract.ContentEntry.COLUMN_NAME_FROM_DATE + OfflineEnduserContract.INTEGER_TYPE);
+        sqLiteDatabase.execSQL("ALTER TABLE " +
+            OfflineEnduserContract.ContentEntry.TABLE_NAME +
+            " ADD " +
+            OfflineEnduserContract.ContentEntry.COLUMN_NAME_TO_DATE + OfflineEnduserContract.INTEGER_TYPE);
+        sqLiteDatabase.execSQL("ALTER TABLE " +
+            OfflineEnduserContract.ContentEntry.TABLE_NAME +
+            " ADD " +
+            OfflineEnduserContract.ContentEntry.COLUMN_NAME_RELATED_SPOT + OfflineEnduserContract.INTEGER_TYPE);
+
+        // add system settings social sharing
+        sqLiteDatabase.execSQL("ALTER TABLE " +
+            OfflineEnduserContract.SettingEntry.TABLE_NAME +
+            " ADD " +
+            OfflineEnduserContract.SettingEntry.COLUMN_NAME_SOCIAL_SHARING_ENABLED + OfflineEnduserContract.INTEGER_TYPE);
+
+        // add system webClientUrl
+        sqLiteDatabase.execSQL("ALTER TABLE " +
+            OfflineEnduserContract.SystemEntry.TABLE_NAME +
+            " ADD " +
+            OfflineEnduserContract.SystemEntry.COLUMN_NAME_WEBCLIENT_URL + OfflineEnduserContract.TEXT_TYPE);
     }
+
+    Log.i(TAG, "Updated "+ OfflineEnduserContract.DATABASE_NAME + " database version "+ oldVersion +
+        " to version " + newVersion);
   }
 }

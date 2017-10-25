@@ -61,6 +61,8 @@ public class SettingDatabaseAdapter extends DatabaseAdapter {
         setting.getItunesAppId());
     values.put(OfflineEnduserContract.SettingEntry.COLUMN_NAME_PLAYSTORE_ID,
         setting.getGooglePlayAppId());
+    values.put(OfflineEnduserContract.SettingEntry.COLUMN_NAME_SOCIAL_SHARING_ENABLED,
+        setting.getSocialSharingEnabled());
     if (systemRow != -1) {
       values.put(OfflineEnduserContract.SettingEntry.COLUMN_NAME_SYSTEM_RELATION,
           systemRow);
@@ -129,6 +131,8 @@ public class SettingDatabaseAdapter extends DatabaseAdapter {
           OfflineEnduserContract.SettingEntry.COLUMN_NAME_APPSTORE_ID)));
       setting.setGooglePlayAppId(cursor.getString(
           cursor.getColumnIndex(OfflineEnduserContract.SettingEntry.COLUMN_NAME_PLAYSTORE_ID)));
+      setting.setSocialSharingEnabled(cursor.getInt(cursor.getColumnIndex(
+          OfflineEnduserContract.SettingEntry.COLUMN_NAME_SOCIAL_SHARING_ENABLED)) == 1);
       return setting;
     }
     return null;
