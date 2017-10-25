@@ -102,7 +102,8 @@ public class MainActivity extends XamoomPushActivity
     //getContentOption();
     //getContentLocationIdentifier();
     //getContentWithConditions();
-    getContentsWithTags();
+    //getContentsWithTags();
+    getContentByDates();
     //getContentsLocation();
     //searchContent();
     //getSpot();
@@ -384,6 +385,21 @@ public class MainActivity extends XamoomPushActivity
       @Override
       public void finished(List<Content> result, String cursor, boolean hasMore) {
         Log.v(TAG, "byTags: " + result);
+      }
+
+      @Override
+      public void error(List<Error> error) {
+
+      }
+    });
+  }
+
+  private void getContentByDates() {
+    mEnduserApi.getContentByDates(DateUtil.parse("2017-10-15T07:00:00Z"), null, "5755996320301056|5700735861784576", 10, null, null,
+        null, new APIListCallback<List<Content>, List<Error>>() {
+      @Override
+      public void finished(List<Content> result, String cursor, boolean hasMore) {
+        Log.v(TAG, "byDates: " + result);
       }
 
       @Override

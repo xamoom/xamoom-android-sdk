@@ -434,6 +434,57 @@ public class EnduserApi implements Parcelable {
   }
 
   /**
+   * Get list of contents with dates and relatedSpotId.
+   *
+   * @param fromDate Filter events from this date
+   * @param toDate Filter events to this date
+   * @param relatedSpotId RelatedSpot id to filter
+   * @param pageSize PageSize for returned contents (max 100)
+   * @param cursor Cursor for paging
+   * @param sortFlags {@link ContentSortFlags} to sort results
+   * @param filter Optional filters to add on top of filtering for name
+   * @param callback {@link APIListCallback}
+   * @return Used call object
+   */
+  public Call getContentByDates(@Nullable Date fromDate, @Nullable Date toDate,
+                                @Nullable String relatedSpotId, int pageSize,
+                           @Nullable String cursor, EnumSet<ContentSortFlags> sortFlags,
+                           @Nullable Filter filter,
+                           APIListCallback<List<Content>, List<Error>> callback) {
+
+    if (filter != null) {
+      filter = new Filter.FilterBuilder()
+          .name(filter.getName())
+          .tags(filter.getTags())
+          .fromDate(fromDate)
+          .toDate(toDate)
+          .relatedSpotId(relatedSpotId)
+          .build();
+    } else {
+      filter = new Filter.FilterBuilder()
+          .fromDate(fromDate)
+          .toDate(toDate)
+          .relatedSpotId(relatedSpotId)
+          .build();
+    }
+
+    if (offline) {
+      // TODO: implement offline
+      return null;
+    }
+
+    Map<String, String> params = UrlUtil.addContentSortingParameter(UrlUtil.getUrlParameter(language),
+        sortFlags);
+    params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
+    params = UrlUtil.addFilters(params, filter);
+
+    Call<ResponseBody> call = enduserApiInterface.getContents(params);
+    callHandler.enqueListCall(call, callback);
+    return call;
+  }
+
+
+  /**
    * Get spot with specific id.
    *
    * @param spotId Id of the spot
