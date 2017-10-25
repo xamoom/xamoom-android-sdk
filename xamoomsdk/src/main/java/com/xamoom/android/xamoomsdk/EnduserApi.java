@@ -418,8 +418,7 @@ public class EnduserApi implements Parcelable {
     }
 
     if (offline) {
-      offlineEnduserApi.searchContentsByName(name, pageSize, cursor, sortFlags,
-          callback);
+      offlineEnduserApi.searchContentsByName(name, pageSize, cursor, sortFlags, filter, callback);
       return null;
     }
 

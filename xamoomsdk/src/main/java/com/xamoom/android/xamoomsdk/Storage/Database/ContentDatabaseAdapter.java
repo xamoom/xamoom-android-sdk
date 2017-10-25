@@ -14,6 +14,7 @@ import android.database.Cursor;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.xamoom.android.xamoomsdk.Filter;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Storage.TableContracts.OfflineEnduserContract;
@@ -79,6 +80,27 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
     ArrayList<Content> contents = cursorToContents(cursor);
 
     close();
+    return contents;
+  }
+
+  public ArrayList<Content> getContents(Filter filter) {
+    String selection = "";
+    ArrayList<String> arguments = new ArrayList<>();
+
+    if (filter.getName() != null) {
+      selection += "LOWER(" + OfflineEnduserContract.ContentEntry.COLUMN_NAME_TITLE + ") LIKE LOWER(?)";
+      arguments.add("%"+filter.getName()+"%");
+    }
+
+    String[] selectionArgs = arguments.toArray(new String[0]);
+
+    open();
+    Cursor cursor = queryContent(selection, selectionArgs);
+
+    ArrayList<Content> contents = cursorToContents(cursor);
+
+    close();
+
     return contents;
   }
 

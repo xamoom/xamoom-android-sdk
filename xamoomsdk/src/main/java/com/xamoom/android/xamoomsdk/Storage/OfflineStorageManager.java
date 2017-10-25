@@ -12,12 +12,10 @@ import android.content.Context;
 import android.location.Location;
 import android.support.annotation.Nullable;
 
-import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.APIListCallback;
 import com.xamoom.android.xamoomsdk.Enums.ContentSortFlags;
-import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotSortFlags;
-import com.xamoom.android.xamoomsdk.Offline.OfflineEnduserApi;
+import com.xamoom.android.xamoomsdk.Filter;
 import com.xamoom.android.xamoomsdk.Offline.OfflineEnduserApiHelper;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
@@ -40,6 +38,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -376,17 +375,40 @@ public class OfflineStorageManager {
 
   /**
    * Search content by name.
-   *
-   * @param name String to search for.
+   *  @param name String to search for.
    * @param pageSize PageSize for paging. Limit 100.
    * @param cursor Cursor when paging. Null when first call.
    * @param sortFlags Sort query result.
+   * @param filter
    * @param callback Callback when finished.
    */
   public void searchContentsByName(String name, int pageSize, @Nullable String cursor,
                                    EnumSet<ContentSortFlags> sortFlags,
-                                   APIListCallback<List<Content>, List<Error>> callback) {
-    ArrayList<Content> contents = mContentDatabaseAdapter.getContents(name);
+                                   Filter filter, APIListCallback<List<Content>, List<Error>> callback) {
+    ArrayList<Content> contents = mContentDatabaseAdapter.getContents(filter);
+
+    if (filter != null && filter.getTags() != null) {
+      contents = OfflineEnduserApiHelper.getContentsWithTags(filter.getTags(), contents);
+    }
+
+    sortContents(contents, sortFlags);
+
+    OfflineEnduserApiHelper.PagedResult<Content> contentPagedResult =
+        OfflineEnduserApiHelper.pageResults(contents, pageSize, cursor);
+
+    if (callback != null) {
+      callback.finished(contentPagedResult.getObjects(), contentPagedResult.getCursor(),
+          contentPagedResult.hasMore());
+    }
+  }
+
+  public void getContentByDate(@Nullable Date fromDate, @Nullable Date toDate,
+                               @Nullable String relatedSpotId, int pageSize,
+                               @Nullable String cursor, EnumSet<ContentSortFlags> sortFlags,
+                               @Nullable Filter filter,
+                               APIListCallback<List<Content>, List<Error>> callback) {
+
+    ArrayList<Content> contents = mContentDatabaseAdapter.getContents(filter);
 
     sortContents(contents, sortFlags);
 
