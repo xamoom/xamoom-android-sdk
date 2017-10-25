@@ -209,6 +209,9 @@ public class Content extends Resource implements Parcelable {
   }
 
   public Date getFromDate() {
+    if (fromDate == null) {
+      return null;
+    }
     return DateUtil.parse(fromDate);
   }
 
@@ -217,6 +220,9 @@ public class Content extends Resource implements Parcelable {
   }
 
   public Date getToDate() {
+    if (fromDate == null) {
+      return null;
+    }
     return DateUtil.parse(toDate);
   }
 

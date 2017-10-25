@@ -153,8 +153,13 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
     values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_CATEGORY, content.getCategory());
     values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_PUBLIC_IMAGE_URL, content.getPublicImageUrl());
     values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_SOCIAL_SHARING_URL, content.getSharingUrl());
-    values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_FROM_DATE, content.getFromDate().getTime());
-    values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_TO_DATE, content.getToDate().getTime());
+
+    if (content.getFromDate() != null) {
+      values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_FROM_DATE, content.getFromDate().getTime());
+    }
+    if (content.getToDate() != null) {
+      values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_TO_DATE, content.getToDate().getTime());
+    }
 
     if (content.getTags() != null) {
       values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_TAGS,
