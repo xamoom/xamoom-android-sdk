@@ -103,10 +103,10 @@ public class MainActivity extends XamoomPushActivity
     //getContentOption();
     //getContentLocationIdentifier();
     //getContentWithConditions();
-    //getContentsWithTags();
+    getContentsWithTags();
     //getContentByDates();
     //getContentsLocation();
-    searchContent();
+    //searchContent();
     //getSpot();
     //getSpotsWithLocation();
     //getSpotsWithTags();
@@ -382,7 +382,9 @@ public class MainActivity extends XamoomPushActivity
         .fromDate(DateUtil.parse("2017-10-15T07:00:00Z"))
         .build();
 
-    mEnduserApi.getContentsByTags(tags, 10, null, null, filter, new APIListCallback<List<Content>, List<Error>>() {
+    mEnduserApi.setOffline(true);
+    mEnduserApi.getContentsByTags(tags, 10, null, null, filter,
+        new APIListCallback<List<Content>, List<Error>>() {
       @Override
       public void finished(List<Content> result, String cursor, boolean hasMore) {
         Log.v(TAG, "byTags: " + result);
@@ -422,6 +424,9 @@ public class MainActivity extends XamoomPushActivity
 
     Filter filter = new Filter.FilterBuilder()
         .addTag("Wörthersee")
+        .fromDate(DateUtil.parse("2017-10-18T12:00:00Z"))
+        .toDate(DateUtil.parse("2017-10-20T17:00:00Z"))
+        .relatedSpotId("5755996320301056|5700735861784576")
         .build();
 
     mEnduserApi.searchContentsByName("Test", 10, null, null, filter, new APIListCallback<List<Content>, List<Error>>() {

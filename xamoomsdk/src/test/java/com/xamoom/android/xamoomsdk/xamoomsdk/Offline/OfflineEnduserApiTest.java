@@ -14,6 +14,7 @@ import android.location.Location;
 import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.APIListCallback;
 import com.xamoom.android.xamoomsdk.BuildConfig;
+import com.xamoom.android.xamoomsdk.Filter;
 import com.xamoom.android.xamoomsdk.Offline.OfflineEnduserApi;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.Menu;
@@ -27,6 +28,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
@@ -147,7 +149,7 @@ public class OfflineEnduserApiTest {
 
   @Test
   public void testGetContentsByTags() {
-    mOfflineEnduserApi.getContentsByTags(null, 1, null, null, new APIListCallback<List<Content>, List<Error>>() {
+    mOfflineEnduserApi.getContentsByTags(null, 1, null, null, null, new APIListCallback<List<Content>, List<Error>>() {
       @Override
       public void finished(List<Content> result, String cursor, boolean hasMore) {
         Assert.assertNotNull(result);
@@ -159,13 +161,14 @@ public class OfflineEnduserApiTest {
       }
     });
 
-    Mockito.verify(mMockedOfflineStorageManager).getContentByTags(any(List.class), anyInt(),
+    Mockito.verify(mMockedOfflineStorageManager).getContents(any(Filter.class), anyInt(),
         anyString(), any(EnumSet.class), any (APIListCallback.class));
   }
 
   @Test
   public void testSearchContentsByName() {
-    mOfflineEnduserApi.searchContentsByName("test", 1, null, null, new APIListCallback<List<Content>, List<Error>>() {
+    mOfflineEnduserApi.searchContentsByName("test", 1, null, null, null,
+        new APIListCallback<List<Content>, List<Error>>() {
       @Override
       public void finished(List<Content> result, String cursor, boolean hasMore) {
         Assert.assertNotNull(result);
@@ -177,7 +180,7 @@ public class OfflineEnduserApiTest {
       }
     });
 
-    Mockito.verify(mMockedOfflineStorageManager).searchContentsByName(eq("test"), anyInt(), anyString(),
+    Mockito.verify(mMockedOfflineStorageManager).getContents(any(Filter.class), anyInt(), anyString(),
         any(EnumSet.class), (APIListCallback<List<Content>, List<Error>>) any(APICallback.class));
   }
 

@@ -11,6 +11,7 @@ package com.xamoom.android.xamoomsdk.Offline;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.location.Location;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.xamoom.android.xamoomsdk.APICallback;
@@ -27,6 +28,7 @@ import com.xamoom.android.xamoomsdk.Resource.System;
 import com.xamoom.android.xamoomsdk.Resource.SystemSetting;
 import com.xamoom.android.xamoomsdk.Storage.OfflineStorageManager;
 
+import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -70,14 +72,20 @@ public class OfflineEnduserApi {
 
   public void getContentsByTags(List<String> tags, int pageSize, @Nullable String cursor,
                                 EnumSet<ContentSortFlags> sortFlags,
-                                APIListCallback<List<Content>, List<Error>> callback) {
-    mOfflineStorageManager.getContentByTags(tags, pageSize, cursor, sortFlags, callback);
+                                Filter filter, APIListCallback<List<Content>, List<Error>> callback) {
+    mOfflineStorageManager.getContents(filter, pageSize, cursor, sortFlags, callback);
   }
 
   public void searchContentsByName(String name, int pageSize, @Nullable String cursor,
                                    EnumSet<ContentSortFlags> sortFlags, Filter filter,
                                    APIListCallback<List<Content>, List<Error>> callback) {
-    mOfflineStorageManager.searchContentsByName(name, pageSize, cursor, sortFlags, filter, callback);
+    mOfflineStorageManager.getContents(filter, pageSize, cursor, sortFlags, callback);
+  }
+
+  public void getContents(@NonNull Filter filter, int pageSize, @Nullable String cursor,
+                          EnumSet<ContentSortFlags> sortFlags,
+                          APIListCallback<List<Content>, List<Error>> callback) {
+    mOfflineStorageManager.getContents(filter, pageSize, cursor, sortFlags, callback);
   }
 
   public void getSpot(String spotId, APICallback<Spot, List<Error>> callback) {

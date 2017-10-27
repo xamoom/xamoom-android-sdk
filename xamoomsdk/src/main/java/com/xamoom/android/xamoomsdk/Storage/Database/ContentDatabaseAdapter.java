@@ -83,6 +83,10 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
     return contents;
   }
 
+  /*
+   * Create query for filters.
+   * All combined with "AND".
+   */
   public ArrayList<Content> getContents(Filter filter) {
     String selection = "";
     ArrayList<String> arguments = new ArrayList<>();
@@ -90,6 +94,26 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
     if (filter.getName() != null) {
       selection += "LOWER(" + OfflineEnduserContract.ContentEntry.COLUMN_NAME_TITLE + ") LIKE LOWER(?)";
       arguments.add("%"+filter.getName()+"%");
+    }
+
+    if (filter.getFromDate() != null) {
+      selection = addAnd(selection);
+      selection += OfflineEnduserContract.ContentEntry.COLUMN_NAME_FROM_DATE + " > ?";
+      arguments.add(String.valueOf(filter.getFromDate().getTime()));
+    }
+
+    if (filter.getToDate() != null) {
+      selection = addAnd(selection);
+      selection += OfflineEnduserContract.ContentEntry.COLUMN_NAME_TO_DATE + " < ?";
+      arguments.add(String.valueOf(filter.getToDate().getTime()));
+    }
+
+    if (filter.getRelatedSpotId() != null) {
+      selection = addAnd(selection);
+      selection += OfflineEnduserContract.ContentEntry.COLUMN_NAME_RELATED_SPOT + " = ?";
+
+      long spotRow = getSpotDatabaseDapter().getPrimaryKey(filter.getRelatedSpotId());
+      arguments.add(String.valueOf(spotRow));
     }
 
     String[] selectionArgs = arguments.toArray(new String[0]);
@@ -102,6 +126,13 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
     close();
 
     return contents;
+  }
+
+  private String addAnd(String selection) {
+    if (selection.length() > 0) {
+      selection += " AND ";
+    }
+    return selection;
   }
 
   public ArrayList<Content> getContents(String name) {

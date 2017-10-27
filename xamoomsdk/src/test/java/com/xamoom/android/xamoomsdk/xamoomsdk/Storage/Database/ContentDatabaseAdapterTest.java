@@ -14,6 +14,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.xamoom.android.xamoomcontentblocks.Adapters.ContentBlockAdapter;
 import com.xamoom.android.xamoomsdk.BuildConfig;
+import com.xamoom.android.xamoomsdk.Filter;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Resource.Style;
@@ -43,6 +44,7 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import static junit.framework.Assert.assertTrue;
@@ -298,6 +300,31 @@ public class ContentDatabaseAdapterTest {
 
     Mockito.verify(mMockedDatabase).query(anyString(), any(String[].class),
         eq(OfflineEnduserContract.ContentEntry.COLUMN_NAME_PUBLIC_IMAGE_URL + " = ?"),
+        any(String[].class), anyString(), anyString(), anyString());
+  }
+
+  @Test
+  public void testGetContentsWithFilter() {
+    Cursor mockedCursor = mock(Cursor.class);
+    Mockito.stub(mMockedDatabase.query(
+        Mockito.anyString(), Mockito.any(String[].class), Mockito.anyString(),
+        Mockito.any(String[].class), Mockito.anyString(), Mockito.anyString(),
+        Mockito.anyString())).toReturn(mockedCursor);
+    Mockito.stub(mockedCursor.getCount()).toReturn(1);
+    Mockito.stub(mockedCursor.moveToNext()).toReturn(true).toReturn(true).toReturn(false);
+
+    Filter filter = new Filter.FilterBuilder()
+        .name("name")
+        .fromDate(new Date())
+        .toDate(new Date())
+        .relatedSpotId("1234")
+        .build();
+
+    ArrayList<Content> contents = mContentDatabaseAdapter.getContents(filter);
+
+    Mockito.verify(mMockedDatabase).query(anyString(), any(String[].class),
+        eq("LOWER(title) LIKE LOWER(?) AND fromDate > ? AND toDate < ? AND " +
+            "relatedSpot = ?"),
         any(String[].class), anyString(), anyString(), anyString());
   }
 

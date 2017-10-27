@@ -359,7 +359,7 @@ public class EnduserApi implements Parcelable {
     }
 
     if (offline) {
-      offlineEnduserApi.getContentsByTags(tags, pageSize, cursor, sortFlags, callback);
+      offlineEnduserApi.getContentsByTags(tags, pageSize, cursor, sortFlags, filter, callback);
       return null;
     }
 
@@ -468,7 +468,7 @@ public class EnduserApi implements Parcelable {
     }
 
     if (offline) {
-      // TODO: implement offline
+      offlineEnduserApi.getContents(filter, pageSize, cursor, sortFlags, callback);
       return null;
     }
 

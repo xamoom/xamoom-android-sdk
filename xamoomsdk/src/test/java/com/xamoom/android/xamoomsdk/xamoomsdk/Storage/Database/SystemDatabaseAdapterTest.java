@@ -153,6 +153,7 @@ public class SystemDatabaseAdapterTest {
     ContentValues values = new ContentValues();
     values.put(OfflineEnduserContract.SystemEntry.COLUMN_NAME_JSON_ID, system.getId());
     values.put(OfflineEnduserContract.SystemEntry.COLUMN_NAME_NAME, system.getName());
+    values.put(OfflineEnduserContract.SystemEntry.COLUMN_NAME_WEBCLIENT_URL, system.getWebClientUrl());
 
     mSystemDatabaseAdapter.insertOrUpdateSystem(system);
 
