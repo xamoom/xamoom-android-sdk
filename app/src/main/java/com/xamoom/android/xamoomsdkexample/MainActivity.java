@@ -100,10 +100,10 @@ public class MainActivity extends XamoomPushActivity
 
 
     //getContent();
-    //getContentOption();
+    getContentOption();
     //getContentLocationIdentifier();
     //getContentWithConditions();
-    getContentsWithTags();
+    //getContentsWithTags();
     //getContentByDates();
     //getContentsLocation();
     //searchContent();
