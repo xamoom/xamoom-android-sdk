@@ -1,0 +1,14 @@
+com.xamoom.android.pushnotifications
+com.xamoom.android.xamoomcontentblocks
+com.xamoom.android.xamoomcontentblocks.Adapters
+com.xamoom.android.xamoomcontentblocks.Helper
+com.xamoom.android.xamoomcontentblocks.ViewHolders
+com.xamoom.android.xamoomcontentblocks.Views
+com.xamoom.android.xamoomsdk
+com.xamoom.android.xamoomsdk.Enums
+com.xamoom.android.xamoomsdk.Offline
+com.xamoom.android.xamoomsdk.Resource
+com.xamoom.android.xamoomsdk.Storage
+com.xamoom.android.xamoomsdk.Storage.Database
+com.xamoom.android.xamoomsdk.Storage.TableContracts
+com.xamoom.android.xamoomsdk.Utils
