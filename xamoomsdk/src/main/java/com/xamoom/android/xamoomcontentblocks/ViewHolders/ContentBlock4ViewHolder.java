@@ -142,11 +142,11 @@ public class ContentBlock4ViewHolder extends RecyclerView.ViewHolder {
         mContentTextView.setTextColor(Color.WHITE);
         break;
       case 11:
-        mRootLayout.setBackgroundResource(R.color.default_linkblock_background_color);
+        mRootLayout.setBackgroundResource(R.color.phone_linkblock_background_color);
         mIcon.setImageResource(R.drawable.ic_phone);
-        mIcon.setColorFilter(Color.parseColor("#333333"));
-        mTitleTextView.setTextColor(Color.parseColor("#333333"));
-        mContentTextView.setTextColor(Color.parseColor("#333333"));
+        mIcon.setColorFilter(Color.BLACK);
+        mTitleTextView.setTextColor(Color.BLACK);
+        mContentTextView.setTextColor(Color.BLACK);
         break;
       case 12:
         mRootLayout.setBackgroundResource(R.color.default_linkblock_background_color);

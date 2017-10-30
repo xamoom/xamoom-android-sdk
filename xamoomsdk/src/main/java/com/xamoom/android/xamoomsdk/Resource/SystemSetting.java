@@ -23,6 +23,8 @@ public class SystemSetting extends Resource implements Parcelable {
   private String googlePlayAppId;
   @SerializedName("app-id-itunes")
   private String itunesAppId;
+  @SerializedName("is-social-sharing-active")
+  private Boolean socialSharingEnabled;
 
   public SystemSetting() {
   }
@@ -31,6 +33,7 @@ public class SystemSetting extends Resource implements Parcelable {
     this.setId(in.readString());
     googlePlayAppId = in.readString();
     itunesAppId = in.readString();
+    socialSharingEnabled = (Boolean) in.readSerializable();
   }
 
   public static final Creator<SystemSetting> CREATOR = new Creator<SystemSetting>() {
@@ -44,6 +47,19 @@ public class SystemSetting extends Resource implements Parcelable {
       return new SystemSetting[size];
     }
   };
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeString(this.getId());
+    dest.writeString(googlePlayAppId);
+    dest.writeString(itunesAppId);
+    dest.writeSerializable(socialSharingEnabled);
+  }
 
   public String getGooglePlayAppId() {
     return googlePlayAppId;
@@ -61,15 +77,13 @@ public class SystemSetting extends Resource implements Parcelable {
     this.itunesAppId = itunesAppId;
   }
 
-  @Override
-  public int describeContents() {
-    return 0;
+  public Boolean getSocialSharingEnabled() {
+    return socialSharingEnabled;
   }
 
-  @Override
-  public void writeToParcel(Parcel dest, int flags) {
-    dest.writeString(this.getId());
-    dest.writeString(googlePlayAppId);
-    dest.writeString(itunesAppId);
+  public void setSocialSharingEnabled(Boolean socialSharingEnabled) {
+    this.socialSharingEnabled = socialSharingEnabled;
   }
+
+
 }

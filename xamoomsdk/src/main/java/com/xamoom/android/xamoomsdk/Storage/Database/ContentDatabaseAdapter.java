@@ -14,6 +14,7 @@ import android.database.Cursor;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.xamoom.android.xamoomsdk.Filter;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Storage.TableContracts.OfflineEnduserContract;
@@ -21,11 +22,11 @@ import com.xamoom.android.xamoomsdk.Storage.TableContracts.OfflineEnduserContrac
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -33,6 +34,7 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
   private static ContentDatabaseAdapter mSharedInstance;
   private ContentBlockDatabaseAdapter mContentBlockDatabaseAdapter;
   private SystemDatabaseAdapter mSystemDatabaseAdapter;
+  private SpotDatabaseAdapter mSpotDatabaseAdapter;
 
   public static ContentDatabaseAdapter getInstance(Context context) {
     if (mSharedInstance == null) {
@@ -79,6 +81,58 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
 
     close();
     return contents;
+  }
+
+  /*
+   * Create query for filters.
+   * All combined with "AND".
+   */
+  public ArrayList<Content> getContents(Filter filter) {
+    String selection = "";
+    ArrayList<String> arguments = new ArrayList<>();
+
+    if (filter.getName() != null) {
+      selection += "LOWER(" + OfflineEnduserContract.ContentEntry.COLUMN_NAME_TITLE + ") LIKE LOWER(?)";
+      arguments.add("%"+filter.getName()+"%");
+    }
+
+    if (filter.getFromDate() != null) {
+      selection = addAnd(selection);
+      selection += OfflineEnduserContract.ContentEntry.COLUMN_NAME_FROM_DATE + " > ?";
+      arguments.add(String.valueOf(filter.getFromDate().getTime()));
+    }
+
+    if (filter.getToDate() != null) {
+      selection = addAnd(selection);
+      selection += OfflineEnduserContract.ContentEntry.COLUMN_NAME_TO_DATE + " < ?";
+      arguments.add(String.valueOf(filter.getToDate().getTime()));
+    }
+
+    if (filter.getRelatedSpotId() != null) {
+      selection = addAnd(selection);
+      selection += OfflineEnduserContract.ContentEntry.COLUMN_NAME_RELATED_SPOT + " = ?";
+
+      long spotRow = getSpotDatabaseDapter().getPrimaryKey(filter.getRelatedSpotId());
+      arguments.add(String.valueOf(spotRow));
+    }
+
+    String[] selectionArgs = arguments.toArray(new String[0]);
+
+    open();
+    Cursor cursor = queryContent(selection, selectionArgs);
+
+    ArrayList<Content> contents = cursorToContents(cursor);
+
+    close();
+
+    return contents;
+  }
+
+  private String addAnd(String selection) {
+    if (selection.length() > 0) {
+      selection += " AND ";
+    }
+    return selection;
   }
 
   public ArrayList<Content> getContents(String name) {
@@ -129,6 +183,15 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
     values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_LANGUAGE, content.getLanguage());
     values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_CATEGORY, content.getCategory());
     values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_PUBLIC_IMAGE_URL, content.getPublicImageUrl());
+    values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_SOCIAL_SHARING_URL, content.getSharingUrl());
+
+    if (content.getFromDate() != null) {
+      values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_FROM_DATE, content.getFromDate().getTime());
+    }
+    if (content.getToDate() != null) {
+      values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_TO_DATE, content.getToDate().getTime());
+    }
+
     if (content.getTags() != null) {
       values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_TAGS,
           TextUtils.join(",", content.getTags()));
@@ -149,6 +212,13 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
       if (systemRow != -1) {
         values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_SYSTEM_RELATION,
             systemRow);
+      }
+    }
+
+    if (content.getRelatedSpot() != null) {
+      long relatedSpotRow = getSpotDatabaseDapter().insertOrUpdateSpot(content.getRelatedSpot());
+      if (relatedSpotRow != -1) {
+        values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_RELATED_SPOT, relatedSpotRow);
       }
     }
 
@@ -245,6 +315,13 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
           OfflineEnduserContract.ContentEntry.COLUMN_NAME_LANGUAGE)));
       content.setCategory(cursor.getInt(cursor.getColumnIndex(
           OfflineEnduserContract.ContentEntry.COLUMN_NAME_CATEGORY)));
+      content.setSharingUrl(cursor.getString(cursor.getColumnIndex(
+          OfflineEnduserContract.ContentEntry.COLUMN_NAME_SOCIAL_SHARING_URL)));
+      content.setFromDate(new Date(cursor.getLong(
+          cursor.getColumnIndex(OfflineEnduserContract.ContentEntry.COLUMN_NAME_FROM_DATE))));
+
+      content.setToDate(new Date(cursor.getLong(
+          cursor.getColumnIndex(OfflineEnduserContract.ContentEntry.COLUMN_NAME_TO_DATE))));
       String tags = cursor.getString(cursor
           .getColumnIndex(OfflineEnduserContract.ContentEntry.COLUMN_NAME_TAGS));
 
@@ -276,6 +353,8 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
           .getLong(cursor.getColumnIndex(OfflineEnduserContract.ContentEntry._ID))));
       content.setSystem(getSystemDatabaseAdapter().getSystem(cursor.getLong(
           cursor.getColumnIndex(OfflineEnduserContract.ContentEntry.COLUMN_NAME_SYSTEM_RELATION))));
+      content.setRelatedSpot(getSpotDatabaseDapter().getSpot(cursor.getLong(
+          cursor.getColumnIndex(OfflineEnduserContract.ContentEntry.COLUMN_NAME_RELATED_SPOT))));
       contents.add(content);
     }
 
@@ -312,4 +391,13 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
   public void setContentBlockDatabaseAdapter(ContentBlockDatabaseAdapter contentBlockDatabaseAdapter) {
     mContentBlockDatabaseAdapter = contentBlockDatabaseAdapter;
   }
+
+  private SpotDatabaseAdapter getSpotDatabaseDapter() {
+    if (mSpotDatabaseAdapter == null) {
+      mSpotDatabaseAdapter = SpotDatabaseAdapter.getInstance(mContext);
+    }
+
+    return mSpotDatabaseAdapter;
+  }
+
 }

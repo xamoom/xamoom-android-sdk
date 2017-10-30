@@ -15,6 +15,7 @@ import com.xamoom.android.xamoomsdk.APIListCallback;
 import com.xamoom.android.xamoomsdk.BuildConfig;
 import com.xamoom.android.xamoomsdk.Enums.ContentSortFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotSortFlags;
+import com.xamoom.android.xamoomsdk.Filter;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Resource.Marker;
@@ -391,7 +392,11 @@ public class OfflineStorageManagerTest {
 
   @Test
   public void testGetContentWithTags() throws InterruptedException {
-    ArrayList<String> tags = new ArrayList<>();
+    Filter filter = new Filter.FilterBuilder()
+        .addTag("tag1")
+        .build();
+
+    ArrayList<String> tags = new ArrayList<>(1);
     tags.add("tag1");
 
     Content content1 = new Content();
@@ -399,12 +404,11 @@ public class OfflineStorageManagerTest {
     ArrayList<Content> contents = new ArrayList<>();
     contents.add(content1);
 
-    Mockito.stub(mMockedContentDatabaseAdapter.getAllContents()).toReturn(contents);
+    Mockito.stub(mMockedContentDatabaseAdapter.getContents(any(Filter.class))).toReturn(contents);
 
     final Semaphore semaphore = new Semaphore(0);
     mOfflineStorageManager
-        .getContentByTags(tags, 1, null, null,
-            new APIListCallback<List<Content>, List<Error>>() {
+        .getContents(filter, 1, null, null, new APIListCallback<List<Content>, List<Error>>() {
               @Override
               public void finished(List<Content> result, String cursor, boolean hasMore) {
                 Assert.assertEquals(1, result.size());
@@ -423,15 +427,19 @@ public class OfflineStorageManagerTest {
 
   @Test
   public void testSearchContentsByName() throws InterruptedException {
+    Filter filter = new Filter.FilterBuilder()
+        .name("test")
+        .build();
+
     Content content1 = new Content();
     ArrayList<Content> contents = new ArrayList<>();
     contents.add(content1);
 
-    Mockito.stub(mMockedContentDatabaseAdapter.getContents(anyString())).toReturn(contents);
+    Mockito.stub(mMockedContentDatabaseAdapter.getContents(any(Filter.class))).toReturn(contents);
 
     final Semaphore semaphore = new Semaphore(0);
     mOfflineStorageManager
-        .searchContentsByName("test", 1, null, null, new APIListCallback<List<Content>, List<Error>>() {
+        .getContents(filter, 1, null, null, new APIListCallback<List<Content>, List<Error>>() {
           @Override
           public void finished(List<Content> result, String cursor, boolean hasMore) {
             Assert.assertEquals(1, result.size());
@@ -447,6 +455,33 @@ public class OfflineStorageManagerTest {
         });
     semaphore.acquire();
 
+  }
+
+  @Test
+  public void testGetContents() throws InterruptedException {
+    Content content1 = new Content();
+    ArrayList<Content> contents = new ArrayList<>();
+    contents.add(content1);
+
+    Mockito.stub(mMockedContentDatabaseAdapter.getContents(any(Filter.class))).toReturn(contents);
+
+    final Semaphore semaphore = new Semaphore(0);
+    mOfflineStorageManager
+        .getContents(null, 1, null, null, new APIListCallback<List<Content>, List<Error>>() {
+          @Override
+          public void finished(List<Content> result, String cursor, boolean hasMore) {
+            Assert.assertEquals(1, result.size());
+            Assert.assertFalse(hasMore);
+            Assert.assertEquals("1", cursor);
+            semaphore.release();
+          }
+
+          @Override
+          public void error(List<Error> error) {
+
+          }
+        });
+    semaphore.acquire();
   }
 
   @Test

@@ -9,11 +9,12 @@
 package com.xamoom.android.xamoomsdk.Storage.TableContracts;
 
 import android.provider.BaseColumns;
+import android.provider.Settings;
 
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 
 public class OfflineEnduserContract {
-  public static final int DATABASE_VERSION = 3;
+  public static final int DATABASE_VERSION = 4;
   public static final String DATABASE_NAME = "OfflineEnduser.db";
 
   public static final String TEXT_TYPE = " TEXT";
@@ -32,19 +33,22 @@ public class OfflineEnduserContract {
     public static final String COLUMN_NAME_JSON_ID = "json_id";
     public static final String COLUMN_NAME_NAME = "name";
     public static final String COLUMN_NAME_URL = "url";
+    public static final String COLUMN_NAME_WEBCLIENT_URL = "webclientUrl";
 
     public static final String CREATE_TABLE =
         "CREATE TABLE " + SystemEntry.TABLE_NAME + " (" +
             SystemEntry._ID + " INTEGER PRIMARY KEY," +
             SystemEntry.COLUMN_NAME_JSON_ID + TEXT_TYPE + UNIQUE + COMMA_SEP +
             SystemEntry.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
-            SystemEntry.COLUMN_NAME_URL + TEXT_TYPE + " )";
+            SystemEntry.COLUMN_NAME_URL + TEXT_TYPE + COMMA_SEP +
+            SystemEntry.COLUMN_NAME_WEBCLIENT_URL + TEXT_TYPE + " )";
 
     public static  final String[] PROJECTION = {
           SystemEntry._ID,
           SystemEntry.COLUMN_NAME_JSON_ID,
           SystemEntry.COLUMN_NAME_NAME,
-          SystemEntry.COLUMN_NAME_URL
+          SystemEntry.COLUMN_NAME_URL,
+          SystemEntry.COLUMN_NAME_WEBCLIENT_URL
     };
   }
 
@@ -96,6 +100,7 @@ public class OfflineEnduserContract {
     public static final String COLUMN_NAME_SYSTEM_RELATION = "system";
     public static final String COLUMN_NAME_PLAYSTORE_ID = "playstore_id";
     public static final String COLUMN_NAME_APPSTORE_ID = "appstore_id";
+    public static final String COLUMN_NAME_SOCIAL_SHARING_ENABLED = "socialSharingEnabled";
 
     public static final String CREATE_TABLE =
         "CREATE TABLE " + SettingEntry.TABLE_NAME + " (" +
@@ -103,14 +108,16 @@ public class OfflineEnduserContract {
             SettingEntry.COLUMN_NAME_JSON_ID + TEXT_TYPE + UNIQUE + COMMA_SEP +
             SettingEntry.COLUMN_NAME_SYSTEM_RELATION + INTEGER_TYPE + COMMA_SEP +
             SettingEntry.COLUMN_NAME_PLAYSTORE_ID + TEXT_TYPE + COMMA_SEP +
-            SettingEntry.COLUMN_NAME_APPSTORE_ID + TEXT_TYPE + " )";
+            SettingEntry.COLUMN_NAME_APPSTORE_ID + TEXT_TYPE + COMMA_SEP +
+            SettingEntry.COLUMN_NAME_SOCIAL_SHARING_ENABLED + INTEGER_TYPE + " )";
 
     public static final String[] PROJECTION = {
         SettingEntry._ID,
         SettingEntry.COLUMN_NAME_JSON_ID,
         SettingEntry.COLUMN_NAME_SYSTEM_RELATION,
         SettingEntry.COLUMN_NAME_PLAYSTORE_ID,
-        SettingEntry.COLUMN_NAME_APPSTORE_ID
+        SettingEntry.COLUMN_NAME_APPSTORE_ID,
+        SettingEntry.COLUMN_NAME_SOCIAL_SHARING_ENABLED
     };
   }
 
@@ -237,6 +244,10 @@ public class OfflineEnduserContract {
     public static final String COLUMN_NAME_TAGS = "tags";
     public static final String COLUMN_NAME_PUBLIC_IMAGE_URL = "imageUrl";
     public static final String COLUMN_NAME_CUSTOM_META = "customMeta";
+    public static final String COLUMN_NAME_SOCIAL_SHARING_URL = "socialSharingUrl";
+    public static final String COLUMN_NAME_FROM_DATE = "fromDate";
+    public static final String COLUMN_NAME_TO_DATE = "toDate";
+    public static final String COLUMN_NAME_RELATED_SPOT = "relatedSpot";
 
     public static final String CREATE_TABLE =
         "CREATE TABLE " + ContentEntry.TABLE_NAME + " (" +
@@ -250,7 +261,11 @@ public class OfflineEnduserContract {
             ContentEntry.COLUMN_NAME_CATEGORY + INTEGER_TYPE + COMMA_SEP +
             ContentEntry.COLUMN_NAME_TAGS + TEXT_TYPE + COMMA_SEP +
             ContentEntry.COLUMN_NAME_PUBLIC_IMAGE_URL + TEXT_TYPE + COMMA_SEP +
-            ContentEntry.COLUMN_NAME_CUSTOM_META + TEXT_TYPE + " )";
+            ContentEntry.COLUMN_NAME_CUSTOM_META + TEXT_TYPE + COMMA_SEP +
+            ContentEntry.COLUMN_NAME_SOCIAL_SHARING_URL + TEXT_TYPE + COMMA_SEP +
+            ContentEntry.COLUMN_NAME_FROM_DATE + INTEGER_TYPE + COMMA_SEP +
+            ContentEntry.COLUMN_NAME_TO_DATE + INTEGER_TYPE + COMMA_SEP +
+            ContentEntry.COLUMN_NAME_RELATED_SPOT + INTEGER_TYPE + " )";
 
     public static final String[] PROJECTION = {
         ContentEntry._ID,
@@ -262,7 +277,11 @@ public class OfflineEnduserContract {
         ContentEntry.COLUMN_NAME_CATEGORY,
         ContentEntry.COLUMN_NAME_TAGS,
         ContentEntry.COLUMN_NAME_PUBLIC_IMAGE_URL,
-        ContentEntry.COLUMN_NAME_CUSTOM_META
+        ContentEntry.COLUMN_NAME_CUSTOM_META,
+        ContentEntry.COLUMN_NAME_SOCIAL_SHARING_URL,
+        ContentEntry.COLUMN_NAME_FROM_DATE,
+        ContentEntry.COLUMN_NAME_TO_DATE,
+        ContentEntry.COLUMN_NAME_RELATED_SPOT
     };
   }
 
@@ -315,7 +334,7 @@ public class OfflineEnduserContract {
             ContentBlockEntry.COLUMN_NAME_VIDEO_URL + TEXT_TYPE + COMMA_SEP +
             ContentBlockEntry.COLUMN_NAME_SHOW_CONTENT_ON_SPOTMAP + INTEGER_TYPE + COMMA_SEP +
             ContentBlockEntry.COLUMN_NAME_ALT_TEXT + TEXT_TYPE + COMMA_SEP +
-            ContentBlockEntry.COLUMN_NAME_COPYRIGHT + TEXT_TYPE +
+            ContentBlockEntry.COLUMN_NAME_COPYRIGHT + TEXT_TYPE + COMMA_SEP +
             ContentBlockEntry.COLUMN_NAME_CONTENT_LIST_TAGS + TEXT_TYPE + COMMA_SEP +
             ContentBlockEntry.COLUMN_NAME_CONTENT_LIST_PAGE_SIZE + INTEGER_TYPE + COMMA_SEP +
             ContentBlockEntry.COLUMN_NAME_CONTENT_LIST_SORT_ASC + INTEGER_TYPE +

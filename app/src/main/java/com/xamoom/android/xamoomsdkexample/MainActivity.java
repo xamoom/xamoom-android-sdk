@@ -44,14 +44,17 @@ import com.xamoom.android.xamoomsdk.APIListCallback;
 import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
+import com.xamoom.android.xamoomsdk.Filter;
 import com.xamoom.android.xamoomsdk.Resource.*;
 import com.xamoom.android.xamoomsdk.Resource.System;
+import com.xamoom.android.xamoomsdk.Storage.Database.ContentDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.MenuDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.SpotDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.SystemDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.DownloadError;
 import com.xamoom.android.xamoomsdk.Storage.DownloadManager;
 import com.xamoom.android.xamoomsdk.Storage.OfflineStorageManager;
+import com.xamoom.android.xamoomsdk.Utils.DateUtil;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -92,29 +95,26 @@ public class MainActivity extends XamoomPushActivity
 
     setupEnduserApi();
 
-    getContentOption();
-
     // register custom notification factory
     registerNotificationFactory(new CustomNotification());
 
-    /*
-    getContent();
+
+    //getContent();
     getContentOption();
-    getContentLocationIdentifier();
-    */
+    //getContentLocationIdentifier();
     //getContentWithConditions();
-    /*
-    getContentsLocation();
-    searchContent();
-    getSpot();
-    getSpotsWithLocation();
-    getSpotsWithTags();
-    searchSpots();
-    getSystem();
-    getMenu();
-    getRelatedSystemSetting();
-    getStyle();
-    */
+    //getContentsWithTags();
+    //getContentByDates();
+    //getContentsLocation();
+    //searchContent();
+    //getSpot();
+    //getSpotsWithLocation();
+    //getSpotsWithTags();
+    //searchSpots();
+    //getSystem();
+    //getMenu();
+    //getSystemSetting();
+    //getStyle();
   }
 
   @Override
@@ -218,10 +218,11 @@ public class MainActivity extends XamoomPushActivity
   }
 
   public void getContent() {
-    mEnduserApi.getContent("7cf2c58e6d374ce3888c32eb80be53b5", new APICallback<Content, List<at.rags.morpheus.Error>>() {
+    mEnduserApi.getContent("5f6a24e9ec5e4090890b7911c791a0c7", new APICallback<Content, List<at.rags.morpheus.Error>>() {
       @Override
       public void finished(Content result) {Log.v(TAG, "getContent: " + result);
-
+        Log.v(TAG, "Test: " + result);
+        /*
         OfflineStorageManager manager =
             OfflineStorageManager.getInstance(getApplicationContext());
         try {
@@ -241,8 +242,7 @@ public class MainActivity extends XamoomPushActivity
         }
 
         boolean deleted = manager.deleteContent(result.getId());
-
-        //getSystem();
+*/
       }
 
       @Override
@@ -374,11 +374,72 @@ public class MainActivity extends XamoomPushActivity
     });
   }
 
+  private void getContentsWithTags() {
+    ArrayList<String> tags = new ArrayList<>();
+    tags.add("tests");
+
+    Filter filter = new Filter.FilterBuilder()
+        .fromDate(DateUtil.parse("2017-10-15T07:00:00Z"))
+        .build();
+
+    mEnduserApi.setOffline(true);
+    mEnduserApi.getContentsByTags(tags, 10, null, null, filter,
+        new APIListCallback<List<Content>, List<Error>>() {
+      @Override
+      public void finished(List<Content> result, String cursor, boolean hasMore) {
+        Log.v(TAG, "byTags: " + result);
+      }
+
+      @Override
+      public void error(List<Error> error) {
+
+      }
+    });
+  }
+
+  private void getContentByDates() {
+    mEnduserApi.getContentByDates(DateUtil.parse("2017-10-15T07:00:00Z"), null, "5755996320301056|5700735861784576", 10, null, null,
+        null, new APIListCallback<List<Content>, List<Error>>() {
+      @Override
+      public void finished(List<Content> result, String cursor, boolean hasMore) {
+        Log.v(TAG, "byDates: " + result);
+
+        ContentDatabaseAdapter databaseAdapter = ContentDatabaseAdapter.getInstance(getApplicationContext());
+        for (Content content : result) {
+          databaseAdapter.insertOrUpdateContent(content, false, 0);
+          Content savedContent = databaseAdapter.getContent(content.getId());
+          Log.v(TAG, "Saved Content: " + savedContent);
+        }
+      }
+
+      @Override
+      public void error(List<Error> error) {
+
+      }
+    });
+  }
+
   private void searchContent() {
-    mEnduserApi.searchContentsByName("do not touch", 10, null, null, new APIListCallback<List<Content>, List<Error>>() {
+    mEnduserApi.setOffline(true);
+
+    Filter filter = new Filter.FilterBuilder()
+        .addTag("Wörthersee")
+        .fromDate(DateUtil.parse("2017-10-18T12:00:00Z"))
+        .toDate(DateUtil.parse("2017-10-20T17:00:00Z"))
+        .relatedSpotId("5755996320301056|5700735861784576")
+        .build();
+
+    mEnduserApi.searchContentsByName("Test", 10, null, null, filter, new APIListCallback<List<Content>, List<Error>>() {
       @Override
       public void finished(List<Content> result, String cursor, boolean hasMore) {
         Log.v(TAG, "searchContent: " + result.get(0));
+
+        ContentDatabaseAdapter databaseAdapter = ContentDatabaseAdapter.getInstance(getApplicationContext());
+        for (Content content : result) {
+          databaseAdapter.insertOrUpdateContent(content, false, 0);
+          Content savedContent = databaseAdapter.getContent(content.getId());
+          Log.v(TAG, "Saved Content: " + savedContent);
+        }
       }
 
       @Override
@@ -470,12 +531,12 @@ public class MainActivity extends XamoomPushActivity
       public void finished(System result) {
         Log.v(TAG, "getSystem: " + result.getId());
 
+        /*
         SystemDatabaseAdapter systemDatabaseAdapter = SystemDatabaseAdapter.getInstance(getApplicationContext());
         systemDatabaseAdapter.insertOrUpdateSystem(result);
         System savedSystem = systemDatabaseAdapter.getSystem(result.getId());
         Log.v(TAG, "Saved system: " + savedSystem);
-
-        getSpotsWithTags();
+        */
       }
 
       @Override

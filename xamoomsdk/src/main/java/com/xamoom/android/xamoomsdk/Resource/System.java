@@ -29,6 +29,8 @@ public class System extends Resource implements Parcelable {
   private SystemSetting systemSetting;
   @Relationship("menu")
   private Menu menu;
+  @SerializedName("web-client-url")
+  private String webClientUrl;
 
   public System() {
   }
@@ -40,6 +42,7 @@ public class System extends Resource implements Parcelable {
     style = in.readParcelable(Style.class.getClassLoader());
     systemSetting = in.readParcelable(SystemSetting.class.getClassLoader());
     menu = in.readParcelable(Menu.class.getClassLoader());
+    webClientUrl = in.readString();
   }
 
   public static final Creator<System> CREATOR = new Creator<System>() {
@@ -53,6 +56,22 @@ public class System extends Resource implements Parcelable {
       return new System[size];
     }
   };
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeString(this.getId());
+    dest.writeString(name);
+    dest.writeString(url);
+    dest.writeParcelable(style, flags);
+    dest.writeParcelable(systemSetting, flags);
+    dest.writeParcelable(menu, flags);
+    dest.writeString(webClientUrl);
+  }
 
   public String getName() {
     return name;
@@ -94,18 +113,11 @@ public class System extends Resource implements Parcelable {
     this.menu = menu;
   }
 
-  @Override
-  public int describeContents() {
-    return 0;
+  public String getWebClientUrl() {
+    return webClientUrl;
   }
 
-  @Override
-  public void writeToParcel(Parcel dest, int flags) {
-    dest.writeString(this.getId());
-    dest.writeString(name);
-    dest.writeString(url);
-    dest.writeParcelable(style, flags);
-    dest.writeParcelable(systemSetting, flags);
-    dest.writeParcelable(menu, flags);
+  public void setWebClientUrl(String webClientUrl) {
+    this.webClientUrl = webClientUrl;
   }
 }

@@ -36,6 +36,7 @@ import com.xamoom.android.xamoomsdk.Resource.SystemSetting;
 import com.xamoom.android.xamoomsdk.Utils.JsonListUtil;
 import com.xamoom.android.xamoomsdk.Utils.UrlUtil;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.text.Normalizer;
 import java.util.EnumSet;
@@ -51,6 +52,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Retrofit;
+import retrofit2.http.Url;
 
 /**
  * EnduserApi is the main part of the XamoomSDK. You can use it to send api request to
@@ -325,15 +327,46 @@ public class EnduserApi implements Parcelable {
   public Call getContentsByTags(List<String> tags, int pageSize, @Nullable String cursor,
                                 EnumSet<ContentSortFlags> sortFlags,
                                 APIListCallback<List<Content>, List<Error>> callback) {
+    return getContentsByTags(tags, pageSize, cursor, sortFlags, null, callback);
+  }
+
+  /**
+   * Get list of contents with a specific tag.
+   *
+   * @param tags List of strings
+   * @param pageSize PageSize for returned contents (max 100)
+   * @param cursor Cursor for paging
+   * @param sortFlags {@link ContentSortFlags} to sort results
+   * @param filter Optional filters to add on top of filtering for tags
+   * @param callback {@link APIListCallback}
+   * @return Used call object
+   */
+  public Call getContentsByTags(List<String> tags, int pageSize, @Nullable String cursor,
+                                EnumSet<ContentSortFlags> sortFlags, @Nullable Filter filter,
+                                APIListCallback<List<Content>, List<Error>> callback) {
+    if (filter != null) {
+      filter = new Filter.FilterBuilder()
+          .name(filter.getName())
+          .tags((ArrayList<String>) tags)
+          .fromDate(filter.getFromDate())
+          .toDate(filter.getToDate())
+          .relatedSpotId(filter.getRelatedSpotId())
+          .build();
+    }else {
+      filter = new Filter.FilterBuilder()
+          .tags((ArrayList<String>) tags)
+          .build();
+    }
+
     if (offline) {
-      offlineEnduserApi.getContentsByTags(tags, pageSize, cursor, sortFlags, callback);
+      offlineEnduserApi.getContentsByTags(tags, pageSize, cursor, sortFlags, filter, callback);
       return null;
     }
 
     Map<String, String> params = UrlUtil.addContentSortingParameter(UrlUtil.getUrlParameter(language),
         sortFlags);
     params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
-    params.put("filter[tags]", JsonListUtil.listToJsonArray(tags, ","));
+    params = UrlUtil.addFilters(params, filter);
 
     Call<ResponseBody> call = enduserApiInterface.getContents(params);
     callHandler.enqueListCall(call, callback);
@@ -353,21 +386,102 @@ public class EnduserApi implements Parcelable {
   public Call searchContentsByName(String name, int pageSize, @Nullable String cursor,
                                    EnumSet<ContentSortFlags> sortFlags,
                                    APIListCallback<List<Content>, List<Error>> callback) {
+    return searchContentsByName(name, pageSize, cursor, sortFlags, null, callback);
+  }
+
+  /**
+   * Get list of contents with full-text name search.
+   *
+   * @param name Name to search for
+   * @param pageSize PageSize for returned contents (max 100)
+   * @param cursor Cursor for paging
+   * @param sortFlags {@link ContentSortFlags} to sort results
+   * @param filter Optional filters to add on top of filtering for name
+   * @param callback {@link APIListCallback}
+   * @return Used call object
+   */
+  public Call searchContentsByName(String name, int pageSize, @Nullable String cursor,
+                                   EnumSet<ContentSortFlags> sortFlags, @Nullable Filter filter,
+                                   APIListCallback<List<Content>, List<Error>> callback) {
+    if (filter != null) {
+      filter = new Filter.FilterBuilder()
+          .name(name)
+          .tags(filter.getTags())
+          .fromDate(filter.getFromDate())
+          .toDate(filter.getToDate())
+          .relatedSpotId(filter.getRelatedSpotId())
+          .build();
+    } else {
+      filter = new Filter.FilterBuilder()
+          .name(name)
+          .build();
+    }
+
     if (offline) {
-      offlineEnduserApi.searchContentsByName(name, pageSize, cursor, sortFlags,
-          callback);
+      offlineEnduserApi.searchContentsByName(name, pageSize, cursor, sortFlags, filter, callback);
       return null;
     }
 
     Map<String, String> params = UrlUtil.addContentSortingParameter(UrlUtil.getUrlParameter(language),
         sortFlags);
     params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
-    params.put("filter[name]", name);
+    params = UrlUtil.addFilters(params, filter);
 
     Call<ResponseBody> call = enduserApiInterface.getContents(params);
     callHandler.enqueListCall(call, callback);
     return call;
   }
+
+  /**
+   * Get list of contents with dates and relatedSpotId.
+   *
+   * @param fromDate Filter events from this date
+   * @param toDate Filter events to this date
+   * @param relatedSpotId RelatedSpot id to filter
+   * @param pageSize PageSize for returned contents (max 100)
+   * @param cursor Cursor for paging
+   * @param sortFlags {@link ContentSortFlags} to sort results
+   * @param filter Optional filters to add on top of filtering for name
+   * @param callback {@link APIListCallback}
+   * @return Used call object
+   */
+  public Call getContentByDates(@Nullable Date fromDate, @Nullable Date toDate,
+                                @Nullable String relatedSpotId, int pageSize,
+                           @Nullable String cursor, EnumSet<ContentSortFlags> sortFlags,
+                           @Nullable Filter filter,
+                           APIListCallback<List<Content>, List<Error>> callback) {
+
+    if (filter != null) {
+      filter = new Filter.FilterBuilder()
+          .name(filter.getName())
+          .tags(filter.getTags())
+          .fromDate(fromDate)
+          .toDate(toDate)
+          .relatedSpotId(relatedSpotId)
+          .build();
+    } else {
+      filter = new Filter.FilterBuilder()
+          .fromDate(fromDate)
+          .toDate(toDate)
+          .relatedSpotId(relatedSpotId)
+          .build();
+    }
+
+    if (offline) {
+      offlineEnduserApi.getContents(filter, pageSize, cursor, sortFlags, callback);
+      return null;
+    }
+
+    Map<String, String> params = UrlUtil.addContentSortingParameter(UrlUtil.getUrlParameter(language),
+        sortFlags);
+    params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
+    params = UrlUtil.addFilters(params, filter);
+
+    Call<ResponseBody> call = enduserApiInterface.getContents(params);
+    callHandler.enqueListCall(call, callback);
+    return call;
+  }
+
 
   /**
    * Get spot with specific id.

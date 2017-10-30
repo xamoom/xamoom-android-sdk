@@ -36,6 +36,7 @@ public class SystemSettingTest {
     mSystemSetting.setId("id");
     mSystemSetting.setGooglePlayAppId("googleplayappid");
     mSystemSetting.setItunesAppId("itunesappid");
+    mSystemSetting.setSocialSharingEnabled(true);
   }
 
   @Test
@@ -55,6 +56,7 @@ public class SystemSettingTest {
     assertEquals(mSystemSetting.getId(), createdFromParcel.getId());
     assertEquals(mSystemSetting.getGooglePlayAppId(), createdFromParcel.getGooglePlayAppId());
     assertEquals(mSystemSetting.getItunesAppId(), createdFromParcel.getItunesAppId());
+    assertEquals(mSystemSetting.getSocialSharingEnabled(), createdFromParcel.getSocialSharingEnabled());
   }
 
 }
