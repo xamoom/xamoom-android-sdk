@@ -10,11 +10,13 @@ package com.xamoom.android.xamoomsdk.xamoomsdk;
 
 import android.location.Location;
 
+import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.APIListCallback;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
+import com.xamoom.android.xamoomsdk.Filter;
 import com.xamoom.android.xamoomsdk.HTTPHeaderInterceptor;
 import com.xamoom.android.xamoomsdk.Offline.OfflineEnduserApi;
 import com.xamoom.android.xamoomsdk.Resource.Content;
@@ -23,6 +25,7 @@ import com.xamoom.android.xamoomsdk.Resource.Spot;
 import com.xamoom.android.xamoomsdk.Resource.Style;
 import com.xamoom.android.xamoomsdk.Resource.System;
 import com.xamoom.android.xamoomsdk.Resource.SystemSetting;
+import com.xamoom.android.xamoomsdk.Utils.DateUtil;
 
 import org.junit.After;
 import org.junit.Before;
@@ -51,7 +54,6 @@ import at.rags.morpheus.Error;
 import at.rags.morpheus.JsonApiObject;
 import at.rags.morpheus.Morpheus;
 import at.rags.morpheus.Resource;
-import dalvik.annotation.TestTarget;
 import okhttp3.OkHttpClient;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -651,7 +653,7 @@ public class EnduserApiTests {
 
     Mockito.verify(mMockedOfflineEnduserApi).getContentsByTags(any(List.class),
         anyInt(), anyString(), any(EnumSet.class),
-        (APIListCallback<List<Content>, List<Error>>) any());
+        any(Filter.class), (APIListCallback<List<Content>, List<Error>>) any());
 
     Mockito.verifyNoMoreInteractions(mMockMorpheus);
   }
@@ -710,8 +712,72 @@ public class EnduserApiTests {
     mEnduserApi.searchContentsByName("name", 10, null, null, null);
 
     Mockito.verify(mMockedOfflineEnduserApi).searchContentsByName(anyString(), anyInt(),
-        anyString(), any(EnumSet.class),
+        anyString(), any(EnumSet.class), any(Filter.class),
         (APIListCallback<List<Content>, List<Error>>) any());
+
+    Mockito.verifyNoMoreInteractions(mMockMorpheus);
+  }
+
+  @Test
+  public void testContentsByDate() throws Exception {
+    mMockWebServer.enqueue(new MockResponse().setBody(""));
+
+    final List<Content> checkContents = new ArrayList<>();
+
+    Content content = new Content();
+    content.setTitle("Test");
+    ArrayList<Resource> contents = new ArrayList<Resource>();
+    contents.add(content);
+
+    HashMap<String, Object> meta = new HashMap<>();
+    meta.put("cursor", "1");
+    meta.put("has-more", true);
+
+    JsonApiObject jsonApiObject = new JsonApiObject();
+    jsonApiObject.setResources(contents);
+    jsonApiObject.setMeta(meta);
+
+    List<String> tags = new ArrayList<>();
+    tags.add("tag1");
+    tags.add("tag2");
+
+    when(mMockMorpheus.parse(anyString())).thenReturn(jsonApiObject);
+
+    final Semaphore semaphore = new Semaphore(0);
+
+    mEnduserApi.getContentByDates(DateUtil.parse("2017-10-15T07:00:00Z"),
+        DateUtil.parse("2017-10-15T08:00:00Z"),
+        "1234", 10, null, null, null,
+        new APIListCallback<List<Content>, List<Error>>() {
+      @Override
+      public void finished(List<Content> result, String cursor, boolean hasMore) {
+        checkContents.addAll(result);
+        semaphore.release();
+      }
+
+      @Override
+      public void error(List<Error> error) {
+        semaphore.release();
+      }
+    });
+
+    semaphore.acquire();
+
+    assertTrue(checkContents.get(0).getTitle().equals("Test"));
+    RecordedRequest request1 = mMockWebServer.takeRequest();
+    assertEquals("/_api/v2/consumer/contents?lang=en&page[size]=10&filter[meta-datetime-from]=2017-10-15T07:00:00Z&filter[meta-datetime-to]=2017-10-15T08:00:00Z&filter[related-spot]=1234",
+        request1.getPath());
+  }
+
+  @Test
+  public void testContentsByDateCallsOffline() {
+    mEnduserApi.setOffline(true);
+
+    mEnduserApi.getContentByDates(null, null, null, 10,
+        null, null, null, null);
+
+    Mockito.verify(mMockedOfflineEnduserApi).getContents(any(Filter.class), anyInt(),
+        anyString(), any(EnumSet.class), (APIListCallback<List<Content>, List<Error>>) any());
 
     Mockito.verifyNoMoreInteractions(mMockMorpheus);
   }

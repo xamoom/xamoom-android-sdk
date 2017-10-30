@@ -44,14 +44,17 @@ import com.xamoom.android.xamoomsdk.APIListCallback;
 import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
+import com.xamoom.android.xamoomsdk.Filter;
 import com.xamoom.android.xamoomsdk.Resource.*;
 import com.xamoom.android.xamoomsdk.Resource.System;
+import com.xamoom.android.xamoomsdk.Storage.Database.ContentDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.MenuDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.SpotDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.SystemDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.DownloadError;
 import com.xamoom.android.xamoomsdk.Storage.DownloadManager;
 import com.xamoom.android.xamoomsdk.Storage.OfflineStorageManager;
+import com.xamoom.android.xamoomsdk.Utils.DateUtil;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -96,23 +99,21 @@ public class MainActivity extends XamoomPushActivity
     registerNotificationFactory(new CustomNotification());
 
 
-    getContent();
-    /*getContentOption();
-    getContentLocationIdentifier();
-    */
+    //getContent();
+    //getContentOption();
+    //getContentLocationIdentifier();
     //getContentWithConditions();
-    //getContentsWithTags();
-    /*
-    getContentsLocation();
-    searchContent();
-    getSpot();
-    getSpotsWithLocation();
-    getSpotsWithTags();
-    searchSpots();
-    */
-    getSystem();
+    getContentsWithTags();
+    //getContentByDates();
+    //getContentsLocation();
+    //searchContent();
+    //getSpot();
+    //getSpotsWithLocation();
+    //getSpotsWithTags();
+    //searchSpots();
+    //getSystem();
     //getMenu();
-    getSystemSetting();
+    //getSystemSetting();
     //getStyle();
   }
 
@@ -376,7 +377,14 @@ public class MainActivity extends XamoomPushActivity
   private void getContentsWithTags() {
     ArrayList<String> tags = new ArrayList<>();
     tags.add("tests");
-    mEnduserApi.getContentsByTags(tags, 10, null, null, new APIListCallback<List<Content>, List<Error>>() {
+
+    Filter filter = new Filter.FilterBuilder()
+        .fromDate(DateUtil.parse("2017-10-15T07:00:00Z"))
+        .build();
+
+    mEnduserApi.setOffline(true);
+    mEnduserApi.getContentsByTags(tags, 10, null, null, filter,
+        new APIListCallback<List<Content>, List<Error>>() {
       @Override
       public void finished(List<Content> result, String cursor, boolean hasMore) {
         Log.v(TAG, "byTags: " + result);
@@ -389,11 +397,49 @@ public class MainActivity extends XamoomPushActivity
     });
   }
 
+  private void getContentByDates() {
+    mEnduserApi.getContentByDates(DateUtil.parse("2017-10-15T07:00:00Z"), null, "5755996320301056|5700735861784576", 10, null, null,
+        null, new APIListCallback<List<Content>, List<Error>>() {
+      @Override
+      public void finished(List<Content> result, String cursor, boolean hasMore) {
+        Log.v(TAG, "byDates: " + result);
+
+        ContentDatabaseAdapter databaseAdapter = ContentDatabaseAdapter.getInstance(getApplicationContext());
+        for (Content content : result) {
+          databaseAdapter.insertOrUpdateContent(content, false, 0);
+          Content savedContent = databaseAdapter.getContent(content.getId());
+          Log.v(TAG, "Saved Content: " + savedContent);
+        }
+      }
+
+      @Override
+      public void error(List<Error> error) {
+
+      }
+    });
+  }
+
   private void searchContent() {
-    mEnduserApi.searchContentsByName("do not touch", 10, null, null, new APIListCallback<List<Content>, List<Error>>() {
+    mEnduserApi.setOffline(true);
+
+    Filter filter = new Filter.FilterBuilder()
+        .addTag("Wörthersee")
+        .fromDate(DateUtil.parse("2017-10-18T12:00:00Z"))
+        .toDate(DateUtil.parse("2017-10-20T17:00:00Z"))
+        .relatedSpotId("5755996320301056|5700735861784576")
+        .build();
+
+    mEnduserApi.searchContentsByName("Test", 10, null, null, filter, new APIListCallback<List<Content>, List<Error>>() {
       @Override
       public void finished(List<Content> result, String cursor, boolean hasMore) {
         Log.v(TAG, "searchContent: " + result.get(0));
+
+        ContentDatabaseAdapter databaseAdapter = ContentDatabaseAdapter.getInstance(getApplicationContext());
+        for (Content content : result) {
+          databaseAdapter.insertOrUpdateContent(content, false, 0);
+          Content savedContent = databaseAdapter.getContent(content.getId());
+          Log.v(TAG, "Saved Content: " + savedContent);
+        }
       }
 
       @Override

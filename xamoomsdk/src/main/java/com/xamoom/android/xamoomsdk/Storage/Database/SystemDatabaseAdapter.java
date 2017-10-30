@@ -64,6 +64,7 @@ public class SystemDatabaseAdapter extends DatabaseAdapter {
     ContentValues values = new ContentValues();
     values.put(SystemEntry.COLUMN_NAME_JSON_ID, system.getId());
     values.put(SystemEntry.COLUMN_NAME_NAME, system.getName());
+    values.put(SystemEntry.COLUMN_NAME_WEBCLIENT_URL, system.getWebClientUrl());
 
     long row = getPrimaryKey(system.getId());
 
@@ -157,6 +158,8 @@ public class SystemDatabaseAdapter extends DatabaseAdapter {
           cursor.getColumnIndex(SystemEntry.COLUMN_NAME_JSON_ID)));
       system.setName(cursor.getString(
           cursor.getColumnIndex(SystemEntry.COLUMN_NAME_NAME)));
+      system.setWebClientUrl(cursor.getString(
+          cursor.getColumnIndex(SystemEntry.COLUMN_NAME_WEBCLIENT_URL)));
       system.setStyle(getStyleDatabaseAdapter().getRelatedStyle(
           cursor.getLong(cursor.getColumnIndex(SystemEntry._ID))));
       system.setSystemSetting(getSettingDatabaseAdapter().getSystemSetting(
