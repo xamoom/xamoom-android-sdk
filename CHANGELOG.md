@@ -4,6 +4,7 @@
 
 - Added socialSharing url to content
 - Added eventPackage
+
 - Fixed phone links
 
 ## [3.6.0](https://github.com/xamoom/xamoom-android-sdk/compare/3.5.3...3.6.0) - 13.10.2017
