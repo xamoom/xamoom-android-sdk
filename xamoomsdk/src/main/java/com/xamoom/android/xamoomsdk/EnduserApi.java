@@ -769,6 +769,13 @@ public class EnduserApi implements Parcelable {
     String appName = (String) context.getApplicationInfo().loadLabel(context.getPackageManager());
     appName = Normalizer.normalize(appName, Normalizer.Form.NFD);
 
+    appName = appName.replace("ä", "ae");
+    appName = appName.replace("ö", "oe");
+    appName = appName.replace("ü", "ue");
+    appName = appName.replace("Ä", "AE");
+    appName = appName.replace("Ö", "OE");
+    appName = appName.replace("Ü", "UE");
+
     String builder = "Xamoom SDK Android" +
         "|" +
         appName +
