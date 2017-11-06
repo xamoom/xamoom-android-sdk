@@ -142,7 +142,6 @@ public class EnduserApiTests {
     Context context = Mockito.mock(Context.class);
     PackageManager packageManager = Mockito.mock(PackageManager.class);
     ApplicationInfo applicationInfo = Mockito.mock(ApplicationInfo.class);
-
     Bundle bundle = new Bundle(1);
     bundle.putString("com.xamoom.android.xamoomsdk.version", "0.0.0");
     ApplicationInfo applicationInfo1 = new ApplicationInfo();
@@ -150,7 +149,6 @@ public class EnduserApiTests {
 
     when(context.getPackageManager()).thenReturn(packageManager);
     when(packageManager.getApplicationInfo(anyString(), anyInt())).thenReturn(applicationInfo1);
-
     when(context.getApplicationInfo()).thenReturn(applicationInfo);
     when(applicationInfo.loadLabel(any(PackageManager.class))).thenReturn("ÄÖÜäöü");
 

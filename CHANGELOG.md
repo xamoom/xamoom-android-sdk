@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.7.2](https://github.com/xamoom/xamoom-android-sdk/compare/3.7.1...3.7.2) - 06.11.2017
+
+- Fix normalizing of appname in User-Agent
+
 ## [3.7.1](https://github.com/xamoom/xamoom-android-sdk/compare/3.7.0...3.7.1) - 06.11.2017
 
 - Fix normalizing of appname in User-Agent
