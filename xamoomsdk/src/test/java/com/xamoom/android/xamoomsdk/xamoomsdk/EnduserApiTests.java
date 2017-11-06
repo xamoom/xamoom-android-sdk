@@ -8,7 +8,11 @@
 
 package com.xamoom.android.xamoomsdk.xamoomsdk;
 
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Bundle;
 
 import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.xamoom.android.xamoomsdk.APICallback;
@@ -131,6 +135,29 @@ public class EnduserApiTests {
 
     assertNotNull(enduserApi.getEnduserApiInterface());
     assertEquals(enduserApi.getSystemLanguage(), "en");
+  }
+
+  @Test
+  public void testGeneratedUserAgent() throws PackageManager.NameNotFoundException {
+    Context context = Mockito.mock(Context.class);
+    PackageManager packageManager = Mockito.mock(PackageManager.class);
+    ApplicationInfo applicationInfo = Mockito.mock(ApplicationInfo.class);
+
+    Bundle bundle = new Bundle(1);
+    bundle.putString("com.xamoom.android.xamoomsdk.version", "0.0.0");
+    ApplicationInfo applicationInfo1 = new ApplicationInfo();
+    applicationInfo.metaData = bundle;
+
+    when(context.getPackageManager()).thenReturn(packageManager);
+    when(packageManager.getApplicationInfo(anyString(), anyInt())).thenReturn(applicationInfo1);
+
+    when(context.getApplicationInfo()).thenReturn(applicationInfo);
+    when(applicationInfo.loadLabel(any(PackageManager.class))).thenReturn("ÄÖÜäöü");
+
+    EnduserApi enduserApi = new EnduserApi("", context);
+    String useragent = enduserApi.generateUserAgent();
+
+    assertEquals("Xamoom SDK Android|AOUaou|", useragent);
   }
 
   @Test
