@@ -767,6 +767,8 @@ public class EnduserApi implements Parcelable {
     }
 
     String appName = (String) context.getApplicationInfo().loadLabel(context.getPackageManager());
+    appName = Normalizer.normalize(appName, Normalizer.Form.NFD);
+
     appName = appName.replace("ä", "ae");
     appName = appName.replace("ö", "oe");
     appName = appName.replace("ü", "ue");
