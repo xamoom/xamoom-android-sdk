@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ÄÖÜ</string>
+    <string name="app_name">ÄÖÜäöü</string>
     <string name="action_settings" translatable="false">Settings</string>
     <string name="close_fragment">Close Fragment</string>
     <string name="open_fragment">Open Fragment</string>

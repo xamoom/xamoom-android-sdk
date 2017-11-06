@@ -36,6 +36,7 @@ import com.xamoom.android.xamoomsdk.Resource.SystemSetting;
 import com.xamoom.android.xamoomsdk.Utils.JsonListUtil;
 import com.xamoom.android.xamoomsdk.Utils.UrlUtil;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.text.Normalizer;
@@ -749,7 +750,7 @@ public class EnduserApi implements Parcelable {
 
   // helper
 
-  private String generateUserAgent() {
+  public String generateUserAgent() {
     if (this.context == null) {
       return "Xamoom SDK Android";
     }
@@ -766,15 +767,9 @@ public class EnduserApi implements Parcelable {
       Log.e(TAG, "Failed to load meta-data, NullPointer: " + e.getMessage());
     }
 
-    String appName = (String) context.getApplicationInfo().loadLabel(context.getPackageManager());
+    String appName = context.getApplicationInfo().loadLabel(context.getPackageManager()).toString();
     appName = Normalizer.normalize(appName, Normalizer.Form.NFD);
-
-    appName = appName.replace("ä", "ae");
-    appName = appName.replace("ö", "oe");
-    appName = appName.replace("ü", "ue");
-    appName = appName.replace("Ä", "AE");
-    appName = appName.replace("Ö", "OE");
-    appName = appName.replace("Ü", "UE");
+    appName = appName.replaceAll("[^\\p{ASCII}]", "");
 
     String builder = "Xamoom SDK Android" +
         "|" +
