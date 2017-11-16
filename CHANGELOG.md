@@ -1,5 +1,11 @@
 # Changelog
 
+
+## [3.7.3](https://github.com/xamoom/xamoom-ios-sdk/compare/3.7.2...3.7.3) - 16.11.2017
+
+- Fixed contentListTags parsing
+- Added contentList localization 
+
 ## [3.7.2](https://github.com/xamoom/xamoom-android-sdk/compare/3.7.1...3.7.2) - 06.11.2017
 
 - Fix normalizing of appname in User-Agent
