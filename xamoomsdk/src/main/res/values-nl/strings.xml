@@ -9,4 +9,6 @@
     <string name="noLocation">Zoekt naar locatie</string>
     <string name="open">Openen</string>
     <string name="file_not_found">Bestand niet gevonden</string>
+    <string name="content_list_load_more_button_text">Meer laden</string>
+    <string name="content_list_error_loading_text">Fout bij het laden</string>
 </resources>

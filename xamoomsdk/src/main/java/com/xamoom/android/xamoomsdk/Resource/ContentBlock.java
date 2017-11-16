@@ -52,7 +52,7 @@ public class ContentBlock extends Resource implements Parcelable {
   private String altText;
   @SerializedName("copyright")
   private String copyright;
-  @SerializedName("content-list-tag")
+  @SerializedName("content-list-tags")
   private List<String> contentListTags;
   @SerializedName("content-list-sort-asc")
   private boolean contentListSortAsc;
