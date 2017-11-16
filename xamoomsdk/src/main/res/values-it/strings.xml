@@ -9,4 +9,6 @@
     <string name="open">Apri</string>
     <string name="cannot_save_image">SVGs e GIFs non possono essere salvate.</string>
     <string name="noLocation">Location è ricercato</string>
+    <string name="content_list_load_more_button_text">Carica di più</string>
+    <string name="content_list_error_loading_text">Errore nel caricamento</string>
 </resources>
