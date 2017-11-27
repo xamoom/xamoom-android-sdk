@@ -82,7 +82,7 @@ public class MainActivity extends XamoomPushActivity
 
   private EnduserApi mEnduserApi;
   private Style mStyle;
-  private boolean mOffline;
+  private boolean mOffline = true;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -99,22 +99,22 @@ public class MainActivity extends XamoomPushActivity
     registerNotificationFactory(new CustomNotification());
 
 
-    //getContent();
+    getContent();
     getContentOption();
-    //getContentLocationIdentifier();
-    //getContentWithConditions();
-    //getContentsWithTags();
-    //getContentByDates();
-    //getContentsLocation();
-    //searchContent();
-    //getSpot();
-    //getSpotsWithLocation();
-    //getSpotsWithTags();
-    //searchSpots();
-    //getSystem();
-    //getMenu();
-    //getSystemSetting();
-    //getStyle();
+    getContentLocationIdentifier();
+    getContentWithConditions();
+    getContentsWithTags();
+    getContentByDates();
+    getContentsLocation();
+    searchContent();
+    getSpot();
+    getSpotsWithLocation();
+    getSpotsWithTags();
+    searchSpots();
+    getSystem();
+    getMenu();
+    getSystemSetting();
+    getStyle();
   }
 
   @Override
@@ -253,7 +253,6 @@ public class MainActivity extends XamoomPushActivity
   }
 
   public void getContentOption() {
-    mEnduserApi.setOffline(mOffline);
     mEnduserApi.getContent("7cf2c58e6d374ce3888c32eb80be53b5", EnumSet.of(ContentFlags.PREVIEW, ContentFlags.PRIVATE),
         new APICallback<Content, List<Error>>() {
           @Override
@@ -320,7 +319,7 @@ public class MainActivity extends XamoomPushActivity
           }
         });
 
-    mEnduserApi.getContentByLocationIdentifier("8wv7o",
+    mEnduserApi.getContentByLocationIdentifier(getResources().getString(R.string.qrMarker),
         EnumSet.of(ContentFlags.PREVIEW), new APICallback<Content, List<Error>>() {
           @Override
           public void finished(Content result) {
@@ -342,7 +341,7 @@ public class MainActivity extends XamoomPushActivity
     conditions.put("double", (double) 1.000002358923523523523523535);
     conditions.put("date", new Date());
 
-    mEnduserApi.getContentByLocationIdentifier("7qpqr", null, conditions, new APICallback<Content, List<Error>>() {
+    mEnduserApi.getContentByLocationIdentifier(getResources().getString(R.string.qrMarker), null, conditions, new APICallback<Content, List<Error>>() {
       @Override
       public void finished(Content result) {
         Log.v(TAG, "getContentByLocationIdentifier: " + result);
@@ -382,7 +381,6 @@ public class MainActivity extends XamoomPushActivity
         .fromDate(DateUtil.parse("2017-10-15T07:00:00Z"))
         .build();
 
-    mEnduserApi.setOffline(true);
     mEnduserApi.getContentsByTags(tags, 10, null, null, filter,
         new APIListCallback<List<Content>, List<Error>>() {
       @Override
@@ -398,7 +396,8 @@ public class MainActivity extends XamoomPushActivity
   }
 
   private void getContentByDates() {
-    mEnduserApi.getContentByDates(DateUtil.parse("2017-10-15T07:00:00Z"), null, "5755996320301056|5700735861784576", 10, null, null,
+    mEnduserApi.getContentByDates(DateUtil.parse("2017-10-15T07:00:00Z"), null,
+        "5755996320301056|5700735861784576", 10, null, null,
         null, new APIListCallback<List<Content>, List<Error>>() {
       @Override
       public void finished(List<Content> result, String cursor, boolean hasMore) {
@@ -420,8 +419,6 @@ public class MainActivity extends XamoomPushActivity
   }
 
   private void searchContent() {
-    mEnduserApi.setOffline(true);
-
     Filter filter = new Filter.FilterBuilder()
         .addTag("Wörthersee")
         .fromDate(DateUtil.parse("2017-10-18T12:00:00Z"))
@@ -511,7 +508,7 @@ public class MainActivity extends XamoomPushActivity
   }
 
   private void searchSpots() {
-    mEnduserApi.searchSpotsByName("do not touch", 10, null, null, null, new APIListCallback<List<Spot>, List<Error>>() {
+    mEnduserApi.searchSpotsByName("do not", 10, null, null, null, new APIListCallback<List<Spot>, List<Error>>() {
       @Override
       public void finished(List<Spot> result, String cursor, boolean hasMore) {
         Log.v(TAG, "searchSpots: " + result);
@@ -519,7 +516,7 @@ public class MainActivity extends XamoomPushActivity
 
       @Override
       public void error(List<Error> error) {
-
+        Log.v(TAG, "Error searchSpots: " + error);
       }
     });
   }
