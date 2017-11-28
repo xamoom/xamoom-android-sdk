@@ -12,7 +12,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ShareCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -94,7 +93,7 @@ public class ContentBlock8ViewHolder extends RecyclerView.ViewHolder {
         mContentTextView.setTextColor(Color.WHITE);
         break;
       default:
-        mRootLayout.setBackgroundResource(R.color.default_linkblock_background_color);
+        mRootLayout.setBackgroundResource(R.color.linkblock_default_background_color);
         mIconImageView.setImageResource(R.drawable.ic_web);
         mIconImageView.setColorFilter(Color.parseColor("#333333"));
         mTitleTextView.setTextColor(Color.parseColor("#333333"));

@@ -9,6 +9,7 @@
 package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
@@ -25,6 +26,64 @@ import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
  * LinkBlock
  */
 public class ContentBlock4ViewHolder extends RecyclerView.ViewHolder {
+  private static final int[] ATTRS = {
+      R.attr.facebook_background_color, R.attr.facebook_tint_color,
+      R.attr.twitter_background_color, R.attr.twitter_tint_color,
+      R.attr.web_background_color, R.attr.web_tint_color,
+      R.attr.shop_background_color, R.attr.shop_tint_color,
+      R.attr.wikipedia_background_color, R.attr.wikipedia_tint_color,
+      R.attr.linkedin_background_color, R.attr.linkedin_tint_color,
+      R.attr.flickr_background_color, R.attr.flickr_tint_color,
+      R.attr.soundcloud_background_color, R.attr.soundcloud_tint_color,
+      R.attr.itunes_background_color, R.attr.itunes_tint_color,
+      R.attr.youtube_background_color, R.attr.youtube_tint_color,
+      R.attr.google_background_color, R.attr.google_tint_color,
+      R.attr.phone_background_color, R.attr.phone_tint_color,
+      R.attr.email_background_color, R.attr.email_tint_color,
+      R.attr.spotify_background_color, R.attr.spotify_tint_color,
+      R.attr.navigation_background_color, R.attr.navigation_tint_color,
+      R.attr.apple_background_color, R.attr.apple_tint_color,
+      R.attr.android_background_color, R.attr.android_tint_color,
+      R.attr.windows_background_color, R.attr.windows_tint_color,
+      R.attr.instagram_background_color, R.attr.instagram_tint_color};
+  private static final int FACEBOOK_BACKGROUND_COLOR = 0;
+  private static final int FACEBOOK_TINT_COLOR = 1;
+  private static final int TWITTER_BACKGROUND_COLOR = 2;
+  private static final int TWITTER_TINT_COLOR = 3;
+  private static final int WEB_BACKGROUND_COLOR = 4;
+  private static final int WEB_TINT_COLOR = 5;
+  private static final int SHOP_BACKGROUND_COLOR = 6;
+  private static final int SHOP_TINT_COLOR = 7;
+  private static final int WIKIPEDIA_BACKGROUND_COLOR = 8;
+  private static final int WIKIPEDIA_TINT_COLOR = 9;
+  private static final int LINKEDIN_BACKGROUND_COLOR = 10;
+  private static final int LINKEDIN_TINT_COLOR = 11;
+  private static final int FLICKR_BACKGROUND_COLOR = 12;
+  private static final int FLICKR_TINT_COLOR = 13;
+  private static final int SOUNDCLOUD_BACKGROUND_COLOR = 14;
+  private static final int SOUNDCLOUD_TINT_COLOR = 15;
+  private static final int ITUNES_BACKGROUND_COLOR = 16;
+  private static final int ITUNES_TINT_COLOR = 17;
+  private static final int YOUTUBE_BACKGROUND_COLOR = 18;
+  private static final int YOUTUBE_TINT_COLOR = 19;
+  private static final int GOOGLE_BACKGROUND_COLOR = 20;
+  private static final int GOOGLE_TINT_COLOR = 21;
+  private static final int PHONE_BACKGROUND_COLOR = 22;
+  private static final int PHONE_TINT_COLOR = 23;
+  private static final int EMAIL_BACKGROUND_COLOR = 24;
+  private static final int EMAIL_TINT_COLOR = 25;
+  private static final int SPOTIFY_BACKGROUND_COLOR = 26;
+  private static final int SPOTIFY_TINT_COLOR = 27;
+  private static final int NAVIGATION_BACKGROUND_COLOR = 28;
+  private static final int NAVIGATION_TINT_COLOR = 29;
+  private static final int APPLE_BACKGROUND_COLOR = 30;
+  private static final int APPLE_TINT_COLOR = 31;
+  private static final int ANDROID_BACKGROUND_COLOR = 32;
+  private static final int ANDROID_TINT_COLOR = 33;
+  private static final int WINDOWS_BACKGROUND_COLOR = 34;
+  private static final int WINDOWS_TINT_COLOR = 35;
+  private static final int INSTAGRAM_BACKGROUND_COLOR = 36;
+  private static final int INSTAGRAM_TINT_COLOR = 37;
 
   private Fragment mFragment;
   private LinearLayout mRootLayout;
@@ -61,149 +120,123 @@ public class ContentBlock4ViewHolder extends RecyclerView.ViewHolder {
         mFragment.getActivity().startActivity(i);
       }
     });
-
     mIcon.setColorFilter(Color.BLACK);
 
+    TypedArray ta = mFragment.getContext()
+        .obtainStyledAttributes(R.style.ContentBlocksTheme_Links, ATTRS);
+
+    int backgroundColor = 0;
+    int tintColor = 0;
     mRootLayout.setVisibility(View.VISIBLE);
     switch (contentBlock.getLinkType()) {
       case 0:
-        mRootLayout.setBackgroundResource(R.color.facebook_linkblock_background_color);
+        backgroundColor = ta.getResourceId(FACEBOOK_BACKGROUND_COLOR, 0);
+        tintColor = ta.getColor(FACEBOOK_TINT_COLOR, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_facebook);
-        mIcon.setColorFilter(Color.WHITE);
-        mTitleTextView.setTextColor(Color.WHITE);
-        mContentTextView.setTextColor(Color.WHITE);
         break;
       case 1:
-        mRootLayout.setBackgroundResource(R.color.twitter_linkblock_background_color);
+        backgroundColor = ta.getResourceId(TWITTER_BACKGROUND_COLOR, 0);
+        tintColor = ta.getColor(TWITTER_TINT_COLOR, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_twitter);
-        mIcon.setColorFilter(Color.WHITE);
-        mTitleTextView.setTextColor(Color.WHITE);
-        mContentTextView.setTextColor(Color.WHITE);
         break;
       case 2:
-        mRootLayout.setBackgroundResource(R.color.default_linkblock_background_color);
+        backgroundColor = ta.getResourceId(WEB_BACKGROUND_COLOR, 0);
+        tintColor = ta.getColor(WEB_TINT_COLOR, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_web);
-        mIcon.setColorFilter(Color.parseColor("#333333"));
-        mTitleTextView.setTextColor(Color.parseColor("#333333"));
-        mContentTextView.setTextColor(Color.parseColor("#333333"));
         break;
       case 3:
-        mRootLayout.setBackgroundResource(R.color.amazon_linkblock_background_color);
+        backgroundColor = ta.getResourceId(SHOP_BACKGROUND_COLOR, 0);
+        tintColor = ta.getColor(SHOP_TINT_COLOR, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_cart);
-        mTitleTextView.setTextColor(Color.BLACK);
-        mContentTextView.setTextColor(Color.BLACK);
         break;
       case 4:
-        mRootLayout.setBackgroundResource(R.color.default_linkblock_background_color);
+        backgroundColor = ta.getResourceId(WIKIPEDIA_BACKGROUND_COLOR, 0);
+        tintColor = ta.getColor(WIKIPEDIA_TINT_COLOR, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_wikipedia);
-        mIcon.setColorFilter(Color.parseColor("#333333"));
-        mTitleTextView.setTextColor(Color.parseColor("#333333"));
-        mContentTextView.setTextColor(Color.parseColor("#333333"));
         break;
       case 5:
-        mRootLayout.setBackgroundResource(R.color.linkedin_linkblock_background_color);
+        backgroundColor = ta.getResourceId(LINKEDIN_BACKGROUND_COLOR, 0);
+        tintColor = ta.getColor(LINKEDIN_TINT_COLOR, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_linkedin_box);
-        mIcon.setColorFilter(Color.WHITE);
-        mTitleTextView.setTextColor(Color.WHITE);
-        mContentTextView.setTextColor(Color.WHITE);
         break;
       case 6:
-        mRootLayout.setBackgroundResource(R.color.flickr_linkblock_background_color);
+        backgroundColor = ta.getResourceId(FLICKR_BACKGROUND_COLOR, 0);
+        tintColor = ta.getColor(FLICKR_TINT_COLOR, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_flickr9);
-        mIcon.setColorFilter(Color.WHITE);
-        mTitleTextView.setTextColor(Color.WHITE);
-        mContentTextView.setTextColor(Color.WHITE);
         break;
       case 7:
-        mRootLayout.setBackgroundResource(R.color.soundcloud_linkblock_background_color);
+        backgroundColor = ta.getResourceId(SOUNDCLOUD_BACKGROUND_COLOR, 0);
+        tintColor = ta.getColor(SOUNDCLOUD_TINT_COLOR, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_soundcloud);
-        mTitleTextView.setTextColor(Color.BLACK);
-        mContentTextView.setTextColor(Color.BLACK);
         break;
       case 8:
-        mRootLayout.setBackgroundResource(R.color.default_linkblock_background_color);
+        backgroundColor = ta.getResourceId(ITUNES_BACKGROUND_COLOR, 0);
+        tintColor = ta.getColor(ITUNES_TINT_COLOR, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_itunes);
-        mIcon.setColorFilter(Color.parseColor("#333333"));
-        mTitleTextView.setTextColor(Color.parseColor("#333333"));
-        mContentTextView.setTextColor(Color.parseColor("#333333"));
         break;
       case 9:
-        mRootLayout.setBackgroundResource(R.color.youtube_linkblock_background_color);
+        backgroundColor = ta.getResourceId(YOUTUBE_BACKGROUND_COLOR, 0);
+        tintColor = ta.getColor(YOUTUBE_TINT_COLOR, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_youtube_play);
-        mIcon.setColorFilter(Color.WHITE);
-        mTitleTextView.setTextColor(Color.WHITE);
-        mContentTextView.setTextColor(Color.WHITE);
         break;
       case 10:
-        mRootLayout.setBackgroundResource(R.color.googleplus_linkblock_background_color);
+        backgroundColor = ta.getResourceId(GOOGLE_BACKGROUND_COLOR, 0);
+        tintColor = ta.getColor(GOOGLE_TINT_COLOR, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_google_plus);
-        mIcon.setColorFilter(Color.WHITE);
-        mTitleTextView.setTextColor(Color.WHITE);
-        mContentTextView.setTextColor(Color.WHITE);
         break;
       case 11:
-        mRootLayout.setBackgroundResource(R.color.phone_linkblock_background_color);
+        backgroundColor = ta.getResourceId(PHONE_BACKGROUND_COLOR, 0);
+        tintColor = ta.getColor(PHONE_TINT_COLOR, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_phone);
-        mIcon.setColorFilter(Color.BLACK);
-        mTitleTextView.setTextColor(Color.BLACK);
-        mContentTextView.setTextColor(Color.BLACK);
         break;
       case 12:
-        mRootLayout.setBackgroundResource(R.color.default_linkblock_background_color);
+        backgroundColor = ta.getResourceId(EMAIL_BACKGROUND_COLOR, 0);
+        tintColor = ta.getColor(EMAIL_TINT_COLOR, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_email);
-        mIcon.setColorFilter(Color.parseColor("#333333"));
-        mTitleTextView.setTextColor(Color.parseColor("#333333"));
-        mContentTextView.setTextColor(Color.parseColor("#333333"));
         break;
       case 13:
-        mRootLayout.setBackgroundResource(R.color.spotify_linkblock_background_color);
+        backgroundColor = ta.getResourceId(SPOTIFY_BACKGROUND_COLOR, 0);
+        tintColor = ta.getColor(SPOTIFY_TINT_COLOR, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_spotify);
-        mTitleTextView.setTextColor(Color.BLACK);
-        mContentTextView.setTextColor(Color.BLACK);
         break;
       case 14:
-        mRootLayout.setBackgroundResource(R.color.googlemaps_linkblock_background_color);
+        backgroundColor = ta.getResourceId(NAVIGATION_BACKGROUND_COLOR, 0);
+        tintColor = ta.getColor(NAVIGATION_TINT_COLOR, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_navigation);
-        mIcon.setColorFilter(Color.WHITE);
-        mTitleTextView.setTextColor(Color.WHITE);
-        mContentTextView.setTextColor(Color.WHITE);
         break;
       case 15:
-        mRootLayout.setBackgroundResource(R.color.appstore_linkblock_background_color);
+        backgroundColor = ta.getResourceId(APPLE_BACKGROUND_COLOR, 0);
+        tintColor = ta.getColor(APPLE_TINT_COLOR, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_apple);
-        mIcon.setColorFilter(Color.WHITE);
-        mTitleTextView.setTextColor(Color.WHITE);
-        mContentTextView.setTextColor(Color.WHITE);
         break;
       case 16:
-        mRootLayout.setBackgroundResource(R.color.playstore_downloadBlock_background_color);
+        backgroundColor = ta.getResourceId(ANDROID_BACKGROUND_COLOR, 0);
+        tintColor = ta.getColor(ANDROID_TINT_COLOR, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_android);
-        mIcon.setColorFilter(Color.WHITE);
-        mTitleTextView.setTextColor(Color.WHITE);
-        mContentTextView.setTextColor(Color.WHITE);
         break;
       case 17:
-        mRootLayout.setBackgroundResource(R.color.windowsstore_downloadBlock_background_color);
+        backgroundColor = ta.getResourceId(WINDOWS_BACKGROUND_COLOR, 0);
+        tintColor = ta.getColor(WINDOWS_TINT_COLOR, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_windows);
-        mIcon.setColorFilter(Color.WHITE);
-        mTitleTextView.setTextColor(Color.WHITE);
-        mContentTextView.setTextColor(Color.WHITE);
         break;
       case 18:
-        mRootLayout.setBackgroundResource(R.color.instagram_background_color);
+        backgroundColor = ta.getResourceId(INSTAGRAM_BACKGROUND_COLOR, 0);
+        tintColor = ta.getColor(INSTAGRAM_TINT_COLOR, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_instagram);
-        mIcon.setColorFilter(Color.WHITE);
-        mTitleTextView.setTextColor(Color.WHITE);
-        mContentTextView.setTextColor(Color.WHITE);
         break;
       default:
-        mRootLayout.setBackgroundResource(R.color.default_linkblock_background_color);
+        backgroundColor = ta.getResourceId(FACEBOOK_BACKGROUND_COLOR, 0);
+        tintColor = ta.getColor(FACEBOOK_TINT_COLOR, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_web);
-        mIcon.setColorFilter(Color.parseColor("#333333"));
-        mTitleTextView.setTextColor(Color.parseColor("#333333"));
-        mContentTextView.setTextColor(Color.parseColor("#333333"));
         break;
     }
+
+    ta.recycle();
+
+    mRootLayout.setBackgroundResource(backgroundColor);
+    mIcon.setColorFilter(tintColor);
+    mTitleTextView.setTextColor(tintColor);
+    mContentTextView.setTextColor(tintColor);
   }
 
   public LinearLayout getRootLayout() {

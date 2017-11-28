@@ -8,4 +8,47 @@
         <attr name="audio_player_button_tint" format="reference|color" />
         <attr name="audio_player_moving_bars_color" format="reference|color" />
     </declare-styleable>
+
+    <declare-styleable name="Links">
+        <attr name="facebook_background_color" format="reference|color" />
+        <attr name="facebook_tint_color" format="reference|color" />
+        <attr name="twitter_background_color" format="reference|color" />
+        <attr name="twitter_tint_color" format="reference|color" />
+        <attr name="web_background_color" format="reference|color" />
+        <attr name="web_tint_color" format="reference|color" />
+        <attr name="shop_background_color" format="reference|color" />
+        <attr name="shop_tint_color" format="reference|color" />
+        <attr name="wikipedia_background_color" format="reference|color" />
+        <attr name="wikipedia_tint_color" format="reference|color" />
+        <attr name="linkedin_background_color" format="reference|color" />
+        <attr name="linkedin_tint_color" format="reference|color" />
+        <attr name="flickr_background_color" format="reference|color" />
+        <attr name="flickr_tint_color" format="reference|color" />
+        <attr name="soundcloud_background_color" format="reference|color" />
+        <attr name="soundcloud_tint_color" format="reference|color" />
+        <attr name="itunes_background_color" format="reference|color" />
+        <attr name="itunes_tint_color" format="reference|color" />
+        <attr name="youtube_background_color" format="reference|color" />
+        <attr name="youtube_tint_color" format="reference|color" />
+        <attr name="google_background_color" format="reference|color" />
+        <attr name="google_tint_color" format="reference|color" />
+        <attr name="phone_background_color" format="reference|color" />
+        <attr name="phone_tint_color" format="reference|color" />
+        <attr name="email_background_color" format="reference|color" />
+        <attr name="email_tint_color" format="reference|color" />
+        <attr name="spotify_background_color" format="reference|color" />
+        <attr name="spotify_tint_color" format="reference|color" />
+        <attr name="navigation_background_color" format="reference|color" />
+        <attr name="navigation_tint_color" format="reference|color" />
+        <attr name="apple_background_color" format="reference|color" />
+        <attr name="apple_tint_color" format="reference|color" />
+        <attr name="android_background_color" format="reference|color" />
+        <attr name="android_tint_color" format="reference|color" />
+        <attr name="windows_background_color" format="reference|color" />
+        <attr name="windows_tint_color" format="reference|color" />
+        <attr name="instagram_background_color" format="reference|color" />
+        <attr name="instagram_tint_color" format="reference|color" />
+        <attr name="default_background_color" format="reference|color" />
+        <attr name="default_tint_color" format="reference|color" />
+    </declare-styleable>
 </resources>
