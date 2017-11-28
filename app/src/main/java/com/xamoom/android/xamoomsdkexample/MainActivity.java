@@ -82,7 +82,7 @@ public class MainActivity extends XamoomPushActivity
 
   private EnduserApi mEnduserApi;
   private Style mStyle;
-  private boolean mOffline = true;
+  private boolean mOffline = false;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {

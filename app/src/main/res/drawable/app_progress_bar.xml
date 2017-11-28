@@ -5,8 +5,8 @@
         android:id="@android:id/background">
         <shape>
             <gradient
-                android:startColor="@color/audio_player_progress_bar_background_color"
-                android:endColor="@color/audio_player_progress_bar_background_color" />
+                android:startColor="#000"
+                android:endColor="#000" />
         </shape>
     </item>
 
@@ -15,8 +15,8 @@
         <clip>
             <shape>
                 <gradient
-                    android:startColor="@color/audio_player_progress_bar_color"
-                    android:endColor="@color/audio_player_progress_bar_color" />
+                    android:startColor="#fff"
+                    android:endColor="#fff" />
             </shape>
         </clip>
     </item>

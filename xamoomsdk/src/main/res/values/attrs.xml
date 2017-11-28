@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="MovingBarsView">
+        <attr name="barColor" format="reference|color" />
+    </declare-styleable>
+
+    <declare-styleable name="AudioPlayer">
+        <attr name="audio_player_button_tint" format="reference|color" />
+        <attr name="audio_player_moving_bars_color" format="reference|color" />
     </declare-styleable>
 </resources>

@@ -5,11 +5,24 @@
         <item name="windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
     </style>
-    
-    <style name="customSongProgressBar" parent="android:Widget.ProgressBar.Horizontal">
+
+    <style name="ContentBlocksTheme">
+    </style>
+
+    <style name="ContentBlocksTheme.AudioPlayer">
+        <item name="android:background">@color/audio_player_background_color</item>
+        <item name="android:textColor">@color/audio_player_tint_color</item>
+        <item name="audio_player_button_tint">@color/audio_player_tint_color</item>
+    </style>
+
+    <style name="ContentBlocksTheme.AudioPlayer.MovingBars">
+        <item name="barColor">@color/audio_player_tint_color</item>
+    </style>
+
+    <style name="ContentBlocksTheme.AudioPlayer.ProgressBar" parent="android:Widget.ProgressBar.Horizontal">
         <item name="android:indeterminateOnly">false</item>
-        <item name="android:progressDrawable">@drawable/custom_song_progress_bar</item>
         <item name="android:minHeight">6dp</item>
+        <item name="android:progressDrawable">@drawable/custom_song_progress_bar</item>
     </style>
 
 </resources>

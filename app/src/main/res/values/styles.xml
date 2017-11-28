@@ -17,4 +17,25 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
+
+
+
+    <!--style name="ContentBlocksTheme.AudioPlayer">
+        <item name="android:background">@color/colorAccent</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="audio_player_button_tint">@color/colorPrimaryDark</item>
+    </style>
+
+    <style name="ContentBlocksTheme.AudioPlayer.MovingBars">
+        <item name="barColor">@color/colorPrimaryDark</item>
+    </style>
+
+    <style name="ContentBlocksTheme.AudioPlayer.ProgressBar" parent="android:Widget.ProgressBar.Horizontal">
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:progressDrawable">@drawable/app_progress_bar</item>
+        <item name="android:minHeight">6dp</item>
+    </style-->
+
+
+
 </resources>

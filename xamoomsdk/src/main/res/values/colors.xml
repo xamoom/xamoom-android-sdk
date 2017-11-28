@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+
     <color name="default_linkblock_background_color">#d1d1d1</color>
     <color name="phone_linkblock_background_color">#3ed78b</color>
     <color name="amazon_linkblock_background_color">#ff9900</color>
@@ -16,10 +19,12 @@
     <color name="appstore_linkblock_background_color">#000000</color>
     <color name="playstore_downloadBlock_background_color">#516c00</color>
     <color name="windowsstore_downloadBlock_background_color">#2d89ef</color>
-    <color name="white">#FFFFFF</color>
-    <color name="black">#000000</color>
     <color name="vcf_downloadBlock_background_color">#AA3F41</color>
     <color name="ical_downloadBlock_background_color">#3b5998</color>
     <color name="instagram_background_color">#bc2a8d</color>
+
     <color name="audio_player_background_color">#ffee00</color>
+    <color name="audio_player_tint_color">@android:color/black</color>
+    <color name="audio_player_progress_bar_color">#5AC425</color>
+    <color name="audio_player_progress_bar_background_color">#AAAAAA</color>
 </resources>
