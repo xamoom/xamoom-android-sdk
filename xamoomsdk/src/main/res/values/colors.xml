@@ -3,7 +3,6 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
 
-
     <color name="linkblock_default_background_color">#d1d1d1</color>
     <color name="linkblock_default_tint_color">#333333</color>
     <color name="linkblock_facebook_background_color">#3b5998</color>
@@ -45,9 +44,10 @@
     <color name="linkblock_instagram_background_color">#bc2a8d</color>
     <color name="linkblock_instagram_tint_color">@android:color/white</color>
 
-    <color name="ebook_contentblock_color">#058b8c</color>
     <color name="ical_downloadBlock_background_color">#3b5998</color>
     <color name="vcf_downloadBlock_background_color">#AA3F41</color>
+    <color name="ebookblock_background_color">#058b8c</color>
+    <color name="ebookblock_tint_color">@android:color/white</color>
 
     <color name="audio_player_background_color">#ffee00</color>
     <color name="audio_player_tint_color">@android:color/black</color>
