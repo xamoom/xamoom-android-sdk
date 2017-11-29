@@ -45,7 +45,9 @@ public class ContentBlock4ViewHolder extends RecyclerView.ViewHolder {
       R.attr.apple_background_color, R.attr.apple_tint_color,
       R.attr.android_background_color, R.attr.android_tint_color,
       R.attr.windows_background_color, R.attr.windows_tint_color,
-      R.attr.instagram_background_color, R.attr.instagram_tint_color};
+      R.attr.instagram_background_color, R.attr.instagram_tint_color,
+      R.attr.default_background_color, R.attr.default_tint_color
+  };
   private static final int FACEBOOK_BACKGROUND_COLOR = 0;
   private static final int FACEBOOK_TINT_COLOR = 1;
   private static final int TWITTER_BACKGROUND_COLOR = 2;
@@ -84,6 +86,8 @@ public class ContentBlock4ViewHolder extends RecyclerView.ViewHolder {
   private static final int WINDOWS_TINT_COLOR = 35;
   private static final int INSTAGRAM_BACKGROUND_COLOR = 36;
   private static final int INSTAGRAM_TINT_COLOR = 37;
+  private static final int DEFAULT_BACKGROUND_COLOR = 38;
+  private static final int DEFAULT_TINT_COLOR = 39;
 
   private Fragment mFragment;
   private LinearLayout mRootLayout;
@@ -225,8 +229,8 @@ public class ContentBlock4ViewHolder extends RecyclerView.ViewHolder {
         mIcon.setImageResource(R.drawable.ic_instagram);
         break;
       default:
-        backgroundColor = ta.getResourceId(FACEBOOK_BACKGROUND_COLOR, 0);
-        tintColor = ta.getColor(FACEBOOK_TINT_COLOR, Color.BLACK);
+        backgroundColor = ta.getResourceId(DEFAULT_BACKGROUND_COLOR, 0);
+        tintColor = ta.getColor(DEFAULT_TINT_COLOR, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_web);
         break;
     }
