@@ -73,4 +73,13 @@
         <item name="android:tint">@color/ebookblock_tint_color</item>
         <item name="android:textColor">@color/ebookblock_tint_color</item>
     </style>
+
+    <style name="ContentBlocksTheme.Download">
+        <item name="calendar_background_color">@color/downloadblock_calendar_background_color</item>
+        <item name="calendar_tint_color">@color/downloadblock_calendar_tint_color</item>
+        <item name="contact_background_color">@color/downloadblock_contact_background_color</item>
+        <item name="contact_tint_color">@color/downloadblock_contact_tint_color</item>
+        <item name="default_background_color">@color/downloadblock_default_background_color</item>
+        <item name="default_tint_color">@color/downloadblock_default_tint_color</item>
+    </style>
 </resources>

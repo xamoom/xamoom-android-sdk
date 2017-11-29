@@ -51,4 +51,11 @@
         <attr name="default_background_color" format="reference|color" />
         <attr name="default_tint_color" format="reference|color" />
     </declare-styleable>
+
+    <declare-styleable name="Download">
+        <attr name="calendar_background_color" format="reference|color" />
+        <attr name="calendar_tint_color" format="reference|color" />
+        <attr name="contact_background_color" format="reference|color" />
+        <attr name="contact_tint_color" format="reference|color" />
+    </declare-styleable>
 </resources>
