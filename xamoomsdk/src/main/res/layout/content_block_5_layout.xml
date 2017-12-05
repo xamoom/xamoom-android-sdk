@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:theme="@style/ContentBlocksTheme.Ebook"
     android:id="@+id/linkBlockLinearLayout"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="70dp"
-    android:background="@color/ebook_contentblock_color"
     android:layout_marginStart="@dimen/standard_contentblock_padding"
     android:layout_marginEnd="@dimen/standard_contentblock_padding"
     android:layout_marginBottom="@dimen/contentblock_to_contentblock_margin">
@@ -16,7 +16,6 @@
         android:layout_height="40dp"
         android:layout_gravity="center"
         android:src="@drawable/ic_book"
-        android:tint="@android:color/white"
         android:contentDescription="@string/contentdescription_ebook_link_icon"/>
 
     <LinearLayout
@@ -32,7 +31,6 @@
             android:maxLines="1"
             android:ellipsize="end"
             android:textStyle="bold"
-            android:textColor="@color/white"
             android:textSize="15sp"
             />
 
@@ -42,7 +40,6 @@
             android:layout_height="wrap_content"
             android:maxLines="1"
             android:ellipsize="end"
-            android:textColor="@color/white"
             android:textSize="14sp"
             />
 

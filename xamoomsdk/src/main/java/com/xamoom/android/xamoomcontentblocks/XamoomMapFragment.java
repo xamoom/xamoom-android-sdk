@@ -102,7 +102,7 @@ public class XamoomMapFragment extends Fragment implements OnMapReadyCallback {
     mSpotContentButton = (Button) view.findViewById(R.id.spot_content_button);
     mFloatingActionButton = (FloatingActionButton) view.findViewById(R.id.spot_fab);
     mFloatingActionButton.setBackgroundTintList(ColorStateList.valueOf(getResources()
-        .getColor(R.color.googlemaps_linkblock_background_color)));
+        .getColor(R.color.linkblock_navigation_background_color)));
     mMapCloseButton = (Button) view.findViewById(R.id.map_close_button);
 
     View bottomSheet = view.findViewById(R.id.bottom_sheet);

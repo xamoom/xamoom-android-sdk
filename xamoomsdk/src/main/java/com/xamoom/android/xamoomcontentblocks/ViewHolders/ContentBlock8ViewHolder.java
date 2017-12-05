@@ -9,10 +9,10 @@
 package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ShareCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -33,6 +33,18 @@ import java.io.IOException;
  * DownloadBlock
  */
 public class ContentBlock8ViewHolder extends RecyclerView.ViewHolder {
+  private static final int[] ATTRS = {
+      R.attr.calendar_background_color, R.attr.calendar_tint_color,
+      R.attr.contact_background_color, R.attr.contact_tint_color,
+      R.attr.default_background_color, R.attr.default_tint_color
+  };
+  private static final int CALENDAR_BACKGROUND_COLOR = 0;
+  private static final int CALENDAR_TINT_COLOR = 1;
+  private static final int CONTACT_BACKGROUND_COLOR = 2;
+  private static final int CONTACT_TINT_COLOR = 3;
+  private static final int DEFAULT_BACKGROUND_COLOR = 4;
+  private static final int DEFAULT_TINT_COLOR = 5;
+
   private Fragment mFragment;
   private TextView mTitleTextView;
   private TextView mContentTextView;
@@ -78,29 +90,33 @@ public class ContentBlock8ViewHolder extends RecyclerView.ViewHolder {
       }
     });
 
+    TypedArray ta = mFragment.getContext()
+        .obtainStyledAttributes(R.style.ContentBlocksTheme_Download, ATTRS);
+
+    int backgroundColor = 0;
+    int tintColor = 0;
     switch (contentBlock.getDownloadType()) {
       case 0:
-        mRootLayout.setBackgroundResource(R.color.vcf_downloadBlock_background_color);
+        backgroundColor = ta.getResourceId(CONTACT_BACKGROUND_COLOR, 0);
+        tintColor = ta.getColor(CONTACT_TINT_COLOR, Color.BLACK);
         mIconImageView.setImageResource(R.drawable.ic_account_plus);
-        mIconImageView.setColorFilter(Color.WHITE);
-        mTitleTextView.setTextColor(Color.WHITE);
-        mContentTextView.setTextColor(Color.WHITE);
         break;
       case 1:
-        mRootLayout.setBackgroundResource(R.color.ical_downloadBlock_background_color);
+        backgroundColor = ta.getResourceId(CALENDAR_BACKGROUND_COLOR, 0);
+        tintColor = ta.getColor(CALENDAR_TINT_COLOR, Color.BLACK);
         mIconImageView.setImageResource(R.drawable.ic_calendar);
-        mIconImageView.setColorFilter(Color.WHITE);
-        mTitleTextView.setTextColor(Color.WHITE);
-        mContentTextView.setTextColor(Color.WHITE);
         break;
       default:
-        mRootLayout.setBackgroundResource(R.color.default_linkblock_background_color);
+        backgroundColor = ta.getResourceId(DEFAULT_BACKGROUND_COLOR, 0);
+        tintColor = ta.getColor(DEFAULT_TINT_COLOR, Color.BLACK);
         mIconImageView.setImageResource(R.drawable.ic_web);
-        mIconImageView.setColorFilter(Color.parseColor("#333333"));
-        mTitleTextView.setTextColor(Color.parseColor("#333333"));
-        mContentTextView.setTextColor(Color.parseColor("#333333"));
         break;
     }
+
+    mRootLayout.setBackgroundResource(backgroundColor);
+    mIconImageView.setColorFilter(tintColor);
+    mTitleTextView.setTextColor(tintColor);
+    mContentTextView.setTextColor(tintColor);
   }
 
   private void startShareIntent(String fileUrl) {
