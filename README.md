@@ -19,7 +19,7 @@ More informations about xamoom and how xamoom works? Visit our Github page [xamo
 
 Add in your Gradle in dependencies
 
-    compile 'com.xamoom.android:xamoomsdk:3.7.3'
+    compile 'com.xamoom.android:xamoomsdk:3.8.0'
 
 # Usage
 
