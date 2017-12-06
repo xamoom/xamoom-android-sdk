@@ -5,11 +5,81 @@
         <item name="windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
     </style>
-    
-    <style name="customSongProgressBar" parent="android:Widget.ProgressBar.Horizontal">
-        <item name="android:indeterminateOnly">false</item>
-        <item name="android:progressDrawable">@drawable/custom_song_progress_bar</item>
-        <item name="android:minHeight">6dp</item>
+
+    <style name="ContentBlocksTheme">
     </style>
 
+    <style name="ContentBlocksTheme.AudioPlayer">
+        <item name="android:background">@color/audio_player_background_color</item>
+        <item name="android:textColor">@color/audio_player_tint_color</item>
+        <item name="audio_player_button_tint">@color/audio_player_tint_color</item>
+    </style>
+
+    <style name="ContentBlocksTheme.AudioPlayer.MovingBars">
+        <item name="barColor">@color/audio_player_tint_color</item>
+    </style>
+
+    <style name="ContentBlocksTheme.AudioPlayer.ProgressBar" parent="android:Widget.ProgressBar.Horizontal">
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:minHeight">6dp</item>
+        <item name="android:progressDrawable">@drawable/custom_song_progress_bar</item>
+    </style>
+
+    <style name="ContentBlocksTheme.Links">
+        <item name="facebook_background_color">@color/linkblock_facebook_background_color</item>
+        <item name="facebook_tint_color">@color/linkblock_facebook_tint_color</item>
+        <item name="twitter_background_color">@color/linkblock_twitter_background_color</item>
+        <item name="twitter_tint_color">@color/linkblock_twitter_tint_color</item>
+        <item name="web_background_color">@color/linkblock_web_background_color</item>
+        <item name="web_tint_color">@color/linkblock_web_tint_color</item>
+        <item name="shop_background_color">@color/linkblock_shop_background_color</item>
+        <item name="shop_tint_color">@color/linkblock_shop_tint_color</item>
+        <item name="wikipedia_background_color">@color/linkblock_wikipedia_background_color</item>
+        <item name="wikipedia_tint_color">@color/linkblock_wikipedia_tint_color</item>
+        <item name="linkedin_background_color">@color/linkblock_linkedin_background_color</item>
+        <item name="linkedin_tint_color">@color/linkblock_linkedin_tint_color</item>
+        <item name="flickr_background_color">@color/linkblock_flickr_background_color</item>
+        <item name="flickr_tint_color">@color/linkblock_flickr_tint_color</item>
+        <item name="soundcloud_background_color">@color/linkblock_soundcloud_background_color</item>
+        <item name="soundcloud_tint_color">@color/linkblock_soundcloud_tint_color</item>
+        <item name="itunes_background_color">@color/linkblock_itunes_background_color</item>
+        <item name="itunes_tint_color">@color/linkblock_itunes_tint_color</item>
+        <item name="youtube_background_color">@color/linkblock_youtube_background_color</item>
+        <item name="youtube_tint_color">@color/linkblock_youtube_tint_color</item>
+        <item name="google_background_color">@color/linkblock_googleplus_background_color</item>
+        <item name="google_tint_color">@color/linkblock_googleplus_tint_color</item>
+        <item name="phone_background_color">@color/linkblock_phone_background_color</item>
+        <item name="phone_tint_color">@color/linkblock_phone_tint_color</item>
+        <item name="email_background_color">@color/linkblock_email_background_color</item>
+        <item name="email_tint_color">@color/linkblock_email_tint_color</item>
+        <item name="spotify_background_color">@color/linkblock_spotify_background_color</item>
+        <item name="spotify_tint_color">@color/linkblock_spotify_tint_color</item>
+        <item name="navigation_background_color">@color/linkblock_navigation_background_color</item>
+        <item name="navigation_tint_color">@color/linkblock_navigation_tint_color</item>
+        <item name="apple_background_color">@color/linkblock_appstore_background_color</item>
+        <item name="apple_tint_color">@color/linkblock_appstore_tint_color</item>
+        <item name="android_background_color">@color/linkblock_playstore_background_color</item>
+        <item name="android_tint_color">@color/linkblock_playstore_tint_color</item>
+        <item name="windows_background_color">@color/linkblock_windowsstore_background_color</item>
+        <item name="windows_tint_color">@color/linkblock_windowsstore_tint_color</item>
+        <item name="instagram_background_color">@color/linkblock_instagram_background_color</item>
+        <item name="instagram_tint_color">@color/linkblock_instagram_tint_color</item>
+        <item name="default_background_color">@color/linkblock_default_background_color</item>
+        <item name="default_tint_color">@color/linkblock_default_tint_color</item>
+    </style>
+
+    <style name="ContentBlocksTheme.Ebook">
+        <item name="android:background">@color/ebookblock_background_color</item>
+        <item name="android:tint">@color/ebookblock_tint_color</item>
+        <item name="android:textColor">@color/ebookblock_tint_color</item>
+    </style>
+
+    <style name="ContentBlocksTheme.Download">
+        <item name="calendar_background_color">@color/downloadblock_calendar_background_color</item>
+        <item name="calendar_tint_color">@color/downloadblock_calendar_tint_color</item>
+        <item name="contact_background_color">@color/downloadblock_contact_background_color</item>
+        <item name="contact_tint_color">@color/downloadblock_contact_tint_color</item>
+        <item name="default_background_color">@color/downloadblock_default_background_color</item>
+        <item name="default_tint_color">@color/downloadblock_default_tint_color</item>
+    </style>
 </resources>

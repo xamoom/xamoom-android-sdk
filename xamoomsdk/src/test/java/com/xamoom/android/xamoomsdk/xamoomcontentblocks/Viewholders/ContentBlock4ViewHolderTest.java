@@ -13,7 +13,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v4.util.LruCache;
-import android.util.Log;
 import android.view.View;
 
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock4ViewHolder;
@@ -91,7 +90,7 @@ public class ContentBlock4ViewHolderTest {
     assertEquals(contentBlock.getText(), viewHolder.getContentTextView().getText());
     assertEquals(RuntimeEnvironment.application.getResources().getDrawable(R.drawable.ic_instagram),
         viewHolder.getIcon().getDrawable());
-    assertEquals(RuntimeEnvironment.application.getResources().getColor(R.color.instagram_background_color),
+    assertEquals(RuntimeEnvironment.application.getResources().getColor(R.color.linkblock_instagram_background_color),
         getColor(viewHolder.getRootLayout().getBackground()));
     assertEquals(Color.WHITE,
         viewHolder.getTitleTextView().getCurrentTextColor());

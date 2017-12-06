@@ -11,7 +11,9 @@ package com.xamoom.android.xamoomcontentblocks.Views;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.Path;
@@ -21,6 +23,9 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.AttributeSet;
+
+import com.xamoom.android.xamoomsdk.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,7 +49,7 @@ public class MovingBarsDrawable extends Drawable implements ValueAnimator.Animat
   private int margin;
   private int startHeight;
 
-  public MovingBarsDrawable(Context context) {
+  public MovingBarsDrawable(Context context, AttributeSet attrs) {
     mBounds = getBounds();
 
     float density = context.getResources().getDisplayMetrics().density;
@@ -53,8 +58,12 @@ public class MovingBarsDrawable extends Drawable implements ValueAnimator.Animat
     margin = (int) (MARGIN * density);
     startHeight = (int) (START_HEIGHT * density);
 
+    TypedArray a = context.obtainStyledAttributes(
+        attrs,
+        R.styleable.MovingBarsView);
     mPaint = new Paint();
-    mPaint.setColor(0xff000000);
+    mPaint.setColor(a.getColor(R.styleable.MovingBarsView_barColor, Color.BLACK));
+    a.recycle();
     mPaint.setStrokeWidth(strokeWidth);
     mPaint.setStyle(Paint.Style.STROKE);
 
@@ -63,7 +72,6 @@ public class MovingBarsDrawable extends Drawable implements ValueAnimator.Animat
       mPaths.add(path);
       mHeights.put(path, startHeight);
     }
-
   }
 
   public void startAnimating() {

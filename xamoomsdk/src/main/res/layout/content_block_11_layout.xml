@@ -7,11 +7,10 @@
 
     <TextView
         android:id="@+id/content_list_title_text_view"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="@dimen/contentblock_title_size"
         android:textColor="@color/black"
-        android:text="Title"
         android:layout_marginStart="@dimen/standard_contentblock_padding"
         android:layout_marginEnd="@dimen/standard_contentblock_padding"
         android:layout_marginBottom="@dimen/contentblock_children_margin"
@@ -20,8 +19,7 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/content_list_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
 
     </android.support.v7.widget.RecyclerView>
 

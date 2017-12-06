@@ -78,7 +78,7 @@
         app:layout_anchorGravity="right|end"
         android:src="@drawable/ic_navigation"
         android:tint="@android:color/white"
-        app:rippleColor="@color/facebook_linkblock_background_color"
+        app:rippleColor="@color/linkblock_facebook_background_color"
         android:layout_marginEnd="16dp"
         />
 

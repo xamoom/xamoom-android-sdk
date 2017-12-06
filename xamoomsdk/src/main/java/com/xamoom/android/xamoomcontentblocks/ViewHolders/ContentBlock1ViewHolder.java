@@ -9,11 +9,25 @@
 package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
 import android.annotation.SuppressLint;
+import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.LightingColorFilter;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -28,6 +42,8 @@ import com.xamoom.android.xamoomsdk.Storage.FileManager;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+
+import static android.support.v4.content.ContextCompat.getColor;
 
 /**
  * Displays audio content blocks.
@@ -52,6 +68,9 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
   private boolean mPrepared = false;
   private boolean mError = false;
 
+  private Drawable playIcon;
+  private Drawable pauseIcon;
+
   public ContentBlock1ViewHolder(View itemView, Fragment fragment) {
     super(itemView);
     mFragment = fragment;
@@ -64,6 +83,28 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
     mSongProgressBar = (ProgressBar) itemView.findViewById(R.id.song_progress_bar);
     mFileManager = FileManager.getInstance(fragment.getContext());
     mMovingBarsView = (MovingBarsView) itemView.findViewById(R.id.moving_bars_view);
+
+    int[] attrs = {R.attr.audio_player_button_tint};
+    TypedArray ta = fragment.getContext().obtainStyledAttributes(R.style.ContentBlocksTheme_AudioPlayer, attrs);
+    int color = ta.getColor(0, Color.BLACK);
+    ta.recycle();
+
+    ColorFilter filter = new LightingColorFilter(color, color);
+
+    playIcon = fragment.getResources().getDrawable(R.drawable.ic_play);
+    playIcon.setColorFilter(filter);
+    mPlayPauseButton.setBackground(playIcon);
+
+    pauseIcon = fragment.getResources().getDrawable(R.drawable.ic_pause);
+    pauseIcon.setColorFilter(filter);
+
+    Drawable forwardIcon = fragment.getResources().getDrawable(R.drawable.ic_forward);
+    forwardIcon.setColorFilter(filter);
+    mForwardButton.setBackground(forwardIcon);
+
+    Drawable backwardIcon = fragment.getResources().getDrawable(R.drawable.ic_backward);
+    backwardIcon.setColorFilter(filter);
+    mBackwardButton.setBackground(backwardIcon);
 
     mForwardButton.setOnClickListener(mForwardButtonClickListener);
     mBackwardButton.setOnClickListener(mBackwardButtonClickListener);
@@ -154,11 +195,11 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
           if (mMediaPlayer.isPlaying()) {
             mMovingBarsView.stopAnimation();
             mMediaPlayer.pause();
-            mPlayPauseButton.setBackgroundResource(R.drawable.ic_play);
+            mPlayPauseButton.setBackground(playIcon);
           } else {
             mMovingBarsView.startAnimation();
             mMediaPlayer.start();
-            mPlayPauseButton.setBackgroundResource(R.drawable.ic_pause);
+            mPlayPauseButton.setBackground(pauseIcon);
             startUpdatingProgress();
           }
         }
@@ -263,7 +304,7 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
     mHandler.removeCallbacks(mRunnable);
     if (mMediaPlayer != null)
       mMediaPlayer.stop();
-    mPlayPauseButton.setBackgroundResource(R.drawable.ic_play);
+    mPlayPauseButton.setBackground(playIcon);
     mSongProgressBar.setProgress(0);
   }
 
