@@ -56,7 +56,9 @@ public class ContentBlock1AdapterTest {
         .resume()
         .get();
 
-    mXamoomContentFragment = XamoomContentFragment.newInstance("");
+    mXamoomContentFragment = Mockito.mock(XamoomContentFragment.class);
+    Mockito.when(mXamoomContentFragment.getContext()).thenReturn(RuntimeEnvironment.application);
+    Mockito.when(mXamoomContentFragment.getResources()).thenReturn(RuntimeEnvironment.application.getResources());
   }
 
 
