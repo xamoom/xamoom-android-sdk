@@ -46,6 +46,7 @@ public class ContentBlock11ViewHolder extends RecyclerView.ViewHolder  {
   private ListManager mListManager;
   private Style mStyle;
   private ContentBlock mContentBlock;
+  private int childrenMargin;
 
   private String mCursor = null;
   private boolean hasMore = true;
@@ -58,6 +59,7 @@ public class ContentBlock11ViewHolder extends RecyclerView.ViewHolder  {
     super(view);
     mEnduserApi = enduserApi;
     mListManager = listManager;
+    childrenMargin = fragment.getContext().getResources().getDimensionPixelSize(R.dimen.contentblock_children_margin);
 
     mErrorTextView = (TextView) view.findViewById(R.id.content_list_error_text_view);
     mTitleTextView = (TextView) view.findViewById(R.id.content_list_title_text_view);
@@ -106,16 +108,21 @@ public class ContentBlock11ViewHolder extends RecyclerView.ViewHolder  {
     mContentBlock = contentBlock;
     mErrorTextView.setVisibility(View.GONE);
     mLoadMoreButton.setVisibility(View.GONE);
+    mTitleTextView.setVisibility(View.VISIBLE);
+    LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mTitleTextView.getLayoutParams();
+    params.setMargins(0,0,0, childrenMargin);
+    mTitleTextView.setLayoutParams(params);
 
     adapter.setOffline(offline);
 
     clearContentBlocks();
 
     // set title text or remove the layoutParams to have same margins as when using a title
-    if (contentBlock.getTitle() != null) {
+    if (contentBlock.getTitle() != null && !contentBlock.getTitle().equalsIgnoreCase("")) {
       mTitleTextView.setText(contentBlock.getTitle());
     } else {
-      LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mTitleTextView.getLayoutParams();
+      mTitleTextView.setVisibility(View.GONE);
+      params = (LinearLayout.LayoutParams) mTitleTextView.getLayoutParams();
       params.setMargins(0,0,0,0);
       mTitleTextView.setLayoutParams(params);
     }

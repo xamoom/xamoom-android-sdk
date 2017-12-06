@@ -262,30 +262,6 @@ public class MainActivity extends XamoomPushActivity
             xamoomFragment.setEnduserApi(mEnduserApi);
             xamoomFragment.setDisplayAllStoreLinks(true);
 
-            ContentBlock block = new ContentBlock();
-            block.setId("38945u98243zut2435hkj234h5k2j34h5klj");
-            block.setBlockType(11);
-            block.setTitle("Liste");
-            block.setContentListPageSize(3);
-            ArrayList<String> tags = new ArrayList();
-            tags.add("tests");
-            block.setContentListTags(tags);
-            block.setContentListSortAsc(true);
-
-            result.getContentBlocks().add(block);
-
-            result.getContentBlocks().add(block);
-            result.getContentBlocks().add(block);
-            result.getContentBlocks().add(block);
-            result.getContentBlocks().add(block);
-            result.getContentBlocks().add(block);
-            result.getContentBlocks().add(block);
-            result.getContentBlocks().add(block);
-            result.getContentBlocks().add(block);
-            result.getContentBlocks().add(block);
-            result.getContentBlocks().add(block);
-            result.getContentBlocks().add(block);
-
             xamoomFragment.setContent(result, false, mOffline);
             xamoomFragment.setShowSpotMapContentLinks(true);
             //xamoomFragment.setStyle(mStyle);
