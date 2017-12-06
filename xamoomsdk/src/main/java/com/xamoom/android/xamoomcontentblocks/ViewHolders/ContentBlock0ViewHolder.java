@@ -31,17 +31,24 @@ public class ContentBlock0ViewHolder extends RecyclerView.ViewHolder {
   private float mTextSize = 22.0f;
   private String mLinkColor = "#0000FF";
   private String mTextColor = "#000000";
+  private int childrenMargin;
 
   public ContentBlock0ViewHolder(View itemView) {
     super(itemView);
     mTitleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
     mHtmlTextView = (HtmlTextView) itemView.findViewById(R.id.htmlTextView);
     mHtmlTextView.setRemoveTrailingNewLines(true);
+
+    childrenMargin = itemView.getContext().getResources().getDimensionPixelSize(R.dimen.contentblock_children_margin);
   }
 
   public void setupContentBlock(ContentBlock contentBlock, boolean offline){
     mTitleTextView.setVisibility(View.VISIBLE);
     mHtmlTextView.setVisibility(View.VISIBLE);
+    LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mHtmlTextView.getLayoutParams();
+    params.setMargins(0,childrenMargin,0, 0);
+    mHtmlTextView.setLayoutParams(params);
+
 
     if(contentBlock.getTitle() != null && !contentBlock.getTitle().equalsIgnoreCase("")) {
       mTitleTextView.setTextSize(mTextSize);
@@ -52,7 +59,7 @@ public class ContentBlock0ViewHolder extends RecyclerView.ViewHolder {
       }
     } else {
       mTitleTextView.setVisibility(View.GONE);
-      LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mHtmlTextView.getLayoutParams();
+      params = (LinearLayout.LayoutParams) mHtmlTextView.getLayoutParams();
       params.setMargins(0,0,0,0);
       mHtmlTextView.setLayoutParams(params);
     }
