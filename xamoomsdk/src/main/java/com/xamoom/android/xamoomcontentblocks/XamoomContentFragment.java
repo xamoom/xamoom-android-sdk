@@ -13,7 +13,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -50,21 +49,23 @@ import java.util.List;
  * To get started with the XamoomContentFragment create a new Instance via {@link #newInstance(String)}.
  * You also have to adapt {@link com.xamoom.android.xamoomcontentblocks.XamoomContentFragment.OnXamoomContentFragmentInteractionListener}.
  *
- * There are two ways to use this class.
- * You can set an identifier (contentId or locationIdentifier), this fragment will download it and display it, when added to an activity.
- * Or you can set the content and the fragment will display that.
+ * Display data by setting the Content. Content must be completely downloaded to appear completely.
+ *
+ * Set the EnduserApi for ContentBlocks, that need to download additional data from the xamoom cms.
  *
  * @author Raphael Seher
  *
- * @version 0.1
- *
  */
 public class XamoomContentFragment extends Fragment implements ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener {
-  private static final String YOUTUBE_API_KEY = "0000";
-  private static final String SHOW_SPOT_MAP_CONTENT_LINKS = "0001";
-  private static final String CONTENT_BLOCKS = "0002";
-  private static final String CONTENT = "0003";
-  private static final String ENDUSER_API = "0004";
+  private static final String YOUTUBE_API_KEY = "YoutubeAPIKey";
+  private static final String LIST_STATE = "LayoutManagerState";
+  private static final String CONTENT_ID = "ContentID";
+  private static final String ENDUSER_API = "EnduserApi";
+  private static final String OFFLINE = "Offline";
+  private static final String SHOW_SPOT_MAP_CONTENT_LINKS = "ContentLinksSpotMaps";
+  private static final String STYLE = "Style";
+  private static final String BACKGROUND_COLOR = "BackgroundColor";
+
   private static final int WRITE_STORAGE_PERMISSION = 0;
 
   private View mRootView;
@@ -72,9 +73,12 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   private RecyclerView mRecyclerView;
   private ContentBlockAdapter mContentBlockAdapter;
   private Content mContent;
+  private String mContentID;
   private ArrayList<ContentBlock> mContentBlocks = new ArrayList<>();
   private String mYoutubeApiKey;
+  private Style style;
   private int mBackgroundColor = Color.WHITE;
+  private Bundle mListState;
 
   private boolean offline = false;
   private boolean showAllBlocksWhenOffline = false;
@@ -113,14 +117,22 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
 
     if (savedInstanceState != null) {
       mYoutubeApiKey = savedInstanceState.getString(YOUTUBE_API_KEY);
+      showSpotMapContentLinks = savedInstanceState.getBoolean(SHOW_SPOT_MAP_CONTENT_LINKS);
+      mEnduserApi = savedInstanceState.getParcelable(ENDUSER_API);
+      mContentID = savedInstanceState.getString(CONTENT_ID);
+      mListState = savedInstanceState.getParcelable(LIST_STATE);
+      offline = savedInstanceState.getBoolean(OFFLINE);
+      style = savedInstanceState.getParcelable(STYLE);
+      mBackgroundColor = savedInstanceState.getInt(BACKGROUND_COLOR);
+
+      mContentBlocks = (ArrayList<ContentBlock>)
+          ContentFragmentCache.getSharedInstance().get(mContentID);
+
       mContentBlockAdapter.setYoutubeApiKey(mYoutubeApiKey);
       mContentBlockAdapter.setContentBlocks(mContentBlocks);
       mContentBlockAdapter.setEnduserApi(mEnduserApi);
-
-      showSpotMapContentLinks = savedInstanceState.getBoolean(SHOW_SPOT_MAP_CONTENT_LINKS);
-      mContent = savedInstanceState.getParcelable(CONTENT);
-      mContentBlocks = savedInstanceState.getParcelableArrayList(CONTENT_BLOCKS);
-      mEnduserApi = savedInstanceState.getParcelable(ENDUSER_API);
+      mContentBlockAdapter.setOffline(offline);
+      mContentBlockAdapter.setStyle(style);
     }
   }
 
@@ -142,6 +154,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
 
     if(!isAnimated) {
       if (mContentBlockAdapter != null) {
+        Log.v("test", "onStart");
         mContentBlockAdapter.notifyDataSetChanged();
       }
     }
@@ -159,9 +172,14 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
     super.onSaveInstanceState(outState);
     outState.putString(YOUTUBE_API_KEY, mYoutubeApiKey);
     outState.putBoolean(SHOW_SPOT_MAP_CONTENT_LINKS, showSpotMapContentLinks);
-    outState.putParcelable(CONTENT, mContent);
-    outState.putParcelableArrayList(CONTENT_BLOCKS, mContentBlocks);
     outState.putParcelable(ENDUSER_API, mEnduserApi);
+    outState.putString(CONTENT_ID, mContentID);
+    outState.putParcelable(LIST_STATE, mRecyclerView.getLayoutManager().onSaveInstanceState());
+    outState.putBoolean(OFFLINE, offline);
+    outState.putParcelable(STYLE, style);
+    outState.putInt(BACKGROUND_COLOR, mBackgroundColor);
+
+    ContentFragmentCache.getSharedInstance().save(mContentID, mContentBlocks);
   }
 
   @Override
@@ -182,13 +200,14 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
    * Setup the recyclerview.
    */
   private void setupRecyclerView() {
-    if(mContent == null) {
-      return;
+    RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this.getActivity().getApplicationContext());
+    layoutManager.setAutoMeasureEnabled(true);
+
+    if (mListState != null) {
+      layoutManager.onRestoreInstanceState(mListState);
     }
 
-    LinearLayoutManager layoutManager = new LinearLayoutManager(this.getActivity().getApplicationContext());
-    layoutManager.setAutoMeasureEnabled(true);
-    mRecyclerView.setLayoutManager(layoutManager);
+    mRecyclerView.setLayoutManager(layoutManager); // HERE RAPHI
     mRecyclerView.setAdapter(mContentBlockAdapter);
   }
 
@@ -344,7 +363,6 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
 
   // getters
 
-
   public ContentBlockAdapter getContentBlockAdapter() {
     return mContentBlockAdapter;
   }
@@ -390,14 +408,17 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
     }
 
     this.mContent = content;
+    this.mContentID = content.getId();
     if (mContent.getContentBlocks() != null) {
       mContentBlocks.addAll(mContent.getContentBlocks());
     }
 
+    // add header if needed choosen
     if (addHeader) {
       addContentTitleAndImage();
     }
 
+    // set offline modus inside adapter & remove blocks that cannot be displayed offline (like maps)
     if (offline && !showAllBlocksWhenOffline) {
       this.offline = offline;
       mContentBlockAdapter.setOffline(offline);
@@ -446,8 +467,6 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   public String getYoutubeApiKey() {
     return mYoutubeApiKey;
   }
-
-
 
   public boolean isShowAllBlocksWhenOffline() {
     return showAllBlocksWhenOffline;
