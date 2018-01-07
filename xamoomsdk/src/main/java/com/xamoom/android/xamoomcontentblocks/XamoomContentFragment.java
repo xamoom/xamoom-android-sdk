@@ -78,7 +78,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   private String mYoutubeApiKey;
   private Style style;
   private int mBackgroundColor = Color.WHITE;
-  private Bundle mListState;
+  private LinearLayoutManager.SavedState mListState;
 
   private boolean offline = false;
   private boolean showAllBlocksWhenOffline = false;

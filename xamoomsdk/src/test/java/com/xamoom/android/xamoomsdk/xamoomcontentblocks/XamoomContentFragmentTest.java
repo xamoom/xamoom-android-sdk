@@ -60,7 +60,7 @@ public class XamoomContentFragmentTest {
 
     assertNotNull(fragment);
     assertNotNull(fragment.getRecyclerView());
-    assertNull(fragment.getRecyclerView().getAdapter());
+    assertNotNull(fragment.getRecyclerView().getAdapter());
   }
 
   @Test
