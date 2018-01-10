@@ -72,6 +72,7 @@ dependencies {
 	compile 'com.google.android.gms:play-services-gcm:11.0.4'
 	compile 'com.google.android.gms:play-services-location:11.0.4'
 	compile 'com.xamoom.android:htmltextview:1.0.8'
+	compile 'com.google.android.exoplayer:exoplayer-core:2.6.1'
 }
 
 ext {
