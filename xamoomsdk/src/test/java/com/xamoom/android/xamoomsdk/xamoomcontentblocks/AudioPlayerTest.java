@@ -3,7 +3,6 @@ package com.xamoom.android.xamoomsdk.xamoomcontentblocks;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.media.MediaPlayer;
 import android.net.Uri;
 
 import com.google.android.exoplayer2.ExoPlayer;
@@ -13,26 +12,15 @@ import com.xamoom.android.xamoomcontentblocks.MediaFile;
 
 import junit.framework.Assert;
 
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.mockito.internal.matchers.Any;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
-import org.robolectric.internal.Shadow;
-import org.robolectric.shadows.ShadowMediaPlayer;
-import org.robolectric.shadows.util.DataSource;
-
-import java.io.IOException;
-import java.util.concurrent.Semaphore;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotSame;
-import static org.hamcrest.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.robolectric.Shadows.shadowOf;
 import static org.robolectric.shadows.util.DataSource.toDataSource;
@@ -158,6 +146,6 @@ public class AudioPlayerTest {
 
     audioPlayer.onLoadingChanged(true);
 
-    Mockito.verify(mockEventListener).loading();
+    Mockito.verify(mockEventListener).loadingChanged(eq(true));
   }
 }

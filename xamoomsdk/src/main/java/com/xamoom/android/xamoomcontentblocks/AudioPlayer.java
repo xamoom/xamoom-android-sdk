@@ -36,8 +36,6 @@ public class AudioPlayer implements Player.EventListener {
 
   private static final String TAG = AudioPlayer.class.getSimpleName();
 
-  private static AudioPlayer sharedInstance;
-
   private Context context;
   private ExoPlayer exoPlayer;
   private String appName;
@@ -122,9 +120,7 @@ public class AudioPlayer implements Player.EventListener {
   @Override
   public void onLoadingChanged(boolean isLoading) {
     Log.v(TAG, "onLoadingChanged " + String.valueOf(isLoading));
-    if (isLoading) {
-      currentMediaFile.loading();
-    }
+    currentMediaFile.loading(isLoading);
   }
 
   @Override

@@ -48,9 +48,9 @@ public class MediaFile {
     }
   }
 
-  void loading() {
+  void loading(boolean isLoading) {
     if (eventListener != null) {
-      eventListener.loading();
+      eventListener.loadingChanged(isLoading);
     }
   }
 
@@ -61,7 +61,7 @@ public class MediaFile {
   }
 
   public interface EventListener {
-    void loading();
+    void loadingChanged(boolean isLoading);
     void started();
     void paused();
     void finished();
