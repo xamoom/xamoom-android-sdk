@@ -26,6 +26,7 @@ import static junit.framework.Assert.assertNotSame;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
 import static org.robolectric.shadows.util.DataSource.toDataSource;
@@ -169,5 +170,79 @@ public class AudioPlayerTest {
     when(mockExoPlayer.getCurrentPosition()).thenReturn(101L);
 
     Assert.assertEquals(101L, audioPlayer.getPlaybackPosition(0));
+  }
+
+  @Test
+  public void testSeekForward() {
+    AudioPlayer audioPlayer = new AudioPlayer(RuntimeEnvironment.application, mockExoPlayer);
+    Uri uri = Uri.parse("www.xamoom.com");
+    MediaFile mediaFile1 = audioPlayer.createMediaFile(uri, 0);
+    mediaFile1.setEventListener(mockEventListener);
+    when(mockExoPlayer.getCurrentPosition()).thenReturn(0L);
+
+    audioPlayer.seekForward(50000, 0);
+
+    verify(mockExoPlayer).seekTo(eq(50000L));
+  }
+
+  @Test
+  public void testSeekBackward() {
+    AudioPlayer audioPlayer = new AudioPlayer(RuntimeEnvironment.application, mockExoPlayer);
+    Uri uri = Uri.parse("www.xamoom.com");
+    MediaFile mediaFile1 = audioPlayer.createMediaFile(uri, 0);
+    mediaFile1.setEventListener(mockEventListener);
+    when(mockExoPlayer.getCurrentPosition()).thenReturn(0L);
+
+    audioPlayer.seekBackward(50000L, 0);
+
+    verify(mockExoPlayer).seekTo(eq(-50000L));
+  }
+
+  @Test
+  public void testUpdatePlaybackPosition() {
+    AudioPlayer audioPlayer = new AudioPlayer(RuntimeEnvironment.application, mockExoPlayer);
+    Uri uri = Uri.parse("www.xamoom.com");
+    MediaFile mediaFile1 = audioPlayer.createMediaFile(uri, 0);
+    mediaFile1.setEventListener(mockEventListener);
+
+    when(mockExoPlayer.getCurrentPosition()).thenReturn(100L);
+    when(mockExoPlayer.getDuration()).thenReturn(10000L);
+    audioPlayer.start(0);
+    audioPlayer.onPlayerStateChanged(true, 3);
+    audioPlayer.onSeekProcessed();
+
+    verify(mockEventListener).updatePlaybackPosition(eq(100L));
+  }
+
+  @Test
+  public void testUpdatePlaybackPositionOverDurationCheck() {
+    AudioPlayer audioPlayer = new AudioPlayer(RuntimeEnvironment.application, mockExoPlayer);
+    Uri uri = Uri.parse("www.xamoom.com");
+    MediaFile mediaFile1 = audioPlayer.createMediaFile(uri, 0);
+    mediaFile1.setEventListener(mockEventListener);
+
+    when(mockExoPlayer.getCurrentPosition()).thenReturn(10001L);
+    when(mockExoPlayer.getDuration()).thenReturn(10000L);
+    audioPlayer.start(0);
+    audioPlayer.onPlayerStateChanged(true, 3);
+    audioPlayer.onSeekProcessed();
+
+    verify(mockEventListener).updatePlaybackPosition(eq(10000L));
+  }
+
+  @Test
+  public void testUpdatePlaybackPositionLower0Check() {
+    AudioPlayer audioPlayer = new AudioPlayer(RuntimeEnvironment.application, mockExoPlayer);
+    Uri uri = Uri.parse("www.xamoom.com");
+    MediaFile mediaFile1 = audioPlayer.createMediaFile(uri, 0);
+    mediaFile1.setEventListener(mockEventListener);
+
+    when(mockExoPlayer.getCurrentPosition()).thenReturn(-100L);
+    when(mockExoPlayer.getDuration()).thenReturn(10000L);
+    audioPlayer.start(0);
+    audioPlayer.onPlayerStateChanged(true, 3);
+    audioPlayer.onSeekProcessed();
+
+    verify(mockEventListener).updatePlaybackPosition(eq(0L));
   }
 }

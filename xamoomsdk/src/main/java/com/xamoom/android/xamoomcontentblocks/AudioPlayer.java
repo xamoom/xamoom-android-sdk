@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.v4.util.SparseArrayCompat;
 import android.util.Log;
-import android.util.SparseArray;
 
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -25,8 +24,6 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
-
-import java.util.HashMap;
 
 public class AudioPlayer implements Player.EventListener {
   private static final String TAG = AudioPlayer.class.getSimpleName();
@@ -102,11 +99,14 @@ public class AudioPlayer implements Player.EventListener {
     exoPlayer.setPlayWhenReady(false);
   }
 
-  public long getPlaybackPosition(int position) {
-    if (currentMediaFile == null || currentMediaFile != mediaFiles.get(position)) {
-      return -1;
-    }
-    return exoPlayer.getCurrentPosition();
+  public void seekForward(long seekTime, int position) {
+    long currentPosition = exoPlayer.getCurrentPosition();
+    exoPlayer.seekTo(currentPosition + seekTime);
+  }
+
+  public void seekBackward(long seekTime, int position) {
+    long currentPosition = exoPlayer.getCurrentPosition();
+    exoPlayer.seekTo(currentPosition - seekTime);
   }
 
   @Override
@@ -165,7 +165,6 @@ public class AudioPlayer implements Player.EventListener {
   @Override
   public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
     Log.v(TAG, "onShuffleModeEnabledChanged");
-
   }
 
   @Override
@@ -185,6 +184,15 @@ public class AudioPlayer implements Player.EventListener {
 
   @Override
   public void onSeekProcessed() {
-    Log.v(TAG, "onSeekProcessed");
+    long position = exoPlayer.getCurrentPosition();
+    Log.v(TAG, "onSeekProcessed updatePlaybackPosition: " + position);
+    currentMediaFile.updatePlaybackPosition(position);
+  }
+
+  public long getPlaybackPosition(int position) {
+    if (currentMediaFile == null || currentMediaFile != mediaFiles.get(position)) {
+      return -1;
+    }
+    return exoPlayer.getCurrentPosition();
   }
 }

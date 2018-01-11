@@ -45,7 +45,14 @@ public class MediaFile {
 
   public void pause() {
     audioPlayer.pause(position);
+  }
 
+  public void seekForward(long seekTime) {
+    audioPlayer.seekForward(seekTime, position);
+  }
+
+  public void seekBackward(long seekTime) {
+    audioPlayer.seekBackward(seekTime, position);
   }
 
   void started() {
@@ -82,11 +89,35 @@ public class MediaFile {
     this.duration = duration;
   }
 
+  void updatePlaybackPosition(long playbackPosition) {
+    if (playbackPosition < 0) {
+      playbackPosition = 0;
+    }
+
+    if (playbackPosition > duration) {
+      playbackPosition = duration;
+    }
+
+    this.playbackPosition = playbackPosition;
+
+    if (eventListener != null) {
+      eventListener.updatePlaybackPosition(playbackPosition);
+    }
+  }
+
   private void startMonitoringPlaybackPosition() {
     handler.postDelayed(new Runnable() {
       @Override
       public void run() {
         playbackPosition = audioPlayer.getPlaybackPosition(position);
+        if (playbackPosition < 0) {
+          playbackPosition = 0;
+        }
+
+        if (playbackPosition > duration) {
+          playbackPosition = duration;
+        }
+
         if (eventListener != null) {
           eventListener.updatePlaybackPosition(playbackPosition);
         }
