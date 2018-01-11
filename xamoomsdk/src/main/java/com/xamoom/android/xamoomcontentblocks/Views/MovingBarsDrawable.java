@@ -77,36 +77,46 @@ public class MovingBarsDrawable extends Drawable implements ValueAnimator.Animat
   public void startAnimating() {
     shouldStop = false;
 
-    for (Path path : mPaths) {
-      ValueAnimator valueAnimator = createAnimator(path, false);
-      valueAnimator.start();
+    if (mValueAnimators.size() == 0) {
+      for (Path path : mPaths) {
+        int height = mHeights.get(path);
+        int animHeight = calculateAnimationHeight(false);
+
+        ValueAnimator valueAnimator = ValueAnimator.ofInt(height,
+            animHeight);
+        valueAnimator.setDuration(DURATION);
+        valueAnimator.addUpdateListener(this);
+        valueAnimator.addListener(mAnimatorListener);
+
+        mValueAnimators.put(valueAnimator, path);
+        valueAnimator.start();
+      }
+    } else {
+      for (ValueAnimator animator : mValueAnimators.keySet()) {
+        Path path = mValueAnimators.get(animator);
+        int height = mHeights.get(path);
+        int animHeight = calculateAnimationHeight(false);
+        animator.setIntValues(height, animHeight);
+        animator.start();
+      }
     }
   }
 
   public void stopAnimation() {
     shouldStop = true;
-    for (ValueAnimator animator : mValueAnimators.keySet()) {
-      animator.end();
-      onAnimationUpdate(animator);
-    }
-
     startEndAnimation();
   }
 
-  private void restartAnimator(Path path) {
-    ValueAnimator valueAnimator = createAnimator(path, false);
-    valueAnimator.start();
-  }
-
   private void startEndAnimation() {
-    for (Path path : mPaths) {
-      ValueAnimator valueAnimator = createAnimator(path, true);
-      valueAnimator.start();
+    for (ValueAnimator animator : mValueAnimators.keySet()) {
+      Path path = mValueAnimators.get(animator);
+      int height = (int) animator.getAnimatedValue();
+      animator.setIntValues(height, startHeight);
+      animator.start();
     }
   }
 
-  private ValueAnimator createAnimator(Path path, boolean end) {
-    int height = mHeights.get(path);
+  private int calculateAnimationHeight(boolean end) {
     int maxHeight = mBounds.height();
 
     int animHeight = startHeight;
@@ -115,14 +125,7 @@ public class MovingBarsDrawable extends Drawable implements ValueAnimator.Animat
       animHeight = r.nextInt(maxHeight);
     }
 
-    ValueAnimator valueAnimator = ValueAnimator.ofInt(height,
-        animHeight);
-    valueAnimator.setDuration(DURATION);
-    valueAnimator.addUpdateListener(this);
-    valueAnimator.addListener(mAnimatorListener);
-    mValueAnimators.put(valueAnimator, path);
-
-    return valueAnimator;
+    return animHeight;
   }
 
   @Override
@@ -167,7 +170,11 @@ public class MovingBarsDrawable extends Drawable implements ValueAnimator.Animat
       Path path = mValueAnimators.get(animation);
 
       if (!shouldStop) {
-        restartAnimator(path);
+        int height = mHeights.get(path);
+        int animHeight = calculateAnimationHeight(false);
+
+        ((ValueAnimator) animation).setIntValues(height, animHeight);
+        animation.start();
       }
     }
 
