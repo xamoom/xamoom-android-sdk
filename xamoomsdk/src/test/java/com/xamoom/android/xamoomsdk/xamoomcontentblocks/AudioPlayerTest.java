@@ -99,11 +99,13 @@ public class AudioPlayerTest {
 
     Uri uri = Uri.parse("www.xamoom.com");
     MediaFile mediaFile1 = audioPlayer.createMediaFile(uri, 0);
+    mediaFile1.setEventListener(mockEventListener);
     MediaFile mediaFile2 = audioPlayer.createMediaFile(uri, 1);
 
     audioPlayer.start(0);
     audioPlayer.start(1);
 
+    Mockito.verify(mockEventListener).paused();
     Mockito.verify(mockExoPlayer, Mockito.times(2))
         .prepare(Mockito.any(MediaSource.class));
     Mockito.verify(mockExoPlayer, Mockito.times(2))

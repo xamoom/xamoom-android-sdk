@@ -11,10 +11,15 @@ import android.util.Log;
  */
 
 public class MediaFile {
+  public enum State {
+    IDLE, PLAYING, PAUSED
+  }
+
   private int position;
   private AudioPlayer audioPlayer;
   private Uri uri;
   private EventListener eventListener;
+  private State state = State.IDLE;
   private long duration;
   private long playbackPosition;
   private final Handler handler = new Handler();
@@ -44,6 +49,7 @@ public class MediaFile {
   }
 
   void started() {
+    state = State.PLAYING;
     startMonitoringPlaybackPosition();
     if (eventListener != null) {
       eventListener.started();
@@ -51,6 +57,7 @@ public class MediaFile {
   }
 
   void paused() {
+    state = State.PAUSED;
     stopMonitoringPlaybackPosition();
     if (eventListener != null) {
       eventListener.paused();
@@ -64,6 +71,7 @@ public class MediaFile {
   }
 
   void finished() {
+    state = State.IDLE;
     stopMonitoringPlaybackPosition();
     if (eventListener != null) {
       eventListener.finished();
@@ -82,9 +90,9 @@ public class MediaFile {
         if (eventListener != null) {
           eventListener.updatePlaybackPosition(playbackPosition);
         }
-        handler.postDelayed(this, 300);
+        handler.postDelayed(this, 100);
       }
-    }, 300);
+    }, 100);
   }
 
   private void stopMonitoringPlaybackPosition() {
@@ -103,10 +111,6 @@ public class MediaFile {
     this.eventListener = eventListener;
   }
 
-  public AudioPlayer.State getState() {
-    return audioPlayer.getState();
-  }
-
   public int getPosition() {
     return position;
   }
@@ -117,5 +121,9 @@ public class MediaFile {
 
   public long getPlaybackPosition() {
     return playbackPosition;
+  }
+
+  public State getState() {
+    return state;
   }
 }

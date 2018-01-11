@@ -29,17 +29,11 @@ import com.google.android.exoplayer2.util.Util;
 import java.util.HashMap;
 
 public class AudioPlayer implements Player.EventListener {
-
-  public enum State {
-    NOT_READY, IDLE, LOADING, PLAYING, PAUSED
-  }
-
   private static final String TAG = AudioPlayer.class.getSimpleName();
 
   private Context context;
   private ExoPlayer exoPlayer;
   private String appName;
-  private State state = State.NOT_READY;
   private SparseArrayCompat<MediaFile> mediaFiles = new SparseArrayCompat<>();
   private MediaFile currentMediaFile;
 
@@ -85,8 +79,11 @@ public class AudioPlayer implements Player.EventListener {
   public void start(int position) {
     Log.v(TAG, "start");
 
-    if (currentMediaFile == null || currentMediaFile != mediaFiles.get(position)) {
+    if (currentMediaFile != mediaFiles.get(position)) {
       Log.v(TAG, "PREPARING");
+      if (currentMediaFile != null) {
+        currentMediaFile.paused();
+      }
       currentMediaFile = mediaFiles.get(position);
       prepareStreaming(currentMediaFile.getUri());
     }
@@ -96,16 +93,13 @@ public class AudioPlayer implements Player.EventListener {
   }
 
   public void pause(int position) {
-    Log.v(TAG, "paused");
+    Log.v(TAG, "pause");
 
     if (currentMediaFile == null || currentMediaFile != mediaFiles.get(position)) {
       return;
     }
 
-    if (state == State.PLAYING) {
-      exoPlayer.setPlayWhenReady(false);
-      state = State.PAUSED;
-    }
+    exoPlayer.setPlayWhenReady(false);
   }
 
   public long getPlaybackPosition(int position) {
@@ -146,10 +140,8 @@ public class AudioPlayer implements Player.EventListener {
 
         if (playWhenReady) {
           currentMediaFile.started();
-          state = State.PLAYING;
         } else {
           currentMediaFile.paused();
-          state = State.PAUSED;
         }
         break;
       case Player.STATE_IDLE:
@@ -158,7 +150,6 @@ public class AudioPlayer implements Player.EventListener {
       case Player.STATE_ENDED:
         Log.v(TAG, "State: ENDED");
         exoPlayer.stop();
-        state = State.NOT_READY;
         currentMediaFile.finished();
         mediaFiles.remove(currentMediaFile.getPosition());
         currentMediaFile = null;
@@ -180,7 +171,6 @@ public class AudioPlayer implements Player.EventListener {
   @Override
   public void onPlayerError(ExoPlaybackException error) {
     Log.v(TAG, "onPlayerError" + error);
-
   }
 
   @Override
@@ -196,9 +186,5 @@ public class AudioPlayer implements Player.EventListener {
   @Override
   public void onSeekProcessed() {
     Log.v(TAG, "onSeekProcessed");
-  }
-
-  public State getState() {
-    return state;
   }
 }
