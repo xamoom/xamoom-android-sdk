@@ -91,6 +91,7 @@ public class AudioPlayer implements Player.EventListener {
       prepareStreaming(currentMediaFile.getUri());
     }
 
+    exoPlayer.seekTo(currentMediaFile.getPlaybackPosition());
     exoPlayer.setPlayWhenReady(true);
   }
 

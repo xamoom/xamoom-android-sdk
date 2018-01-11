@@ -23,6 +23,7 @@ import dalvik.annotation.TestTarget;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotSame;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
@@ -89,6 +90,7 @@ public class AudioPlayerTest {
 
     Mockito.verify(mockExoPlayer).prepare(Mockito.any(MediaSource.class));
     Mockito.verify(mockExoPlayer).setPlayWhenReady(eq(true));
+    Mockito.verify(mockExoPlayer).seekTo(eq(0L));
   }
 
   @Test
