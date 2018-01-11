@@ -1,7 +1,10 @@
 package com.xamoom.android.xamoomcontentblocks;
 
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 /**
  * Created by raphaelseher on 10.01.18.
@@ -12,6 +15,10 @@ public class MediaFile {
   private AudioPlayer audioPlayer;
   private Uri uri;
   private EventListener eventListener;
+  private long duration;
+  private long playbackPosition;
+  private final Handler handler = new Handler();
+
 
   public MediaFile(@NonNull AudioPlayer audioPlayer, @NonNull Uri uri, @NonNull int position) {
     this.audioPlayer = audioPlayer;
@@ -37,12 +44,14 @@ public class MediaFile {
   }
 
   void started() {
+    startMonitoringPlaybackPosition();
     if (eventListener != null) {
       eventListener.started();
     }
   }
 
-  public void paused() {
+  void paused() {
+    stopMonitoringPlaybackPosition();
     if (eventListener != null) {
       eventListener.paused();
     }
@@ -55,9 +64,31 @@ public class MediaFile {
   }
 
   void finished() {
+    stopMonitoringPlaybackPosition();
     if (eventListener != null) {
       eventListener.finished();
     }
+  }
+
+  void updateDuration(long duration) {
+    this.duration = duration;
+  }
+
+  private void startMonitoringPlaybackPosition() {
+    handler.postDelayed(new Runnable() {
+      @Override
+      public void run() {
+        playbackPosition = audioPlayer.getPlaybackPosition(position);
+        if (eventListener != null) {
+          eventListener.updatePlaybackPosition(playbackPosition);
+        }
+        handler.postDelayed(this, 300);
+      }
+    }, 300);
+  }
+
+  private void stopMonitoringPlaybackPosition() {
+    handler.removeCallbacksAndMessages(null);
   }
 
   public interface EventListener {
@@ -65,6 +96,7 @@ public class MediaFile {
     void started();
     void paused();
     void finished();
+    void updatePlaybackPosition(long position);
   }
 
   public void setEventListener(EventListener eventListener) {
@@ -77,5 +109,13 @@ public class MediaFile {
 
   public int getPosition() {
     return position;
+  }
+
+  public long getDuration() {
+    return duration;
+  }
+
+  public long getPlaybackPosition() {
+    return playbackPosition;
   }
 }

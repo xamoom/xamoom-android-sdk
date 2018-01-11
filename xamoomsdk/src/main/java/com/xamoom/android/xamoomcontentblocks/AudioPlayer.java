@@ -107,6 +107,13 @@ public class AudioPlayer implements Player.EventListener {
     }
   }
 
+  public long getPlaybackPosition(int position) {
+    if (currentMediaFile == null || currentMediaFile != mediaFiles.get(position)) {
+      return -1;
+    }
+    return exoPlayer.getCurrentPosition();
+  }
+
   @Override
   public void onTimelineChanged(Timeline timeline, Object manifest) {
     Log.v(TAG, "onTimelineChanged " + timeline);
@@ -133,6 +140,9 @@ public class AudioPlayer implements Player.EventListener {
         break;
       case Player.STATE_READY:
         Log.v(TAG, "State: READY");
+
+        currentMediaFile.updateDuration(exoPlayer.getDuration());
+
         if (playWhenReady) {
           currentMediaFile.started();
           state = State.PLAYING;

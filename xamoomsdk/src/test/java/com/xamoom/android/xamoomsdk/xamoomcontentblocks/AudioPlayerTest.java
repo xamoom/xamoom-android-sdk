@@ -19,9 +19,13 @@ import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 
+import dalvik.annotation.TestTarget;
+
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotSame;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
 import static org.robolectric.shadows.util.DataSource.toDataSource;
 
@@ -39,8 +43,8 @@ public class AudioPlayerTest {
     mockEventListener = Mockito.mock(MediaFile.EventListener.class);
 
     ApplicationInfo mockApplicationInfo = Mockito.mock(ApplicationInfo.class);
-    Mockito.when(mockContext.getApplicationInfo()).thenReturn(mockApplicationInfo);
-    Mockito.when(mockApplicationInfo.loadLabel(Mockito.any(PackageManager.class)))
+    when(mockContext.getApplicationInfo()).thenReturn(mockApplicationInfo);
+    when(mockApplicationInfo.loadLabel(Mockito.any(PackageManager.class)))
         .thenReturn("AppName");
   }
 
@@ -118,6 +122,7 @@ public class AudioPlayerTest {
     audioPlayer.onPlayerStateChanged(false, 3);
 
     Mockito.verify(mockExoPlayer).setPlayWhenReady(eq(false));
+    Mockito.verify(mockExoPlayer, times(2)).getDuration();
     Mockito.verify(mockEventListener).started();
     Mockito.verify(mockEventListener).paused();
   }
@@ -147,5 +152,18 @@ public class AudioPlayerTest {
     audioPlayer.onLoadingChanged(true);
 
     Mockito.verify(mockEventListener).loadingChanged(eq(true));
+  }
+
+  @Test
+  public void testPlaybackPosition() {
+    AudioPlayer audioPlayer = new AudioPlayer(RuntimeEnvironment.application, mockExoPlayer);
+    Uri uri = Uri.parse("www.xamoom.com");
+    MediaFile mediaFile1 = audioPlayer.createMediaFile(uri, 0);
+    mediaFile1.setEventListener(mockEventListener);
+    audioPlayer.start(0);
+
+    when(mockExoPlayer.getCurrentPosition()).thenReturn(101L);
+
+    Assert.assertEquals(101L, audioPlayer.getPlaybackPosition(0));
   }
 }
