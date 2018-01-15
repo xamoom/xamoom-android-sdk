@@ -21,7 +21,7 @@ public class MediaFile {
   private EventListener eventListener;
   private State state = State.IDLE;
   private long duration;
-  private long playbackPosition;
+  private long playbackPosition = (long) 0.0;
   private final Handler handler = new Handler();
 
 
