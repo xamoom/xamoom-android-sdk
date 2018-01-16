@@ -15,7 +15,12 @@
         android:supportsRtl="true">
 
         <service android:enabled="true"
-                 android:name="com.xamoom.android.xamoomcontentblocks.AudioPlayerService" />
+                 android:name="com.xamoom.android.xamoomcontentblocks.AudioPlayerService">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+                <action android:name="android.media.AUDIO_BECOMING_NOISY" />
+            </intent-filter>
+        </service>
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -41,6 +46,13 @@
         </provider>
 
         <activity android:name="com.xamoom.android.pushnotifications.XamoomPushActivity"/>
+
+        <receiver android:name="android.support.v4.media.session.MediaButtonReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+                <action android:name="android.media.AUDIO_BECOMING_NOISY" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

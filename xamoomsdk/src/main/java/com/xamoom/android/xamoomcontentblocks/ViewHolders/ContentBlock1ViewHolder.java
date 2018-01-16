@@ -36,6 +36,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.xamoom.android.xamoomcontentblocks.AudioPlayerService;
+import com.xamoom.android.xamoomcontentblocks.MediaFile;
 import com.xamoom.android.xamoomcontentblocks.Views.MovingBarsView;
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
@@ -68,6 +69,7 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
   private FileManager mFileManager;
   private boolean mPrepared = false;
   private boolean mError = false;
+  private boolean playing = false;
 
   private String url;
 
@@ -87,6 +89,45 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
         case AudioPlayerService.MSG_SET_URL:
           Log.v(TAG, "Did work.");
           break;
+
+        case AudioPlayerService.MSG_AUDIO_EVENT_STARTED:
+          Log.v(TAG, "MSG_AUDIO_EVENT_STARTED");
+          playing = true;
+          mMovingBarsView.startAnimation();
+          mPlayPauseButton.setBackground(pauseIcon);
+          break;
+
+        case AudioPlayerService.MSG_AUDIO_EVENT_PAUSED:
+          Log.v(TAG, "MSG_AUDIO_EVENT_PAUSED");
+          playing = false;
+          mMovingBarsView.stopAnimation();
+          mPlayPauseButton.setBackground(playIcon);
+          break;
+
+        case AudioPlayerService.MSG_AUDIO_EVENT_FINISHED:
+          Log.v(TAG, "MSG_AUDIO_EVENT_FINISHED");
+          playing = false;
+          mMovingBarsView.stopAnimation();
+          mPlayPauseButton.setBackground(playIcon);
+          updateProgress(0,0);
+          break;
+
+        case AudioPlayerService.MSG_AUDIO_EVENT_UPDATE_PROGRESS:
+          Bundle bundle = msg.getData();
+          long duration = bundle.getLong("DURATION");
+          long position = bundle.getLong("POSITION");
+          if (duration > 0 && position > 0) {
+            updateProgress(duration, position);
+          }
+          Log.v(TAG, "MSG_AUDIO_EVENT_UPDATE_PROGRESS "+ duration + " and " + position);
+          break;
+
+        case AudioPlayerService.MSG_AUDIO_EVENT_UPDATE_LOADING:
+          boolean isLoading = msg.arg1 == 1;
+          Log.v(TAG, "MSG_AUDIO_EVENT_UPDATE_LOADING " +
+              (isLoading ? "is not loading" : "is loading"));
+          break;
+
         default:
           super.handleMessage(msg);
       }
@@ -110,15 +151,6 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
         Message msg = Message.obtain(null,
             AudioPlayerService.MSG_REGISTER_CLIENT);
         msg.replyTo = messenger;
-        mService.send(msg);
-
-        // Give it some value as an example.
-        msg = Message.obtain(null,
-            AudioPlayerService.MSG_SET_URL, 0, 0);
-        Bundle bundle = new Bundle();
-        bundle.putString("URL", url);
-        bundle.putInt("POS", getAdapterPosition());
-        msg.setData(bundle);
         mService.send(msg);
       } catch (RemoteException e) {
         // In this case the service has crashed before we could even
@@ -208,15 +240,13 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
     backwardIcon.setColorFilter(filter);
     mBackwardButton.setBackground(backwardIcon);
 
-    mForwardButton.setOnClickListener(mForwardButtonClickListener);
-    mBackwardButton.setOnClickListener(mBackwardButtonClickListener);
-
+    //mForwardButton.setOnClickListener(mForwardButtonClickListener);
+    //mBackwardButton.setOnClickListener(mBackwardButtonClickListener);
     doBindService();
   }
 
-  public void setupContentBlock(ContentBlock contentBlock, boolean offline) {
-    url = contentBlock.getFileId();
-
+  public void setupContentBlock(final ContentBlock contentBlock, boolean offline) {
+    playing = false;
     mError = false;
     mPlayPauseButton.setEnabled(true);
     mForwardButton.setEnabled(true);
@@ -237,12 +267,25 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
     mPlayPauseButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        Message msg = Message.obtain(null,
-            AudioPlayerService.MSG_PLAY, 0, 0);
-        Bundle bundle = new Bundle();
-        bundle.putString("URL", url);
-        bundle.putInt("POS", getAdapterPosition());
-        msg.setData(bundle);
+        // Give it some value as an example.
+        Message msg;
+        if (playing) {
+          msg = Message.obtain(null,
+              AudioPlayerService.MSG_ACTION_PAUSE);
+          msg.replyTo = messenger;
+          Bundle bundle = new Bundle();
+          bundle.putInt("POS", getAdapterPosition());
+          msg.setData(bundle);
+        } else {
+          msg = Message.obtain(null,
+              AudioPlayerService.MSG_SET_URL);
+          msg.replyTo = messenger;
+          Bundle bundle = new Bundle();
+          bundle.putString("URL", contentBlock.getFileId());
+          bundle.putInt("POS", getAdapterPosition());
+          msg.setData(bundle);
+        }
+
         try {
           mService.send(msg);
         } catch (RemoteException e) {
@@ -270,6 +313,7 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
     }*/
   }
 
+  /*
   private void setupMusicPlayer(final Uri fileUrl) {
     if(mMediaPlayer == null) {
       mMediaPlayer = new MediaPlayer();
@@ -333,26 +377,7 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
       });
     }
   }
-
-  private void resetMediaPlayer() {
-    // if the play button is pressed to times fast, it could happen to be in the wrong state
-    // when calling the prepareAsync() method.
-    if (!mPrepared || mError) {
-      return;
-    }
-
-    mPrepared = false;
-    stopUpdatingProgress();
-    mMovingBarsView.stopAnimation();
-    mMediaPlayer.prepareAsync();
-  }
-
-  private MediaPlayer.OnCompletionListener mOnCompletionListener = new MediaPlayer.OnCompletionListener() {
-    @Override
-    public void onCompletion(MediaPlayer mp) {
-      resetMediaPlayer();
-    }
-  };
+  */
 
   @SuppressLint("DefaultLocale")
   private String getTimeString(int milliseconds) {
@@ -370,6 +395,7 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
     return output;
   }
 
+  /*
   private View.OnClickListener mForwardButtonClickListener = new View.OnClickListener() {
     @Override
     public void onClick(View v) {
@@ -399,40 +425,12 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
       }
     }
   };
+  */
 
-  private void startUpdatingProgress() {
-    //Make sure you update Seekbar on UI thread
-    mRunnable = new Runnable() {
-      @Override
-      public void run() {
-        if (mFragment.getActivity() == null) {
-          stopUpdatingProgress();
-        }
-
-        if (mMediaPlayer != null) {
-          updateProgress();
-        } else {
-          mHandler.removeCallbacks(this);
-        }
-        mHandler.postDelayed(this, 100);
-      }
-    };
-
-    mFragment.getActivity().runOnUiThread(mRunnable);
-  }
-
-  private void updateProgress() {
-    int currentPosition = mMediaPlayer.getCurrentPosition();
-    mSongProgressBar.setProgress(currentPosition);
-    mRemainingSongTimeTextView.setText(getTimeString((mMediaPlayer.getDuration() - currentPosition)));
-  }
-
-  private void stopUpdatingProgress() {
-    mHandler.removeCallbacks(mRunnable);
-    if (mMediaPlayer != null)
-      mMediaPlayer.stop();
-    mPlayPauseButton.setBackground(playIcon);
-    mSongProgressBar.setProgress(0);
+  private void updateProgress(long duration, long position) {
+    mSongProgressBar.setMax((int) duration);
+    mSongProgressBar.setProgress((int) position);
+    mRemainingSongTimeTextView.setText(getTimeString((int) (duration - position)));
   }
 
   public void setMediaPlayer(MediaPlayer mediaPlayer) {

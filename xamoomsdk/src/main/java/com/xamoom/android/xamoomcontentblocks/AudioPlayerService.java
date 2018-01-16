@@ -24,18 +24,24 @@ public class AudioPlayerService extends Service {
   public static final int MSG_REGISTER_CLIENT = 1;
   public static final int MSG_UNREGISTER_CLIENT = 2;
   public static final int MSG_SET_URL = 3;
-  public static final int MSG_PLAY = 4;
-
+  public static final int MSG_ACTION_PLAY = 4;
+  public static final int MSG_ACTION_PAUSE = 5;
+  public static final int MSG_AUDIO_EVENT_STARTED = 6;
+  public static final int MSG_AUDIO_EVENT_PAUSED = 7;
+  public static final int MSG_AUDIO_EVENT_FINISHED = 8;
+  public static final int MSG_AUDIO_EVENT_UPDATE_PROGRESS = 9;
+  public static final int MSG_AUDIO_EVENT_UPDATE_LOADING = 10;
   public static final String AUDIO_URL = "AudioPlayerService.audio_url";
 
-  ArrayList<Messenger> clients = new ArrayList<Messenger>();
-  HashMap<String, MediaFile> mediaFiles = new HashMap<>();
-
+  private ArrayList<Messenger> clients = new ArrayList<Messenger>();
+  private HashMap<MediaFile, Messenger> mediaFileMessengers = new HashMap<>();
   private AudioPlayer audioPlayer;
+  final Messenger messenger = new Messenger(new IncomingHandler());
 
   class IncomingHandler extends Handler {
     @Override
-    public void handleMessage(Message msg) {
+    public void handleMessage(final Message msg) {
+      int position = 0;
       switch (msg.what) {
         case MSG_REGISTER_CLIENT:
           clients.add(msg.replyTo);
@@ -44,35 +50,113 @@ public class AudioPlayerService extends Service {
           clients.remove(msg.replyTo);
           break;
         case MSG_SET_URL:
-          for (int i=clients.size()-1; i>=0; i--) {
-            try {
-              String url = msg.getData().getString("URL");
-              int position = msg.getData().getInt("POS");
-              Log.v(TAG, "Got message from ViewHolder: " + url);
-              mediaFiles.put(url, audioPlayer.createMediaFile(Uri.parse(url), position));
-              clients.get(i).send(Message.obtain(null,
-                  MSG_SET_URL, 0, 0));
-            } catch (RemoteException e) {
-              // The client is dead.  Remove it from the list;
-              // we are going through the list from back to front
-              // so this is safe to do inside the loop.
-              clients.remove(i);
-            }
-          }
-          break;
-        case MSG_PLAY:
-          Log.v(TAG, "Got play message");
           String url = msg.getData().getString("URL");
-          MediaFile mediaFile = mediaFiles.get(url);
+          position = msg.getData().getInt("POS");
+          final MediaFile mediaFile = audioPlayer.createMediaFile(Uri.parse(url), position);
+          mediaFileMessengers.put(mediaFile, msg.replyTo);
+          mediaFile.setEventListener(new MediaFile.EventListener() {
+            @Override
+            public void loadingChanged(boolean isLoading) {
+              Log.v(TAG, "loadingChanged: " + isLoading);
+
+              Messenger messenger = mediaFileMessengers.get(mediaFile);
+              if (messenger == null) {
+                Log.e(TAG, "Messenger for mediaFile not found.");
+                return;
+              }
+              try {
+                messenger.send(Message.obtain(null, MSG_AUDIO_EVENT_UPDATE_LOADING,
+                    isLoading ? 0 : 1,0));
+              } catch (RemoteException e) {
+                e.printStackTrace();
+              }
+            }
+
+            @Override
+            public void started() {
+              Log.v(TAG, "started: " + mediaFile);
+              Messenger messenger = mediaFileMessengers.get(mediaFile);
+              if (messenger == null) {
+                Log.e(TAG, "Messenger for mediaFile not found.");
+                return;
+              }
+              try {
+                messenger.send(Message.obtain(null, MSG_AUDIO_EVENT_STARTED,
+                    0,0));
+              } catch (RemoteException e) {
+                e.printStackTrace();
+              }
+            }
+
+            @Override
+            public void paused() {
+              Log.v(TAG, "paused: " + mediaFile);
+
+              Messenger messenger = mediaFileMessengers.get(mediaFile);
+              if (messenger == null) {
+                Log.e(TAG, "Messenger for mediaFile not found.");
+                return;
+              }
+              try {
+                Message msg = Message.obtain(null, MSG_AUDIO_EVENT_PAUSED,
+                    0,0);
+                messenger.send(msg);
+              } catch (RemoteException e) {
+                e.printStackTrace();
+              }
+            }
+
+            @Override
+            public void finished() {
+              Log.v(TAG, "finished: " + mediaFile);
+
+              Messenger messenger = mediaFileMessengers.get(mediaFile);
+              if (messenger == null) {
+                Log.e(TAG, "Messenger for mediaFile not found.");
+                return;
+              }
+              try {
+                messenger.send(Message.obtain(null, MSG_AUDIO_EVENT_FINISHED,
+                    0,0));
+              } catch (RemoteException e) {
+                e.printStackTrace();
+              }
+            }
+
+            @Override
+            public void updatePlaybackPosition(long position) {
+              //Log.v(TAG, "updatePlaybackPosition: " + mediaFile);
+
+              Messenger messenger = mediaFileMessengers.get(mediaFile);
+              if (messenger == null) {
+                Log.e(TAG, "Messenger for mediaFile not found.");
+                return;
+              }
+              try {
+                Message msg = Message.obtain(null, MSG_AUDIO_EVENT_UPDATE_PROGRESS,
+                    0,0);
+                Bundle bundle = new Bundle();
+                bundle.putLong("DURATION", mediaFile.getDuration());
+                bundle.putLong("POSITION", position);
+                msg.setData(bundle);
+                messenger.send(msg);
+              } catch (RemoteException e) {
+                e.printStackTrace();
+              }
+            }
+          });
           mediaFile.start();
-        break;
+          break;
+        case MSG_ACTION_PAUSE:
+          position = msg.getData().getInt("POS");
+          audioPlayer.pause(position);
+          break;
         default:
           super.handleMessage(msg);
       }
     }
   }
 
-  final Messenger messenger = new Messenger(new IncomingHandler());
 
   @Nullable
   @Override
@@ -88,13 +172,7 @@ public class AudioPlayerService extends Service {
 
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
-    Log.v(TAG, "onStartCommand");
-    if (intent != null) {
-      if (intent.getExtras() != null) {
-        String url = intent.getExtras().getString(AUDIO_URL);
-        Log.v(TAG, "url " + url);
-      }
-    }
+    Log.v(TAG, "onStartCommand " + intent);
     return START_STICKY;
   }
 

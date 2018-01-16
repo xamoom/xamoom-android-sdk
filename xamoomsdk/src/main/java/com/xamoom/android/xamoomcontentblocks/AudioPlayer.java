@@ -195,4 +195,8 @@ public class AudioPlayer implements Player.EventListener {
     }
     return exoPlayer.getCurrentPosition();
   }
+
+  public MediaFile getCurrentMediaFile() {
+    return currentMediaFile;
+  }
 }
