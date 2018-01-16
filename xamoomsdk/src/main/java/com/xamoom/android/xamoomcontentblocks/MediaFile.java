@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 /**
@@ -15,20 +16,27 @@ public class MediaFile {
     IDLE, PLAYING, PAUSED
   }
 
-  private int position;
+  private State state = State.IDLE;
   private AudioPlayer audioPlayer;
   private Uri uri;
-  private EventListener eventListener;
-  private State state = State.IDLE;
+  private int position;
+  private String title;
+  private String artist;
+  private String album;
   private long duration;
   private long playbackPosition = (long) 0.0;
+  private EventListener eventListener;
   private final Handler handler = new Handler();
 
 
-  public MediaFile(@NonNull AudioPlayer audioPlayer, @NonNull Uri uri, @NonNull int position) {
+  public MediaFile(@NonNull AudioPlayer audioPlayer, @NonNull Uri uri, @NonNull int position,
+                   @Nullable String title, @Nullable String artist, @Nullable String album) {
     this.audioPlayer = audioPlayer;
     this.uri = uri;
     this.position = position;
+    this.title = title;
+    this.artist = artist;
+    this.album = album;
   }
 
   public AudioPlayer getAudioPlayer() {
@@ -144,6 +152,18 @@ public class MediaFile {
 
   public int getPosition() {
     return position;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public String getArtist() {
+    return artist;
+  }
+
+  public String getAlbum() {
+    return album;
   }
 
   public long getDuration() {
