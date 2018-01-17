@@ -240,8 +240,8 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
     backwardIcon.setColorFilter(filter);
     mBackwardButton.setBackground(backwardIcon);
 
-    //mForwardButton.setOnClickListener(mForwardButtonClickListener);
-    //mBackwardButton.setOnClickListener(mBackwardButtonClickListener);
+    mForwardButton.setOnClickListener(mForwardButtonClickListener);
+    mBackwardButton.setOnClickListener(mBackwardButtonClickListener);
     doBindService();
   }
 
@@ -397,18 +397,19 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
     return output;
   }
 
-  /*
+
   private View.OnClickListener mForwardButtonClickListener = new View.OnClickListener() {
     @Override
     public void onClick(View v) {
       Log.v("MediaPlayer", "Forward");
-      if (mMediaPlayer != null && mPrepared) {
-        int seekTime = mMediaPlayer.getCurrentPosition() + SEEK_TIME;
-        if (seekTime > mMediaPlayer.getDuration()) {
-          seekTime = mMediaPlayer.getDuration();
-        }
-        mMediaPlayer.seekTo(seekTime);
-        updateProgress();
+      Message msg = Message.obtain(null,
+          AudioPlayerService.MSG_ACTION_SEEK_FORWARD);
+      msg.replyTo = messenger;
+
+      try {
+        mService.send(msg);
+      } catch (RemoteException e) {
+        e.printStackTrace();
       }
     }
   };
@@ -417,17 +418,18 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
     @Override
     public void onClick(View v) {
       Log.v("MediaPlayer", "Backward");
-      if (mMediaPlayer != null && mPrepared) {
-        int seekTime = mMediaPlayer.getCurrentPosition() - SEEK_TIME;
-        if (seekTime < 0) {
-          seekTime = 0;
-        }
-        mMediaPlayer.seekTo(seekTime);
-        updateProgress();
+      Message msg = Message.obtain(null,
+          AudioPlayerService.MSG_ACTION_SEEK_BACKWARD);
+      msg.replyTo = messenger;
+
+      try {
+        mService.send(msg);
+      } catch (RemoteException e) {
+        e.printStackTrace();
       }
     }
   };
-  */
+
 
   private void updateProgress(long duration, long position) {
     mSongProgressBar.setMax((int) duration);
