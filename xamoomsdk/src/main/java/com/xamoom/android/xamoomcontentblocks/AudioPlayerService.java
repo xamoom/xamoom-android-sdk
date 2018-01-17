@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -228,14 +229,6 @@ public class AudioPlayerService extends Service {
     }
   }
 
-
-  private BroadcastReceiver mNoisyReceiver = new BroadcastReceiver() {
-    @Override
-    public void onReceive(Context context, Intent intent) {
-      Log.v(TAG, "became noisy");
-    }
-  };
-
   @Nullable
   @Override
   public IBinder onBind(Intent intent) {
@@ -309,6 +302,8 @@ public class AudioPlayerService extends Service {
         Log.e(TAG, "onAudioFocusChange " + focusChange);
       }
     }, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+
+    registerBecomingNoisyReceiver();
   }
 
   @Override
@@ -332,7 +327,26 @@ public class AudioPlayerService extends Service {
   public void onDestroy() {
     super.onDestroy();
     mediaSession.release();
+    unregisterBecomingNoisyReceiver();
   }
+
+  private void registerBecomingNoisyReceiver() {
+    //register after getting audio focus
+    IntentFilter intentFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
+    registerReceiver(noisyReceiver, intentFilter);
+  }
+
+  private void unregisterBecomingNoisyReceiver() {
+    unregisterReceiver(noisyReceiver);
+  }
+
+  private BroadcastReceiver noisyReceiver = new BroadcastReceiver() {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+      Log.v(TAG, "became noisy");
+      audioPlayer.getCurrentMediaFile().pause();
+    }
+  };
 
   private void showMediaNotification(boolean playing) {
     NotificationCompat.Builder builder = MediaStyleHelper.from(getApplicationContext(), mediaSession);
