@@ -56,10 +56,10 @@ public class AudioPlayer implements Player.EventListener {
     exoPlayer.addListener(this);
   }
 
-  public MediaFile createMediaFile(Uri uri, int position) {
+  public MediaFile createMediaFile(Uri uri, int position, String title, String artist, String album) {
     MediaFile mediaFile = mediaFiles.get(position);
     if (mediaFile == null) {
-      mediaFile = new MediaFile(this, uri, position);
+      mediaFile = new MediaFile(this, uri, position, title, artist, album);
       mediaFiles.put(mediaFile.getPosition(), mediaFile);
     }
     return mediaFile;
