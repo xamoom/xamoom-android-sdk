@@ -99,6 +99,11 @@ public class AudioPlayer implements Player.EventListener {
     exoPlayer.setPlayWhenReady(false);
   }
 
+  public void stop() {
+    Log.v(TAG, "stop");
+    exoPlayer.stop();
+  }
+
   public void seekForward(long seekTime, int position) {
     long currentPosition = exoPlayer.getCurrentPosition();
     exoPlayer.seekTo(currentPosition + seekTime);
@@ -122,7 +127,9 @@ public class AudioPlayer implements Player.EventListener {
   @Override
   public void onLoadingChanged(boolean isLoading) {
     Log.v(TAG, "onLoadingChanged " + String.valueOf(isLoading));
-    currentMediaFile.loading(isLoading);
+    if (currentMediaFile != null) {
+      currentMediaFile.loading(isLoading);
+    }
   }
 
   @Override
@@ -149,10 +156,8 @@ public class AudioPlayer implements Player.EventListener {
         break;
       case Player.STATE_ENDED:
         Log.v(TAG, "State: ENDED");
-        exoPlayer.stop();
         currentMediaFile.finished();
-        mediaFiles.remove(currentMediaFile.getPosition());
-        currentMediaFile = null;
+        currentMediaFile.updatePlaybackPosition(0);
         break;
     }
   }
@@ -186,7 +191,9 @@ public class AudioPlayer implements Player.EventListener {
   public void onSeekProcessed() {
     long position = exoPlayer.getCurrentPosition();
     Log.v(TAG, "onSeekProcessed updatePlaybackPosition: " + position);
-    currentMediaFile.updatePlaybackPosition(position);
+    if (currentMediaFile != null) {
+      currentMediaFile.updatePlaybackPosition(position);
+    }
   }
 
   public long getPlaybackPosition(int position) {

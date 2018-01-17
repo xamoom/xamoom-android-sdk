@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 
 import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.xamoom.android.xamoomcontentblocks.AudioPlayer;
 import com.xamoom.android.xamoomcontentblocks.MediaFile;
@@ -133,6 +134,25 @@ public class AudioPlayerTest {
   }
 
   @Test
+  public void testStop() {
+    AudioPlayer audioPlayer = new AudioPlayer(RuntimeEnvironment.application, mockExoPlayer);
+    Uri uri = Uri.parse("www.xamoom.com");
+    MediaFile mediaFile1 = audioPlayer.createMediaFile(uri, 0, "title", "artist", "album");
+    mediaFile1.setEventListener(mockEventListener);
+
+    audioPlayer.start(0);
+    audioPlayer.onPlayerStateChanged(true, 3);
+
+    audioPlayer.stop();
+    audioPlayer.onPlayerStateChanged(false, Player.STATE_ENDED);
+
+    Mockito.verify(mockEventListener).started();
+    Mockito.verify(mockEventListener).finished();
+    Mockito.verify(mockExoPlayer).stop();
+  }
+
+
+  @Test
   public void testEndOfPlayback() {
     AudioPlayer audioPlayer = new AudioPlayer(RuntimeEnvironment.application, mockExoPlayer);
     Uri uri = Uri.parse("www.xamoom.com");
@@ -142,7 +162,6 @@ public class AudioPlayerTest {
 
     audioPlayer.onPlayerStateChanged(true, 4);
 
-    Mockito.verify(mockExoPlayer).stop();
     Mockito.verify(mockEventListener).finished();
   }
 
