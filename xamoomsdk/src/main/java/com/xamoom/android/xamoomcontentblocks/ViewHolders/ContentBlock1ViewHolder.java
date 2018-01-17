@@ -283,6 +283,8 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
           Bundle bundle = new Bundle();
           bundle.putString("URL", contentBlock.getFileId());
           bundle.putInt("POS", getAdapterPosition());
+          bundle.putString("TITLE", contentBlock.getTitle());
+          bundle.putString("ARTIST", contentBlock.getArtists());
           msg.setData(bundle);
         }
 
