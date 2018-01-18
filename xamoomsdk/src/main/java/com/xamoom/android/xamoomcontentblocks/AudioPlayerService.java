@@ -201,7 +201,8 @@ public class AudioPlayerService extends Service {
           .setActions(PlaybackStateCompat.ACTION_PAUSE |
               PlaybackStateCompat.ACTION_PLAY_PAUSE |
               PlaybackStateCompat.ACTION_FAST_FORWARD |
-              PlaybackStateCompat.ACTION_REWIND)
+              PlaybackStateCompat.ACTION_REWIND |
+              PlaybackStateCompat.ACTION_STOP)
           .build());
 
       mediaSession.setActive(true);
@@ -228,7 +229,8 @@ public class AudioPlayerService extends Service {
           .setState(PlaybackStateCompat.STATE_PAUSED,
               PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0)
           .setActions(PlaybackStateCompat.ACTION_PLAY |
-              PlaybackStateCompat.ACTION_PLAY_PAUSE)
+              PlaybackStateCompat.ACTION_PLAY_PAUSE |
+              PlaybackStateCompat.ACTION_STOP)
           .build());
 
 
@@ -296,7 +298,8 @@ public class AudioPlayerService extends Service {
           .setActions(PlaybackStateCompat.ACTION_PAUSE |
               PlaybackStateCompat.ACTION_PLAY_PAUSE |
               PlaybackStateCompat.ACTION_FAST_FORWARD |
-              PlaybackStateCompat.ACTION_REWIND)
+              PlaybackStateCompat.ACTION_REWIND |
+              PlaybackStateCompat.ACTION_STOP)
           .build());
 
       Messenger messenger = mediaFileMessengers.get(mediaFile);
@@ -367,7 +370,7 @@ public class AudioPlayerService extends Service {
 
     @Override
     public void onStop() {
-      audioPlayer.getCurrentMediaFile().pause();
+      audioPlayer.stop();
       Log.v(TAG, "mediaSession onStop");
       super.onStop();
     }
@@ -434,20 +437,24 @@ public class AudioPlayerService extends Service {
       playPauseButtonIndex = 1;
       builder.addAction(new android.support.v4.app.NotificationCompat.Action(
           R.drawable.ic_notification_rewind, "Backward",
-          MediaButtonReceiver.buildMediaButtonPendingIntent(getApplicationContext(), PlaybackStateCompat.ACTION_REWIND))
+          MediaButtonReceiver.buildMediaButtonPendingIntent(getApplicationContext(),
+              PlaybackStateCompat.ACTION_REWIND))
       );
       builder.addAction(new android.support.v4.app.NotificationCompat.Action(
           R.drawable.ic_notification_pause, "Pause",
-          MediaButtonReceiver.buildMediaButtonPendingIntent(getApplicationContext(), PlaybackStateCompat.ACTION_PAUSE))
+          MediaButtonReceiver.buildMediaButtonPendingIntent(getApplicationContext(),
+              PlaybackStateCompat.ACTION_PAUSE))
       );
       builder.addAction(new android.support.v4.app.NotificationCompat.Action(
           R.drawable.ic_notification_forward, "Forward",
-          MediaButtonReceiver.buildMediaButtonPendingIntent(getApplicationContext(), PlaybackStateCompat.ACTION_FAST_FORWARD))
+          MediaButtonReceiver.buildMediaButtonPendingIntent(getApplicationContext(),
+              PlaybackStateCompat.ACTION_FAST_FORWARD))
       );
     } else {
       builder.addAction(new android.support.v4.app.NotificationCompat.Action(
           R.drawable.ic_notification_play_arrow, "Play",
-          MediaButtonReceiver.buildMediaButtonPendingIntent(getApplicationContext(), PlaybackStateCompat.ACTION_PLAY))
+          MediaButtonReceiver.buildMediaButtonPendingIntent(getApplicationContext(),
+              PlaybackStateCompat.ACTION_PLAY))
       );
     }
 
@@ -458,7 +465,9 @@ public class AudioPlayerService extends Service {
             .setShowActionsInCompactView(playPauseButtonIndex)
             .setMediaSession(mediaSession.getSessionToken())
             .setShowCancelButton(true)
-            .setCancelButtonIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(getApplicationContext(), PlaybackStateCompat.ACTION_STOP)));
+            .setCancelButtonIntent(
+                MediaButtonReceiver.buildMediaButtonPendingIntent(getApplicationContext(),
+                    PlaybackStateCompat.ACTION_STOP)));
 
     return builder.build();
 
