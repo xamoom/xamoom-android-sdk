@@ -79,7 +79,7 @@ public class AudioPlayer implements Player.EventListener {
     if (currentMediaFile != mediaFiles.get(position)) {
       Log.v(TAG, "PREPARING");
       if (currentMediaFile != null) {
-        currentMediaFile.paused();
+        currentMediaFile.pause();
       }
       currentMediaFile = mediaFiles.get(position);
       prepareStreaming(currentMediaFile.getUri());
