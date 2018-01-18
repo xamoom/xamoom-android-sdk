@@ -195,10 +195,6 @@ public class AudioPlayerService extends Service {
           .putString(MediaMetadataCompat.METADATA_KEY_TITLE, mediaFile.getTitle())
           .build());
 
-      Log.d(TAG, "Duration: " + mediaFile.getDuration());
-
-      mediaSession.setActive(true);
-
       mediaSession.setPlaybackState(new PlaybackStateCompat.Builder()
           .setState(PlaybackStateCompat.STATE_PLAYING,
               PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 1.0f)
@@ -208,6 +204,7 @@ public class AudioPlayerService extends Service {
               PlaybackStateCompat.ACTION_REWIND)
           .build());
 
+      mediaSession.setActive(true);
       startForeground(NOTIFICATION_ID, createMediaNotification(true));
 
       Messenger messenger = mediaFileMessengers.get(mediaFile);
@@ -278,22 +275,30 @@ public class AudioPlayerService extends Service {
         e.printStackTrace();
       }
     }
-    
+
 
     @Override
     public void updatePlaybackPosition(long position) {
       //Log.v(TAG, "updatePlaybackPosition: " + mediaFile);
-
-              /*
-              mediaSession.setPlaybackState(new PlaybackStateCompat.Builder()
-                  .setState(PlaybackStateCompat.STATE_PLAYING, position, 0)
-                   .setActions(PlaybackStateCompat.ACTION_PLAY |
-                          PlaybackStateCompat.ACTION_PLAY_PAUSE |
-                      PlaybackStateCompat.ACTION_FAST_FORWARD |
-                      PlaybackStateCompat.ACTION_REWIND)
-                  .build());
-              */
       MediaFile mediaFile = audioPlayer.getCurrentMediaFile();
+
+      mediaSession.setMetadata(new MediaMetadataCompat.Builder()
+          .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, mediaFile.getUri().toString())
+          .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, mediaFile.getAlbum())
+          .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, mediaFile.getArtist())
+          .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, mediaFile.getDuration())
+          .putString(MediaMetadataCompat.METADATA_KEY_TITLE, mediaFile.getTitle())
+          .build());
+
+      mediaSession.setPlaybackState(new PlaybackStateCompat.Builder()
+          .setState(PlaybackStateCompat.STATE_PLAYING,
+              PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 1.0f)
+          .setActions(PlaybackStateCompat.ACTION_PAUSE |
+              PlaybackStateCompat.ACTION_PLAY_PAUSE |
+              PlaybackStateCompat.ACTION_FAST_FORWARD |
+              PlaybackStateCompat.ACTION_REWIND)
+          .build());
+
       Messenger messenger = mediaFileMessengers.get(mediaFile);
       if (messenger == null) {
         Log.v(TAG, "Messenger for mediaFile not found.");
