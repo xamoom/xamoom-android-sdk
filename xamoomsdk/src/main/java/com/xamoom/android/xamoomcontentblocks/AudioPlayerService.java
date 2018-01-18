@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -63,9 +62,11 @@ public class AudioPlayerService extends Service {
       int position;
       switch (msg.what) {
         case MSG_REGISTER_CLIENT:
+          Log.v(TAG, "Register Client");
           clients.add(msg.replyTo);
           break;
         case MSG_UNREGISTER_CLIENT:
+          Log.v(TAG, "Unregister Client");
           clients.remove(msg.replyTo);
           break;
         case MSG_SET_URL:
@@ -152,6 +153,7 @@ public class AudioPlayerService extends Service {
 
   @Override
   public boolean stopService(Intent name) {
+    cancelMediaNotification();
     return super.stopService(name);
   }
 
@@ -206,7 +208,7 @@ public class AudioPlayerService extends Service {
               PlaybackStateCompat.ACTION_REWIND)
           .build());
 
-      showMediaNotification(true);
+      startForeground(NOTIFICATION_ID, createMediaNotification(true));
 
       Messenger messenger = mediaFileMessengers.get(mediaFile);
       if (messenger == null) {
@@ -232,7 +234,14 @@ public class AudioPlayerService extends Service {
               PlaybackStateCompat.ACTION_PLAY_PAUSE)
           .build());
 
-      showMediaNotification(false);
+
+      stopForeground(false);
+      Notification notification = createMediaNotification(false);
+      NotificationManager notificationManager =
+          (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+      if (notificationManager != null) {
+        notificationManager.notify(NOTIFICATION_ID, notification);
+      }
 
       Messenger messenger = mediaFileMessengers.get(audioPlayer.getCurrentMediaFile());
       if (messenger == null) {
@@ -252,7 +261,7 @@ public class AudioPlayerService extends Service {
     public void finished() {
       Log.v(TAG, "finished");
 
-      cancelMediaNotification();
+      stopForeground(true);
       dismissAudioFocus();
 
       mediaSession.setActive(false);
@@ -269,6 +278,7 @@ public class AudioPlayerService extends Service {
         e.printStackTrace();
       }
     }
+    
 
     @Override
     public void updatePlaybackPosition(long position) {
@@ -411,7 +421,7 @@ public class AudioPlayerService extends Service {
     }
   };
 
-  private void showMediaNotification(boolean playing) {
+  private Notification createMediaNotification(boolean playing) {
     NotificationCompat.Builder builder = MediaStyleHelper.from(getApplicationContext(), mediaSession);
 
     int playPauseButtonIndex = 0;
@@ -445,13 +455,14 @@ public class AudioPlayerService extends Service {
             .setShowCancelButton(true)
             .setCancelButtonIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(getApplicationContext(), PlaybackStateCompat.ACTION_STOP)));
 
-    Notification notification = builder.build();
+    return builder.build();
 
+    /*
     NotificationManager notificationManager =
         (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     if (notificationManager != null) {
       notificationManager.notify(NOTIFICATION_ID, notification);
-    }
+    }*/
   }
 
   private void cancelMediaNotification() {
@@ -470,4 +481,6 @@ public class AudioPlayerService extends Service {
 
     return color;
   }
+
+  private static final String CHANNEL_ID = "media_playback_channel";
 }
