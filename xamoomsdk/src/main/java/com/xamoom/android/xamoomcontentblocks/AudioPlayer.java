@@ -75,8 +75,8 @@ public class AudioPlayer implements Player.EventListener {
 
   public void start(int position) {
     Log.v(TAG, "start");
-
-    if (currentMediaFile != mediaFiles.get(position)) {
+    if (currentMediaFile != mediaFiles.get(position) ||
+        exoPlayer.getPlaybackState() == Player.STATE_IDLE) {
       Log.v(TAG, "PREPARING");
       if (currentMediaFile != null) {
         currentMediaFile.pause();
