@@ -58,7 +58,7 @@ public class AudioPlayer implements Player.EventListener {
 
   public MediaFile createMediaFile(Uri uri, int position, String title, String artist, String album) {
     MediaFile mediaFile = mediaFiles.get(position);
-    if (mediaFile == null || !mediaFile.getUri().toString().equalsIgnoreCase(uri.toString())) {
+    if (mediaFile == null) {
       mediaFile = new MediaFile(this, uri, position, title, artist, album);
       mediaFiles.put(mediaFile.getPosition(), mediaFile);
     }
