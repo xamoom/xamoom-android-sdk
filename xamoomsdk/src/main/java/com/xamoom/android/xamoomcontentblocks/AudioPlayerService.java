@@ -78,7 +78,6 @@ public class AudioPlayerService extends Service {
           MediaFile mediaFile = audioPlayer.createMediaFile(Uri.parse(url), position, title,
               artist, null);
           mediaFileMessengers.put(mediaFile, msg.replyTo);
-
           mediaFile.setEventListener(mediaFileEventListener);
 
           if (requestAudioFocus()) {
@@ -470,13 +469,6 @@ public class AudioPlayerService extends Service {
                     PlaybackStateCompat.ACTION_STOP)));
 
     return builder.build();
-
-    /*
-    NotificationManager notificationManager =
-        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-    if (notificationManager != null) {
-      notificationManager.notify(NOTIFICATION_ID, notification);
-    }*/
   }
 
   private void cancelMediaNotification() {
