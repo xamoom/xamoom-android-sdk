@@ -251,6 +251,8 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
     mPlayPauseButton.setEnabled(true);
     mForwardButton.setEnabled(true);
     mBackwardButton.setEnabled(true);
+    mSongProgressBar.setProgress(0);
+    mRemainingSongTimeTextView.setText("");
 
     if (contentBlock.getTitle() != null)
       mTitleTextView.setText(contentBlock.getTitle());
