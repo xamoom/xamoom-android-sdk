@@ -143,7 +143,7 @@ public class AudioPlayerService extends Service {
   public int onStartCommand(Intent intent, int flags, int startId) {
     Log.v(TAG, "onStartCommand " + intent);
     MediaButtonReceiver.handleIntent(mediaSession, intent);
-    return START_STICKY;
+    return START_NOT_STICKY;
   }
 
   @Override
