@@ -152,6 +152,7 @@ public class AudioPlayerService extends Service {
 
   @Override
   public boolean stopService(Intent name) {
+    stopForeground(true);
     cancelMediaNotification();
     return super.stopService(name);
   }
@@ -160,6 +161,7 @@ public class AudioPlayerService extends Service {
   public void onDestroy() {
     super.onDestroy();
     mediaSession.release();
+    cancelMediaNotification();
     unregisterBecomingNoisyReceiver();
   }
 
@@ -229,6 +231,8 @@ public class AudioPlayerService extends Service {
               PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0)
           .setActions(PlaybackStateCompat.ACTION_PLAY |
               PlaybackStateCompat.ACTION_PLAY_PAUSE |
+              PlaybackStateCompat.ACTION_FAST_FORWARD |
+              PlaybackStateCompat.ACTION_REWIND |
               PlaybackStateCompat.ACTION_STOP)
           .build());
 
