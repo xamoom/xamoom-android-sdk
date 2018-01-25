@@ -9,6 +9,7 @@
 package com.xamoom.android.xamoomsdk;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -67,9 +68,10 @@ import retrofit2.http.Url;
  * Get local saved data by setting {@link #setOffline(boolean)} to true. Data must be saved
  * using {@link com.xamoom.android.xamoomsdk.Storage.OfflineStorageManager}.
  */
-public class EnduserApi implements Parcelable {
+public class EnduserApi implements Parcelable, CallHandler.CallHandlerListener {
   private static final String TAG = EnduserApi.class.getSimpleName();
   private static final String API_URL = "https://xamoom-cloud.appspot.com/";
+  private static final String PREF_EPHEMERAL_ID = "com.xamoom.android.xamoomsdk.ephemeralid";
 
   private static EnduserApi sharedInstance;
 
@@ -81,8 +83,10 @@ public class EnduserApi implements Parcelable {
   private String language;
   private String systemLanguage;
   private boolean offline;
+  private SharedPreferences sharedPref;
+  private String ephemeralId;
 
-  public EnduserApi(final String apikey, Context context) {
+  public EnduserApi(@NonNull final String apikey, @NonNull Context context) {
     this.apiKey = apikey;
     this.context = context;
     this.offlineEnduserApi = new OfflineEnduserApi(context);
@@ -90,15 +94,18 @@ public class EnduserApi implements Parcelable {
     initRetrofit(apiKey);
     initMorpheus();
     initVars();
+    initSharedPreferences();
   }
 
-  public EnduserApi(Retrofit retrofit, Context context) {
+  public EnduserApi(@NonNull Retrofit retrofit, @NonNull Context context) {
     this.enduserApiInterface = retrofit.create(EnduserApiInterface.class);
     this.context = context;
     this.offlineEnduserApi = new OfflineEnduserApi(context);
 
+
     initMorpheus();
     initVars();
+    initSharedPreferences();
   }
 
   protected EnduserApi(Parcel in) {
@@ -106,14 +113,11 @@ public class EnduserApi implements Parcelable {
     initRetrofit(apiKey);
     initMorpheus();
     initVars();
+    initSharedPreferences();
     language = in.readString();
   }
 
-  private void initRetrofit(final String apiKey) {
-    if (apiKey == null) {
-      throw new NullPointerException("apiKey is null.");
-    }
-
+  private void initRetrofit(@NonNull final String apiKey) {
     OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
     builder.addInterceptor(new HTTPHeaderInterceptor(generateUserAgent(), apiKey));
     OkHttpClient httpClient = builder.build();
@@ -128,6 +132,7 @@ public class EnduserApi implements Parcelable {
   private void initMorpheus() {
     Morpheus morpheus = new Morpheus();
     callHandler = new CallHandler(morpheus);
+    callHandler.setListener(this);
 
     Deserializer.registerResourceClass("contents", Content.class);
     Deserializer.registerResourceClass("content", Content.class);
@@ -143,6 +148,17 @@ public class EnduserApi implements Parcelable {
   private void initVars() {
     systemLanguage = Locale.getDefault().getLanguage();
     language = systemLanguage;
+  }
+
+  private void initSharedPreferences() {
+    if (context == null) {
+      throw new NullPointerException("The given context is null.");
+    }
+    // generate unique name for preferences => {appid}.xamoomsdk.preferences
+    String preferencesName = String.format("%s.xamoomsdk.preferences",
+        context.getApplicationInfo().loadLabel(context.getPackageManager()).toString());
+    sharedPref = context.getSharedPreferences(preferencesName,
+        Context.MODE_PRIVATE);
   }
 
   /**
@@ -174,7 +190,7 @@ public class EnduserApi implements Parcelable {
     Map<String, String> params = UrlUtil.addContentParameter(UrlUtil.getUrlParameter(language),
         contentFlags);
 
-    Call<ResponseBody> call = enduserApiInterface.getContent(contentID, params);
+    Call<ResponseBody> call = enduserApiInterface.getContent(getEphemeralId(), contentID, params);
     callHandler.enqueCall(call, callback);
     return call;
   }
@@ -234,7 +250,7 @@ public class EnduserApi implements Parcelable {
     params = UrlUtil.addContentParameter(params, contentFlags);
     params = UrlUtil.addConditionsToUrl(params, conditions);
 
-    Call<ResponseBody> call = enduserApiInterface.getContents(params);
+    Call<ResponseBody> call = enduserApiInterface.getContents(getEphemeralId(), params);
     callHandler.enqueCall(call, callback);
     return call;
   }
@@ -310,7 +326,7 @@ public class EnduserApi implements Parcelable {
     params.put("filter[lat]", Double.toString(location.getLatitude()));
     params.put("filter[lon]", Double.toString(location.getLongitude()));
 
-    Call<ResponseBody> call = enduserApiInterface.getContents(params);
+    Call<ResponseBody> call = enduserApiInterface.getContents(getEphemeralId(), params);
     callHandler.enqueListCall(call, callback);
     return call;
   }
@@ -369,7 +385,7 @@ public class EnduserApi implements Parcelable {
     params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
     params = UrlUtil.addFilters(params, filter);
 
-    Call<ResponseBody> call = enduserApiInterface.getContents(params);
+    Call<ResponseBody> call = enduserApiInterface.getContents(getEphemeralId(), params);
     callHandler.enqueListCall(call, callback);
     return call;
   }
@@ -428,7 +444,7 @@ public class EnduserApi implements Parcelable {
     params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
     params = UrlUtil.addFilters(params, filter);
 
-    Call<ResponseBody> call = enduserApiInterface.getContents(params);
+    Call<ResponseBody> call = enduserApiInterface.getContents(getEphemeralId(), params);
     callHandler.enqueListCall(call, callback);
     return call;
   }
@@ -478,7 +494,7 @@ public class EnduserApi implements Parcelable {
     params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
     params = UrlUtil.addFilters(params, filter);
 
-    Call<ResponseBody> call = enduserApiInterface.getContents(params);
+    Call<ResponseBody> call = enduserApiInterface.getContents(getEphemeralId(), params);
     callHandler.enqueListCall(call, callback);
     return call;
   }
@@ -512,7 +528,7 @@ public class EnduserApi implements Parcelable {
     Map<String, String> params = UrlUtil.getUrlParameter(this.language);
     params = UrlUtil.addSpotParameter(params, spotFlags);
 
-    Call<ResponseBody> call = enduserApiInterface.getSpot(spotId, params);
+    Call<ResponseBody> call = enduserApiInterface.getSpot(getEphemeralId(), spotId, params);
     callHandler.enqueCall(call, callback);
     return call;
   }
@@ -563,7 +579,7 @@ public class EnduserApi implements Parcelable {
     params.put("filter[lon]", Double.toString(location.getLongitude()));
     params.put("filter[radius]", Integer.toString(radius));
 
-    Call<ResponseBody> call = enduserApiInterface.getSpots(params);
+    Call<ResponseBody> call = enduserApiInterface.getSpots(getEphemeralId(), params);
     callHandler.enqueListCall(call, callback);
     return call;
   }
@@ -612,7 +628,7 @@ public class EnduserApi implements Parcelable {
     params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
     params.put("filter[tags]", JsonListUtil.listToJsonArray(tags, ","));
 
-    Call<ResponseBody> call = enduserApiInterface.getSpots(params);
+    Call<ResponseBody> call = enduserApiInterface.getSpots(getEphemeralId(), params);
     callHandler.enqueListCall(call, callback);
     return call;
   }
@@ -644,7 +660,7 @@ public class EnduserApi implements Parcelable {
     params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
     params.put("filter[name]", name);
 
-    Call<ResponseBody> call = enduserApiInterface.getSpots(params);
+    Call<ResponseBody> call = enduserApiInterface.getSpots(getEphemeralId(), params);
     callHandler.enqueListCall(call, callback);
     return call;
   }
@@ -662,7 +678,7 @@ public class EnduserApi implements Parcelable {
     }
 
     Map<String, String> params = UrlUtil.getUrlParameter(language);
-    Call<ResponseBody> call = enduserApiInterface.getSystem(params);
+    Call<ResponseBody> call = enduserApiInterface.getSystem(getEphemeralId(), params);
     callHandler.enqueCall(call, callback);
     return call;
   }
@@ -681,7 +697,7 @@ public class EnduserApi implements Parcelable {
     }
 
     Map<String, String> params = UrlUtil.getUrlParameter(language);
-    Call<ResponseBody> call = enduserApiInterface.getMenu(systemId, params);
+    Call<ResponseBody> call = enduserApiInterface.getMenu(getEphemeralId(), systemId, params);
     callHandler.enqueCall(call, callback);
     return call;
   }
@@ -700,7 +716,7 @@ public class EnduserApi implements Parcelable {
     }
 
     Map<String, String> params = UrlUtil.getUrlParameter(language);
-    Call<ResponseBody> call = enduserApiInterface.getSetting(systemId, params);
+    Call<ResponseBody> call = enduserApiInterface.getSetting(getEphemeralId(), systemId, params);
     callHandler.enqueCall(call, callback);
     return call;
   }
@@ -719,7 +735,7 @@ public class EnduserApi implements Parcelable {
     }
 
     Map<String, String> params = UrlUtil.getUrlParameter(language);
-    Call<ResponseBody> call = enduserApiInterface.getStyle(systemId, params);
+    Call<ResponseBody> call = enduserApiInterface.getStyle(getEphemeralId(), systemId, params);
     callHandler.enqueCall(call, callback);
     return call;
   }
@@ -746,6 +762,29 @@ public class EnduserApi implements Parcelable {
   public void writeToParcel(Parcel dest, int flags) {
     dest.writeString(apiKey);
     dest.writeString(language);
+  }
+
+  // ephemeral stuff
+
+  @Override
+  public void gotEphemeralId(String ephemeralId) {
+    if (getEphemeralId() == null ||
+        !getEphemeralId().equals(ephemeralId)) {
+      this.ephemeralId = ephemeralId;
+
+      SharedPreferences.Editor editor = sharedPref.edit();
+      editor.putString(PREF_EPHEMERAL_ID, ephemeralId);
+      editor.apply();
+    }
+  }
+
+  private String getEphemeralId() {
+    if (ephemeralId != null) {
+      return ephemeralId;
+    }
+
+    ephemeralId = sharedPref.getString(PREF_EPHEMERAL_ID, null);
+    return ephemeralId;
   }
 
   // helper

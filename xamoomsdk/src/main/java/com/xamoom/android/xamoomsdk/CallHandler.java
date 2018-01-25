@@ -20,6 +20,7 @@ import at.rags.morpheus.Error;
 import at.rags.morpheus.JsonApiObject;
 import at.rags.morpheus.Morpheus;
 import at.rags.morpheus.Resource;
+import okhttp3.Headers;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,8 +37,10 @@ public class CallHandler <T extends Resource> {
   public static final String ERROR_MESSAGE_RESPONSE_IS_NULL = "Parsed response is null. " +
       "Check if data really exists.";
 
+  private static final String HEADER_EPHEMERAL = "X-Ephemeral-Id";
 
   private Morpheus morpheus;
+  private CallHandlerListener listener;
 
   public CallHandler(@NonNull Morpheus morpheus) {
     this.morpheus = morpheus;
@@ -45,10 +48,12 @@ public class CallHandler <T extends Resource> {
 
   public void enqueCall(@NonNull Call<ResponseBody> call, final APICallback<T, List<Error>> callback) {
     checkForNull(call);
-
     call.enqueue(new Callback<ResponseBody>() {
       @Override
       public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+        // checks if there is a ephemeral id and calls listeners gotEphemeralId method
+        notifyEphemeralId(response.headers());
+
         JsonApiObject jsonApiObject;
         try {
           jsonApiObject = parseResponse(response);
@@ -79,6 +84,9 @@ public class CallHandler <T extends Resource> {
     call.enqueue(new Callback<ResponseBody>() {
       @Override
       public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+        // checks if there is a ephemeral id and calls listeners gotEphemeralId method
+        notifyEphemeralId(response.headers());
+
         JsonApiObject jsonApiObject;
         try {
           jsonApiObject = parseResponse(response);
@@ -169,7 +177,23 @@ public class CallHandler <T extends Resource> {
     return errors;
   }
 
+  private void notifyEphemeralId(Headers headers) {
+    String ephemeralId = headers.get(HEADER_EPHEMERAL);
+    if (ephemeralId != null
+          && listener != null) {
+      listener.gotEphemeralId(ephemeralId);
+    }
+  }
+
+  public interface CallHandlerListener {
+    void gotEphemeralId(String ephemeralId);
+  }
+
   public void setMorpheus(Morpheus morpheus) {
     this.morpheus = morpheus;
+  }
+
+  public void setListener(CallHandlerListener listener) {
+    this.listener = listener;
   }
 }
