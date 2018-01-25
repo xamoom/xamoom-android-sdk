@@ -71,7 +71,7 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
   private boolean mError = false;
   private boolean playing = false;
 
-  private String url;
+  private ContentBlock contentBlock;
 
   private Drawable playIcon;
   private Drawable pauseIcon;
@@ -157,6 +157,22 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
         // do anything with it; we can count on soon being
         // disconnected (and then reconnected if it can be restarted)
         // so there is no need to do anything here.
+      }
+
+      Message msg = Message.obtain(null,
+          AudioPlayerService.MSG_SET_URL);
+      msg.replyTo = messenger;
+      Bundle bundle = new Bundle();
+      bundle.putString("URL", contentBlock.getFileId());
+      bundle.putInt("POS", getAdapterPosition());
+      bundle.putString("TITLE", contentBlock.getTitle());
+      bundle.putString("ARTIST", contentBlock.getArtists());
+      msg.setData(bundle);
+
+      try {
+        mService.send(msg);
+      } catch (RemoteException e) {
+        e.printStackTrace();
       }
     }
 
@@ -246,6 +262,7 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
   }
 
   public void setupContentBlock(final ContentBlock contentBlock, boolean offline) {
+    this.contentBlock = contentBlock;
     playing = false;
     mError = false;
     mPlayPauseButton.setEnabled(true);
@@ -266,6 +283,24 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
       mArtistTextView.setText(null);
     }
 
+    if (mService != null) {
+      Message msg = Message.obtain(null,
+          AudioPlayerService.MSG_SET_URL);
+      msg.replyTo = messenger;
+      Bundle bundle = new Bundle();
+      bundle.putString("URL", contentBlock.getFileId());
+      bundle.putInt("POS", getAdapterPosition());
+      bundle.putString("TITLE", contentBlock.getTitle());
+      bundle.putString("ARTIST", contentBlock.getArtists());
+      msg.setData(bundle);
+
+      try {
+        mService.send(msg);
+      } catch (RemoteException e) {
+        e.printStackTrace();
+      }
+    }
+
     mPlayPauseButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -280,13 +315,10 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
           msg.setData(bundle);
         } else {
           msg = Message.obtain(null,
-              AudioPlayerService.MSG_SET_URL);
+              AudioPlayerService.MSG_ACTION_PLAY);
           msg.replyTo = messenger;
           Bundle bundle = new Bundle();
-          bundle.putString("URL", contentBlock.getFileId());
           bundle.putInt("POS", getAdapterPosition());
-          bundle.putString("TITLE", contentBlock.getTitle());
-          bundle.putString("ARTIST", contentBlock.getArtists());
           msg.setData(bundle);
         }
 

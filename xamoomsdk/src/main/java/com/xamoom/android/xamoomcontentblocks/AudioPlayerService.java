@@ -42,6 +42,7 @@ public class AudioPlayerService extends Service {
   public static final int MSG_SET_URL = 3;
   public static final int MSG_ACTION_SEEK_FORWARD = 4;
   public static final int MSG_ACTION_SEEK_BACKWARD = 5;
+  public static final int MSG_ACTION_PLAY = 12;
   public static final int MSG_ACTION_PAUSE = 6;
   public static final int MSG_AUDIO_EVENT_STARTED = 7;
   public static final int MSG_AUDIO_EVENT_PAUSED = 8;
@@ -80,9 +81,23 @@ public class AudioPlayerService extends Service {
           mediaFileMessengers.put(mediaFile, msg.replyTo);
           mediaFile.setEventListener(mediaFileEventListener);
 
+          try {
+            Message msgAnswer = Message.obtain(null, MSG_AUDIO_EVENT_UPDATE_PROGRESS,
+                0,0);
+            Bundle bundle = new Bundle();
+            bundle.putLong("DURATION", mediaFile.getDuration());
+            bundle.putLong("POSITION", mediaFile.getPlaybackPosition());
+            msgAnswer.setData(bundle);
+            msg.replyTo.send(msgAnswer);
+          } catch (RemoteException e) {
+            e.printStackTrace();
+          }
+          break;
+        case MSG_ACTION_PLAY:
+          position = msg.getData().getInt("POS");
           if (requestAudioFocus()) {
             Log.v(TAG, "AudioFocus granted, start playing");
-            mediaFile.start();
+            audioPlayer.start(position);
           } else {
             Log.v(TAG, "AudioFocus not granted");
           }
@@ -310,6 +325,7 @@ public class AudioPlayerService extends Service {
         Log.v(TAG, "Messenger for mediaFile not found.");
         return;
       }
+
       try {
         Message msg = Message.obtain(null, MSG_AUDIO_EVENT_UPDATE_PROGRESS,
             0,0);
