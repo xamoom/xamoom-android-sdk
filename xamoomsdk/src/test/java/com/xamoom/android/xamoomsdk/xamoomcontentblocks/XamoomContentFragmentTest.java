@@ -24,6 +24,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
@@ -97,7 +98,7 @@ public class XamoomContentFragmentTest {
     content.setContentBlocks(blocks);
 
     XamoomContentFragment fragment = XamoomContentFragment.newInstance("api");
-    fragment.setEnduserApi(new EnduserApi("api", null));
+    fragment.setEnduserApi(new EnduserApi("api", RuntimeEnvironment.application));
     fragment.setContent(content);
 
     addFragmentToActivity(fragment);

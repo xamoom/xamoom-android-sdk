@@ -20,6 +20,7 @@ import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.APIListCallback;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
+import com.xamoom.android.xamoomsdk.Enums.ContentReason;
 import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
 import com.xamoom.android.xamoomsdk.Filter;
 import com.xamoom.android.xamoomsdk.HTTPHeaderInterceptor;
@@ -287,6 +288,7 @@ public class EnduserApiTests {
     when(mMockMorpheus.parse(anyString())).thenReturn(jsonApiObject);
 
     mEnduserApi.getContent("123456", EnumSet.of(ContentFlags.PREVIEW, ContentFlags.PRIVATE),
+        ContentReason.NOTIFICATION,
         new APICallback<Content, List<at.rags.morpheus.Error>>() {
           @Override
           public void finished(Content result) {
@@ -299,6 +301,7 @@ public class EnduserApiTests {
 
     RecordedRequest request1 = mMockWebServer.takeRequest();
     assertEquals("/_api/v2/consumer/contents/123456?lang=en&preview=true&public-only=true", request1.getPath());
+    assertEquals("4", request1.getHeader("X-Reason"));
   }
 
   @Test
@@ -374,7 +377,7 @@ public class EnduserApiTests {
     final Semaphore semaphore = new Semaphore(0);
 
     mEnduserApi.getContentByLocationIdentifier("1234", null, conditions,
-        new APICallback<Content, List<Error>>() {
+        ContentReason.NOTIFICATION, new APICallback<Content, List<Error>>() {
           @Override
           public void finished(Content result) {
             checkContent[0] = result;
@@ -398,6 +401,7 @@ public class EnduserApiTests {
             "&condition[double]=1.0000023589235236" +
             "&condition[x-datetime]="+ getISO8601Date(),
         request1.getPath());
+    assertEquals("4", request1.getHeader("X-Reason"));
   }
 
   @Test
@@ -798,6 +802,7 @@ public class EnduserApiTests {
 
       @Override
       public void error(List<Error> error) {
+        fail();
         semaphore.release();
       }
     });

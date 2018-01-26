@@ -60,7 +60,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   private static final String YOUTUBE_API_KEY = "YoutubeAPIKey";
   private static final String LIST_STATE = "LayoutManagerState";
   private static final String CONTENT_ID = "ContentID";
-  private static final String ENDUSER_API = "EnduserApi";
+  private static final String ENDUSER_API_KEY = "EnduserApiKey";
   private static final String OFFLINE = "Offline";
   private static final String SHOW_SPOT_MAP_CONTENT_LINKS = "ContentLinksSpotMaps";
   private static final String STYLE = "Style";
@@ -118,7 +118,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
     if (savedInstanceState != null) {
       mYoutubeApiKey = savedInstanceState.getString(YOUTUBE_API_KEY);
       showSpotMapContentLinks = savedInstanceState.getBoolean(SHOW_SPOT_MAP_CONTENT_LINKS);
-      mEnduserApi = savedInstanceState.getParcelable(ENDUSER_API);
+      mEnduserApi = new EnduserApi(savedInstanceState.getString(ENDUSER_API_KEY), getContext());
       mContentID = savedInstanceState.getString(CONTENT_ID);
       mListState = savedInstanceState.getParcelable(LIST_STATE);
       offline = savedInstanceState.getBoolean(OFFLINE);
@@ -172,7 +172,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
     super.onSaveInstanceState(outState);
     outState.putString(YOUTUBE_API_KEY, mYoutubeApiKey);
     outState.putBoolean(SHOW_SPOT_MAP_CONTENT_LINKS, showSpotMapContentLinks);
-    outState.putParcelable(ENDUSER_API, mEnduserApi);
+    outState.putString(ENDUSER_API_KEY, mEnduserApi.getApiKey());
     outState.putString(CONTENT_ID, mContentID);
     outState.putParcelable(LIST_STATE, mRecyclerView.getLayoutManager().onSaveInstanceState());
     outState.putBoolean(OFFLINE, offline);
