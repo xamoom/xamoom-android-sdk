@@ -266,6 +266,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
    * @param contentFlags Different flags {@link ContentFlags}
    * @param conditions  HashMap with conditions to match. Allowed value types: Strings, ints, floats,
    *                    doubles and dates.
+   * @param reason ContentReason to get better analytics in the xamoom dashboard
    * @param callback {@link APICallback}
    * @return Used call object
    */
@@ -316,6 +317,21 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
   }
 
   /**
+   * Get content for a specific beacon with options and condition.
+   *
+   * @param major Beacon major ID
+   * @param minor Beacon minor ID
+   * @param contentFlags Different flags {@link ContentFlags}
+   * @param callback {@link APICallback}
+   * @return Used call object
+   */
+  public Call getContentByBeacon(int major, int minor, EnumSet<ContentFlags> contentFlags,
+                                 APICallback<Content, List<Error>> callback) {
+    return getContentByLocationIdentifier(String.format("%s|%s", major, minor), contentFlags, callback);
+  }
+
+
+  /**
    * Get content for a specific beacon with options.
    *
    * @param major Beacon major ID
@@ -339,12 +355,17 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
    * @param major Beacon major ID
    * @param minor Beacon minor ID
    * @param contentFlags Different flags {@link ContentFlags}
+   * @param conditions HashMap with conditions to match. Allowed value types: Strings, ints, floats,
+   *                   doubles and dates.
+   * @param reason ContentReason to get better analytics in the xamoom dashboard
    * @param callback {@link APICallback}
    * @return Used call object
    */
   public Call getContentByBeacon(int major, int minor, EnumSet<ContentFlags> contentFlags,
-                                 APICallback<Content, List<Error>> callback) {
-    return getContentByLocationIdentifier(String.format("%s|%s", major, minor), contentFlags, callback);
+                                 HashMap<String, Object> conditions,
+                                 ContentReason reason, APICallback<Content, List<Error>> callback) {
+    return getContentByLocationIdentifier(String.format("%s|%s", major, minor),contentFlags,
+        conditions, reason, callback);
   }
 
   /**
