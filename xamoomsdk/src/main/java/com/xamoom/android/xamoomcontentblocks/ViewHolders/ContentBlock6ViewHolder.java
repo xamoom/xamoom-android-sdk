@@ -77,6 +77,7 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
   }
 
   public void setupContentBlock(ContentBlock contentBlock, boolean offline) {
+    mEnduserApi.setOffline(offline);
     mContentThumbnailImageView.setImageDrawable(null);
     mTitleTextView.setText(null);
     mDescriptionTextView.setText(null);
@@ -93,8 +94,6 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
     } else {
       loadContent(contentBlock.getContentId(), offline);
     }
-
-    mEnduserApi.setOffline(offline);
   }
 
   private void loadContent(final String contentId, final boolean offline) {

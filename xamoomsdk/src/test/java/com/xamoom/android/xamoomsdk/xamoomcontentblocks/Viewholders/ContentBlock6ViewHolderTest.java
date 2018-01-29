@@ -19,6 +19,7 @@ import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.APIListCallback;
 import com.xamoom.android.xamoomsdk.BuildConfig;
 import com.xamoom.android.xamoomsdk.EnduserApi;
+import com.xamoom.android.xamoomsdk.Enums.ContentReason;
 import com.xamoom.android.xamoomsdk.Helper.ContentFragmentActivity;
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.Content;
@@ -90,13 +91,13 @@ public class ContentBlock6ViewHolderTest {
         new Answer<Object>() {
           public Object answer(InvocationOnMock invocation) {
             APICallback<Content, Error> callback =
-                (APICallback<Content, Error>) invocation.getArguments()[2];
+                (APICallback<Content, Error>) invocation.getArguments()[3];
             Content content = new Content();
             content.setPublicImageUrl("www.xamoom.com/video.mp4");
             callback.finished(content);
             return null;
           }
-        }).when(mockedApi).getContent(anyString(), any(EnumSet.class),
+        }).when(mockedApi).getContent(anyString(), any(EnumSet.class), any(ContentReason.class),
         (APICallback<Content, List<Error>>) any());
 
     View itemView = View.inflate(mActivity, R.layout.content_block_6_layout, null);
