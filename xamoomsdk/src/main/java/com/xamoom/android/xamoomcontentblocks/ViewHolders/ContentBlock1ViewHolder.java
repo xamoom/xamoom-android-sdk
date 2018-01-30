@@ -290,12 +290,17 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
       mArtistTextView.setText(null);
     }
 
+    String urlString = contentBlock.getFileId();
+    if (offline) {
+      urlString = mFileManager.getFilePath(urlString);
+    }
+
     if (mService != null) {
       Message msg = Message.obtain(null,
           AudioPlayerService.MSG_SET_URL);
       msg.replyTo = messenger;
       Bundle bundle = new Bundle();
-      bundle.putString("URL", contentBlock.getFileId());
+      bundle.putString("URL", urlString);
       bundle.putInt("POS", getAdapterPosition());
       bundle.putString("TITLE", contentBlock.getTitle());
       bundle.putString("ARTIST", contentBlock.getArtists());
