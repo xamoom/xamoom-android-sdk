@@ -9,18 +9,18 @@
 package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.LightingColorFilter;
 import android.graphics.drawable.Drawable;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -28,6 +28,7 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -36,13 +37,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.xamoom.android.xamoomcontentblocks.AudioPlayerService;
-import com.xamoom.android.xamoomcontentblocks.MediaFile;
 import com.xamoom.android.xamoomcontentblocks.Views.MovingBarsView;
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Storage.FileManager;
 
-import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -51,24 +50,19 @@ import java.util.concurrent.TimeUnit;
 public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
   private static final String TAG = ContentBlock1ViewHolder.class.getSimpleName();
 
-  private final static int SEEK_TIME = 50000;
-  private final static int MEDIA_LOW_LEVEL_ERROR = -2147483648;
+  public static final String PAUSE_INTENT_ACTION = "com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock1ViewHolder.pause";
 
   private Fragment mFragment;
+  private Context mContext;
   private TextView mTitleTextView;
   private TextView mArtistTextView;
   private TextView mRemainingSongTimeTextView;
   private Button mPlayPauseButton;
   private Button mForwardButton;
   private Button mBackwardButton;
-  private MediaPlayer mMediaPlayer;
   private ProgressBar mSongProgressBar;
   private MovingBarsView mMovingBarsView;
-  private final Handler mHandler = new Handler();
-  private Runnable mRunnable;
   private FileManager mFileManager;
-  private boolean mPrepared = false;
-  private boolean mError = false;
   private boolean playing = false;
 
   private ContentBlock contentBlock;
@@ -189,8 +183,8 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
     // class name because there is no reason to be able to let other
     // applications replace our component.
 
-    mFragment.getContext().bindService(
-        new Intent(mFragment.getContext(), AudioPlayerService.class),
+    mContext.bindService(
+        new Intent(mContext, AudioPlayerService.class),
         mConnection, Context.BIND_AUTO_CREATE);
     mIsBound = true;
     Log.v(TAG, "Binding");
@@ -213,7 +207,9 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
       }
 
       // Detach our existing connection.
-      mFragment.getContext().unbindService(mConnection);
+      Context context = mContext;
+      context.unbindService(mConnection);
+
       mIsBound = false;
       Log.v(TAG, "Unbinding");
     }
@@ -224,6 +220,7 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
   public ContentBlock1ViewHolder(View itemView, Fragment fragment) {
     super(itemView);
     mFragment = fragment;
+    mContext = fragment.getContext();
     mTitleTextView = (TextView) itemView.findViewById(R.id.title_text_view);
     mArtistTextView = (TextView) itemView.findViewById(R.id.artist_text_view);
     mPlayPauseButton = (Button) itemView.findViewById(R.id.play_pause_button);
@@ -258,13 +255,23 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
 
     mForwardButton.setOnClickListener(mForwardButtonClickListener);
     mBackwardButton.setOnClickListener(mBackwardButtonClickListener);
+
+    LocalBroadcastManager.getInstance(mContext).registerReceiver(onPauseReceiver, new IntentFilter(PAUSE_INTENT_ACTION));
+
     doBindService();
   }
+
+  private BroadcastReceiver onPauseReceiver = new BroadcastReceiver() {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+      doUnbindService();
+      LocalBroadcastManager.getInstance(mContext).unregisterReceiver(onPauseReceiver);
+    }
+  };
 
   public void setupContentBlock(final ContentBlock contentBlock, boolean offline) {
     this.contentBlock = contentBlock;
     playing = false;
-    mError = false;
     mPlayPauseButton.setEnabled(true);
     mForwardButton.setEnabled(true);
     mBackwardButton.setEnabled(true);
@@ -469,10 +476,6 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
     mSongProgressBar.setMax((int) duration);
     mSongProgressBar.setProgress((int) position);
     mRemainingSongTimeTextView.setText(getTimeString((int) (duration - position)));
-  }
-
-  public void setMediaPlayer(MediaPlayer mediaPlayer) {
-    mMediaPlayer = mediaPlayer;
   }
 
   public void setFileManager(FileManager fileManager) {

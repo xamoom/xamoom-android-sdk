@@ -27,6 +27,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
 import com.xamoom.android.xamoomcontentblocks.Adapters.ContentBlockAdapter;
+import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock1ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock2ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
 import com.xamoom.android.xamoomsdk.EnduserApi;
@@ -164,6 +165,8 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   public void onPause() {
     Intent intent = new Intent(ContentBlock2ViewHolder.RESET_YOUTUBE);
     LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
+    Intent intent2 = new Intent(ContentBlock1ViewHolder.PAUSE_INTENT_ACTION);
+    LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent2);
     super.onPause();
   }
 
