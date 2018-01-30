@@ -83,7 +83,7 @@ public class AudioPlayerService extends Service {
 
           try {
             Message msgAnswer = Message.obtain(null, MSG_AUDIO_EVENT_UPDATE_PROGRESS,
-                0,0);
+                0, 0);
             Bundle bundle = new Bundle();
             bundle.putLong("DURATION", mediaFile.getDuration());
             bundle.putLong("POSITION", mediaFile.getPlaybackPosition());
@@ -91,6 +91,15 @@ public class AudioPlayerService extends Service {
             msg.replyTo.send(msgAnswer);
           } catch (RemoteException e) {
             e.printStackTrace();
+          }
+
+          if (mediaFile.getState() == MediaFile.State.PLAYING) {
+            try {
+              msg.replyTo.send(Message.obtain(null, MSG_AUDIO_EVENT_STARTED,
+                  0,0));
+            } catch (RemoteException e) {
+              e.printStackTrace();
+            }
           }
           break;
         case MSG_ACTION_PLAY:
