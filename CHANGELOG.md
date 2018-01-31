@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.9.0](https://github.com/xamoom/xamoom-ios-sdk/compare/3.8.0...3.9.0) - 31.01.2018
+
+- Added ephemeralId
+- Added reasons to content calls
+
+- Changed audioplayerblock to use service & show notification
+
 ## [3.8.0](https://github.com/xamoom/xamoom-ios-sdk/compare/3.7.3...3.8.0) - 06.12.2017
 
 - Added ContentBlocksTheme for styling contentBlocks
