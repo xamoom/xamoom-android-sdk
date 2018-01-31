@@ -31,6 +31,7 @@ import at.rags.morpheus.Error;
 import at.rags.morpheus.JsonApiObject;
 import at.rags.morpheus.Morpheus;
 import at.rags.morpheus.Resource;
+import okhttp3.Headers;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -41,6 +42,7 @@ import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.fail;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
@@ -52,13 +54,15 @@ public class CallHandlerTest {
   private Morpheus mockMorpheus;
   private CallHandler callHandler;
   private Call mockCall;
-
+  private CallHandler.CallHandlerListener mockEventListener;
 
   @Before
   public void setup() {
     mockMorpheus = mock(Morpheus.class);
-    callHandler = new CallHandler(mockMorpheus);
     mockCall = Mockito.mock(Call.class);
+    mockEventListener = Mockito.mock(CallHandler.CallHandlerListener.class);
+    callHandler = new CallHandler(mockMorpheus);
+    callHandler.setListener(mockEventListener);
   }
 
   @Test
@@ -80,8 +84,11 @@ public class CallHandlerTest {
    */
   @Test
   public void testEnqueCallSuccessfull() throws InterruptedException {
+    Headers headers = new Headers.Builder()
+        .add("X-Ephemeral-Id", "1234")
+        .build();
     final Response<ResponseBody> response =
-        Response.success(ResponseBody.create(null, ""));
+        Response.success(ResponseBody.create(null, ""), headers);
     final Content content = new Content();
     content.setId("1");
     JsonApiObject jsonApiObject = new JsonApiObject();
@@ -118,6 +125,8 @@ public class CallHandlerTest {
       }
     });
     semaphore.acquire();
+
+    Mockito.verify(mockEventListener).gotEphemeralId(eq("1234"));
   }
 
   /**
@@ -314,8 +323,11 @@ public class CallHandlerTest {
    */
   @Test
   public void testEnqueListCallSuccessfull() throws InterruptedException {
+    Headers headers = new Headers.Builder()
+        .add("X-Ephemeral-Id", "1234")
+        .build();
     final Response<ResponseBody> response =
-        Response.success(ResponseBody.create(null, ""));
+        Response.success(ResponseBody.create(null, ""), headers);
     final Content content = new Content();
     content.setId("1");
     final List<Resource> contents = new ArrayList<>(1);
@@ -360,6 +372,7 @@ public class CallHandlerTest {
       }
     });
     semaphore.acquire();
-  }
 
+    Mockito.verify(mockEventListener).gotEphemeralId(eq("1234"));
+  }
 }

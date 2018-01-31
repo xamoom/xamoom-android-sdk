@@ -8,6 +8,9 @@
 
 package com.xamoom.android.xamoomsdk;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import java.io.IOException;
 
 import okhttp3.Interceptor;
@@ -18,23 +21,29 @@ import okhttp3.Response;
  * Interceptor for retrofit to change the header.
  */
 public class HTTPHeaderInterceptor implements Interceptor {
+  private static final String HEADER_USERAGENT = "User-Agent";
+  private static final String HEADER_APIKEY = "APIKEY";
   private String userAgent;
   private String apiKey;
 
-  public HTTPHeaderInterceptor(String userAgent, String apikey) {
+  public HTTPHeaderInterceptor(@NonNull String userAgent, @NonNull String apikey) {
     this.userAgent = userAgent;
     this.apiKey = apikey;
   }
 
   @Override
   public Response intercept(Chain chain) throws IOException {
-    Request request = chain.request().newBuilder()
+    Request.Builder builder = chain.request().newBuilder()
         .addHeader("Content-Type", "application/vnd.api+json")
-        .addHeader("Accept", "application/json")
-        .addHeader("User-Agent", userAgent)
-        .addHeader("APIKEY", apiKey)
-        .build();
+        .addHeader("Accept", "application/json");
 
-    return chain.proceed(request);
+    if (userAgent != null) {
+      builder.addHeader(HEADER_USERAGENT, userAgent);
+    }
+
+    if (apiKey != null) {
+      builder.addHeader(HEADER_APIKEY, apiKey);
+    }
+    return chain.proceed(builder.build());
   }
 }
