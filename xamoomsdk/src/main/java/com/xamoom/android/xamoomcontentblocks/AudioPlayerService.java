@@ -63,11 +63,9 @@ public class AudioPlayerService extends Service {
       int position;
       switch (msg.what) {
         case MSG_REGISTER_CLIENT:
-          Log.v(TAG, "Register Client");
           clients.add(msg.replyTo);
           break;
         case MSG_UNREGISTER_CLIENT:
-          Log.v(TAG, "Unregister Client");
           clients.remove(msg.replyTo);
           break;
         case MSG_SET_URL:
@@ -105,10 +103,7 @@ public class AudioPlayerService extends Service {
         case MSG_ACTION_PLAY:
           position = msg.getData().getInt("POS");
           if (requestAudioFocus()) {
-            Log.v(TAG, "AudioFocus granted, start playing");
             audioPlayer.start(position);
-          } else {
-            Log.v(TAG, "AudioFocus not granted");
           }
           break;
         case MSG_ACTION_PAUSE:
@@ -166,7 +161,6 @@ public class AudioPlayerService extends Service {
 
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
-    Log.v(TAG, "onStartCommand " + intent);
     MediaButtonReceiver.handleIntent(mediaSession, intent);
     return START_NOT_STICKY;
   }
@@ -194,15 +188,12 @@ public class AudioPlayerService extends Service {
   private MediaFile.EventListener mediaFileEventListener = new MediaFile.EventListener() {
     @Override
     public void loadingChanged(boolean isLoading) {
-      Log.v(TAG, "loadingChanged: " + isLoading);
-
       if (audioPlayer.getCurrentMediaFile() == null) {
         return;
       }
 
       Messenger messenger = mediaFileMessengers.get(audioPlayer.getCurrentMediaFile());
       if (messenger == null) {
-        Log.v(TAG, "Messenger for mediaFile not found.");
         return;
       }
       try {
@@ -219,8 +210,6 @@ public class AudioPlayerService extends Service {
       if (mediaFile == null) {
         return;
       }
-
-      Log.v(TAG, "started: " + mediaFile);
 
       mediaSession.setMetadata(new MediaMetadataCompat.Builder()
           .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, mediaFile.getUri().toString())
@@ -245,7 +234,6 @@ public class AudioPlayerService extends Service {
 
       Messenger messenger = mediaFileMessengers.get(mediaFile);
       if (messenger == null) {
-        Log.v(TAG, "Messenger for mediaFile not found.");
         return;
       }
       try {
@@ -258,8 +246,6 @@ public class AudioPlayerService extends Service {
 
     @Override
     public void paused() {
-      Log.v(TAG, "paused");
-
       mediaSession.setPlaybackState(new PlaybackStateCompat.Builder()
           .setState(PlaybackStateCompat.STATE_PAUSED,
               PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0)
@@ -281,7 +267,6 @@ public class AudioPlayerService extends Service {
 
       Messenger messenger = mediaFileMessengers.get(audioPlayer.getCurrentMediaFile());
       if (messenger == null) {
-        Log.v(TAG, "Messenger for mediaFile not found.");
         return;
       }
       try {
@@ -295,8 +280,6 @@ public class AudioPlayerService extends Service {
 
     @Override
     public void finished() {
-      Log.v(TAG, "finished");
-
       stopForeground(true);
       dismissAudioFocus();
 
@@ -308,7 +291,6 @@ public class AudioPlayerService extends Service {
 
       Messenger messenger = mediaFileMessengers.get(audioPlayer.getCurrentMediaFile());
       if (messenger == null) {
-        Log.v(TAG, "Messenger for mediaFile not found.");
         return;
       }
       try {
@@ -322,7 +304,6 @@ public class AudioPlayerService extends Service {
 
     @Override
     public void updatePlaybackPosition(long position) {
-      //Log.v(TAG, "updatePlaybackPosition: " + mediaFile);
       MediaFile mediaFile = audioPlayer.getCurrentMediaFile();
       if (mediaFile == null) {
         return;
@@ -348,7 +329,6 @@ public class AudioPlayerService extends Service {
 
       Messenger messenger = mediaFileMessengers.get(mediaFile);
       if (messenger == null) {
-        Log.v(TAG, "Messenger for mediaFile not found.");
         return;
       }
 
@@ -369,7 +349,6 @@ public class AudioPlayerService extends Service {
   private MediaSessionCompat.Callback mediaSessionCallback = new MediaSessionCompat.Callback() {
     @Override
     public boolean onMediaButtonEvent(Intent mediaButtonEvent) {
-      Log.v(TAG, "mediaSession onMediaButtonEvent " + mediaButtonEvent);
       return super.onMediaButtonEvent(mediaButtonEvent);
     }
 
@@ -379,7 +358,6 @@ public class AudioPlayerService extends Service {
       if (mediaFile != null) {
         mediaFile.start();
       }
-      Log.v(TAG, "mediaSession onPlay");
       super.onPlay();
     }
 
@@ -389,13 +367,11 @@ public class AudioPlayerService extends Service {
       if (mediaFile != null) {
         audioPlayer.getCurrentMediaFile().pause();
       }
-      Log.v(TAG, "mediaSession onPause");
       super.onPause();
     }
 
     @Override
     public void onFastForward() {
-      Log.v(TAG, "mediaSession onFastForward");
       MediaFile mediaFile = audioPlayer.getCurrentMediaFile();
       if (mediaFile != null) {
         mediaFile.seekForward(SEEK_TIME);
@@ -405,7 +381,6 @@ public class AudioPlayerService extends Service {
 
     @Override
     public void onRewind() {
-      Log.v(TAG, "mediaSession onRewind");
       MediaFile mediaFile = audioPlayer.getCurrentMediaFile();
       if (mediaFile != null) {
         mediaFile.seekBackward(SEEK_TIME);
@@ -416,7 +391,6 @@ public class AudioPlayerService extends Service {
     @Override
     public void onStop() {
       audioPlayer.stop();
-      Log.v(TAG, "mediaSession onStop");
       super.onStop();
     }
   };
@@ -425,24 +399,17 @@ public class AudioPlayerService extends Service {
       new AudioManager.OnAudioFocusChangeListener() {
     @Override
     public void onAudioFocusChange(int focusChange) {
-      Log.v(TAG, "onAudioFocusChange " + focusChange);
       switch (focusChange) {
         case AudioManager.AUDIOFOCUS_LOSS:
-          Log.v(TAG, "AUDIOFOCUS_LOSS");
-          //audioPlayer.stop();
           break;
         case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
           // fall trough
-          Log.v(TAG, "AUDIOFOCUS_LOSS_TRANSIENT");
         case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-          Log.v(TAG, "AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK");
           if (audioPlayer.getCurrentMediaFile() != null) {
             audioPlayer.getCurrentMediaFile().pause();
           }
           break;
         case AudioManager.AUDIOFOCUS_GAIN:
-          Log.v(TAG, "AUDIOFOCUS_GAIN");
-          //audioPlayer.getCurrentMediaFile().start();
           break;
       }
     }
@@ -471,7 +438,6 @@ public class AudioPlayerService extends Service {
   private BroadcastReceiver noisyReceiver = new BroadcastReceiver() {
     @Override
     public void onReceive(Context context, Intent intent) {
-      Log.v(TAG, "became noisy");
       if (audioPlayer.getCurrentMediaFile() != null) {
         audioPlayer.getCurrentMediaFile().pause();
       }

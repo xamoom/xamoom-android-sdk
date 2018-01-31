@@ -74,10 +74,8 @@ public class AudioPlayer implements Player.EventListener {
   }
 
   public void start(int position) {
-    Log.v(TAG, "start");
     if (currentMediaFile != mediaFiles.get(position) ||
         exoPlayer.getPlaybackState() == Player.STATE_IDLE) {
-      Log.v(TAG, "PREPARING");
       if (currentMediaFile != null) {
         currentMediaFile.pause();
       }
@@ -90,8 +88,6 @@ public class AudioPlayer implements Player.EventListener {
   }
 
   public void pause(int position) {
-    Log.v(TAG, "pause");
-
     if (currentMediaFile == null || currentMediaFile != mediaFiles.get(position)) {
       return;
     }
@@ -100,7 +96,6 @@ public class AudioPlayer implements Player.EventListener {
   }
 
   public void stop() {
-    Log.v(TAG, "stop");
     exoPlayer.stop();
   }
 
@@ -116,17 +111,14 @@ public class AudioPlayer implements Player.EventListener {
 
   @Override
   public void onTimelineChanged(Timeline timeline, Object manifest) {
-    Log.v(TAG, "onTimelineChanged " + timeline);
   }
 
   @Override
   public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
-    Log.v(TAG, "onTracksChanged");
   }
 
   @Override
   public void onLoadingChanged(boolean isLoading) {
-    Log.v(TAG, "onLoadingChanged " + String.valueOf(isLoading));
     if (currentMediaFile != null) {
       currentMediaFile.loading(isLoading);
     }
@@ -134,15 +126,11 @@ public class AudioPlayer implements Player.EventListener {
 
   @Override
   public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-    Log.v(TAG, "onPlayerStateChanged " + String.valueOf(playbackState));
 
     switch (playbackState) {
       case Player.STATE_BUFFERING:
-        Log.v(TAG, "State: BUFFERING");
         break;
       case Player.STATE_READY:
-        Log.v(TAG, "State: READY");
-
         currentMediaFile.updateDuration(exoPlayer.getDuration());
 
         if (playWhenReady) {
@@ -152,12 +140,10 @@ public class AudioPlayer implements Player.EventListener {
         }
         break;
       case Player.STATE_IDLE:
-        Log.v(TAG, "State: IDLE");
         currentMediaFile.updatePlaybackPosition(0);
         currentMediaFile.finished();
         break;
       case Player.STATE_ENDED:
-        Log.v(TAG, "State: ENDED");
         currentMediaFile.updatePlaybackPosition(0);
         currentMediaFile.finished();
 
@@ -170,33 +156,28 @@ public class AudioPlayer implements Player.EventListener {
 
   @Override
   public void onRepeatModeChanged(int repeatMode) {
-    Log.v(TAG, "onRepeatModeChanged");
+
   }
 
   @Override
   public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
-    Log.v(TAG, "onShuffleModeEnabledChanged");
   }
 
   @Override
   public void onPlayerError(ExoPlaybackException error) {
-    Log.v(TAG, "onPlayerError" + error);
   }
 
   @Override
   public void onPositionDiscontinuity(int reason) {
-    Log.v(TAG, "onPositionDiscontinuity");
   }
 
   @Override
   public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
-    Log.v(TAG, "onPlaybackParametersChanged " + playbackParameters);
   }
 
   @Override
   public void onSeekProcessed() {
     long position = exoPlayer.getCurrentPosition();
-    Log.v(TAG, "onSeekProcessed updatePlaybackPosition: " + position);
     if (currentMediaFile != null) {
       currentMediaFile.updatePlaybackPosition(position);
     }
