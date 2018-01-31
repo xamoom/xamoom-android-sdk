@@ -112,18 +112,20 @@ public class AudioPlayerService extends Service {
           }
           break;
         case MSG_ACTION_PAUSE:
-          audioPlayer.getCurrentMediaFile().pause();
+          if (audioPlayer.getCurrentMediaFile() != null) {
+            audioPlayer.getCurrentMediaFile().pause();
+          }
           break;
         case MSG_ACTION_SEEK_FORWARD:
           mediaFile = audioPlayer.getCurrentMediaFile();
           if (mediaFile != null) {
-            audioPlayer.getCurrentMediaFile().seekForward(SEEK_TIME);
+            mediaFile.seekForward(SEEK_TIME);
           }
           break;
         case MSG_ACTION_SEEK_BACKWARD:
           mediaFile = audioPlayer.getCurrentMediaFile();
           if (mediaFile != null) {
-            audioPlayer.getCurrentMediaFile().seekBackward(SEEK_TIME);
+            mediaFile.seekBackward(SEEK_TIME);
           }
           break;
         default:
@@ -194,6 +196,10 @@ public class AudioPlayerService extends Service {
     public void loadingChanged(boolean isLoading) {
       Log.v(TAG, "loadingChanged: " + isLoading);
 
+      if (audioPlayer.getCurrentMediaFile() == null) {
+        return;
+      }
+
       Messenger messenger = mediaFileMessengers.get(audioPlayer.getCurrentMediaFile());
       if (messenger == null) {
         Log.v(TAG, "Messenger for mediaFile not found.");
@@ -210,6 +216,10 @@ public class AudioPlayerService extends Service {
     @Override
     public void started() {
       MediaFile mediaFile = audioPlayer.getCurrentMediaFile();
+      if (mediaFile == null) {
+        return;
+      }
+
       Log.v(TAG, "started: " + mediaFile);
 
       mediaSession.setMetadata(new MediaMetadataCompat.Builder()
@@ -292,6 +302,10 @@ public class AudioPlayerService extends Service {
 
       mediaSession.setActive(false);
 
+      if (audioPlayer.getCurrentMediaFile() == null) {
+        return;
+      }
+
       Messenger messenger = mediaFileMessengers.get(audioPlayer.getCurrentMediaFile());
       if (messenger == null) {
         Log.v(TAG, "Messenger for mediaFile not found.");
@@ -310,6 +324,9 @@ public class AudioPlayerService extends Service {
     public void updatePlaybackPosition(long position) {
       //Log.v(TAG, "updatePlaybackPosition: " + mediaFile);
       MediaFile mediaFile = audioPlayer.getCurrentMediaFile();
+      if (mediaFile == null) {
+        return;
+      }
 
       mediaSession.setMetadata(new MediaMetadataCompat.Builder()
           .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, mediaFile.getUri().toString())
@@ -391,7 +408,7 @@ public class AudioPlayerService extends Service {
       Log.v(TAG, "mediaSession onRewind");
       MediaFile mediaFile = audioPlayer.getCurrentMediaFile();
       if (mediaFile != null) {
-        audioPlayer.getCurrentMediaFile().seekBackward(SEEK_TIME);
+        mediaFile.seekBackward(SEEK_TIME);
       }
       super.onRewind();
     }
@@ -419,7 +436,9 @@ public class AudioPlayerService extends Service {
           Log.v(TAG, "AUDIOFOCUS_LOSS_TRANSIENT");
         case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
           Log.v(TAG, "AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK");
-          audioPlayer.getCurrentMediaFile().pause();
+          if (audioPlayer.getCurrentMediaFile() != null) {
+            audioPlayer.getCurrentMediaFile().pause();
+          }
           break;
         case AudioManager.AUDIOFOCUS_GAIN:
           Log.v(TAG, "AUDIOFOCUS_GAIN");
@@ -453,7 +472,9 @@ public class AudioPlayerService extends Service {
     @Override
     public void onReceive(Context context, Intent intent) {
       Log.v(TAG, "became noisy");
-      audioPlayer.getCurrentMediaFile().pause();
+      if (audioPlayer.getCurrentMediaFile() != null) {
+        audioPlayer.getCurrentMediaFile().pause();
+      }
     }
   };
 
