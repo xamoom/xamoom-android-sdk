@@ -65,7 +65,6 @@ public class ContentBlock1ViewHolderTest {
     View itemView = View.inflate(mActivity, R.layout.content_block_1_layout, null);
     ContentBlock1ViewHolder viewHolder = new ContentBlock1ViewHolder(itemView,
         mXamoomContentFragment);
-    viewHolder.setMediaPlayer(mMockedMediaPlayer);
     FileManager mockedFileManager = Mockito.mock(FileManager.class);
     viewHolder.setFileManager(mockedFileManager);
     Mockito.stub(mockedFileManager.getFilePath(anyString())).toReturn(fileId);

@@ -23,6 +23,7 @@ import org.robolectric.RuntimeEnvironment;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotSame;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -105,9 +106,11 @@ public class AudioPlayerTest {
     MediaFile mediaFile2 = audioPlayer.createMediaFile(uri, 1, "title", "artist", "album");
 
     audioPlayer.start(0);
+    audioPlayer.onPlayerStateChanged(false, 3);
     audioPlayer.start(1);
 
     Mockito.verify(mockEventListener).paused();
+    Mockito.verify(mockExoPlayer).setPlayWhenReady(false);
     Mockito.verify(mockExoPlayer, Mockito.times(2))
         .prepare(Mockito.any(MediaSource.class));
     Mockito.verify(mockExoPlayer, Mockito.times(2))
