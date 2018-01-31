@@ -136,6 +136,10 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
       // interact with the service.  We are communicating with our
       // service through an IDL interface, so get a client-side
       // representation of that from the raw service object.
+      if (service == null) {
+        return;
+      }
+
       mService = new Messenger(service);
       Log.v(TAG, "Attached");
 
