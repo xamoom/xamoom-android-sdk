@@ -61,11 +61,11 @@ public class AudioPlayerTest {
     AudioPlayer audioPlayer = new AudioPlayer(mockContext, mockExoPlayer);
     Uri uri = Uri.parse("www.xamoom.com");
 
-    MediaFile mediaFile = audioPlayer.createMediaFile(uri, 0, "title", "artist", "album");
+    MediaFile mediaFile = audioPlayer.createMediaFile(uri, "0", "title", "artist", "album");
 
     assertEquals(uri, mediaFile.getUri());
     assertEquals(audioPlayer, mediaFile.getAudioPlayer());
-    assertEquals(0, mediaFile.getId());
+    assertEquals("0", mediaFile.getId());
     assertEquals("title", mediaFile.getTitle());
     assertEquals("artist", mediaFile.getArtist());
     assertEquals("album", mediaFile.getAlbum());
@@ -76,8 +76,8 @@ public class AudioPlayerTest {
     AudioPlayer audioPlayer = new AudioPlayer(mockContext, mockExoPlayer);
     Uri uri = Uri.parse("www.xamoom.com");
 
-    MediaFile mediaFile1 = audioPlayer.createMediaFile(uri, 0, "title", "artist", "album");
-    MediaFile mediaFile2 = audioPlayer.createMediaFile(uri, 1, "title", "artist", "album");
+    MediaFile mediaFile1 = audioPlayer.createMediaFile(uri, "0", "title", "artist", "album");
+    MediaFile mediaFile2 = audioPlayer.createMediaFile(uri, "1", "title", "artist", "album");
 
     assertNotSame(mediaFile1, mediaFile2);
   }
@@ -87,9 +87,9 @@ public class AudioPlayerTest {
     AudioPlayer audioPlayer = new AudioPlayer(RuntimeEnvironment.application, mockExoPlayer);
 
     Uri uri = Uri.parse("www.xamoom.com");
-    MediaFile mediaFile1 = audioPlayer.createMediaFile(uri, 0, "title", "artist", "album");
+    MediaFile mediaFile1 = audioPlayer.createMediaFile(uri, "0", "title", "artist", "album");
 
-    audioPlayer.start(0);
+    audioPlayer.start("0");
 
     Mockito.verify(mockExoPlayer).prepare(Mockito.any(MediaSource.class));
     Mockito.verify(mockExoPlayer).setPlayWhenReady(eq(true));
@@ -101,13 +101,13 @@ public class AudioPlayerTest {
     AudioPlayer audioPlayer = new AudioPlayer(RuntimeEnvironment.application, mockExoPlayer);
 
     Uri uri = Uri.parse("www.xamoom.com");
-    MediaFile mediaFile1 = audioPlayer.createMediaFile(uri, 0, "title", "artist", "album");
+    MediaFile mediaFile1 = audioPlayer.createMediaFile(uri, "0", "title", "artist", "album");
     mediaFile1.setEventListener(mockEventListener);
-    MediaFile mediaFile2 = audioPlayer.createMediaFile(uri, 1, "title", "artist", "album");
+    MediaFile mediaFile2 = audioPlayer.createMediaFile(uri, "1", "title", "artist", "album");
 
-    audioPlayer.start(0);
+    audioPlayer.start("0");
     audioPlayer.onPlayerStateChanged(false, 3);
-    audioPlayer.start(1);
+    audioPlayer.start("1");
 
     Mockito.verify(mockEventListener).paused();
     Mockito.verify(mockExoPlayer).setPlayWhenReady(false);
@@ -121,13 +121,13 @@ public class AudioPlayerTest {
   public void testPause() {
     AudioPlayer audioPlayer = new AudioPlayer(RuntimeEnvironment.application, mockExoPlayer);
     Uri uri = Uri.parse("www.xamoom.com");
-    MediaFile mediaFile1 = audioPlayer.createMediaFile(uri, 0, "title", "artist", "album");
+    MediaFile mediaFile1 = audioPlayer.createMediaFile(uri, "0", "title", "artist", "album");
     mediaFile1.setEventListener(mockEventListener);
 
-    audioPlayer.start(0);
+    audioPlayer.start("0");
     audioPlayer.onPlayerStateChanged(true, 3);
 
-    audioPlayer.pause(0);
+    audioPlayer.pause("0");
     audioPlayer.onPlayerStateChanged(false, 3);
 
     Mockito.verify(mockExoPlayer).setPlayWhenReady(eq(false));
@@ -140,10 +140,10 @@ public class AudioPlayerTest {
   public void testStop() {
     AudioPlayer audioPlayer = new AudioPlayer(RuntimeEnvironment.application, mockExoPlayer);
     Uri uri = Uri.parse("www.xamoom.com");
-    MediaFile mediaFile1 = audioPlayer.createMediaFile(uri, 0, "title", "artist", "album");
+    MediaFile mediaFile1 = audioPlayer.createMediaFile(uri, "0", "title", "artist", "album");
     mediaFile1.setEventListener(mockEventListener);
 
-    audioPlayer.start(0);
+    audioPlayer.start("0");
     audioPlayer.onPlayerStateChanged(true, 3);
 
     audioPlayer.stop();
@@ -159,9 +159,9 @@ public class AudioPlayerTest {
   public void testEndOfPlayback() {
     AudioPlayer audioPlayer = new AudioPlayer(RuntimeEnvironment.application, mockExoPlayer);
     Uri uri = Uri.parse("www.xamoom.com");
-    MediaFile mediaFile1 = audioPlayer.createMediaFile(uri, 0, "title", "artist", "album");
+    MediaFile mediaFile1 = audioPlayer.createMediaFile(uri, "0", "title", "artist", "album");
     mediaFile1.setEventListener(mockEventListener);
-    audioPlayer.start(0);
+    audioPlayer.start("0");
 
     audioPlayer.onPlayerStateChanged(true, 4);
 
@@ -172,9 +172,9 @@ public class AudioPlayerTest {
   public void testLoading() {
     AudioPlayer audioPlayer = new AudioPlayer(RuntimeEnvironment.application, mockExoPlayer);
     Uri uri = Uri.parse("www.xamoom.com");
-    MediaFile mediaFile1 = audioPlayer.createMediaFile(uri, 0, "title", "artist", "album");
+    MediaFile mediaFile1 = audioPlayer.createMediaFile(uri, "0", "title", "artist", "album");
     mediaFile1.setEventListener(mockEventListener);
-    audioPlayer.start(0);
+    audioPlayer.start("0");
 
     audioPlayer.onLoadingChanged(true);
 
@@ -185,24 +185,24 @@ public class AudioPlayerTest {
   public void testPlaybackPosition() {
     AudioPlayer audioPlayer = new AudioPlayer(RuntimeEnvironment.application, mockExoPlayer);
     Uri uri = Uri.parse("www.xamoom.com");
-    MediaFile mediaFile1 = audioPlayer.createMediaFile(uri, 0, "title", "artist", "album");
+    MediaFile mediaFile1 = audioPlayer.createMediaFile(uri, "0", "title", "artist", "album");
     mediaFile1.setEventListener(mockEventListener);
-    audioPlayer.start(0);
+    audioPlayer.start("0");
 
     when(mockExoPlayer.getCurrentPosition()).thenReturn(101L);
 
-    Assert.assertEquals(101L, audioPlayer.getPlaybackPosition(0));
+    Assert.assertEquals(101L, audioPlayer.getPlaybackPosition("0"));
   }
 
   @Test
   public void testSeekForward() {
     AudioPlayer audioPlayer = new AudioPlayer(RuntimeEnvironment.application, mockExoPlayer);
     Uri uri = Uri.parse("www.xamoom.com");
-    MediaFile mediaFile1 = audioPlayer.createMediaFile(uri, 0, "title", "artist", "album");
+    MediaFile mediaFile1 = audioPlayer.createMediaFile(uri, "0", "title", "artist", "album");
     mediaFile1.setEventListener(mockEventListener);
     when(mockExoPlayer.getCurrentPosition()).thenReturn(0L);
 
-    audioPlayer.seekForward(50000, 0);
+    audioPlayer.seekForward(50000, "0");
 
     verify(mockExoPlayer).seekTo(eq(50000L));
   }
@@ -211,11 +211,11 @@ public class AudioPlayerTest {
   public void testSeekBackward() {
     AudioPlayer audioPlayer = new AudioPlayer(RuntimeEnvironment.application, mockExoPlayer);
     Uri uri = Uri.parse("www.xamoom.com");
-    MediaFile mediaFile1 = audioPlayer.createMediaFile(uri, 0, "title", "artist", "album");
+    MediaFile mediaFile1 = audioPlayer.createMediaFile(uri, "0", "title", "artist", "album");
     mediaFile1.setEventListener(mockEventListener);
     when(mockExoPlayer.getCurrentPosition()).thenReturn(0L);
 
-    audioPlayer.seekBackward(50000L, 0);
+    audioPlayer.seekBackward(50000L, "0");
 
     verify(mockExoPlayer).seekTo(eq(-50000L));
   }
@@ -224,12 +224,12 @@ public class AudioPlayerTest {
   public void testUpdatePlaybackPosition() {
     AudioPlayer audioPlayer = new AudioPlayer(RuntimeEnvironment.application, mockExoPlayer);
     Uri uri = Uri.parse("www.xamoom.com");
-    MediaFile mediaFile1 = audioPlayer.createMediaFile(uri, 0, "title", "artist", "album");
+    MediaFile mediaFile1 = audioPlayer.createMediaFile(uri, "0", "title", "artist", "album");
     mediaFile1.setEventListener(mockEventListener);
 
     when(mockExoPlayer.getCurrentPosition()).thenReturn(100L);
     when(mockExoPlayer.getDuration()).thenReturn(10000L);
-    audioPlayer.start(0);
+    audioPlayer.start("0");
     audioPlayer.onPlayerStateChanged(true, 3);
     audioPlayer.onSeekProcessed();
 
@@ -240,12 +240,12 @@ public class AudioPlayerTest {
   public void testUpdatePlaybackPositionOverDurationCheck() {
     AudioPlayer audioPlayer = new AudioPlayer(RuntimeEnvironment.application, mockExoPlayer);
     Uri uri = Uri.parse("www.xamoom.com");
-    MediaFile mediaFile1 = audioPlayer.createMediaFile(uri, 0, "title", "artist", "album");
+    MediaFile mediaFile1 = audioPlayer.createMediaFile(uri, "0", "title", "artist", "album");
     mediaFile1.setEventListener(mockEventListener);
 
     when(mockExoPlayer.getCurrentPosition()).thenReturn(10001L);
     when(mockExoPlayer.getDuration()).thenReturn(10000L);
-    audioPlayer.start(0);
+    audioPlayer.start("0");
     audioPlayer.onPlayerStateChanged(true, 3);
     audioPlayer.onSeekProcessed();
 
@@ -256,12 +256,12 @@ public class AudioPlayerTest {
   public void testUpdatePlaybackPositionLower0Check() {
     AudioPlayer audioPlayer = new AudioPlayer(RuntimeEnvironment.application, mockExoPlayer);
     Uri uri = Uri.parse("www.xamoom.com");
-    MediaFile mediaFile1 = audioPlayer.createMediaFile(uri, 0, "title", "artist", "album");
+    MediaFile mediaFile1 = audioPlayer.createMediaFile(uri, "0", "title", "artist", "album");
     mediaFile1.setEventListener(mockEventListener);
 
     when(mockExoPlayer.getCurrentPosition()).thenReturn(-100L);
     when(mockExoPlayer.getDuration()).thenReturn(10000L);
-    audioPlayer.start(0);
+    audioPlayer.start("0");
     audioPlayer.onPlayerStateChanged(true, 3);
     audioPlayer.onSeekProcessed();
 

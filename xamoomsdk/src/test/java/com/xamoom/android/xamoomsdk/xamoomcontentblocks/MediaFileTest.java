@@ -33,12 +33,12 @@ public class MediaFileTest {
   public void testConstructor() {
     Uri uri = Uri.parse("www.xamoom.com");
 
-    MediaFile mediaFile = new MediaFile(mockAudioPlayer, uri, 0, "title",
+    MediaFile mediaFile = new MediaFile(mockAudioPlayer, uri, "0", "title",
         "artist", "album");
 
     Assert.assertEquals(mockAudioPlayer, mediaFile.getAudioPlayer());
     Assert.assertEquals(uri, mediaFile.getUri());
-    Assert.assertEquals(0, mediaFile.getId());
+    Assert.assertEquals("0", mediaFile.getId());
     Assert.assertEquals("title", mediaFile.getTitle());
     Assert.assertEquals("artist", mediaFile.getArtist());
     Assert.assertEquals("album", mediaFile.getAlbum());
@@ -48,19 +48,19 @@ public class MediaFileTest {
   public void testStart() {
     Uri uri = Uri.parse("www.xamoom.com");
 
-    MediaFile mediaFile = new MediaFile(mockAudioPlayer, uri, 0, null, null, null);
+    MediaFile mediaFile = new MediaFile(mockAudioPlayer, uri, "0", null, null, null);
     mediaFile.start();
 
-    Mockito.verify(mockAudioPlayer).start(Mockito.eq(0));
+    Mockito.verify(mockAudioPlayer).start(Mockito.eq("0"));
   }
 
   @Test
   public void testPause() {
     Uri uri = Uri.parse("www.xamoom.com");
 
-    MediaFile mediaFile = new MediaFile(mockAudioPlayer, uri, 0, null, null, null);
+    MediaFile mediaFile = new MediaFile(mockAudioPlayer, uri, "0", null, null, null);
     mediaFile.pause();
 
-    Mockito.verify(mockAudioPlayer).pause(Mockito.eq(0));
+    Mockito.verify(mockAudioPlayer).pause(Mockito.eq("0"));
   }
 }
