@@ -8,9 +8,7 @@
 
 package com.xamoom.android.xamoomsdk.Storage.Database;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 public class DatabaseAdapter {

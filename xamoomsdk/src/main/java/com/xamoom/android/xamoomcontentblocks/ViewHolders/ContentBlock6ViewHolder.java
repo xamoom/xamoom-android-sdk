@@ -10,7 +10,6 @@ package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.net.Uri;
 import android.support.v4.util.LruCache;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -33,7 +32,6 @@ import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Resource.Style;
 import com.xamoom.android.xamoomsdk.Storage.FileManager;
 
-import java.io.IOException;
 import java.util.EnumSet;
 import java.util.List;
 

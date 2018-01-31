@@ -8,10 +8,8 @@
 
 package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 

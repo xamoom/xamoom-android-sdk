@@ -14,7 +14,6 @@ import android.database.Cursor;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.google.gson.Gson;
 import com.xamoom.android.xamoomsdk.Resource.Location;
 import com.xamoom.android.xamoomsdk.Resource.Marker;
 import com.xamoom.android.xamoomsdk.Resource.Spot;

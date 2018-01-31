@@ -10,7 +10,6 @@ package com.xamoom.android.xamoomsdk.Storage.Database;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.CursorLoader;
 import android.database.Cursor;
 
 import com.xamoom.android.xamoomsdk.Resource.Content;

@@ -8,28 +8,20 @@
 
 package com.xamoom.android.pushnotifications;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.Notification;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-
-import com.pushwoosh.notification.AbsNotificationFactory;
-import com.pushwoosh.notification.PushData;
-
-import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import java.util.List;
+import com.pushwoosh.notification.AbsNotificationFactory;
+import com.pushwoosh.notification.PushData;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class XamoomNotificationFactory extends AbsNotificationFactory {
   private static final String TAG = XamoomNotificationFactory.class.getSimpleName();
