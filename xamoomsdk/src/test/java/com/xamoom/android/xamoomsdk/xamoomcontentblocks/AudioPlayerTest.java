@@ -65,7 +65,7 @@ public class AudioPlayerTest {
 
     assertEquals(uri, mediaFile.getUri());
     assertEquals(audioPlayer, mediaFile.getAudioPlayer());
-    assertEquals(0, mediaFile.getPosition());
+    assertEquals(0, mediaFile.getId());
     assertEquals("title", mediaFile.getTitle());
     assertEquals("artist", mediaFile.getArtist());
     assertEquals("album", mediaFile.getAlbum());

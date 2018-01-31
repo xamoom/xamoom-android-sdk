@@ -24,13 +24,15 @@ import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
+import java.util.HashMap;
+
 public class AudioPlayer implements Player.EventListener {
   private static final String TAG = AudioPlayer.class.getSimpleName();
 
   private Context context;
   private ExoPlayer exoPlayer;
   private String appName;
-  private SparseArrayCompat<MediaFile> mediaFiles = new SparseArrayCompat<>();
+  private HashMap<String, MediaFile> mediaFiles = new HashMap<>();
   private MediaFile currentMediaFile;
 
   public AudioPlayer(Context context) {
@@ -55,11 +57,11 @@ public class AudioPlayer implements Player.EventListener {
     exoPlayer.addListener(this);
   }
 
-  public MediaFile createMediaFile(Uri uri, int position, String title, String artist, String album) {
-    MediaFile mediaFile = mediaFiles.get(position);
+  public MediaFile createMediaFile(Uri uri, String id, String title, String artist, String album) {
+    MediaFile mediaFile = mediaFiles.get(id);
     if (mediaFile == null) {
-      mediaFile = new MediaFile(this, uri, position, title, artist, album);
-      mediaFiles.put(mediaFile.getPosition(), mediaFile);
+      mediaFile = new MediaFile(this, uri, id, title, artist, album);
+      mediaFiles.put(mediaFile.getId(), mediaFile);
     }
     return mediaFile;
   }
@@ -72,7 +74,7 @@ public class AudioPlayer implements Player.EventListener {
     exoPlayer.prepare(source);
   }
 
-  public void start(int position) {
+  public void start(String position) {
     if (currentMediaFile != mediaFiles.get(position) ||
         exoPlayer.getPlaybackState() == Player.STATE_IDLE) {
       if (currentMediaFile != null) {
@@ -86,7 +88,7 @@ public class AudioPlayer implements Player.EventListener {
     exoPlayer.setPlayWhenReady(true);
   }
 
-  public void pause(int position) {
+  public void pause(String position) {
     if (currentMediaFile == null || currentMediaFile != mediaFiles.get(position)) {
       return;
     }
@@ -98,12 +100,12 @@ public class AudioPlayer implements Player.EventListener {
     exoPlayer.stop();
   }
 
-  public void seekForward(long seekTime, int position) {
+  public void seekForward(long seekTime, String id) {
     long currentPosition = exoPlayer.getCurrentPosition();
     exoPlayer.seekTo(currentPosition + seekTime);
   }
 
-  public void seekBackward(long seekTime, int position) {
+  public void seekBackward(long seekTime, String id) {
     long currentPosition = exoPlayer.getCurrentPosition();
     exoPlayer.seekTo(currentPosition - seekTime);
   }
@@ -147,7 +149,7 @@ public class AudioPlayer implements Player.EventListener {
         currentMediaFile.finished();
 
         // test
-        mediaFiles.remove(currentMediaFile.getPosition());
+        mediaFiles.remove(currentMediaFile.getId());
         currentMediaFile = null;
         break;
     }
@@ -182,8 +184,8 @@ public class AudioPlayer implements Player.EventListener {
     }
   }
 
-  public long getPlaybackPosition(int position) {
-    if (currentMediaFile == null || currentMediaFile != mediaFiles.get(position)) {
+  public long getPlaybackPosition(String id) {
+    if (currentMediaFile == null || currentMediaFile != mediaFiles.get(id)) {
       return -1;
     }
     return exoPlayer.getCurrentPosition();

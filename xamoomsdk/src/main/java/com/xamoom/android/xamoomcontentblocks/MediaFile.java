@@ -17,7 +17,7 @@ public class MediaFile {
   private State state = State.IDLE;
   private AudioPlayer audioPlayer;
   private Uri uri;
-  private int position;
+  private String id;
   private String title;
   private String artist;
   private String album;
@@ -27,11 +27,11 @@ public class MediaFile {
   private final Handler handler = new Handler();
 
 
-  public MediaFile(@NonNull AudioPlayer audioPlayer, @NonNull Uri uri, @NonNull int position,
+  public MediaFile(@NonNull AudioPlayer audioPlayer, @NonNull Uri uri, @NonNull String id,
                    @Nullable String title, @Nullable String artist, @Nullable String album) {
     this.audioPlayer = audioPlayer;
     this.uri = uri;
-    this.position = position;
+    this.id = id;
     this.title = title;
     this.artist = artist;
     this.album = album;
@@ -46,19 +46,19 @@ public class MediaFile {
   }
 
   public void start() {
-    audioPlayer.start(position);
+    audioPlayer.start(id);
   }
 
   public void pause() {
-    audioPlayer.pause(position);
+    audioPlayer.pause(id);
   }
 
   public void seekForward(long seekTime) {
-    audioPlayer.seekForward(seekTime, position);
+    audioPlayer.seekForward(seekTime, id);
   }
 
   public void seekBackward(long seekTime) {
-    audioPlayer.seekBackward(seekTime, position);
+    audioPlayer.seekBackward(seekTime, id);
   }
 
   void started() {
@@ -115,7 +115,7 @@ public class MediaFile {
     handler.postDelayed(new Runnable() {
       @Override
       public void run() {
-        playbackPosition = audioPlayer.getPlaybackPosition(position);
+        playbackPosition = audioPlayer.getPlaybackPosition(id);
         if (playbackPosition < 0) {
           playbackPosition = 0;
         }
@@ -148,8 +148,8 @@ public class MediaFile {
     this.eventListener = eventListener;
   }
 
-  public int getPosition() {
-    return position;
+  public String getId() {
+    return id;
   }
 
   public String getTitle() {

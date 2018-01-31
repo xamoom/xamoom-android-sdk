@@ -161,7 +161,7 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
       msg.replyTo = messenger;
       Bundle bundle = new Bundle();
       bundle.putString("URL", contentBlock.getFileId());
-      bundle.putInt("POS", getAdapterPosition());
+      bundle.putString("POS", contentBlock.getId());
       bundle.putString("TITLE", contentBlock.getTitle());
       bundle.putString("ARTIST", contentBlock.getArtists());
       msg.setData(bundle);
@@ -304,7 +304,7 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
       msg.replyTo = messenger;
       Bundle bundle = new Bundle();
       bundle.putString("URL", urlString);
-      bundle.putInt("POS", getAdapterPosition());
+      bundle.putString("POS", contentBlock.getId());
       bundle.putString("TITLE", contentBlock.getTitle());
       bundle.putString("ARTIST", contentBlock.getArtists());
       msg.setData(bundle);
@@ -326,14 +326,14 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
               AudioPlayerService.MSG_ACTION_PAUSE);
           msg.replyTo = messenger;
           Bundle bundle = new Bundle();
-          bundle.putInt("POS", getAdapterPosition());
+          bundle.putString("POS", contentBlock.getId());
           msg.setData(bundle);
         } else {
           msg = Message.obtain(null,
               AudioPlayerService.MSG_ACTION_PLAY);
           msg.replyTo = messenger;
           Bundle bundle = new Bundle();
-          bundle.putInt("POS", getAdapterPosition());
+          bundle.putString("POS", contentBlock.getId());
           msg.setData(bundle);
         }
 

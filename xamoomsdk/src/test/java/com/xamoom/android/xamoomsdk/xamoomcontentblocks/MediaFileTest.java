@@ -1,6 +1,5 @@
 package com.xamoom.android.xamoomsdk.xamoomcontentblocks;
 
-import android.media.MediaPlayer;
 import android.net.Uri;
 
 import com.xamoom.android.xamoomcontentblocks.AudioPlayer;
@@ -39,7 +38,7 @@ public class MediaFileTest {
 
     Assert.assertEquals(mockAudioPlayer, mediaFile.getAudioPlayer());
     Assert.assertEquals(uri, mediaFile.getUri());
-    Assert.assertEquals(0, mediaFile.getPosition());
+    Assert.assertEquals(0, mediaFile.getId());
     Assert.assertEquals("title", mediaFile.getTitle());
     Assert.assertEquals("artist", mediaFile.getArtist());
     Assert.assertEquals("album", mediaFile.getAlbum());

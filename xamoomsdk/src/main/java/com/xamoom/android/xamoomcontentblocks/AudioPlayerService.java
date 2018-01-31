@@ -59,7 +59,7 @@ public class AudioPlayerService extends Service {
   class IncomingHandler extends Handler {
     @Override
     public void handleMessage(final Message msg) {
-      int position;
+      String position;
       switch (msg.what) {
         case MSG_REGISTER_CLIENT:
           clients.add(msg.replyTo);
@@ -68,7 +68,7 @@ public class AudioPlayerService extends Service {
           clients.remove(msg.replyTo);
           break;
         case MSG_SET_URL:
-          position = msg.getData().getInt("POS");
+          position = msg.getData().getString("POS");
           String url = msg.getData().getString("URL");
           String title = msg.getData().getString("TITLE");
           String artist = msg.getData().getString("ARTIST");
@@ -100,7 +100,7 @@ public class AudioPlayerService extends Service {
           }
           break;
         case MSG_ACTION_PLAY:
-          position = msg.getData().getInt("POS");
+          position = msg.getData().getString("POS");
           if (requestAudioFocus()) {
             audioPlayer.start(position);
           }
