@@ -142,7 +142,7 @@ public class AudioPlayer implements Player.EventListener {
         break;
       case Player.STATE_IDLE:
         currentMediaFile.updatePlaybackPosition(0);
-        currentMediaFile.finished();
+        //currentMediaFile.finished();
         break;
       case Player.STATE_ENDED:
         currentMediaFile.updatePlaybackPosition(0);

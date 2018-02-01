@@ -161,7 +161,7 @@ public class AudioPlayerService extends Service {
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
     MediaButtonReceiver.handleIntent(mediaSession, intent);
-    return START_NOT_STICKY;
+    return START_STICKY;
   }
 
   @Override
@@ -209,6 +209,7 @@ public class AudioPlayerService extends Service {
       if (mediaFile == null) {
         return;
       }
+      mediaSession.setActive(true);
 
       mediaSession.setMetadata(new MediaMetadataCompat.Builder()
           .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, mediaFile.getUri().toString())
@@ -228,7 +229,6 @@ public class AudioPlayerService extends Service {
               PlaybackStateCompat.ACTION_STOP)
           .build());
 
-      mediaSession.setActive(true);
       startForeground(NOTIFICATION_ID, createMediaNotification(true));
 
       Messenger messenger = mediaFileMessengers.get(mediaFile);
@@ -254,7 +254,6 @@ public class AudioPlayerService extends Service {
               PlaybackStateCompat.ACTION_REWIND |
               PlaybackStateCompat.ACTION_STOP)
           .build());
-
 
       stopForeground(false);
       Notification notification = createMediaNotification(false);

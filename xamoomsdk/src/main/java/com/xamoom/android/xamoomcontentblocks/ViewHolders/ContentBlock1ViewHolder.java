@@ -261,6 +261,9 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
 
     LocalBroadcastManager.getInstance(mContext).registerReceiver(onPauseReceiver, new IntentFilter(PAUSE_INTENT_ACTION));
 
+    Intent intent = new Intent(mContext.getApplicationContext(), AudioPlayerService.class);
+    mContext.getApplicationContext().startService(intent);
+
     doBindService();
   }
 
