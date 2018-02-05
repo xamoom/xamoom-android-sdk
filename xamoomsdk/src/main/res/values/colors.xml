@@ -54,9 +54,9 @@
     <color name="downloadblock_default_background_color">#d1d1d1</color>
     <color name="downloadblock_default_tint_color">#333333</color>
 
-    <color name="audio_player_background_color">#ffee00</color>
+    <color name="audio_player_background_color">#d1d1d1</color>
     <color name="audio_player_tint_color">@android:color/black</color>
     <color name="audio_player_progress_bar_color">#5AC425</color>
     <color name="audio_player_progress_bar_background_color">#AAAAAA</color>
-    <color name="audio_player_notification_background_color">#ffee00</color>
+    <color name="audio_player_notification_background_color">#d1d1d1</color>
 </resources>

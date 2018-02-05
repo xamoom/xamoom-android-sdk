@@ -10,9 +10,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -35,6 +38,7 @@ public class AudioPlayerService extends Service {
   private static final String TAG = AudioPlayerService.class.getSimpleName();
   private static final int NOTIFICATION_ID = 1;
   private static final int SEEK_TIME = 30000;
+  private static final String CHANNEL_ID = "media_playback_channel";
 
   public static final int MSG_REGISTER_CLIENT = 1;
   public static final int MSG_UNREGISTER_CLIENT = 2;
@@ -473,7 +477,6 @@ public class AudioPlayerService extends Service {
 
     builder
         .setSmallIcon(R.drawable.ic_notification_stat_audio)
-        .setColor(getBackgroundColor())
         .setStyle(new NotificationCompat.MediaStyle()
             .setShowActionsInCompactView(playPauseButtonIndex)
             .setMediaSession(mediaSession.getSessionToken())
@@ -481,6 +484,21 @@ public class AudioPlayerService extends Service {
             .setCancelButtonIntent(
                 MediaButtonReceiver.buildMediaButtonPendingIntent(getApplicationContext(),
                     PlaybackStateCompat.ACTION_STOP)));
+
+    // setting the color only on Nougat (7.0.0 - API Level 24) and above, because 6.0.0 Samsung
+    // devices would also use the color without adjusting text colors
+    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+      builder.setColor(getBackgroundColor());
+    }
+
+    // add default largeIcon, when below Nougat, cause some devices will else use the small
+    // icon and this does not look great
+    if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.N) {
+      Bitmap image = getDefaultAudioPlayerAsset();
+      if (image != null) {
+        builder.setLargeIcon(image);
+      }
+    }
 
     return builder.build();
   }
@@ -502,5 +520,16 @@ public class AudioPlayerService extends Service {
     return color;
   }
 
-  private static final String CHANNEL_ID = "media_playback_channel";
+  private Bitmap getDefaultAudioPlayerAsset() {
+    int[] attrs = {R.attr.audio_player_default_asset_drawable};
+    TypedArray ta = getApplication().obtainStyledAttributes(R.style.ContentBlocksTheme_AudioPlayer, attrs);
+    int resourceId = ta.getResourceId(0, -1);
+    if (resourceId == -1) {
+      return null;
+    }
+    ta.recycle();
+
+    return BitmapFactory.decodeResource(getApplicationContext().getResources(),
+        resourceId);
+  }
 }
