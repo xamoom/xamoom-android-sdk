@@ -14,13 +14,11 @@ import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 import com.xamoom.android.xamoomsdk.Utils.DateUtil;
 
-import java.security.Key;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Date;
 
 import at.rags.morpheus.Annotations.Relationship;
 import at.rags.morpheus.Resource;

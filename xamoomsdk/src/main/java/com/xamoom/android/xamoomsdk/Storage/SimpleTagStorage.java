@@ -11,7 +11,6 @@ package com.xamoom.android.xamoomsdk.Storage;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;

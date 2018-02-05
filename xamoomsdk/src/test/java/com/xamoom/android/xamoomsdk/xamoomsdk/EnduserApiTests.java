@@ -9,6 +9,7 @@
 package com.xamoom.android.xamoomsdk.xamoomsdk;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -19,6 +20,7 @@ import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.APIListCallback;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
+import com.xamoom.android.xamoomsdk.Enums.ContentReason;
 import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
 import com.xamoom.android.xamoomsdk.Filter;
 import com.xamoom.android.xamoomsdk.HTTPHeaderInterceptor;
@@ -75,6 +77,7 @@ import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -82,6 +85,9 @@ public class EnduserApiTests {
   private static final String TAG = EnduserApiTests.class.getSimpleName();
 
   private MockWebServer mMockWebServer;
+  private Context mockContext;
+  private PackageManager mockPackageManager;
+  private SharedPreferences mockSharedPreferences;
   private EnduserApi mEnduserApi;
   private Morpheus mMockMorpheus;
   private OfflineEnduserApi mMockedOfflineEnduserApi;
@@ -89,9 +95,22 @@ public class EnduserApiTests {
   @Captor ArgumentCaptor<Map<String, String>> mMapArgumentCaptor;
 
   @Before
-  public void setup() {
+  public void setup() throws PackageManager.NameNotFoundException {
     mMockWebServer = new MockWebServer();
+    mockContext = Mockito.mock(Context.class);
+    mockPackageManager = Mockito.mock(PackageManager.class);
+    mockSharedPreferences = Mockito.mock(SharedPreferences.class);
+    ApplicationInfo applicationInfo = Mockito.mock(ApplicationInfo.class);
+    Bundle bundle = new Bundle(1);
+    bundle.putString("com.xamoom.android.xamoomsdk.version", "0.0.0");
+    ApplicationInfo applicationInfo1 = new ApplicationInfo();
+    applicationInfo.metaData = bundle;
 
+    when(mockContext.getPackageManager()).thenReturn(mockPackageManager);
+    when(mockPackageManager.getApplicationInfo(anyString(), anyInt())).thenReturn(applicationInfo1);
+    when(mockContext.getApplicationInfo()).thenReturn(applicationInfo);
+    when(applicationInfo.loadLabel(any(PackageManager.class))).thenReturn("ÄÖÜäöü");
+    when(mockContext.getSharedPreferences(anyString(), anyInt())).thenReturn(mockSharedPreferences);
     OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
     builder.addInterceptor(new HTTPHeaderInterceptor("UserAgent", "apikey"));
     OkHttpClient httpClient = builder.build();
@@ -100,7 +119,7 @@ public class EnduserApiTests {
         .client(httpClient)
         .baseUrl(mMockWebServer.url(""))
         .build();
-    mEnduserApi = new EnduserApi(retrofit, null);
+    mEnduserApi = new EnduserApi(retrofit, mockContext);
 
     mMockMorpheus = mock(Morpheus.class);
     mMockedOfflineEnduserApi = mock(OfflineEnduserApi.class);
@@ -119,7 +138,7 @@ public class EnduserApiTests {
 
   @Test
   public void testInitWithApikey() throws Exception {
-    EnduserApi enduserApi = new EnduserApi("test", null);
+    EnduserApi enduserApi = new EnduserApi("test", mockContext);
 
     assertNotNull(enduserApi.getEnduserApiInterface());
     assertEquals(enduserApi.getSystemLanguage(), "en");
@@ -131,7 +150,7 @@ public class EnduserApiTests {
         .baseUrl("http://www.xamoom.com/")
         .build();
 
-    EnduserApi enduserApi = new EnduserApi(retrofit, null);
+    EnduserApi enduserApi = new EnduserApi(retrofit, mockContext);
 
     assertNotNull(enduserApi.getEnduserApiInterface());
     assertEquals(enduserApi.getSystemLanguage(), "en");
@@ -139,20 +158,17 @@ public class EnduserApiTests {
 
   @Test
   public void testGeneratedUserAgent() throws PackageManager.NameNotFoundException {
-    Context context = Mockito.mock(Context.class);
-    PackageManager packageManager = Mockito.mock(PackageManager.class);
     ApplicationInfo applicationInfo = Mockito.mock(ApplicationInfo.class);
     Bundle bundle = new Bundle(1);
     bundle.putString("com.xamoom.android.xamoomsdk.version", "0.0.0");
     ApplicationInfo applicationInfo1 = new ApplicationInfo();
     applicationInfo.metaData = bundle;
 
-    when(context.getPackageManager()).thenReturn(packageManager);
-    when(packageManager.getApplicationInfo(anyString(), anyInt())).thenReturn(applicationInfo1);
-    when(context.getApplicationInfo()).thenReturn(applicationInfo);
+    when(mockPackageManager.getApplicationInfo(anyString(), anyInt())).thenReturn(applicationInfo1);
+    when(mockContext.getApplicationInfo()).thenReturn(applicationInfo);
     when(applicationInfo.loadLabel(any(PackageManager.class))).thenReturn("ÄÖÜäöü");
 
-    EnduserApi enduserApi = new EnduserApi("", context);
+    EnduserApi enduserApi = new EnduserApi("", mockContext);
     String useragent = enduserApi.generateUserAgent();
 
     assertEquals("Xamoom SDK Android|AOUaou|", useragent);
@@ -160,14 +176,14 @@ public class EnduserApiTests {
 
   @Test
   public void testSharedInstanceApiKey() {
-    EnduserApi api = EnduserApi.getSharedInstance("key", null);
+    EnduserApi api = EnduserApi.getSharedInstance("key", mockContext);
 
     assertNotNull(api);
   }
 
   @Test
   public void testSetSharedInstance() {
-    EnduserApi enduserApi = new EnduserApi("test", null);
+    EnduserApi enduserApi = new EnduserApi("test", mockContext);
 
     EnduserApi.setSharedInstance(enduserApi);
     EnduserApi checkEnduserApi = EnduserApi.getSharedInstance();
@@ -223,7 +239,8 @@ public class EnduserApiTests {
     assertEquals("/_api/v2/consumer/contents/123456?lang=en", request1.getPath());
 
     // TEST User-Agent
-    assertEquals(request1.getHeader("User-Agent"), "UserAgent");
+    assertEquals("UserAgent", request1.getHeader("User-Agent"));
+    assertEquals("apikey", request1.getHeader("APIKEY"));
   }
 
   @Test
@@ -271,6 +288,7 @@ public class EnduserApiTests {
     when(mMockMorpheus.parse(anyString())).thenReturn(jsonApiObject);
 
     mEnduserApi.getContent("123456", EnumSet.of(ContentFlags.PREVIEW, ContentFlags.PRIVATE),
+        ContentReason.NOTIFICATION,
         new APICallback<Content, List<at.rags.morpheus.Error>>() {
           @Override
           public void finished(Content result) {
@@ -283,6 +301,7 @@ public class EnduserApiTests {
 
     RecordedRequest request1 = mMockWebServer.takeRequest();
     assertEquals("/_api/v2/consumer/contents/123456?lang=en&preview=true&public-only=true", request1.getPath());
+    assertEquals("4", request1.getHeader("X-Reason"));
   }
 
   @Test
@@ -358,7 +377,7 @@ public class EnduserApiTests {
     final Semaphore semaphore = new Semaphore(0);
 
     mEnduserApi.getContentByLocationIdentifier("1234", null, conditions,
-        new APICallback<Content, List<Error>>() {
+        ContentReason.NOTIFICATION, new APICallback<Content, List<Error>>() {
           @Override
           public void finished(Content result) {
             checkContent[0] = result;
@@ -382,6 +401,7 @@ public class EnduserApiTests {
             "&condition[double]=1.0000023589235236" +
             "&condition[x-datetime]="+ getISO8601Date(),
         request1.getPath());
+    assertEquals("4", request1.getHeader("X-Reason"));
   }
 
   @Test
@@ -782,6 +802,7 @@ public class EnduserApiTests {
 
       @Override
       public void error(List<Error> error) {
+        fail();
         semaphore.release();
       }
     });
@@ -1315,6 +1336,70 @@ public class EnduserApiTests {
     Mockito.verify(mMockedOfflineEnduserApi).getStyle(anyString(),
         (APICallback<Style, List<Error>>) any());
     Mockito.verifyNoMoreInteractions(mMockMorpheus);
+  }
+
+  @Test
+  public void testGotEphemeralId() {
+    SharedPreferences.Editor mockEditor = Mockito.mock(SharedPreferences.Editor.class);
+    when(mockSharedPreferences.edit()).thenReturn(mockEditor);
+    when(mockSharedPreferences.getString(eq("com.xamoom.android.xamoomsdk.ephemeralid"),
+        anyString())).thenReturn(null);
+
+    mEnduserApi.gotEphemeralId("1234");
+
+    Mockito.verify(mockEditor).putString(eq("com.xamoom.android.xamoomsdk.ephemeralid"),
+        eq("1234"));
+    Mockito.verify(mockEditor).apply();
+  }
+
+  @Test
+  public void testGotEphemeralIdWitExistingId() {
+    SharedPreferences.Editor mockEditor = Mockito.mock(SharedPreferences.Editor.class);
+    when(mockSharedPreferences.edit()).thenReturn(mockEditor);
+
+    when(mockSharedPreferences.getString(eq("com.xamoom.android.xamoomsdk.ephemeralid"),
+        anyString())).thenReturn("12345");
+
+    mEnduserApi.gotEphemeralId("1234");
+
+    Mockito.verify(mockSharedPreferences, times(1)).getString(anyString(), anyString());
+    Mockito.verify(mockEditor).putString(eq("com.xamoom.android.xamoomsdk.ephemeralid"),
+        eq("1234"));
+    Mockito.verify(mockEditor).apply();
+  }
+
+  @Test
+  public void testEphemeralIdHeader() throws Exception {
+    mMockWebServer.enqueue(new MockResponse().setBody(""));
+    when(mockSharedPreferences.getString(eq("com.xamoom.android.xamoomsdk.ephemeralid"),
+        anyString())).thenReturn("12345");
+    mEnduserApi.gotEphemeralId("12345");
+
+    Content content = new Content();
+    JsonApiObject jsonApiObject = new JsonApiObject();
+    jsonApiObject.setResource(content);
+    when(mMockMorpheus.parse(anyString())).thenReturn(jsonApiObject);
+
+
+    final Semaphore semaphore = new Semaphore(0);
+    Call call = mEnduserApi.getContent("123456", new APICallback<Content, List<Error>>() {
+      @Override
+      public void finished(Content result) {
+        semaphore.release();
+      }
+
+      @Override
+      public void error(List<Error> error) {
+        semaphore.release();
+      }
+    });
+    semaphore.acquire();
+
+
+    RecordedRequest request1 = mMockWebServer.takeRequest();
+
+    // TEST User-Agent
+    assertEquals("12345", request1.getHeader("X-Ephemeral-Id"));
   }
 
   private String getISO8601Date() {

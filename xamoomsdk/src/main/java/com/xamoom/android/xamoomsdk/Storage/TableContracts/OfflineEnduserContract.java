@@ -9,9 +9,6 @@
 package com.xamoom.android.xamoomsdk.Storage.TableContracts;
 
 import android.provider.BaseColumns;
-import android.provider.Settings;
-
-import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 
 public class OfflineEnduserContract {
   public static final int DATABASE_VERSION = 4;

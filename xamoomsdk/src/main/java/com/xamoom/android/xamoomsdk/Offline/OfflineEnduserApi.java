@@ -28,7 +28,6 @@ import com.xamoom.android.xamoomsdk.Resource.System;
 import com.xamoom.android.xamoomsdk.Resource.SystemSetting;
 import com.xamoom.android.xamoomsdk.Storage.OfflineStorageManager;
 
-import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
 

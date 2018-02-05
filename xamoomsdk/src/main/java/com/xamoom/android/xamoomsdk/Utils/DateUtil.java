@@ -1,8 +1,6 @@
 package com.xamoom.android.xamoomsdk.Utils;
 
 
-import com.google.gson.internal.bind.util.ISO8601Utils;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

@@ -10,7 +10,6 @@ package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.net.Uri;
 import android.support.v4.util.LruCache;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -26,13 +25,13 @@ import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
+import com.xamoom.android.xamoomsdk.Enums.ContentReason;
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Resource.Style;
 import com.xamoom.android.xamoomsdk.Storage.FileManager;
 
-import java.io.IOException;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -76,6 +75,7 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
   }
 
   public void setupContentBlock(ContentBlock contentBlock, boolean offline) {
+    mEnduserApi.setOffline(offline);
     mContentThumbnailImageView.setImageDrawable(null);
     mTitleTextView.setText(null);
     mDescriptionTextView.setText(null);
@@ -92,8 +92,6 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
     } else {
       loadContent(contentBlock.getContentId(), offline);
     }
-
-    mEnduserApi.setOffline(offline);
   }
 
   private void loadContent(final String contentId, final boolean offline) {
@@ -101,7 +99,8 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
       throw new NullPointerException("EnduserApi is null.");
     }
 
-    mCall = mEnduserApi.getContent(contentId, EnumSet.of(ContentFlags.PREVIEW),new APICallback<Content, List<at.rags.morpheus.Error>>() {
+    mCall = mEnduserApi.getContent(contentId, EnumSet.of(ContentFlags.PREVIEW),
+        ContentReason.LINKED_CONTENT, new APICallback<Content, List<at.rags.morpheus.Error>>() {
       @Override
       public void finished(Content result) {
         if (result == null) {

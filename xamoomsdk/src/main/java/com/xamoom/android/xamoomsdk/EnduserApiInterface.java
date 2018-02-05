@@ -13,7 +13,8 @@ import java.util.Map;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.Headers;
+import retrofit2.http.Header;
+import retrofit2.http.HeaderMap;
 import retrofit2.http.Path;
 import retrofit2.http.QueryMap;
 
@@ -22,33 +23,43 @@ import retrofit2.http.QueryMap;
  * Used by retrofit.
  */
 public interface EnduserApiInterface {
+  String HEADER_EPHEMERAL = "X-Ephemeral-Id";
+  String HEADER_REASON = "X-Reason";
 
   @GET("_api/v2/consumer/contents/{id}")
-  Call<ResponseBody> getContent(@Path("id") String contentId,
+  Call<ResponseBody> getContent(@HeaderMap Map<String, String> headers,
+                                @Path("id") String contentId,
                                 @QueryMap Map<String, String> param);
 
   @GET("_api/v2/consumer/contents")
-  Call<ResponseBody> getContents(@QueryMap Map<String, String> param);
+  Call<ResponseBody> getContents(@HeaderMap Map<String, String> headers,
+                                 @QueryMap Map<String, String> param);
 
   @GET("_api/v2/consumer/spots/{id}")
-  Call<ResponseBody> getSpot(@Path("id") String spotId,
+  Call<ResponseBody> getSpot(@Header(HEADER_EPHEMERAL) String ephemeralId,
+                             @Path("id") String spotId,
                                 @QueryMap Map<String, String> param);
 
   @GET("_api/v2/consumer/spots")
-  Call<ResponseBody> getSpots(@QueryMap Map<String, String> param);
+  Call<ResponseBody> getSpots(@Header(HEADER_EPHEMERAL) String ephemeralId,
+                              @QueryMap Map<String, String> param);
 
   @GET("_api/v2/consumer/systems")
-  Call<ResponseBody> getSystem(@QueryMap Map<String, String> param);
+  Call<ResponseBody> getSystem(@Header(HEADER_EPHEMERAL) String ephemeralId,
+                               @QueryMap Map<String, String> param);
 
   @GET("_api/v2/consumer/menus/{id}")
-  Call<ResponseBody> getMenu(@Path("id") String systemId,
+  Call<ResponseBody> getMenu(@Header(HEADER_EPHEMERAL) String ephemeralId,
+                             @Path("id") String systemId,
                              @QueryMap Map<String, String> param);
 
   @GET("_api/v2/consumer/settings/{id}")
-  Call<ResponseBody> getSetting(@Path("id") String systemId,
+  Call<ResponseBody> getSetting(@Header(HEADER_EPHEMERAL) String ephemeralId,
+                                @Path("id") String systemId,
                                 @QueryMap Map<String, String> param);
 
   @GET("_api/v2/consumer/styles/{id}")
-  Call<ResponseBody> getStyle(@Path("id") String systemId,
-                                 @QueryMap Map<String, String> param);
+  Call<ResponseBody> getStyle(@Header(HEADER_EPHEMERAL) String ephemeralId,
+                              @Path("id") String systemId,
+                              @QueryMap Map<String, String> param);
 }

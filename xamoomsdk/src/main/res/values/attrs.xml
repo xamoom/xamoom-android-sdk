@@ -7,6 +7,8 @@
     <declare-styleable name="AudioPlayer">
         <attr name="audio_player_button_tint" format="reference|color" />
         <attr name="audio_player_moving_bars_color" format="reference|color" />
+        <attr name="audio_player_notification_background" format="reference|color" />
+        <attr name="audio_player_default_asset_drawable" format="reference" />
     </declare-styleable>
 
     <declare-styleable name="Links">

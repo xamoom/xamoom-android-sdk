@@ -13,6 +13,8 @@
         <item name="android:background">@color/audio_player_background_color</item>
         <item name="android:textColor">@color/audio_player_tint_color</item>
         <item name="audio_player_button_tint">@color/audio_player_tint_color</item>
+        <item name="audio_player_notification_background">@color/audio_player_notification_background_color</item>
+        <item name="audio_player_default_asset_drawable">@drawable/default_audioplayer_image</item>
     </style>
 
     <style name="ContentBlocksTheme.AudioPlayer.MovingBars">
