@@ -1,6 +1,6 @@
 # Changelog
 
-## [3.9.0](https://github.com/xamoom/xamoom-ios-sdk/compare/3.8.0...3.9.0) - 31.01.2018
+## [3.9.0](https://github.com/xamoom/xamoom-ios-sdk/compare/3.8.0...3.9.0) - 05.02.2018
 
 - Added ephemeralId
 - Added reasons to content calls
