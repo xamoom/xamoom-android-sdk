@@ -4,9 +4,10 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:layout_marginStart="@dimen/no_contentblock_padding"
-              android:layout_marginEnd="@dimen/no_contentblock_padding"
-              android:layout_marginBottom="@dimen/contentblock_to_contentblock_margin">
+              android:layout_marginStart="@dimen/contentblock_padding_0dp"
+              android:layout_marginEnd="@dimen/contentblock_padding_0dp"
+              android:layout_marginBottom="@dimen/contentblock_to_contentblock_margin"
+              android:theme="@style/ContentBlocksTheme">
 
     <TextView
         android:id="@+id/titleTextView"
@@ -14,8 +15,8 @@
         android:layout_height="wrap_content"
         android:textSize="@dimen/contentblock_title_size"
         android:textColor="@color/black"
-        android:layout_marginStart="@dimen/standard_contentblock_padding"
-        android:layout_marginEnd="@dimen/standard_contentblock_padding"
+        android:layout_marginStart="@dimen/contentblock_standard_padding"
+        android:layout_marginEnd="@dimen/contentblock_standard_padding"
         android:layout_marginBottom="@dimen/contentblock_children_margin"/>
 
     <RelativeLayout

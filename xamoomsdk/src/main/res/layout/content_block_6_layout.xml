@@ -5,9 +5,10 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="70dp"
-    android:layout_marginStart="@dimen/standard_contentblock_padding"
-    android:layout_marginEnd="@dimen/standard_contentblock_padding"
-    android:layout_marginBottom="@dimen/contentblock_to_contentblock_margin">
+    android:layout_marginStart="@dimen/contentblock_standard_padding"
+    android:layout_marginEnd="@dimen/contentblock_standard_padding"
+    android:layout_marginBottom="@dimen/contentblock_to_contentblock_margin"
+    android:theme="@style/ContentBlocksTheme">
 
     <ProgressBar
         android:id="@+id/contentProgressBar"

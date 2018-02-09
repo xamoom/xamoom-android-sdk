@@ -4,9 +4,10 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:paddingStart="@dimen/standard_contentblock_padding"
-              android:paddingEnd="@dimen/standard_contentblock_padding"
+              android:paddingStart="@dimen/contentblock_standard_padding"
+              android:paddingEnd="@dimen/contentblock_standard_padding"
               android:layout_marginBottom="@dimen/contentblock_to_contentblock_margin"
+              android:theme="@style/ContentBlocksTheme"
               tools:ignore="WebViewLayout">
 
     <TextView

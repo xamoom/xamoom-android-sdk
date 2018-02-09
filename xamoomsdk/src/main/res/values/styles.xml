@@ -7,9 +7,11 @@
     </style>
 
     <style name="ContentBlocksTheme">
+        <item name="android:textAlignment">gravity</item>
+        <item name="android:textDirection">locale</item>
     </style>
 
-    <style name="ContentBlocksTheme.AudioPlayer">
+    <style name="ContentBlocksTheme.AudioPlayer" parent="ContentBlocksTheme">
         <item name="android:background">@color/audio_player_background_color</item>
         <item name="android:textColor">@color/audio_player_tint_color</item>
         <item name="audio_player_button_tint">@color/audio_player_tint_color</item>
@@ -25,9 +27,10 @@
         <item name="android:indeterminateOnly">false</item>
         <item name="android:minHeight">6dp</item>
         <item name="android:progressDrawable">@drawable/custom_song_progress_bar</item>
+        <item name="android:layoutDirection">ltr</item>
     </style>
 
-    <style name="ContentBlocksTheme.Links">
+    <style name="ContentBlocksTheme.Links" parent="ContentBlocksTheme">
         <item name="facebook_background_color">@color/linkblock_facebook_background_color</item>
         <item name="facebook_tint_color">@color/linkblock_facebook_tint_color</item>
         <item name="twitter_background_color">@color/linkblock_twitter_background_color</item>
@@ -70,13 +73,13 @@
         <item name="default_tint_color">@color/linkblock_default_tint_color</item>
     </style>
 
-    <style name="ContentBlocksTheme.Ebook">
+    <style name="ContentBlocksTheme.Ebook" parent="ContentBlocksTheme">
         <item name="android:background">@color/ebookblock_background_color</item>
         <item name="android:tint">@color/ebookblock_tint_color</item>
         <item name="android:textColor">@color/ebookblock_tint_color</item>
     </style>
 
-    <style name="ContentBlocksTheme.Download">
+    <style name="ContentBlocksTheme.Download" parent="ContentBlocksTheme">
         <item name="calendar_background_color">@color/downloadblock_calendar_background_color</item>
         <item name="calendar_tint_color">@color/downloadblock_calendar_tint_color</item>
         <item name="contact_background_color">@color/downloadblock_contact_background_color</item>
