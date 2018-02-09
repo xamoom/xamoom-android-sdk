@@ -59,6 +59,7 @@
         android:layout_gravity="center|end"
         android:layout_marginEnd="3dp"
         android:src="@drawable/ic_chevron_right"
+        android:rotationY="@integer/locale_mirror_flip"
         android:contentDescription="@string/contentdescription_chevron_right"/>
 
 </LinearLayout>
