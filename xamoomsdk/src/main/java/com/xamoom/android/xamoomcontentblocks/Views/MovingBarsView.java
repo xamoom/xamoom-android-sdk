@@ -9,7 +9,9 @@
 package com.xamoom.android.xamoomcontentblocks.Views;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.support.annotation.Nullable;
+import android.support.v13.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -24,7 +26,9 @@ public class MovingBarsView extends View {
   public MovingBarsView(Context context, @Nullable AttributeSet attrs) {
     super(context, attrs);
 
-    mMovingBarsDrawable= new MovingBarsDrawable(context, attrs);
+    mMovingBarsDrawable = new MovingBarsDrawable(context, attrs);
+    Configuration config = getResources().getConfiguration();
+    mMovingBarsDrawable.currentLayoutDirection = config.getLayoutDirection();
     this.setBackground(mMovingBarsDrawable);
   }
 
