@@ -29,7 +29,6 @@ import android.os.RemoteException;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -80,25 +79,21 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
     public void handleMessage(Message msg) {
       switch (msg.what) {
         case AudioPlayerService.MSG_SET_URL:
-          Log.v(TAG, "Did work.");
           break;
 
         case AudioPlayerService.MSG_AUDIO_EVENT_STARTED:
-          Log.v(TAG, "MSG_AUDIO_EVENT_STARTED");
           playing = true;
           mMovingBarsView.startAnimation();
           mPlayPauseButton.setBackground(pauseIcon);
           break;
 
         case AudioPlayerService.MSG_AUDIO_EVENT_PAUSED:
-          Log.v(TAG, "MSG_AUDIO_EVENT_PAUSED");
           playing = false;
           mMovingBarsView.stopAnimation();
           mPlayPauseButton.setBackground(playIcon);
           break;
 
         case AudioPlayerService.MSG_AUDIO_EVENT_FINISHED:
-          Log.v(TAG, "MSG_AUDIO_EVENT_FINISHED");
           playing = false;
           mMovingBarsView.stopAnimation();
           mPlayPauseButton.setBackground(playIcon);
@@ -112,13 +107,10 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
           if (duration > 0 && position > 0) {
             updateProgress(duration, position);
           }
-          Log.v(TAG, "MSG_AUDIO_EVENT_UPDATE_PROGRESS "+ duration + " and " + position);
           break;
 
         case AudioPlayerService.MSG_AUDIO_EVENT_UPDATE_LOADING:
           boolean isLoading = msg.arg1 == 1;
-          Log.v(TAG, "MSG_AUDIO_EVENT_UPDATE_LOADING " +
-              (isLoading ? "is not loading" : "is loading"));
           break;
 
         default:
@@ -140,7 +132,6 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
       }
 
       mService = new Messenger(service);
-      Log.v(TAG, "Attached");
 
       // We want to monitor the service for as long as we are
       // connected to it.
@@ -177,7 +168,6 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
       // This is called when the connection with the service has been
       // unexpectedly disconnected -- that is, its process crashed.
       mService = null;
-      Log.v(TAG, "disconnected.");
     }
   };
 
@@ -190,7 +180,6 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
         new Intent(mContext, AudioPlayerService.class),
         mConnection, Context.BIND_AUTO_CREATE);
     mIsBound = true;
-    Log.v(TAG, "Binding");
   }
 
   void doUnbindService() {
@@ -214,7 +203,6 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
       context.unbindService(mConnection);
 
       mIsBound = false;
-      Log.v(TAG, "Unbinding");
     }
   }
 
@@ -347,91 +335,7 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
         }
       }
     });
-
-    //Intent intent = new Intent(mFragment.getContext(), AudioPlayerService.class);
-    //intent.putExtra(AudioPlayerService.AUDIO_URL, contentBlock.getFileId());
-    //mFragment.getActivity().startService(intent);
-    /*
-    Uri fileUrl = null;
-    if (offline) {
-      String filePath = mFileManager.getFilePath(contentBlock.getFileId());
-      fileUrl = Uri.parse(filePath);
-    } else {
-      if (contentBlock.getFileId() != null) {
-        fileUrl = Uri.parse(contentBlock.getFileId());
-      }
-    }
-
-    if (fileUrl != null) {
-      setupMusicPlayer(fileUrl);
-    }*/
   }
-
-  /*
-  private void setupMusicPlayer(final Uri fileUrl) {
-    if(mMediaPlayer == null) {
-      mMediaPlayer = new MediaPlayer();
-      mMediaPlayer.setOnCompletionListener(mOnCompletionListener);
-      mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-
-      try {
-        mMediaPlayer.setDataSource(mFragment.getActivity(), fileUrl);
-        mMediaPlayer.prepareAsync();
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-
-      mMediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-        @Override
-        public boolean onError(MediaPlayer mp, int what, int extra) {
-          if (what == MEDIA_LOW_LEVEL_ERROR) {
-            mError = true;
-            mRemainingSongTimeTextView.setText("-");
-            mPlayPauseButton.setEnabled(false);
-            mForwardButton.setEnabled(false);
-            mBackwardButton.setEnabled(false);
-          }
-          return false;
-        }
-      });
-
-      mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-        @Override
-        public void onPrepared(MediaPlayer mp) {
-          if (mError) {
-            return;
-          }
-
-          mPrepared = true;
-          mMediaPlayer.seekTo(0);
-          mSongProgressBar.setMax(mMediaPlayer.getDuration());
-          mSongProgressBar.setProgress(0);
-          mRemainingSongTimeTextView.setText(getTimeString(mMediaPlayer.getDuration()));
-        }
-      });
-
-      mPlayPauseButton.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          if (!mPrepared) {
-            return;
-          }
-
-          if (mMediaPlayer.isPlaying()) {
-            mMovingBarsView.stopAnimation();
-            mMediaPlayer.pause();
-            mPlayPauseButton.setBackground(playIcon);
-          } else {
-            mMovingBarsView.startAnimation();
-            mMediaPlayer.start();
-            mPlayPauseButton.setBackground(pauseIcon);
-            startUpdatingProgress();
-          }
-        }
-      });
-    }
-  }
-  */
 
   @SuppressLint("DefaultLocale")
   private String getTimeString(int milliseconds) {
@@ -453,7 +357,6 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
   private View.OnClickListener mForwardButtonClickListener = new View.OnClickListener() {
     @Override
     public void onClick(View v) {
-      Log.v("MediaPlayer", "Forward");
       Message msg = Message.obtain(null,
           AudioPlayerService.MSG_ACTION_SEEK_FORWARD);
       msg.replyTo = messenger;
@@ -469,7 +372,6 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
   private View.OnClickListener mBackwardButtonClickListener = new View.OnClickListener() {
     @Override
     public void onClick(View v) {
-      Log.v("MediaPlayer", "Backward");
       Message msg = Message.obtain(null,
           AudioPlayerService.MSG_ACTION_SEEK_BACKWARD);
       msg.replyTo = messenger;
