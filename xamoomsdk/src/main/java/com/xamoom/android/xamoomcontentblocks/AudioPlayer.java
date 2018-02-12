@@ -132,6 +132,9 @@ public class AudioPlayer implements Player.EventListener {
       case Player.STATE_BUFFERING:
         break;
       case Player.STATE_READY:
+        if (currentMediaFile == null) {
+          return;
+        }
         currentMediaFile.updateDuration(exoPlayer.getDuration());
 
         if (playWhenReady) {
