@@ -3,7 +3,8 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:layout_marginBottom="@dimen/contentblock_to_contentblock_margin">
+              android:layout_marginBottom="@dimen/contentblock_to_contentblock_margin"
+              android:theme="@style/ContentBlocksTheme">
 
     <TextView
         android:id="@+id/content_list_title_text_view"
@@ -11,8 +12,8 @@
         android:layout_height="wrap_content"
         android:textSize="@dimen/contentblock_title_size"
         android:textColor="@color/black"
-        android:layout_marginStart="@dimen/standard_contentblock_padding"
-        android:layout_marginEnd="@dimen/standard_contentblock_padding"
+        android:layout_marginStart="@dimen/contentblock_standard_padding"
+        android:layout_marginEnd="@dimen/contentblock_standard_padding"
         android:layout_marginBottom="@dimen/contentblock_children_margin"
         />
 
@@ -46,8 +47,8 @@
             android:id="@+id/content_list_load_more_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/standard_contentblock_padding"
-            android:layout_marginEnd="@dimen/standard_contentblock_padding"
+            android:layout_marginStart="@dimen/contentblock_standard_padding"
+            android:layout_marginEnd="@dimen/contentblock_standard_padding"
             style="?android:attr/borderlessButtonStyle"
             android:text="@string/content_list_load_more_button_text"
             />

@@ -5,9 +5,10 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="70dp"
-    android:layout_marginStart="@dimen/standard_contentblock_padding"
-    android:layout_marginEnd="@dimen/standard_contentblock_padding"
-    android:layout_marginBottom="@dimen/contentblock_to_contentblock_margin">
+    android:layout_marginStart="@dimen/contentblock_standard_padding"
+    android:layout_marginEnd="@dimen/contentblock_standard_padding"
+    android:layout_marginBottom="@dimen/contentblock_to_contentblock_margin"
+    android:theme="@style/ContentBlocksTheme">
 
     <ProgressBar
         android:id="@+id/contentProgressBar"
@@ -59,6 +60,7 @@
         android:layout_gravity="center|end"
         android:layout_marginEnd="3dp"
         android:src="@drawable/ic_chevron_right"
+        android:rotationY="@integer/locale_mirror_flip"
         android:contentDescription="@string/contentdescription_chevron_right"/>
 
 </LinearLayout>

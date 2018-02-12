@@ -105,7 +105,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="com.android.support:support-v13-25.3.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="junit:junit:4.12@jar" level="project" />
-    <orderEntry type="library" exported="" name="com.xamoom.android:htmltextview-1.0.8" level="project" />
+    <orderEntry type="library" exported="" name="com.xamoom.android:htmltextview-1.0.9" level="project" />
     <orderEntry type="library" exported="" name="com.android.support:support-core-ui-25.3.1" level="project" />
     <orderEntry type="library" exported="" name="com.android.support:support-compat-25.3.1" level="project" />
     <orderEntry type="library" exported="" name="com.google.android.gms:play-services-iid-11.0.4" level="project" />
