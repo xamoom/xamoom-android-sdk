@@ -75,11 +75,11 @@ public class AudioPlayer implements Player.EventListener {
   }
 
   public void start(String position) {
-    if (currentMediaFile != mediaFiles.get(position) ||
-        exoPlayer.getPlaybackState() == Player.STATE_IDLE) {
-      if (currentMediaFile != null) {
-        currentMediaFile.pause();
-      }
+    if (currentMediaFile != null) {
+      currentMediaFile.pause();
+    }
+
+    if (currentMediaFile != mediaFiles.get(position) || currentMediaFile == null) {
       currentMediaFile = mediaFiles.get(position);
       prepareStreaming(currentMediaFile.getUri());
     }
@@ -132,6 +132,9 @@ public class AudioPlayer implements Player.EventListener {
       case Player.STATE_BUFFERING:
         break;
       case Player.STATE_READY:
+        if (currentMediaFile == null) {
+          return;
+        }
         currentMediaFile.updateDuration(exoPlayer.getDuration());
 
         if (playWhenReady) {
@@ -150,8 +153,6 @@ public class AudioPlayer implements Player.EventListener {
         currentMediaFile.updatePlaybackPosition(0);
         currentMediaFile.finished();
 
-        // test
-        mediaFiles.remove(currentMediaFile.getId());
         currentMediaFile = null;
         break;
     }

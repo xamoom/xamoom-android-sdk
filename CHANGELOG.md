@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.10.0](https://github.com/xamoom/xamoom-ios-sdk/compare/3.9.0...3.10.0) - 13.02.2018
+
+- Added rtl support to ContentBlocks
+
 ## [3.9.0](https://github.com/xamoom/xamoom-ios-sdk/compare/3.8.0...3.9.0) - 05.02.2018
 
 - Added ephemeralId

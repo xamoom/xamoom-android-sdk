@@ -24,6 +24,7 @@ import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.view.View;
 
 import com.xamoom.android.xamoomsdk.R;
 
@@ -49,6 +50,8 @@ public class MovingBarsDrawable extends Drawable implements ValueAnimator.Animat
   private float strokeWidth;
   private float margin;
   private float startHeight;
+
+  int currentLayoutDirection = View.LAYOUT_DIRECTION_LTR;
 
   public MovingBarsDrawable(Context context, AttributeSet attrs) {
     mBounds = getBounds();
@@ -126,7 +129,9 @@ public class MovingBarsDrawable extends Drawable implements ValueAnimator.Animat
     int count = 0;
     for (Path path : mPaths) {
       float x = (strokeWidth/2) + (strokeWidth * count) + (margin * count);
-      x = getBounds().width() - x; // right to left
+      if (currentLayoutDirection == View.LAYOUT_DIRECTION_LTR) {
+        x = getBounds().width() - x; // right to left
+      }
       float height = getBounds().height() - mHeights.get(path);
 
       path.moveTo(x, getBounds().height());

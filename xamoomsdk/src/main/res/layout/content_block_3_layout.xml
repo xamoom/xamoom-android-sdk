@@ -3,9 +3,10 @@
               android:orientation="vertical"
               android:layout_width="fill_parent"
               android:layout_height="wrap_content"
-              android:layout_marginStart="@dimen/no_contentblock_padding"
-              android:layout_marginEnd="@dimen/no_contentblock_padding"
-              android:layout_marginBottom="@dimen/contentblock_to_contentblock_margin" >
+              android:layout_marginStart="@dimen/contentblock_padding_0dp"
+              android:layout_marginEnd="@dimen/contentblock_padding_0dp"
+              android:layout_marginBottom="@dimen/contentblock_to_contentblock_margin"
+              android:theme="@style/ContentBlocksTheme">
 
     <ProgressBar
         android:id="@+id/imageProgressBar"
@@ -25,8 +26,8 @@
         android:id="@+id/copyrightTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/standard_contentblock_padding"
-        android:layout_marginStart="@dimen/standard_contentblock_padding"
+        android:layout_marginEnd="@dimen/contentblock_standard_padding"
+        android:layout_marginStart="@dimen/contentblock_standard_padding"
         android:layout_marginTop="@dimen/contentblock_3_caption_negative_margin"
         android:layout_marginBottom="@dimen/contentblock_3_caption_negative_margin"
         android:textAlignment="viewEnd"
@@ -37,8 +38,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/contentblock_children_margin"
-        android:layout_marginEnd="@dimen/standard_contentblock_padding"
-        android:layout_marginStart="@dimen/standard_contentblock_padding"
+        android:layout_marginEnd="@dimen/contentblock_standard_padding"
+        android:layout_marginStart="@dimen/contentblock_standard_padding"
         android:textColor="@color/black"
         android:textSize="16sp"
         android:textStyle="bold"

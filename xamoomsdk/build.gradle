@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
-def versionString = "3.9.0"
+def versionString = "3.10.0"
 
 version = versionString
 group = "com.xamoom.android"
@@ -71,7 +71,7 @@ dependencies {
 	compile 'com.pushwoosh:pushwoosh:4.12.2'
 	compile 'com.google.android.gms:play-services-gcm:11.0.4'
 	compile 'com.google.android.gms:play-services-location:11.0.4'
-	compile 'com.xamoom.android:htmltextview:1.0.8'
+	compile 'com.xamoom.android:htmltextview:1.0.9'
 	compile 'com.google.android.exoplayer:exoplayer-core:2.6.1'
 }
 
