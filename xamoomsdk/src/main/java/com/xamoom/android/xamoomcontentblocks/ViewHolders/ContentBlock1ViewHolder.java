@@ -357,6 +357,10 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
   private View.OnClickListener mForwardButtonClickListener = new View.OnClickListener() {
     @Override
     public void onClick(View v) {
+      if (mService == null) {
+        return;
+      }
+
       Message msg = Message.obtain(null,
           AudioPlayerService.MSG_ACTION_SEEK_FORWARD);
       msg.replyTo = messenger;
@@ -372,6 +376,10 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
   private View.OnClickListener mBackwardButtonClickListener = new View.OnClickListener() {
     @Override
     public void onClick(View v) {
+      if (mService == null) {
+        return;
+      }
+
       Message msg = Message.obtain(null,
           AudioPlayerService.MSG_ACTION_SEEK_BACKWARD);
       msg.replyTo = messenger;
