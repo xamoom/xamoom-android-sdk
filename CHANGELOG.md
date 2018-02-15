@@ -1,5 +1,10 @@
 # Changelog
 
+## [3.10.1](https://github.com/xamoom/xamoom-ios-sdk/compare/3.10.0...3.10.1) - 15.02.2018
+
+- Fixed audioPlayer to not stop when user cancels notification
+- Fixed problem when clicking forward/backward button before connecting to service
+
 ## [3.10.0](https://github.com/xamoom/xamoom-ios-sdk/compare/3.9.0...3.10.0) - 13.02.2018
 
 - Added rtl support to ContentBlocks
