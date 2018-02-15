@@ -392,7 +392,10 @@ public class AudioPlayerService extends Service {
 
     @Override
     public void onStop() {
-      audioPlayer.stop();
+      MediaFile mediaFile = audioPlayer.getCurrentMediaFile();
+      if (mediaFile != null) {
+        mediaFile.pause();
+      }
       super.onStop();
     }
   };
