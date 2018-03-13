@@ -392,9 +392,13 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     params.put("filter[lat]", Double.toString(location.getLatitude()));
     params.put("filter[lon]", Double.toString(location.getLongitude()));
 
+    HashMap<String, String> headers = new HashMap<>(1);
+    if (getEphemeralId() != null) {
+      headers.put(EnduserApiInterface.HEADER_EPHEMERAL, getEphemeralId());
+    }
 
     Call<ResponseBody> call = enduserApiInterface.getContents(
-        new HashMap<String, String>(0), params);
+        headers, params);
     callHandler.enqueListCall(call, callback);
     return call;
   }
@@ -453,8 +457,12 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
     params = UrlUtil.addFilters(params, filter);
 
-    Call<ResponseBody> call = enduserApiInterface.getContents(
-        new HashMap<String, String>(0), params);
+    HashMap<String, String> headers = new HashMap<>(1);
+    if (getEphemeralId() != null) {
+      headers.put(EnduserApiInterface.HEADER_EPHEMERAL, getEphemeralId());
+    }
+
+    Call<ResponseBody> call = enduserApiInterface.getContents(headers, params);
     callHandler.enqueListCall(call, callback);
     return call;
   }
@@ -513,8 +521,12 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
     params = UrlUtil.addFilters(params, filter);
 
-    Call<ResponseBody> call = enduserApiInterface.getContents(
-        new HashMap<String, String>(0), params);
+    HashMap<String, String> headers = new HashMap<>(1);
+    if (getEphemeralId() != null) {
+      headers.put(EnduserApiInterface.HEADER_EPHEMERAL, getEphemeralId());
+    }
+
+    Call<ResponseBody> call = enduserApiInterface.getContents(headers, params);
     callHandler.enqueListCall(call, callback);
     return call;
   }
@@ -564,8 +576,12 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
     params = UrlUtil.addFilters(params, filter);
 
-    Call<ResponseBody> call = enduserApiInterface.getContents(
-        new HashMap<String, String>(0), params);
+    HashMap<String, String> headers = new HashMap<>(1);
+    if (getEphemeralId() != null) {
+      headers.put(EnduserApiInterface.HEADER_EPHEMERAL, getEphemeralId());
+    }
+
+    Call<ResponseBody> call = enduserApiInterface.getContents(headers, params);
     callHandler.enqueListCall(call, callback);
     return call;
   }
