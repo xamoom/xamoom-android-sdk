@@ -586,6 +586,32 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     return call;
   }
 
+  /**
+   * Get content recommendations from backend.
+   * Call not available for offline use.
+   *
+   * @param callback {@link APIListCallback}
+   * @return Used call object
+   */
+  public Call getContentRecommendations(APIListCallback<List<Content>, List<Error>> callback) {
+    if (offline) {
+      callback.finished(new ArrayList<Content>(), "1", false);
+      return null;
+    }
+
+    Map<String, String> params = UrlUtil.getUrlParameter(language);
+    params = UrlUtil.addRecommend(params);
+
+    HashMap<String, String> headers = new HashMap<>(1);
+    if (getEphemeralId() != null) {
+      headers.put(EnduserApiInterface.HEADER_EPHEMERAL, getEphemeralId());
+    }
+
+    Call<ResponseBody> call = enduserApiInterface.getContents(headers, params);
+    callHandler.enqueListCall(call, callback);
+
+    return call;
+  }
 
   /**
    * Get spot with specific id.

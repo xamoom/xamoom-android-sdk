@@ -8,6 +8,8 @@
 
 package com.xamoom.android.xamoomsdk.xamoomsdk.Utils;
 
+import android.webkit.URLUtil;
+
 import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
 import com.xamoom.android.xamoomsdk.Enums.ContentSortFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
@@ -250,5 +252,15 @@ public class UrlUtilTests {
     Map<String, String> params = UrlUtil.addConditionsToUrl(new HashMap<String, String>(), null);
 
     assertEquals(0, params.size());
+  }
+
+  @Test
+  public void testAddRecommend() {
+    Map<String, String> params = new HashMap<>();
+
+    UrlUtil.addRecommend(params);
+
+    assertEquals(1, params.size());
+    assertEquals("true", params.get("recommend"));
   }
 }

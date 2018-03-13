@@ -213,6 +213,11 @@ public class UrlUtil {
     return params;
   }
 
+  public static Map<String, String> addRecommend(@NonNull Map<String, String> params) {
+    params.put("recommend", "true");
+    return params;
+  }
+
   private static String conditionToString(Object condition) {
     if (condition instanceof String) {
       return (String) condition;
