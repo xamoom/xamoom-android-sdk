@@ -33,17 +33,6 @@ import java.io.IOException;
  * DownloadBlock
  */
 public class ContentBlock8ViewHolder extends RecyclerView.ViewHolder {
-  private static final int[] ATTRS = {
-      R.attr.calendar_background_color, R.attr.calendar_tint_color,
-      R.attr.contact_background_color, R.attr.contact_tint_color,
-      R.attr.default_background_color, R.attr.default_tint_color
-  };
-  private static final int CALENDAR_BACKGROUND_COLOR = 0;
-  private static final int CALENDAR_TINT_COLOR = 1;
-  private static final int CONTACT_BACKGROUND_COLOR = 2;
-  private static final int CONTACT_TINT_COLOR = 3;
-  private static final int DEFAULT_BACKGROUND_COLOR = 4;
-  private static final int DEFAULT_TINT_COLOR = 5;
 
   private Fragment mFragment;
   private TextView mTitleTextView;
@@ -91,24 +80,24 @@ public class ContentBlock8ViewHolder extends RecyclerView.ViewHolder {
     });
 
     TypedArray ta = mFragment.getContext()
-        .obtainStyledAttributes(R.style.ContentBlocksTheme_Download, ATTRS);
+        .obtainStyledAttributes(R.style.ContentBlocksTheme_Download, R.styleable.Download);
 
     int backgroundColor = 0;
     int tintColor = 0;
     switch (contentBlock.getDownloadType()) {
       case 0:
-        backgroundColor = ta.getResourceId(CONTACT_BACKGROUND_COLOR, 0);
-        tintColor = ta.getColor(CONTACT_TINT_COLOR, Color.BLACK);
+        backgroundColor = ta.getResourceId(R.styleable.Download_contact_background_color, 0);
+        tintColor = ta.getColor(R.styleable.Download_contact_tint_color, Color.BLACK);
         mIconImageView.setImageResource(R.drawable.ic_account_plus);
         break;
       case 1:
-        backgroundColor = ta.getResourceId(CALENDAR_BACKGROUND_COLOR, 0);
-        tintColor = ta.getColor(CALENDAR_TINT_COLOR, Color.BLACK);
+        backgroundColor = ta.getResourceId(R.styleable.Download_calendar_background_color, 0);
+        tintColor = ta.getColor(R.styleable.Download_calendar_tint_color, Color.BLACK);
         mIconImageView.setImageResource(R.drawable.ic_calendar);
         break;
       default:
-        backgroundColor = ta.getResourceId(DEFAULT_BACKGROUND_COLOR, 0);
-        tintColor = ta.getColor(DEFAULT_TINT_COLOR, Color.BLACK);
+        backgroundColor = ta.getResourceId(R.styleable.Download_download_default_background_color, 0);
+        tintColor = ta.getColor(R.styleable.Download_download_default_tint_color, Color.BLACK);
         mIconImageView.setImageResource(R.drawable.ic_web);
         break;
     }
