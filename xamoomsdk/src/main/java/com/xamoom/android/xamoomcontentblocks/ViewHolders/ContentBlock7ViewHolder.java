@@ -58,6 +58,7 @@ public class ContentBlock7ViewHolder extends RecyclerView.ViewHolder {
         return true;
       }
     });
+    mSoundCloudWebview.setBackgroundColor(Color.TRANSPARENT);
     mSoundCloudWebview.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
     if (Build.VERSION.SDK_INT >= 19) {
       mSoundCloudWebview.setLayerType(View.LAYER_TYPE_HARDWARE, null);

@@ -105,6 +105,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
   public void setupContentBlock(ContentBlock contentBlock, boolean offline) {
     mTitleTextView.setVisibility(View.GONE);
     mVideoWebView.setVisibility(View.GONE);
+    mVideoWebView.setBackgroundColor(Color.TRANSPARENT);
     mWebViewOverlay.setVisibility(View.GONE);
     mVideoPlayImageView.setVisibility(View.GONE);
     mProgressBar.setVisibility(View.GONE);
