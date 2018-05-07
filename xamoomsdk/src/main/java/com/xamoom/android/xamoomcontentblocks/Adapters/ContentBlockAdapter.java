@@ -120,6 +120,8 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   }
 
   private void cleanViewHolders(RecyclerView recyclerView) {
+    if (mContentBlocks == null) { return; }
+
     for (int i = 0; i < mContentBlocks.size(); i++) {
       RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(i);
       if (viewHolder != null && viewHolder.getClass() == ContentBlock2ViewHolder.class) {
