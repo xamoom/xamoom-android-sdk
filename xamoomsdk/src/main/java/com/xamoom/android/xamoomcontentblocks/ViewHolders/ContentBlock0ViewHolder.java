@@ -67,6 +67,11 @@ public class ContentBlock0ViewHolder extends RecyclerView.ViewHolder {
     } else {
       mHtmlTextView.setVisibility(View.GONE);
     }
+
+    if (mStyle != null && mStyle.getForegroundFontColor() != null) {
+      mTitleTextView.setTextColor(Color.parseColor(mTextColor));
+      mHtmlTextView.setTextColor(Color.parseColor(mTextColor));
+    }
   }
 
   public void setStyle(Style style) {

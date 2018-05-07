@@ -8,6 +8,7 @@
 
 package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -53,6 +54,11 @@ public class ContentHeaderViewHolder extends RecyclerView.ViewHolder {
       mTextView.setText(contentblock.getText());
     } else {
       mTextView.setVisibility(View.GONE);
+    }
+
+    if (mStyle != null && mStyle.getForegroundFontColor() != null) {
+      mTitleTextView.setTextColor(Color.parseColor(mStyle.getForegroundFontColor()));
+      mTextView.setTextColor(Color.parseColor(mStyle.getForegroundFontColor()));
     }
   }
 
