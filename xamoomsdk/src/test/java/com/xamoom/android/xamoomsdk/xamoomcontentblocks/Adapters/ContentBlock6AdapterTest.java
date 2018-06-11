@@ -97,7 +97,7 @@ public class ContentBlock6AdapterTest {
     XamoomContentFragment fragment = XamoomContentFragment.newInstance("");
     addFragmentToActivity(fragment);
 
-    RecyclerView.ViewHolder vh = adapter.onCreateViewHolder(recycleView, fragment, null, null, null, null, false, null, null, null);
+    RecyclerView.ViewHolder vh = adapter.onCreateViewHolder(recycleView, fragment, null, null, null, null, false, null, null, null, null);
 
     assertNotNull(vh);
     assertEquals(vh.getClass(), ContentBlock6ViewHolder.class);

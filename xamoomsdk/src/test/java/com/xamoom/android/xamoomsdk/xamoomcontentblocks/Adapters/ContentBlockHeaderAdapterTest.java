@@ -76,7 +76,7 @@ public class ContentBlockHeaderAdapterTest {
     ContentBlock0Adapter adapter = new ContentBlock0Adapter();
     ViewGroup recycleView = (ViewGroup) View.inflate(activity, R.layout.content_block_0_layout, null);
 
-    RecyclerView.ViewHolder vh = adapter.onCreateViewHolder(recycleView, null, null, null, null, null, false, null, null, null);
+    RecyclerView.ViewHolder vh = adapter.onCreateViewHolder(recycleView, null, null, null, null, null, false, null, null,null, null);
 
     assertNotNull(vh);
     assertEquals(vh.getClass(), ContentBlock0ViewHolder.class);
