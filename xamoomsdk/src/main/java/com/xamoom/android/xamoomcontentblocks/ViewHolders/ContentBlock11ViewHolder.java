@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.xamoom.android.xamoomcontentblocks.Adapters.AdapterDelegatesManager;
 import com.xamoom.android.xamoomcontentblocks.Adapters.ContentBlockAdapter;
 import com.xamoom.android.xamoomcontentblocks.ListManager;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
@@ -49,7 +50,7 @@ public class ContentBlock11ViewHolder extends RecyclerView.ViewHolder  {
 
   public ContentBlock11ViewHolder(View view, Fragment fragment, EnduserApi enduserApi,
                                   ListManager listManager,
-                                  XamoomContentFragment.OnXamoomContentFragmentInteractionListener
+                                  AdapterDelegatesManager adapterDelegatesManager, XamoomContentFragment.OnXamoomContentFragmentInteractionListener
                                       onXamoomContentFragmentInteractionListener) {
     super(view);
     mEnduserApi = enduserApi;
@@ -63,7 +64,7 @@ public class ContentBlock11ViewHolder extends RecyclerView.ViewHolder  {
     mLoadMoreButton = (Button) view.findViewById(R.id.content_list_load_more_button);
 
     setupButton(fragment.getContext());
-    setupRecyclerView(fragment, enduserApi, onXamoomContentFragmentInteractionListener);
+    setupRecyclerView(fragment, enduserApi, adapterDelegatesManager,onXamoomContentFragmentInteractionListener);
   }
 
   private void setupButton(Context context) {
@@ -85,7 +86,7 @@ public class ContentBlock11ViewHolder extends RecyclerView.ViewHolder  {
   }
 
   private void setupRecyclerView(Fragment fragment, EnduserApi enduserApi,
-                                 XamoomContentFragment.OnXamoomContentFragmentInteractionListener onXamoomContentFragmentInteractionListener) {
+                                 AdapterDelegatesManager adapterDelegatesManager, XamoomContentFragment.OnXamoomContentFragmentInteractionListener onXamoomContentFragmentInteractionListener) {
     RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(fragment.getContext());
     layoutManager.setAutoMeasureEnabled(true);
     mRecyclerView.setLayoutManager(layoutManager);
@@ -96,6 +97,7 @@ public class ContentBlock11ViewHolder extends RecyclerView.ViewHolder  {
         contentFragment.isShowSpotMapContentLinks(), contentFragment.getYoutubeApiKey(), contentFragment);
     adapter.setEnduserApi(enduserApi);
     adapter.setOnXamoomContentFragmentInteractionListener(onXamoomContentFragmentInteractionListener);
+    adapter.getDelegatesManager().setAdapterDelegates(adapterDelegatesManager.getAdapterDelegates());
     mRecyclerView.setAdapter(adapter);
   }
 

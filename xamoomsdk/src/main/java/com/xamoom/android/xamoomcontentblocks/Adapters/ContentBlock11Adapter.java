@@ -32,11 +32,11 @@ public class ContentBlock11Adapter implements AdapterDelegate<List<ContentBlock>
   @Override
   public RecyclerView.ViewHolder onCreateViewHolder(
       ViewGroup parent, Fragment fragment, EnduserApi enduserApi, String youtubeApiKey,
-      LruCache bitmapCache, LruCache contentCache, boolean showContentLinks, ListManager listManager,
+      LruCache bitmapCache, LruCache contentCache, boolean showContentLinks, ListManager listManager, AdapterDelegatesManager adapterDelegatesManager,
       ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener onContentBlock3ViewHolderInteractionListener, XamoomContentFragment.OnXamoomContentFragmentInteractionListener onXamoomContentFragmentInteractionListener) {
     View view = LayoutInflater.from(parent.getContext())
         .inflate(R.layout.content_block_11_layout, parent, false);
-    return new ContentBlock11ViewHolder(view, fragment, enduserApi, listManager, onXamoomContentFragmentInteractionListener);
+    return new ContentBlock11ViewHolder(view, fragment, enduserApi, listManager, adapterDelegatesManager, onXamoomContentFragmentInteractionListener);
   }
 
   @Override
