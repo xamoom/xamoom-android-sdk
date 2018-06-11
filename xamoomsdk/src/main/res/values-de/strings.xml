@@ -11,4 +11,6 @@
     <string name="file_not_found">Datei nicht gefunden</string>
     <string name="content_list_error_loading_text">Fehler beim Laden</string>
     <string name="content_list_load_more_button_text">Mehr laden</string>
+    <string name="audioplayer_notification_channel_description">Kontrolle der Medienwiedergabe als Notification</string>
+    <string name="audioplayer_notification_channel_name">Medienwiedergabe</string>
 </resources>

@@ -12,6 +12,8 @@
     <string name="file_not_found">File not found</string>
 
     <string name="audioplayer_seek_time_text" translatable="false">30</string>
+    <string name="audioplayer_notification_channel_name">Media playback</string>
+    <string name="audioplayer_notification_channel_description">Media playback controls as notification</string>
 
     <string name="contentdescription_video_play_button" translatable="false">Play button for video</string>
     <string name="contentdescription_image_without_description" translatable="false">A image without description</string>
@@ -24,4 +26,5 @@
 
     <string name="content_list_load_more_button_text">Load more</string>
     <string name="content_list_error_loading_text">Error loading</string>
+
 </resources>

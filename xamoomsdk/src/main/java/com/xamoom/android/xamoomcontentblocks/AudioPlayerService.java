@@ -27,8 +27,9 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaButtonReceiver;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.support.v7.app.NotificationCompat;
-
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.media.app.NotificationCompat.MediaStyle;
 import com.xamoom.android.xamoomsdk.R;
 
 import java.util.ArrayList;
@@ -450,6 +451,7 @@ public class AudioPlayerService extends Service {
   };
 
   private Notification createMediaNotification(boolean playing) {
+
     NotificationCompat.Builder builder = MediaStyleHelper.from(getApplicationContext(), mediaSession);
 
     int playPauseButtonIndex = 0;
@@ -480,7 +482,7 @@ public class AudioPlayerService extends Service {
 
     builder
         .setSmallIcon(R.drawable.ic_notification_stat_audio)
-        .setStyle(new NotificationCompat.MediaStyle()
+        .setStyle(new MediaStyle()
             .setShowActionsInCompactView(playPauseButtonIndex)
             .setMediaSession(mediaSession.getSessionToken())
             .setShowCancelButton(true)
