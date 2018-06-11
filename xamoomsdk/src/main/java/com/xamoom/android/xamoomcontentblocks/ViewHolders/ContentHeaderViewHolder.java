@@ -32,9 +32,6 @@ public class ContentHeaderViewHolder extends RecyclerView.ViewHolder {
     super(itemView);
     mTitleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
     mTextView = (TextView) itemView.findViewById(R.id.textView);
-    //mTextView.setBackgroundColor(Color.TRANSPARENT);
-
-    //ContentBlock0ViewHolderUtil.prepareWebView(mWebView);
   }
 
   public void setupContentBlock(ContentBlock contentblock, boolean offline){

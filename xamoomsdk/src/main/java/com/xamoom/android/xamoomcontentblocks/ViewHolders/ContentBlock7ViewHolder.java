@@ -36,7 +36,7 @@ public class ContentBlock7ViewHolder extends RecyclerView.ViewHolder {
   private TextView mTitleTextView;
   private WebView mSoundCloudWebview;
   private boolean isSetup = false;
-  private int mTextColor = Color.BLACK;
+  private Integer mTextColor = null;
 
   private static HashMap<String, WebView> mWebCache = new HashMap<>();
 
@@ -69,7 +69,10 @@ public class ContentBlock7ViewHolder extends RecyclerView.ViewHolder {
 
   public void setupContentBlock(final ContentBlock contentBlock, boolean offline) {
     mTitleTextView.setVisibility(View.VISIBLE);
-    mTitleTextView.setTextColor(mTextColor);
+
+    if (mTextColor != null) {
+      mTitleTextView.setTextColor(mTextColor);
+    }
 
     if(contentBlock.getTitle() != null && !contentBlock.getTitle().equalsIgnoreCase(""))
       mTitleTextView.setText(contentBlock.getTitle());

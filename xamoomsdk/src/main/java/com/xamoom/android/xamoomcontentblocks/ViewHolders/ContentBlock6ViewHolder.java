@@ -50,7 +50,7 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
   private ProgressBar mProgressBar;
   private EnduserApi mEnduserApi;
   private Content mContent;
-  private int mTextColor = Color.BLACK;
+  private Integer mTextColor = null;
   private FileManager mFileManager;
   private LruCache<String, Content> mContentCache;
   private Call mCall;
@@ -136,8 +136,11 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
   private void displayContent(Content content, boolean offline) {
     mTitleTextView.setText(content.getTitle());
     mDescriptionTextView.setText(content.getDescription());
-    mTitleTextView.setTextColor(mTextColor);
-    mDescriptionTextView.setTextColor(mTextColor);
+
+    if (mTextColor != null) {
+      mTitleTextView.setTextColor(mTextColor);
+      mDescriptionTextView.setTextColor(mTextColor);
+    }
 
     String filePath = null;
     if (offline) {

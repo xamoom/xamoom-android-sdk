@@ -33,6 +33,17 @@ import java.io.IOException;
  * DownloadBlock
  */
 public class ContentBlock8ViewHolder extends RecyclerView.ViewHolder {
+  private static final int[] ATTRS = {
+      R.attr.calendar_background_color, R.attr.calendar_tint_color,
+      R.attr.contact_background_color, R.attr.contact_tint_color,
+      R.attr.default_background_color, R.attr.default_tint_color
+  };
+  private static final int CALENDAR_BACKGROUND_COLOR = 0;
+  private static final int CALENDAR_TINT_COLOR = 1;
+  private static final int CONTACT_BACKGROUND_COLOR = 2;
+  private static final int CONTACT_TINT_COLOR = 3;
+  private static final int DEFAULT_BACKGROUND_COLOR = 4;
+  private static final int DEFAULT_TINT_COLOR = 5;
 
   private Fragment mFragment;
   private TextView mTitleTextView;

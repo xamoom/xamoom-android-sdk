@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -210,7 +211,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
       layoutManager.onRestoreInstanceState(mListState);
     }
 
-    mRecyclerView.setLayoutManager(layoutManager); // HERE RAPHI
+    mRecyclerView.setLayoutManager(layoutManager);
     mRecyclerView.setAdapter(mContentBlockAdapter);
   }
 
