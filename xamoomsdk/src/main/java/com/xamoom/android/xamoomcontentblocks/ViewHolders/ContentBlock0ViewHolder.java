@@ -27,8 +27,8 @@ public class ContentBlock0ViewHolder extends RecyclerView.ViewHolder {
   private HtmlTextView mHtmlTextView;
   private Style mStyle;
   private float mTextSize = 22.0f;
-  private String mLinkColor = "#0000FF";
-  private String mTextColor = "#000000";
+  private String mLinkColor = null;
+  private String mTextColor = null;
   private int childrenMargin;
 
   public ContentBlock0ViewHolder(View itemView) {
@@ -66,6 +66,11 @@ public class ContentBlock0ViewHolder extends RecyclerView.ViewHolder {
       mHtmlTextView.setHtmlText(contentBlock.getText());
     } else {
       mHtmlTextView.setVisibility(View.GONE);
+    }
+
+    if (mStyle != null && mStyle.getForegroundFontColor() != null) {
+      mTitleTextView.setTextColor(Color.parseColor(mTextColor));
+      mHtmlTextView.setTextColor(Color.parseColor(mTextColor));
     }
   }
 

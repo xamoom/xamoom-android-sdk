@@ -49,8 +49,7 @@
             android:maxLines="3"
             android:ellipsize="end"
             android:textSize="14sp"
-            android:includeFontPadding="false"
-            android:textColor="@color/black"/>
+            android:includeFontPadding="false"/>
 
     </LinearLayout>
 

@@ -71,7 +71,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
   private Intent mIntent;
   private String mYoutubeApiKey;
   private LruCache<String, Bitmap> mBitmapCache;
-  private int mTextColor = Color.BLACK;
+  private Integer mTextColor = null;
   private FileManager mFileManager;
 
   @SuppressLint("SetJavaScriptEnabled")
@@ -105,6 +105,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
   public void setupContentBlock(ContentBlock contentBlock, boolean offline) {
     mTitleTextView.setVisibility(View.GONE);
     mVideoWebView.setVisibility(View.GONE);
+    mVideoWebView.setBackgroundColor(Color.TRANSPARENT);
     mWebViewOverlay.setVisibility(View.GONE);
     mVideoPlayImageView.setVisibility(View.GONE);
     mProgressBar.setVisibility(View.GONE);
@@ -116,6 +117,9 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
     if(contentBlock.getTitle() != null && !contentBlock.getTitle().equalsIgnoreCase("")) {
       mTitleTextView.setVisibility(View.VISIBLE);
       mTitleTextView.setText(contentBlock.getTitle());
+    }
+
+    if (mTextColor != null) {
       mTitleTextView.setTextColor(mTextColor);
     }
 

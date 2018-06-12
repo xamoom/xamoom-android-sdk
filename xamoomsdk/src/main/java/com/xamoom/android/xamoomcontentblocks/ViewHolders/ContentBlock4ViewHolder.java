@@ -26,68 +26,6 @@ import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
  * LinkBlock
  */
 public class ContentBlock4ViewHolder extends RecyclerView.ViewHolder {
-  private static final int[] ATTRS = {
-      R.attr.facebook_background_color, R.attr.facebook_tint_color,
-      R.attr.twitter_background_color, R.attr.twitter_tint_color,
-      R.attr.web_background_color, R.attr.web_tint_color,
-      R.attr.shop_background_color, R.attr.shop_tint_color,
-      R.attr.wikipedia_background_color, R.attr.wikipedia_tint_color,
-      R.attr.linkedin_background_color, R.attr.linkedin_tint_color,
-      R.attr.flickr_background_color, R.attr.flickr_tint_color,
-      R.attr.soundcloud_background_color, R.attr.soundcloud_tint_color,
-      R.attr.itunes_background_color, R.attr.itunes_tint_color,
-      R.attr.youtube_background_color, R.attr.youtube_tint_color,
-      R.attr.google_background_color, R.attr.google_tint_color,
-      R.attr.phone_background_color, R.attr.phone_tint_color,
-      R.attr.email_background_color, R.attr.email_tint_color,
-      R.attr.spotify_background_color, R.attr.spotify_tint_color,
-      R.attr.navigation_background_color, R.attr.navigation_tint_color,
-      R.attr.apple_background_color, R.attr.apple_tint_color,
-      R.attr.android_background_color, R.attr.android_tint_color,
-      R.attr.windows_background_color, R.attr.windows_tint_color,
-      R.attr.instagram_background_color, R.attr.instagram_tint_color,
-      R.attr.default_background_color, R.attr.default_tint_color
-  };
-  private static final int FACEBOOK_BACKGROUND_COLOR = 0;
-  private static final int FACEBOOK_TINT_COLOR = 1;
-  private static final int TWITTER_BACKGROUND_COLOR = 2;
-  private static final int TWITTER_TINT_COLOR = 3;
-  private static final int WEB_BACKGROUND_COLOR = 4;
-  private static final int WEB_TINT_COLOR = 5;
-  private static final int SHOP_BACKGROUND_COLOR = 6;
-  private static final int SHOP_TINT_COLOR = 7;
-  private static final int WIKIPEDIA_BACKGROUND_COLOR = 8;
-  private static final int WIKIPEDIA_TINT_COLOR = 9;
-  private static final int LINKEDIN_BACKGROUND_COLOR = 10;
-  private static final int LINKEDIN_TINT_COLOR = 11;
-  private static final int FLICKR_BACKGROUND_COLOR = 12;
-  private static final int FLICKR_TINT_COLOR = 13;
-  private static final int SOUNDCLOUD_BACKGROUND_COLOR = 14;
-  private static final int SOUNDCLOUD_TINT_COLOR = 15;
-  private static final int ITUNES_BACKGROUND_COLOR = 16;
-  private static final int ITUNES_TINT_COLOR = 17;
-  private static final int YOUTUBE_BACKGROUND_COLOR = 18;
-  private static final int YOUTUBE_TINT_COLOR = 19;
-  private static final int GOOGLE_BACKGROUND_COLOR = 20;
-  private static final int GOOGLE_TINT_COLOR = 21;
-  private static final int PHONE_BACKGROUND_COLOR = 22;
-  private static final int PHONE_TINT_COLOR = 23;
-  private static final int EMAIL_BACKGROUND_COLOR = 24;
-  private static final int EMAIL_TINT_COLOR = 25;
-  private static final int SPOTIFY_BACKGROUND_COLOR = 26;
-  private static final int SPOTIFY_TINT_COLOR = 27;
-  private static final int NAVIGATION_BACKGROUND_COLOR = 28;
-  private static final int NAVIGATION_TINT_COLOR = 29;
-  private static final int APPLE_BACKGROUND_COLOR = 30;
-  private static final int APPLE_TINT_COLOR = 31;
-  private static final int ANDROID_BACKGROUND_COLOR = 32;
-  private static final int ANDROID_TINT_COLOR = 33;
-  private static final int WINDOWS_BACKGROUND_COLOR = 34;
-  private static final int WINDOWS_TINT_COLOR = 35;
-  private static final int INSTAGRAM_BACKGROUND_COLOR = 36;
-  private static final int INSTAGRAM_TINT_COLOR = 37;
-  private static final int DEFAULT_BACKGROUND_COLOR = 38;
-  private static final int DEFAULT_TINT_COLOR = 39;
 
   private Fragment mFragment;
   private LinearLayout mRootLayout;
@@ -127,110 +65,110 @@ public class ContentBlock4ViewHolder extends RecyclerView.ViewHolder {
     mIcon.setColorFilter(Color.BLACK);
 
     TypedArray ta = mFragment.getContext()
-        .obtainStyledAttributes(R.style.ContentBlocksTheme_Links, ATTRS);
+        .obtainStyledAttributes(R.style.ContentBlocksTheme_Links, R.styleable.Links);
 
     int backgroundColor = 0;
     int tintColor = 0;
     mRootLayout.setVisibility(View.VISIBLE);
     switch (contentBlock.getLinkType()) {
       case 0:
-        backgroundColor = ta.getResourceId(FACEBOOK_BACKGROUND_COLOR, 0);
-        tintColor = ta.getColor(FACEBOOK_TINT_COLOR, Color.BLACK);
+        backgroundColor = ta.getResourceId(R.styleable.Links_facebook_background_color, 0);
+        tintColor = ta.getColor(R.styleable.Links_facebook_tint_color, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_facebook);
         break;
       case 1:
-        backgroundColor = ta.getResourceId(TWITTER_BACKGROUND_COLOR, 0);
-        tintColor = ta.getColor(TWITTER_TINT_COLOR, Color.BLACK);
+        backgroundColor = ta.getResourceId(R.styleable.Links_twitter_background_color, 0);
+        tintColor = ta.getColor(R.styleable.Links_twitter_tint_color, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_twitter);
         break;
       case 2:
-        backgroundColor = ta.getResourceId(WEB_BACKGROUND_COLOR, 0);
-        tintColor = ta.getColor(WEB_TINT_COLOR, Color.BLACK);
+        backgroundColor = ta.getResourceId(R.styleable.Links_web_background_color, 0);
+        tintColor = ta.getColor(R.styleable.Links_web_tint_color, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_web);
         break;
       case 3:
-        backgroundColor = ta.getResourceId(SHOP_BACKGROUND_COLOR, 0);
-        tintColor = ta.getColor(SHOP_TINT_COLOR, Color.BLACK);
+        backgroundColor = ta.getResourceId(R.styleable.Links_shop_background_color, 0);
+        tintColor = ta.getColor(R.styleable.Links_shop_tint_color, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_cart);
         break;
       case 4:
-        backgroundColor = ta.getResourceId(WIKIPEDIA_BACKGROUND_COLOR, 0);
-        tintColor = ta.getColor(WIKIPEDIA_TINT_COLOR, Color.BLACK);
+        backgroundColor = ta.getResourceId(R.styleable.Links_wikipedia_background_color, 0);
+        tintColor = ta.getColor(R.styleable.Links_wikipedia_tint_color, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_wikipedia);
         break;
       case 5:
-        backgroundColor = ta.getResourceId(LINKEDIN_BACKGROUND_COLOR, 0);
-        tintColor = ta.getColor(LINKEDIN_TINT_COLOR, Color.BLACK);
+        backgroundColor = ta.getResourceId(R.styleable.Links_linkedin_background_color, 0);
+        tintColor = ta.getColor(R.styleable.Links_linkedin_tint_color, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_linkedin_box);
         break;
       case 6:
-        backgroundColor = ta.getResourceId(FLICKR_BACKGROUND_COLOR, 0);
-        tintColor = ta.getColor(FLICKR_TINT_COLOR, Color.BLACK);
+        backgroundColor = ta.getResourceId(R.styleable.Links_flickr_background_color, 0);
+        tintColor = ta.getColor(R.styleable.Links_flickr_tint_color, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_flickr9);
         break;
       case 7:
-        backgroundColor = ta.getResourceId(SOUNDCLOUD_BACKGROUND_COLOR, 0);
-        tintColor = ta.getColor(SOUNDCLOUD_TINT_COLOR, Color.BLACK);
+        backgroundColor = ta.getResourceId(R.styleable.Links_soundcloud_background_color, 0);
+        tintColor = ta.getColor(R.styleable.Links_soundcloud_tint_color, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_soundcloud);
         break;
       case 8:
-        backgroundColor = ta.getResourceId(ITUNES_BACKGROUND_COLOR, 0);
-        tintColor = ta.getColor(ITUNES_TINT_COLOR, Color.BLACK);
+        backgroundColor = ta.getResourceId(R.styleable.Links_itunes_background_color, 0);
+        tintColor = ta.getColor(R.styleable.Links_itunes_tint_color, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_itunes);
         break;
       case 9:
-        backgroundColor = ta.getResourceId(YOUTUBE_BACKGROUND_COLOR, 0);
-        tintColor = ta.getColor(YOUTUBE_TINT_COLOR, Color.BLACK);
+        backgroundColor = ta.getResourceId(R.styleable.Links_youtube_background_color, 0);
+        tintColor = ta.getColor(R.styleable.Links_youtube_tint_color, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_youtube_play);
         break;
       case 10:
-        backgroundColor = ta.getResourceId(GOOGLE_BACKGROUND_COLOR, 0);
-        tintColor = ta.getColor(GOOGLE_TINT_COLOR, Color.BLACK);
+        backgroundColor = ta.getResourceId(R.styleable.Links_google_background_color, 0);
+        tintColor = ta.getColor(R.styleable.Links_google_tint_color, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_google_plus);
         break;
       case 11:
-        backgroundColor = ta.getResourceId(PHONE_BACKGROUND_COLOR, 0);
-        tintColor = ta.getColor(PHONE_TINT_COLOR, Color.BLACK);
+        backgroundColor = ta.getResourceId(R.styleable.Links_phone_background_color, 0);
+        tintColor = ta.getColor(R.styleable.Links_phone_tint_color, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_phone);
         break;
       case 12:
-        backgroundColor = ta.getResourceId(EMAIL_BACKGROUND_COLOR, 0);
-        tintColor = ta.getColor(EMAIL_TINT_COLOR, Color.BLACK);
+        backgroundColor = ta.getResourceId(R.styleable.Links_email_background_color, 0);
+        tintColor = ta.getColor(R.styleable.Links_email_tint_color, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_email);
         break;
       case 13:
-        backgroundColor = ta.getResourceId(SPOTIFY_BACKGROUND_COLOR, 0);
-        tintColor = ta.getColor(SPOTIFY_TINT_COLOR, Color.BLACK);
+        backgroundColor = ta.getResourceId(R.styleable.Links_spotify_background_color, 0);
+        tintColor = ta.getColor(R.styleable.Links_spotify_tint_color, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_spotify);
         break;
       case 14:
-        backgroundColor = ta.getResourceId(NAVIGATION_BACKGROUND_COLOR, 0);
-        tintColor = ta.getColor(NAVIGATION_TINT_COLOR, Color.BLACK);
+        backgroundColor = ta.getResourceId(R.styleable.Links_navigation_background_color, 0);
+        tintColor = ta.getColor(R.styleable.Links_navigation_tint_color, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_navigation);
         break;
       case 15:
-        backgroundColor = ta.getResourceId(APPLE_BACKGROUND_COLOR, 0);
-        tintColor = ta.getColor(APPLE_TINT_COLOR, Color.BLACK);
+        backgroundColor = ta.getResourceId(R.styleable.Links_apple_background_color, 0);
+        tintColor = ta.getColor(R.styleable.Links_apple_tint_color, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_apple);
         break;
       case 16:
-        backgroundColor = ta.getResourceId(ANDROID_BACKGROUND_COLOR, 0);
-        tintColor = ta.getColor(ANDROID_TINT_COLOR, Color.BLACK);
+        backgroundColor = ta.getResourceId(R.styleable.Links_android_background_color, 0);
+        tintColor = ta.getColor(R.styleable.Links_android_tint_color, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_android);
         break;
       case 17:
-        backgroundColor = ta.getResourceId(WINDOWS_BACKGROUND_COLOR, 0);
-        tintColor = ta.getColor(WINDOWS_TINT_COLOR, Color.BLACK);
+        backgroundColor = ta.getResourceId(R.styleable.Links_windows_background_color, 0);
+        tintColor = ta.getColor(R.styleable.Links_windows_tint_color, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_windows);
         break;
       case 18:
-        backgroundColor = ta.getResourceId(INSTAGRAM_BACKGROUND_COLOR, 0);
-        tintColor = ta.getColor(INSTAGRAM_TINT_COLOR, Color.BLACK);
+        backgroundColor = ta.getResourceId(R.styleable.Links_instagram_background_color, 0);
+        tintColor = ta.getColor(R.styleable.Links_instagram_tint_color, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_instagram);
         break;
       default:
-        backgroundColor = ta.getResourceId(DEFAULT_BACKGROUND_COLOR, 0);
-        tintColor = ta.getColor(DEFAULT_TINT_COLOR, Color.BLACK);
+        backgroundColor = ta.getResourceId(R.styleable.Links_default_background_color, 0);
+        tintColor = ta.getColor(R.styleable.Links_default_tint_color, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_web);
         break;
     }

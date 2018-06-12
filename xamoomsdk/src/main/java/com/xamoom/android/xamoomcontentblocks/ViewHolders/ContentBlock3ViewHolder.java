@@ -55,7 +55,7 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
   private TextView mCopyrightTextView;
   private ProgressBar mImageProgressBar;
   private ImageView mImageView;
-  private int mTextColor = Color.BLACK;
+  private Integer mTextColor = null;
   private GenericRequestBuilder<Uri, InputStream, SVG, PictureDrawable> requestBuilder;
   private FileManager mFileManager;
 
@@ -88,8 +88,10 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
   }
 
   public void setupContentBlock(final ContentBlock contentBlock, boolean offline) {
-    mTitleTextView.setTextColor(mTextColor);
-    mCopyrightTextView.setTextColor(mTextColor);
+    if (mTextColor != null) {
+      mTitleTextView.setTextColor(mTextColor);
+      mCopyrightTextView.setTextColor(mTextColor);
+    }
 
     mTitleTextView.setVisibility(View.VISIBLE);
     mCopyrightTextView.setVisibility(View.VISIBLE);

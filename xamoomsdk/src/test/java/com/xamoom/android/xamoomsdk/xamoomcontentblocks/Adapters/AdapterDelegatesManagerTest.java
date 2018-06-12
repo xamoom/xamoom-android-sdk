@@ -64,14 +64,13 @@ public class AdapterDelegatesManagerTest {
 
       @NonNull
       @Override
-      public RecyclerView.ViewHolder onCreateViewHolder(
-          ViewGroup parent, Fragment fragment, EnduserApi enduserApi, String youtubeApiKey,
-          LruCache bitmapCache, LruCache contentCache, boolean showContentLinks, ListManager listManager,
-          ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener onContentBlock3ViewHolderInteractionListener,
-          XamoomContentFragment.OnXamoomContentFragmentInteractionListener onXamoomContentFragmentInteractionListener) {
+      public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, Fragment fragment, EnduserApi enduserApi,
+                                                        String youtubeApiKey, LruCache bitmapCache, LruCache contentCache,
+                                                        boolean showContentLinks, ListManager listManager, AdapterDelegatesManager adapterDelegatesManager,
+                                                        ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener onContentBlock3ViewHolderInteractionListener,
+                                                        XamoomContentFragment.OnXamoomContentFragmentInteractionListener onXamoomContentFragmentInteractionListener) {
         return null;
       }
-
 
       @Override
       public void onBindViewHolder(@NonNull ContentBlock items, int position,
@@ -94,7 +93,7 @@ public class AdapterDelegatesManagerTest {
 
     when(mockAdapter.onCreateViewHolder(any(ViewGroup.class), any(Fragment.class),
         any(EnduserApi.class), anyString(), any(LruCache.class),
-        any(LruCache.class), eq(false), any(ListManager.class), any(ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener.class),
+        any(LruCache.class), eq(false), any(ListManager.class), any(AdapterDelegatesManager.class), any(ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener.class),
         any(XamoomContentFragment.OnXamoomContentFragmentInteractionListener.class)))
         .thenReturn(mockViewHolder);
 
@@ -114,7 +113,7 @@ public class AdapterDelegatesManagerTest {
 
     when(mockAdapter.onCreateViewHolder(any(ViewGroup.class), any(Fragment.class),
         any(EnduserApi.class), anyString(), any(LruCache.class),
-        any(LruCache.class), eq(false), any(ListManager.class), any(ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener.class),
+        any(LruCache.class), eq(false), any(ListManager.class), any(AdapterDelegatesManager.class), any(ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener.class),
         any(XamoomContentFragment.OnXamoomContentFragmentInteractionListener.class)))
         .thenReturn(mockViewHolder);
 

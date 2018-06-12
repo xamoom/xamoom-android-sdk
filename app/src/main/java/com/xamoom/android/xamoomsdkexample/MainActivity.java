@@ -107,6 +107,7 @@ public class MainActivity extends XamoomPushActivity
     getContentByDates();
     getContentsLocation();
     searchContent();
+    getRecommendations();
     getSpot();
     getSpotsWithLocation();
     getSpotsWithTags();
@@ -413,6 +414,20 @@ public class MainActivity extends XamoomPushActivity
           Content savedContent = databaseAdapter.getContent(content.getId());
           Log.v(TAG, "Saved Content: " + savedContent);
         }
+      }
+
+      @Override
+      public void error(List<Error> error) {
+
+      }
+    });
+  }
+
+  private void getRecommendations() {
+    mEnduserApi.getContentRecommendations(new APIListCallback<List<Content>, List<Error>>() {
+      @Override
+      public void finished(List<Content> result, String cursor, boolean hasMore) {
+        Log.v(TAG, "Recommendations: " + result);
       }
 
       @Override

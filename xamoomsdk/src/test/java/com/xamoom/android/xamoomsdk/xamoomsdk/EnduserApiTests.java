@@ -68,6 +68,7 @@ import retrofit2.Call;
 import retrofit2.Retrofit;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -701,6 +702,77 @@ public class EnduserApiTests {
         any(Filter.class), (APIListCallback<List<Content>, List<Error>>) any());
 
     Mockito.verifyNoMoreInteractions(mMockMorpheus);
+  }
+
+  @Test
+  public void testGetContentRecommendationsSuccess() throws Exception {
+    mMockWebServer.enqueue(new MockResponse().setBody(""));
+
+    final List<Content> checkContents = new ArrayList<>();
+
+    Content content = new Content();
+    content.setTitle("Test");
+
+    ArrayList<Resource> contents = new ArrayList<>(1);
+    contents.add(content);
+
+    HashMap<String, Object> meta = new HashMap<>(2);
+    meta.put("cursor", "1");
+    meta.put("has-more", false);
+
+    JsonApiObject jsonApiObject = new JsonApiObject();
+    jsonApiObject.setResources(contents);
+    jsonApiObject.setMeta(meta);
+
+    when(mMockMorpheus.parse(anyString())).thenReturn(jsonApiObject);
+
+    final Semaphore semaphore = new Semaphore(0);
+
+    mEnduserApi.getContentRecommendations(new APIListCallback<List<Content>, List<Error>>() {
+      @Override
+      public void finished(List<Content> result, String cursor, boolean hasMore) {
+        checkContents.addAll(result);
+        semaphore.release();
+      }
+
+      @Override
+      public void error(List<Error> error) {
+        semaphore.release();
+      }
+    });
+
+    semaphore.acquire();
+
+    assertTrue(checkContents.get(0).getTitle().equals("Test"));
+    RecordedRequest request1 = mMockWebServer.takeRequest();
+    assertEquals("/_api/v2/consumer/contents?lang=en&recommend=true",
+        request1.getPath());
+  }
+
+  @Test
+  public void testGetContentRecommendationsOffline() throws Exception {
+    final List<Content> checkContents = new ArrayList<>();
+
+    final Semaphore semaphore = new Semaphore(0);
+    mEnduserApi.setOffline(true);
+    mEnduserApi.getContentRecommendations(new APIListCallback<List<Content>, List<Error>>() {
+      @Override
+      public void finished(List<Content> result, String cursor, boolean hasMore) {
+        checkContents.addAll(result);
+
+        assertFalse(hasMore);
+        assertEquals("1", cursor);
+
+        semaphore.release();
+      }
+
+      @Override
+      public void error(List<Error> error) { }
+    });
+
+    semaphore.acquire();
+
+    assertEquals(0, checkContents.size());
   }
 
   @Test

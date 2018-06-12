@@ -64,7 +64,7 @@ public class AdapterDelegatesManager<T> {
     }
 
     RecyclerView.ViewHolder vh = delegate.onCreateViewHolder(parent, fragment, enduserApi,
-        youtubeApiKey, bitmapCache, contentCache, showContentLinks, listManager,
+        youtubeApiKey, bitmapCache, contentCache, showContentLinks, listManager, this,
         onContentBlock3ViewHolderInteractionListener, onXamoomContentFragmentInteractionListener);
 
     return vh;
@@ -88,6 +88,10 @@ public class AdapterDelegatesManager<T> {
 
   public SparseArrayCompat<AdapterDelegate> getAdapterDelegates() {
     return adapterDelegates;
+  }
+
+  public void setAdapterDelegates(SparseArrayCompat<AdapterDelegate> adapterDelegates) {
+    this.adapterDelegates = adapterDelegates;
   }
 
   public void setFallbackAdapter(AdapterDelegate fallbackAdapter) {

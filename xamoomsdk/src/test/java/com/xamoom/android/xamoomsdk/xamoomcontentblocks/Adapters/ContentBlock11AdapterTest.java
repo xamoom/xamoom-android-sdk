@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.xamoom.android.xamoomcontentblocks.Adapters.AdapterDelegatesManager;
 import com.xamoom.android.xamoomcontentblocks.Adapters.ContentBlock11Adapter;
 import com.xamoom.android.xamoomcontentblocks.Adapters.ContentBlock6Adapter;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock11ViewHolder;
@@ -90,7 +91,13 @@ public class ContentBlock11AdapterTest {
     XamoomContentFragment fragment = XamoomContentFragment.newInstance("");
     addFragmentToActivity(fragment);
 
-    RecyclerView.ViewHolder vh = adapter.onCreateViewHolder(recycleView, fragment, null, null, null, null, false, null, null, null);
+
+    AdapterDelegatesManager manager = new AdapterDelegatesManager();
+
+    RecyclerView.ViewHolder vh = adapter.onCreateViewHolder(recycleView, fragment, null,
+        null, null, null, false,
+        null, manager, null,
+        null);
 
     assertNotNull(vh);
     assertEquals(vh.getClass(), ContentBlock11ViewHolder.class);

@@ -57,7 +57,7 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
   private ArrayMap<Marker, Spot> mMarkerArray;
   private String mBase64Icon;
   private ArrayList<Spot> mSpotList;
-  private int mTextColor = Color.BLACK;
+  private Integer mTextColor = null;
   private boolean isStyleLoaded = false;
 
   public boolean showContentLinks;
@@ -80,9 +80,12 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
     mTitleTextView.setVisibility(View.VISIBLE);
     if (contentBlock.getTitle() != null && !contentBlock.getTitle().equalsIgnoreCase("")) {
       mTitleTextView.setText(contentBlock.getTitle());
-      mTitleTextView.setTextColor(mTextColor);
     } else {
       mTitleTextView.setVisibility(View.GONE);
+    }
+
+    if (mTextColor != null) {
+      mTitleTextView.setTextColor(mTextColor);
     }
 
     mContentBlock = contentBlock;
@@ -136,7 +139,6 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
         mSpotList.addAll(result);
 
         if (!isStyleLoaded) {
-          isStyleLoaded = true;
           getStyle(result.get(0).getSystem().getId());
         }
 
@@ -158,6 +160,7 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
     mEnduserApi.getStyle(systemId, new APICallback<Style, List<Error>>() {
       @Override
       public void finished(Style result) {
+        isStyleLoaded = true;
         mBase64Icon = result.getCustomMarker();
         mGoogleMap.clear();
         addMarkerToMap(mSpotList);
@@ -204,7 +207,6 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
 
   public void setStyle(Style style) {
     if (style != null) {
-      isStyleLoaded = true;
       if (style.getForegroundFontColor() != null) {
         mTextColor = Color.parseColor(style.getForegroundFontColor());
       }

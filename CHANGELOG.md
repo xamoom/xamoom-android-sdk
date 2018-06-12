@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.10.2](https://github.com/xamoom/xamoom-ios-sdk/compare/3.10.1...3.10.2) - 12.06.2018
+
+- Added missing ephemeral header to calls
+- Added recommendation call
+
+- Fixed wrongly used obtainStyledAttributes
+- Fixed crash when cleaning ContenBlockViewHolders
+- Fixed textColoring only when set in style
+- Fixed usage of CustomContentBlocks in lists
+
+- Updated to android sdk 26
+
 ## [3.10.1](https://github.com/xamoom/xamoom-ios-sdk/compare/3.10.0...3.10.1) - 15.02.2018
 
 - Fixed audioPlayer to not stop when user cancels notification

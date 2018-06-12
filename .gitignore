@@ -8,4 +8,5 @@
 
 *TestingIDs.*
 
-.idea/misc.xml
+.idea/*
+*.iml

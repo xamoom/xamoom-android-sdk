@@ -39,7 +39,7 @@ public class ContentBlock3Adapter implements AdapterDelegate<List<ContentBlock>>
   @Override
   public RecyclerView.ViewHolder onCreateViewHolder(
       ViewGroup parent, Fragment fragment, EnduserApi enduserApi, String youtubeApiKey,
-      LruCache bitmapCache, LruCache contentCache, boolean showContentLinks, ListManager listManager,
+      LruCache bitmapCache, LruCache contentCache, boolean showContentLinks, ListManager listManager, AdapterDelegatesManager adapterDelegatesManager,
       ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener onContentBlock3ViewHolderInteractionListener, XamoomContentFragment.OnXamoomContentFragmentInteractionListener
                                                         onXamoomContentFragmentInteractionListener) {
     View view = LayoutInflater.from(parent.getContext())
