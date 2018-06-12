@@ -30,6 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.xamoom.android.xamoomcontentblocks.Adapters.AdapterDelegate;
+import com.xamoom.android.xamoomcontentblocks.Adapters.AdapterDelegatesManager;
 import com.xamoom.android.xamoomcontentblocks.ListManager;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock0ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
@@ -52,13 +53,9 @@ public class CustomContentBlock0Adapter implements AdapterDelegate<List<ContentB
 
   @NonNull
   @Override
-  public RecyclerView.ViewHolder onCreateViewHolder(
-      ViewGroup parent, Fragment fragment, EnduserApi enduserApi, String youtubeApiKey,
-      LruCache bitmapCache, LruCache contentCache, boolean showContentLinks, ListManager listManager,
-      ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener onContentBlock3ViewHolderInteractionListener,
-      XamoomContentFragment.OnXamoomContentFragmentInteractionListener onXamoomContentFragmentInteractionListener) {
+  public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, Fragment fragment, EnduserApi enduserApi, String youtubeApiKey, LruCache bitmapCache, LruCache contentCache, boolean showContentLinks, ListManager listManager, AdapterDelegatesManager adapterDelegatesManager, ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener onContentBlock3ViewHolderInteractionListener, XamoomContentFragment.OnXamoomContentFragmentInteractionListener onXamoomContentFragmentInteractionListener) {
     View view = LayoutInflater.from(parent.getContext())
-        .inflate(R.layout.content_block_0_layout, parent, false);
+            .inflate(R.layout.content_block_0_layout, parent, false);
     return new ContentBlock0ViewHolder(view);
   }
 
