@@ -1,23 +1,23 @@
 /*
-* Copyright 2017 by xamoom GmbH <apps@xamoom.com>
-*
-* This file is part of some open source application.
-*
-* Some open source application is free software: you can redistribute
-* it and/or modify it under the terms of the GNU General Public
-* License as published by the Free Software Foundation, either
-* version 2 of the License, or (at your option) any later version.
-*
-* Some open source application is distributed in the hope that it will
-* be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
-* of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with xamoom-android-sdk. If not, see <http://www.gnu.org/licenses/>.
-*
-* author: Raphael Seher <raphael@xamoom.com>
-*/
+ * Copyright 2017 by xamoom GmbH <apps@xamoom.com>
+ *
+ * This file is part of some open source application.
+ *
+ * Some open source application is free software: you can redistribute
+ * it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * Some open source application is distributed in the hope that it will
+ * be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with xamoom-android-sdk. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * author: Raphael Seher <raphael@xamoom.com>
+ */
 
 package com.xamoom.android.xamoomsdkexample;
 
@@ -36,30 +36,25 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.xamoom.android.pushnotifications.XamoomNotificationFactory;
 import com.xamoom.android.pushnotifications.XamoomPushActivity;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.APIListCallback;
-import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
 import com.xamoom.android.xamoomsdk.EnduserApi;
+import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
 import com.xamoom.android.xamoomsdk.Filter;
-import com.xamoom.android.xamoomsdk.Resource.*;
+import com.xamoom.android.xamoomsdk.Resource.Content;
+import com.xamoom.android.xamoomsdk.Resource.Spot;
+import com.xamoom.android.xamoomsdk.Resource.Style;
 import com.xamoom.android.xamoomsdk.Resource.System;
+import com.xamoom.android.xamoomsdk.Resource.SystemSetting;
 import com.xamoom.android.xamoomsdk.Storage.Database.ContentDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.MenuDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.SpotDatabaseAdapter;
-import com.xamoom.android.xamoomsdk.Storage.Database.SystemDatabaseAdapter;
-import com.xamoom.android.xamoomsdk.Storage.DownloadError;
-import com.xamoom.android.xamoomsdk.Storage.DownloadManager;
-import com.xamoom.android.xamoomsdk.Storage.OfflineStorageManager;
 import com.xamoom.android.xamoomsdk.Utils.DateUtil;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.EnumSet;
@@ -221,7 +216,8 @@ public class MainActivity extends XamoomPushActivity
   public void getContent() {
     mEnduserApi.getContent("5f6a24e9ec5e4090890b7911c791a0c7", new APICallback<Content, List<at.rags.morpheus.Error>>() {
       @Override
-      public void finished(Content result) {Log.v(TAG, "getContent: " + result);
+      public void finished(Content result) {
+        Log.v(TAG, "getContent: " + result);
         Log.v(TAG, "Test: " + result);
         /*
         OfflineStorageManager manager =
@@ -360,39 +356,39 @@ public class MainActivity extends XamoomPushActivity
 
     mEnduserApi.getContentsByTags(tags, 10, null, null, filter,
         new APIListCallback<List<Content>, List<Error>>() {
-      @Override
-      public void finished(List<Content> result, String cursor, boolean hasMore) {
-        Log.v(TAG, "byTags: " + result);
-      }
+          @Override
+          public void finished(List<Content> result, String cursor, boolean hasMore) {
+            Log.v(TAG, "byTags: " + result);
+          }
 
-      @Override
-      public void error(List<Error> error) {
+          @Override
+          public void error(List<Error> error) {
 
-      }
-    });
+          }
+        });
   }
 
   private void getContentByDates() {
     mEnduserApi.getContentByDates(DateUtil.parse("2017-10-15T07:00:00Z"), null,
         "5755996320301056|5700735861784576", 10, null, null,
         null, new APIListCallback<List<Content>, List<Error>>() {
-      @Override
-      public void finished(List<Content> result, String cursor, boolean hasMore) {
-        Log.v(TAG, "byDates: " + result);
+          @Override
+          public void finished(List<Content> result, String cursor, boolean hasMore) {
+            Log.v(TAG, "byDates: " + result);
 
-        ContentDatabaseAdapter databaseAdapter = ContentDatabaseAdapter.getInstance(getApplicationContext());
-        for (Content content : result) {
-          databaseAdapter.insertOrUpdateContent(content, false, 0);
-          Content savedContent = databaseAdapter.getContent(content.getId());
-          Log.v(TAG, "Saved Content: " + savedContent);
-        }
-      }
+            ContentDatabaseAdapter databaseAdapter = ContentDatabaseAdapter.getInstance(getApplicationContext());
+            for (Content content : result) {
+              databaseAdapter.insertOrUpdateContent(content, false, 0);
+              Content savedContent = databaseAdapter.getContent(content.getId());
+              Log.v(TAG, "Saved Content: " + savedContent);
+            }
+          }
 
-      @Override
-      public void error(List<Error> error) {
+          @Override
+          public void error(List<Error> error) {
 
-      }
-    });
+          }
+        });
   }
 
   private void searchContent() {
@@ -479,23 +475,23 @@ public class MainActivity extends XamoomPushActivity
     tags.add("tag1");
     mEnduserApi.getSpotsByTags(tags, 0, null, EnumSet.of(SpotFlags.INCLUDE_CONTENT, SpotFlags.INCLUDE_MARKERS),
         null, new APIListCallback<List<Spot>, List<Error>>() {
-      @Override
-      public void finished(List<Spot> result, String cursor, boolean hasMore) {
-        Log.v(TAG, "getSpotsWithTags: " + result.get(0));
-        Log.v(TAG, "getSpotsWithTags: " + cursor);
-        Log.v(TAG, "getSpotsWithTags: " + hasMore);
+          @Override
+          public void finished(List<Spot> result, String cursor, boolean hasMore) {
+            Log.v(TAG, "getSpotsWithTags: " + result.get(0));
+            Log.v(TAG, "getSpotsWithTags: " + cursor);
+            Log.v(TAG, "getSpotsWithTags: " + hasMore);
 
-        SpotDatabaseAdapter spotDatabaseAdapter = SpotDatabaseAdapter.getInstance(getApplicationContext());
-        spotDatabaseAdapter.insertOrUpdateSpot(result.get(0));
-        Spot savedSpot = spotDatabaseAdapter.getSpot(result.get(0).getId());
-        Log.v(TAG, "Saved spot: " + savedSpot);
-      }
+            SpotDatabaseAdapter spotDatabaseAdapter = SpotDatabaseAdapter.getInstance(getApplicationContext());
+            spotDatabaseAdapter.insertOrUpdateSpot(result.get(0));
+            Spot savedSpot = spotDatabaseAdapter.getSpot(result.get(0).getId());
+            Log.v(TAG, "Saved spot: " + savedSpot);
+          }
 
-      @Override
-      public void error(List<Error> error) {
-        Log.e(TAG, "Error " + error);
-      }
-    });
+          @Override
+          public void error(List<Error> error) {
+            Log.e(TAG, "Error " + error);
+          }
+        });
   }
 
   private void searchSpots() {

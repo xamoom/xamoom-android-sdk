@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.pushwoosh.PushManager;
 import com.xamoom.android.pushnotifications.XamoomPushActivity;
 
 /**

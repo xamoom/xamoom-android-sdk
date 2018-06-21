@@ -1,7 +1,6 @@
 package com.xamoom.android.xamoomsdkexample;
 
 import android.app.Notification;
-import android.content.BroadcastReceiver;
 import android.support.v4.app.NotificationCompat;
 
 import com.pushwoosh.notification.PushData;

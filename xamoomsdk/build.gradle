@@ -8,13 +8,14 @@ group = "com.xamoom.android"
 
 android {
 	compileSdkVersion 26
-	buildToolsVersion '26.0.2'
+	buildToolsVersion '27.0.3'
 
 	defaultConfig {
 		minSdkVersion 18
 		targetSdkVersion 25
 		versionCode 15
 		versionName versionString
+		testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
 	}
 
 	buildTypes {
@@ -30,12 +31,6 @@ android {
 		}
 	}
 
-	sourceSets {
-		defaultConfig {
-			testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
-		}
-	}
-
 	testOptions {
 		unitTests.returnDefaultValues = true
 	}
@@ -48,34 +43,34 @@ android {
 def supportLibaryVersion = "26.1.0"
 
 dependencies {
-	compile fileTree(include: ['*.jar'], dir: 'libs')
-	testCompile 'junit:junit:4.12'
-	testCompile 'org.mockito:mockito-core:1.10.10'
-	testCompile 'com.squareup.okhttp3:mockwebserver:3.8.0'
-	testCompile 'org.robolectric:robolectric:3.1.4'
-	testCompile 'org.robolectric:shadows-support-v4:3.1.4'
-	testCompile 'org.robolectric:shadows-maps:3.0'
-	testCompile 'org.robolectric:shadows-play-services:3.0'
-	androidTestCompile 'com.android.support.test:runner:0.5'
-	androidTestCompile 'com.squareup.okhttp3:mockwebserver:3.8.0'
-	compile files('libs/androidsvg-1.2.1.jar')
-	compile files('libs/YouTubeAndroidPlayerApi.jar')
-	compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-	compile "com.android.support:support-compat:$supportLibaryVersion"
-	compile "com.android.support:support-v13:$supportLibaryVersion"
-	compile "com.android.support:recyclerview-v7:$supportLibaryVersion"
-	compile "com.android.support:appcompat-v7:$supportLibaryVersion"
-	compile "com.android.support:design:$supportLibaryVersion"
-	compile 'com.google.android.gms:play-services-maps:11.0.4'
-	compile 'com.google.android.exoplayer:exoplayer-core:2.6.1'
-	compile 'com.squareup.retrofit2:retrofit:2.3.0'
-	compile 'com.squareup.okhttp3:logging-interceptor:3.0.1'
-	compile 'com.xamoom.android:morpheus:0.4.3'
-	compile 'com.github.bumptech.glide:glide:3.7.0'
-	compile 'com.pushwoosh:pushwoosh:4.12.2'
-	compile 'com.google.android.gms:play-services-gcm:11.0.4'
-	compile 'com.google.android.gms:play-services-location:11.0.4'
-	compile 'com.xamoom.android:htmltextview:1.0.9'
+	implementation fileTree(include: ['*.jar'], dir: 'libs')
+	testImplementation 'junit:junit:4.12'
+	testImplementation 'org.mockito:mockito-core:1.10.10'
+	testImplementation 'com.squareup.okhttp3:mockwebserver:3.8.0'
+	testImplementation 'org.robolectric:robolectric:3.1.4'
+	testImplementation 'org.robolectric:shadows-support-v4:3.1.4'
+	testImplementation 'org.robolectric:shadows-maps:3.0'
+	testImplementation 'org.robolectric:shadows-play-services:3.0'
+	androidTestImplementation 'com.android.support.test:runner:0.5'
+	androidTestImplementation 'com.squareup.okhttp3:mockwebserver:3.8.0'
+	implementation files('libs/androidsvg-1.2.1.jar')
+	implementation files('libs/YouTubeAndroidPlayerApi.jar')
+	implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+	implementation "com.android.support:support-compat:$supportLibaryVersion"
+	implementation "com.android.support:support-v13:$supportLibaryVersion"
+	implementation "com.android.support:recyclerview-v7:$supportLibaryVersion"
+	implementation "com.android.support:appcompat-v7:$supportLibaryVersion"
+	implementation "com.android.support:design:$supportLibaryVersion"
+	implementation 'com.google.android.gms:play-services-maps:11.0.4'
+	implementation 'com.google.android.exoplayer:exoplayer-core:2.6.1'
+	implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+	implementation 'com.squareup.okhttp3:logging-interceptor:3.0.1'
+	implementation 'com.xamoom.android:morpheus:0.4.3'
+	implementation 'com.github.bumptech.glide:glide:3.7.0'
+	implementation 'com.pushwoosh:pushwoosh:4.12.2'
+	implementation 'com.google.android.gms:play-services-gcm:11.0.4'
+	implementation 'com.google.android.gms:play-services-location:11.0.4'
+	implementation 'com.xamoom.android:htmltextview:1.0.9'
 }
 
 ext {
