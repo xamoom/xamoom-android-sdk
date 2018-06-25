@@ -15,10 +15,10 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 
-import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.APIListCallback;
 import com.xamoom.android.xamoomsdk.EnduserApi;
+import com.xamoom.android.xamoomsdk.EnduserApiInterface;
 import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
 import com.xamoom.android.xamoomsdk.Enums.ContentReason;
 import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
@@ -142,7 +142,7 @@ public class EnduserApiTests {
     EnduserApi enduserApi = new EnduserApi("test", mockContext);
 
     assertNotNull(enduserApi.getEnduserApiInterface());
-    assertEquals(enduserApi.getSystemLanguage(), "en");
+    assertEquals(enduserApi.getSystemLanguage(), "de");
   }
 
   @Test
@@ -154,7 +154,7 @@ public class EnduserApiTests {
     EnduserApi enduserApi = new EnduserApi(retrofit, mockContext);
 
     assertNotNull(enduserApi.getEnduserApiInterface());
-    assertEquals(enduserApi.getSystemLanguage(), "en");
+    assertEquals(enduserApi.getSystemLanguage(), "de");
   }
 
   @Test
@@ -237,7 +237,7 @@ public class EnduserApiTests {
     assertNotNull(call);
     assertTrue(checkContent[0].getTitle().equals("Test"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
-    assertEquals("/_api/v2/consumer/contents/123456?lang=en", request1.getPath());
+    assertEquals("/_api/v2/consumer/contents/123456?lang=de", request1.getPath());
 
     // TEST User-Agent
     assertEquals("UserAgent", request1.getHeader("User-Agent"));
@@ -279,7 +279,7 @@ public class EnduserApiTests {
 
     assertTrue(checkError[0].getTitle().equals("Fail"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
-    assertEquals("/_api/v2/consumer/contents/123456?lang=en", request1.getPath());
+    assertEquals("/_api/v2/consumer/contents/123456?lang=de", request1.getPath());
   }
 
   @Test
@@ -301,7 +301,7 @@ public class EnduserApiTests {
         });
 
     RecordedRequest request1 = mMockWebServer.takeRequest();
-    assertEquals("/_api/v2/consumer/contents/123456?lang=en&preview=true&public-only=true", request1.getPath());
+    assertEquals("/_api/v2/consumer/contents/123456?lang=de&preview=true&public-only=true", request1.getPath());
     assertEquals("4", request1.getHeader("X-Reason"));
   }
 
@@ -347,7 +347,7 @@ public class EnduserApiTests {
 
     assertTrue(checkContent[0].getTitle().equals("Test"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
-    assertEquals("/_api/v2/consumer/contents?lang=en&filter[location-identifier]=1234&condition[x-datetime]="+ getISO8601Date()
+    assertEquals("/_api/v2/consumer/contents?lang=de&filter[location-identifier]=1234&condition[x-datetime]="+ getISO8601Date()
         , request1.getPath());
   }
 
@@ -394,7 +394,7 @@ public class EnduserApiTests {
 
     assertTrue(checkContent[0].getTitle().equals("Test"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
-    assertEquals("/_api/v2/consumer/contents?lang=en&filter[location-identifier]=1234" +
+    assertEquals("/_api/v2/consumer/contents?lang=de&filter[location-identifier]=1234" +
             "&condition[name]=myname" +
             "&condition[date]=2017-07-10T11:18:49Z" +
             "&condition[number]=5" +
@@ -439,7 +439,7 @@ public class EnduserApiTests {
 
     assertTrue(checkContent[0].getTitle().equals("Test"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
-    assertEquals("/_api/v2/consumer/contents?lang=en&filter[location-identifier]=1234&preview=true" +
+    assertEquals("/_api/v2/consumer/contents?lang=de&filter[location-identifier]=1234&preview=true" +
             "&public-only=true&condition[x-datetime]="+ getISO8601Date(),
         request1.getPath());
   }
@@ -489,7 +489,7 @@ public class EnduserApiTests {
 
     assertTrue(checkContent[0].getTitle().equals("Test"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
-    assertEquals("/_api/v2/consumer/contents?lang=en&filter[location-identifier]=1|2" +
+    assertEquals("/_api/v2/consumer/contents?lang=de&filter[location-identifier]=1|2" +
         "&condition[x-datetime]="+ getISO8601Date(), request1.getPath());
   }
 
@@ -527,7 +527,7 @@ public class EnduserApiTests {
 
     assertTrue(checkContent[0].getTitle().equals("Test"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
-    assertEquals("/_api/v2/consumer/contents?lang=en&filter[location-identifier]=1|2&preview=true" +
+    assertEquals("/_api/v2/consumer/contents?lang=de&filter[location-identifier]=1|2&preview=true" +
             "&public-only=true&condition[x-datetime]="+ getISO8601Date(),
         request1.getPath());
   }
@@ -575,7 +575,7 @@ public class EnduserApiTests {
 
     assertTrue(checkContent[0].getTitle().equals("Test"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
-    assertEquals("/_api/v2/consumer/contents?lang=en&filter[location-identifier]=1|2" +
+    assertEquals("/_api/v2/consumer/contents?lang=de&filter[location-identifier]=1|2" +
             "&condition[name]=myname" +
             "&condition[date]=2017-07-10T11:18:49Z" +
             "&condition[number]=5" +
@@ -628,7 +628,7 @@ public class EnduserApiTests {
 
     assertTrue(checkContents.get(0).getTitle().equals("Test"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
-    assertEquals("/_api/v2/consumer/contents?lang=en&page[size]=10&filter[lat]=1.0&filter[lon]=2.0", request1.getPath());
+    assertEquals("/_api/v2/consumer/contents?lang=de&page[size]=10&filter[lat]=1.0&filter[lon]=2.0", request1.getPath());
   }
 
   @Test
@@ -688,7 +688,7 @@ public class EnduserApiTests {
 
     assertTrue(checkContents.get(0).getTitle().equals("Test"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
-    assertEquals("/_api/v2/consumer/contents?lang=en&page[size]=10&filter[tags]=[%27tag1%27,%27tag2%27]", request1.getPath());
+    assertEquals("/_api/v2/consumer/contents?lang=de&page[size]=10&filter[tags]=[%27tag1%27,%27tag2%27]", request1.getPath());
   }
 
   @Test
@@ -745,7 +745,7 @@ public class EnduserApiTests {
 
     assertTrue(checkContents.get(0).getTitle().equals("Test"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
-    assertEquals("/_api/v2/consumer/contents?lang=en&recommend=true",
+    assertEquals("/_api/v2/consumer/contents?lang=de&recommend=true",
         request1.getPath());
   }
 
@@ -819,7 +819,7 @@ public class EnduserApiTests {
 
     assertTrue(checkContents.get(0).getTitle().equals("Test"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
-    assertEquals("/_api/v2/consumer/contents?lang=en&page[size]=10&filter[name]=do%20not%20touch", request1.getPath());
+    assertEquals("/_api/v2/consumer/contents?lang=de&page[size]=10&filter[name]=do%20not%20touch", request1.getPath());
   }
 
   @Test
@@ -883,7 +883,7 @@ public class EnduserApiTests {
 
     assertTrue(checkContents.get(0).getTitle().equals("Test"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
-    assertEquals("/_api/v2/consumer/contents?lang=en&page[size]=10&filter[meta-datetime-from]=2017-10-15T07:00:00Z&filter[meta-datetime-to]=2017-10-15T08:00:00Z&filter[related-spot]=1234",
+    assertEquals("/_api/v2/consumer/contents?lang=de&page[size]=10&filter[meta-datetime-from]=2017-10-15T07:00:00Z&filter[meta-datetime-to]=2017-10-15T08:00:00Z&filter[related-spot]=1234",
         request1.getPath());
   }
 
@@ -932,7 +932,7 @@ public class EnduserApiTests {
 
     assertTrue(checkSpot[0].getName().equals("Test Spot"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
-    assertEquals("/_api/v2/consumer/spots/1234?lang=en",
+    assertEquals("/_api/v2/consumer/spots/1234?lang=de",
         request1.getPath());
   }
 
@@ -969,7 +969,7 @@ public class EnduserApiTests {
 
     assertTrue(checkSpot[0].getName().equals("Test Spot"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
-    assertEquals("/_api/v2/consumer/spots/1234?lang=en&include_content=true&include_markers=true&filter[has-location]=true",
+    assertEquals("/_api/v2/consumer/spots/1234?lang=de&include_content=true&include_markers=true&filter[has-location]=true",
         request1.getPath());
   }
 
@@ -1028,7 +1028,7 @@ public class EnduserApiTests {
 
     assertTrue(checkSpots.get(0).getName().equals("Test"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
-    assertEquals("/_api/v2/consumer/spots?lang=en&filter[lat]=1.0&filter[lon]=2.0&filter[radius]=100", request1.getPath());
+    assertEquals("/_api/v2/consumer/spots?lang=de&filter[lat]=1.0&filter[lon]=2.0&filter[radius]=100", request1.getPath());
   }
 
   @Test
@@ -1091,7 +1091,7 @@ public class EnduserApiTests {
 
     assertTrue(checkSpots.get(0).getName().equals("Test"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
-    assertEquals("/_api/v2/consumer/spots?lang=en&filter[tags]=[%27tag1%27,%27tag2%27]", request1.getPath());
+    assertEquals("/_api/v2/consumer/spots?lang=de&filter[tags]=[%27tag1%27,%27tag2%27]", request1.getPath());
   }
 
   @Test
@@ -1142,7 +1142,7 @@ public class EnduserApiTests {
 
     assertTrue(checkSpots.get(0).getName().equals("Test"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
-    assertEquals("/_api/v2/consumer/spots?lang=en&filter[has-location]=true&filter[tags]=[%27tag1%27,%27tag2%27]", request1.getPath());
+    assertEquals("/_api/v2/consumer/spots?lang=de&filter[has-location]=true&filter[tags]=[%27tag1%27,%27tag2%27]", request1.getPath());
   }
 
   @Test
@@ -1207,7 +1207,7 @@ public class EnduserApiTests {
 
     assertTrue(checkSpots.get(0).getName().equals("Test"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
-    assertEquals("/_api/v2/consumer/spots?lang=en&page[size]=10&filter[name]=do%20not%20touch", request1.getPath());
+    assertEquals("/_api/v2/consumer/spots?lang=de&page[size]=10&filter[name]=do%20not%20touch", request1.getPath());
   }
 
   @Test
@@ -1255,7 +1255,7 @@ public class EnduserApiTests {
 
     assertTrue(checkSystem[0].getName().equals("Test"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
-    assertEquals("/_api/v2/consumer/systems?lang=en", request1.getPath());
+    assertEquals("/_api/v2/consumer/systems?lang=de", request1.getPath());
   }
 
   @Test
@@ -1302,7 +1302,7 @@ public class EnduserApiTests {
 
     assertTrue(checkMenu[0].getId().equals("123456"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
-    assertEquals("/_api/v2/consumer/menus/123456?lang=en", request1.getPath());
+    assertEquals("/_api/v2/consumer/menus/123456?lang=de", request1.getPath());
   }
 
   @Test
@@ -1349,7 +1349,7 @@ public class EnduserApiTests {
 
     assertTrue(checkSystemSetting[0].getId().equals("123456"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
-    assertEquals("/_api/v2/consumer/settings/123456?lang=en", request1.getPath());
+    assertEquals("/_api/v2/consumer/settings/123456?lang=de", request1.getPath());
   }
 
   @Test
@@ -1396,7 +1396,7 @@ public class EnduserApiTests {
 
     assertTrue(checkStyle[0].getId().equals("123456"));
     RecordedRequest request1 = mMockWebServer.takeRequest();
-    assertEquals("/_api/v2/consumer/styles/123456?lang=en", request1.getPath());
+    assertEquals("/_api/v2/consumer/styles/123456?lang=de", request1.getPath());
   }
 
   @Test
@@ -1425,6 +1425,21 @@ public class EnduserApiTests {
   }
 
   @Test
+  public void testGotAuthenticationId() {
+    String authenticationId = "abcd";
+    SharedPreferences.Editor mockEditor = Mockito.mock(SharedPreferences.Editor.class);
+    when(mockSharedPreferences.edit()).thenReturn(mockEditor);
+    when(mockSharedPreferences.getString(eq("com.xamoom.android.xamoomsdk.authenticationId"),
+        anyString())).thenReturn(null);
+
+    mEnduserApi.gotAuthorizationId(authenticationId);
+
+    Mockito.verify(mockEditor).putString(eq("com.xamoom.android.xamoomsdk.authenticationId"),
+        eq(authenticationId));
+    Mockito.verify(mockEditor).apply();
+  }
+
+  @Test
   public void testGotEphemeralIdWitExistingId() {
     SharedPreferences.Editor mockEditor = Mockito.mock(SharedPreferences.Editor.class);
     when(mockSharedPreferences.edit()).thenReturn(mockEditor);
@@ -1436,6 +1451,22 @@ public class EnduserApiTests {
 
     Mockito.verify(mockSharedPreferences, times(1)).getString(anyString(), anyString());
     Mockito.verify(mockEditor).putString(eq("com.xamoom.android.xamoomsdk.ephemeralid"),
+        eq("1234"));
+    Mockito.verify(mockEditor).apply();
+  }
+
+  @Test
+  public void testGotAuthenticationIdWitExistingId() {
+    SharedPreferences.Editor mockEditor = Mockito.mock(SharedPreferences.Editor.class);
+    when(mockSharedPreferences.edit()).thenReturn(mockEditor);
+
+    when(mockSharedPreferences.getString(eq("com.xamoom.android.xamoomsdk.authenticationId"),
+        anyString())).thenReturn("12345");
+
+    mEnduserApi.gotAuthorizationId("1234");
+
+    Mockito.verify(mockSharedPreferences, times(1)).getString(anyString(), anyString());
+    Mockito.verify(mockEditor).putString(eq("com.xamoom.android.xamoomsdk.authenticationId"),
         eq("1234"));
     Mockito.verify(mockEditor).apply();
   }
@@ -1472,6 +1503,42 @@ public class EnduserApiTests {
 
     // TEST User-Agent
     assertEquals("12345", request1.getHeader("X-Ephemeral-Id"));
+  }
+
+  @Test
+  public void testAuthenticationIdHeader() throws Exception {
+
+    String authenticationId = "abcde";
+    mMockWebServer.enqueue(new MockResponse().setBody(""));
+    when(mockSharedPreferences.getString(eq("com.xamoom.android.xamoomsdk.authenticationId"),
+        anyString())).thenReturn(authenticationId);
+    mEnduserApi.gotAuthorizationId(authenticationId);
+
+    Content content = new Content();
+    JsonApiObject jsonApiObject = new JsonApiObject();
+    jsonApiObject.setResource(content);
+    when(mMockMorpheus.parse(anyString())).thenReturn(jsonApiObject);
+
+
+    final Semaphore semaphore = new Semaphore(0);
+    Call call = mEnduserApi.getContent("123456", new APICallback<Content, List<Error>>() {
+      @Override
+      public void finished(Content result) {
+        semaphore.release();
+      }
+
+      @Override
+      public void error(List<Error> error) {
+        semaphore.release();
+      }
+    });
+    semaphore.acquire();
+
+
+    RecordedRequest request1 = mMockWebServer.takeRequest();
+
+    // TEST User-Agent
+    assertEquals(authenticationId, request1.getHeader(EnduserApiInterface.HEADER_AUTHORIZATION));
   }
 
   private String getISO8601Date() {
