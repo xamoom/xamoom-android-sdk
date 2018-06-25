@@ -72,7 +72,7 @@ import retrofit2.Retrofit;
 public class MainActivity extends XamoomPushActivity
     implements XamoomContentFragment.OnXamoomContentFragmentInteractionListener {
   private static final String TAG = MainActivity.class.getSimpleName();
-  private static final String API_URL = "https://xamoom-cloud-dev.appspot.com/";
+  private static final String API_URL = "https://xamoom3-dev.appspot.com/";
   private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
 
   private EnduserApi mEnduserApi;

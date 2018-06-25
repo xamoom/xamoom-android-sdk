@@ -66,7 +66,7 @@ import retrofit2.Retrofit;
  */
 public class EnduserApi implements CallHandler.CallHandlerListener {
   private static final String TAG = EnduserApi.class.getSimpleName();
-  private static final String API_URL = "https://xamoom-cloud.appspot.com/";
+  private static final String API_URL = "https://xamoom3-dev.appspot.com/";
   private static final String PREF_EPHEMERAL_ID = "com.xamoom.android.xamoomsdk.ephemeralid";
 
   private static EnduserApi sharedInstance;
