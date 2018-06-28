@@ -147,6 +147,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     Deserializer.registerResourceClass("menus", Menu.class);
     Deserializer.registerResourceClass("settings", SystemSetting.class);
     Deserializer.registerResourceClass("styles", Style.class);
+    Deserializer.registerResourceClass("push-device", PushDevice.class);
   }
 
   private void initVars() {
@@ -865,7 +866,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
       }
     };
 
-    Call<ResponseBody> call = enduserApiInterface.postUser(pushDevice.getUid(), json);
+    Call<ResponseBody> call = enduserApiInterface.postPushDevice(getHeaders(), pushDevice.getUid(), json);
     callHandler.enqueCall(call, callback);
   }
 

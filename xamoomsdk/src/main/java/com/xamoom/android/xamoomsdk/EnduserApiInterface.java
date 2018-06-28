@@ -65,6 +65,6 @@ public interface EnduserApiInterface {
   Call<ResponseBody> getStyle(@HeaderMap Map<String, String> headers,
                               @Path("id") String systemId,
                               @QueryMap Map<String, String> param);
-  @POST("push/update/{token}")
-  Call<ResponseBody> postUser(@Path("token") String token, @Body String body);
+  @POST("customer/push-register/{token}")
+  Call<ResponseBody> postPushDevice(@HeaderMap Map<String, String> headers, @Path("token") String token, @Body String body);
 }
