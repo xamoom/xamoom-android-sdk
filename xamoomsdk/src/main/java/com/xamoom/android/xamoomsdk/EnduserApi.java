@@ -24,6 +24,7 @@ import com.xamoom.android.xamoomsdk.Enums.ContentSortFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotSortFlags;
 import com.xamoom.android.xamoomsdk.Offline.OfflineEnduserApi;
+import com.xamoom.android.xamoomsdk.PushDevice.PushDevice;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Resource.Marker;
@@ -46,11 +47,13 @@ import java.util.Map;
 
 import at.rags.morpheus.Deserializer;
 import at.rags.morpheus.Error;
+import at.rags.morpheus.JsonApiObject;
 import at.rags.morpheus.Morpheus;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Retrofit;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 /**
  * EnduserApi is the main part of the XamoomSDK. You can use it to send api request to
@@ -125,6 +128,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     Retrofit retrofit = new Retrofit.Builder()
         .client(httpClient)
         .baseUrl(API_URL)
+        .addConverterFactory(ScalarsConverterFactory.create())
         .build();
     enduserApiInterface = retrofit.create(EnduserApiInterface.class);
   }
@@ -839,6 +843,30 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     Call<ResponseBody> call = enduserApiInterface.getStyle(getHeaders(), systemId, params);
     callHandler.enqueCall(call, callback);
     return call;
+  }
+
+  public void postUser(PushDevice pushDevice) {
+
+    JsonApiObject jsonApiObject = new JsonApiObject();
+    jsonApiObject.setResource(pushDevice);
+
+    Morpheus morpheus = new Morpheus();
+    String json = morpheus.createJson(jsonApiObject, false);
+
+    APICallback<PushDevice, List<Error>> callback = new APICallback<PushDevice, List<Error>>() {
+      @Override
+      public void finished(PushDevice result) {
+        Log.d("Push Registration", "Success");
+      }
+
+      @Override
+      public void error(List<Error> error) {
+        Log.e("Push Registration", error.get(0).getCode() + " " + error.get(0).getDetail());
+      }
+    };
+
+    Call<ResponseBody> call = enduserApiInterface.postUser(pushDevice.getUid(), json);
+    callHandler.enqueCall(call, callback);
   }
 
   /*
