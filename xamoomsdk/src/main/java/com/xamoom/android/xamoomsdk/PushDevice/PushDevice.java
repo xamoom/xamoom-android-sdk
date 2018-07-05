@@ -31,15 +31,12 @@ public class PushDevice extends Resource {
   public PushDevice() {
   }
 
-  public PushDevice(String token) {
+  public PushDevice(String token, Map<String, Float> location, String appVersion, String appId) {
     this.uid = token;
     this.os = "Android";
-    this.appVersion = "1.0";
-    this.appId = "com.xamoom.fcmtest";
-    HashMap<String, Float> map = new HashMap<>();
-    map.put("lat", 1.0f);
-    map.put("lon", 0.0f);
-    this.location = map;
+    this.appVersion = appVersion;
+    this.appId = appId;
+    this.location = location;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.UK);
     String formattedDate = sdf.format(new Date());
 

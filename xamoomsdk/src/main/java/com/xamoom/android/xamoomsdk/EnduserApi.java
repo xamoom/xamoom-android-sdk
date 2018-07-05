@@ -11,6 +11,7 @@ package com.xamoom.android.xamoomsdk;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotSortFlags;
 import com.xamoom.android.xamoomsdk.Offline.OfflineEnduserApi;
 import com.xamoom.android.xamoomsdk.PushDevice.PushDevice;
+import com.xamoom.android.xamoomsdk.PushDevice.PushDeviceUtil;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Resource.Marker;
@@ -846,10 +848,27 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     return call;
   }
 
-  public void postUser(PushDevice pushDevice) {
+  public void pushDevice() {
+    String token = new PushDeviceUtil(context).getSavedToken();
+    Map<String, Float> location = new PushDeviceUtil(context).getSavedLocation();
+    String packageName = context.getPackageName();
+
+    String version = null;
+    try {
+      PackageInfo pInfo = context.getPackageManager().getPackageInfo(packageName, 0);
+      version = pInfo.versionName;
+    } catch (PackageManager.NameNotFoundException e) {
+      e.printStackTrace();
+    }
+
+    if (token == null || location == null || version == null) {
+      return;
+    }
+
+    PushDevice device = new PushDevice(token, location, version, packageName);
 
     JsonApiObject jsonApiObject = new JsonApiObject();
-    jsonApiObject.setResource(pushDevice);
+    jsonApiObject.setResource(device);
 
     Morpheus morpheus = new Morpheus();
     String json = morpheus.createJson(jsonApiObject, false);
@@ -866,7 +885,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
       }
     };
 
-    Call<ResponseBody> call = enduserApiInterface.postPushDevice(getHeaders(), pushDevice.getUid(), json);
+    Call<ResponseBody> call = enduserApiInterface.pushDevice(getHeaders(), device.getUid(), json);
     callHandler.enqueCall(call, callback);
   }
 
