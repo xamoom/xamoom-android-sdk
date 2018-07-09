@@ -17,7 +17,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBNZUh3-dj4YYY9-csOtQeHG_MpoE8x69Q" />
+            android:value="AIzaSyAArczQBYJUsjNhL5R3nEpkbd0ljUK66Xk" />
 
         <!-- PushWoosh -->
         <meta-data android:name="PW_APPID" android:value="8AF88-DDD2D" />
