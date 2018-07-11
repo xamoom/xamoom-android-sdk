@@ -848,9 +848,9 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     return call;
   }
 
-  public void pushDevice() {
-    String token = new PushDeviceUtil(context).getSavedToken();
-    Map<String, Float> location = new PushDeviceUtil(context).getSavedLocation();
+  public void pushDevice(PushDeviceUtil util) {
+    String token = util.getSavedToken();
+    Map<String, Float> location = util.getSavedLocation();
     String packageName = context.getPackageName();
 
     String version = null;

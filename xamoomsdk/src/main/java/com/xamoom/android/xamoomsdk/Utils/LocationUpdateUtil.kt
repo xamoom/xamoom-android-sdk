@@ -1,9 +1,11 @@
 package com.xamoom.android.xamoomsdk.Utils
 
+import android.content.Context
 import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
 import com.google.android.gms.location.*
 import com.xamoom.android.xamoomsdk.EnduserApi
+import com.xamoom.android.xamoomsdk.PushDevice.PushDeviceUtil
 
 fun AppCompatActivity.startUpdateLocation(updateInterval: Long, fastestInterval: Long, enduserApi: EnduserApi) {
     val mLocationRequest = LocationRequest()
@@ -36,10 +38,12 @@ fun AppCompatActivity.startUpdateLocation(updateInterval: Long, fastestInterval:
                     java.lang.Double.toString(location.longitude)
             android.util.Log.e("Location change", msg)
 
-            val util = com.xamoom.android.xamoomsdk.PushDevice.PushDeviceUtil(applicationContext)
+            val sharedPref = applicationContext.getSharedPreferences(PushDeviceUtil.PREFES_NAME,
+                    Context.MODE_PRIVATE)
+            val util = PushDeviceUtil(sharedPref)
             util.storeLocation(location)
-            util.storeToken("stored-testing-token") // TODO: remove line when token refresh is implemented
-            enduserApi.pushDevice()
+            // util.storeToken("stored-testing-token") !! Decomment if testing push-device call !!
+            enduserApi.pushDevice(util)
         }
     }, android.os.Looper.myLooper())
 }
