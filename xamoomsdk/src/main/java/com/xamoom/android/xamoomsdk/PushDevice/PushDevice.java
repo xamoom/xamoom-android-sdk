@@ -1,5 +1,7 @@
 package com.xamoom.android.xamoomsdk.PushDevice;
 
+import android.annotation.SuppressLint;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.text.SimpleDateFormat;
@@ -7,6 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import at.rags.morpheus.Resource;
 
@@ -28,16 +31,15 @@ public class PushDevice extends Resource {
   @SerializedName("created-at")
   private String createdAt;
 
-  public PushDevice() {
-  }
-
   public PushDevice(String token, Map<String, Float> location, String appVersion, String appId) {
     this.uid = token;
     this.os = "Android";
     this.appVersion = appVersion;
     this.appId = appId;
     this.location = location;
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.UK);
+
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+    sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
     String formattedDate = sdf.format(new Date());
 
     this.lastOpen = formattedDate;
