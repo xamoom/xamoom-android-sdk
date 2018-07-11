@@ -36,6 +36,7 @@ import com.xamoom.android.xamoomsdk.Utils.JsonListUtil;
 import com.xamoom.android.xamoomsdk.Utils.UrlUtil;
 
 import java.text.Normalizer;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.EnumSet;
@@ -43,6 +44,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import at.rags.morpheus.Deserializer;
 import at.rags.morpheus.Error;
@@ -281,7 +283,10 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     if (conditions == null) {
       conditions = new HashMap<>();
     }
-    conditions.put("x-datetime", new Date());
+
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+    sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+    conditions.put("x-datetime", sdf.format(new Date()));
 
     Map<String, String> params = UrlUtil.getUrlParameter(language);
     params.put("filter[location-identifier]", locationIdentifier);
