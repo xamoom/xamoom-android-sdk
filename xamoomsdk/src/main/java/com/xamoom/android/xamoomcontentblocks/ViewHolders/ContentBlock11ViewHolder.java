@@ -89,6 +89,7 @@ public class ContentBlock11ViewHolder extends RecyclerView.ViewHolder  {
                                  AdapterDelegatesManager adapterDelegatesManager, XamoomContentFragment.OnXamoomContentFragmentInteractionListener onXamoomContentFragmentInteractionListener) {
     RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(fragment.getContext());
     layoutManager.setAutoMeasureEnabled(true);
+    mRecyclerView.setNestedScrollingEnabled(false);
     mRecyclerView.setLayoutManager(layoutManager);
 
     XamoomContentFragment contentFragment = (XamoomContentFragment) fragment;
