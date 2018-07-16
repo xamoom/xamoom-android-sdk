@@ -80,7 +80,7 @@ public class ContentBlock11ViewHolder extends RecyclerView.ViewHolder  {
       @Override
       public void onClick(View v) {
         showLoading();
-        downloadContent(mContentBlock);
+        downloadContent(mContentBlock, mContentBlock.getContentListSortAsc());
       }
     });
   }
@@ -137,11 +137,11 @@ public class ContentBlock11ViewHolder extends RecyclerView.ViewHolder  {
       displayContents(contents);
     } else {
       showLoading();
-      downloadContent(contentBlock);
+      downloadContent(contentBlock, contentBlock.getContentListSortAsc());
     }
   }
 
-  private void downloadContent(ContentBlock contentBlock) {
+  private void downloadContent(ContentBlock contentBlock, boolean sortAsc) {
     mListManager.downloadContent(getAdapterPosition(), contentBlock.getContentListTags(),
         contentBlock.getContentListPageSize(), new APIListCallback<List<Content>, List<Error>>() {
           @Override
@@ -160,7 +160,7 @@ public class ContentBlock11ViewHolder extends RecyclerView.ViewHolder  {
             hideLoading();
             mErrorTextView.setVisibility(View.VISIBLE);
           }
-        });
+        }, sortAsc);
   }
 
   private void showLoading() {

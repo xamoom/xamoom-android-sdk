@@ -4,9 +4,14 @@ import android.util.SparseArray;
 
 import com.xamoom.android.xamoomsdk.APIListCallback;
 import com.xamoom.android.xamoomsdk.EnduserApi;
+import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
+import com.xamoom.android.xamoomsdk.Enums.ContentSortFlags;
+import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.Iterator;
 import java.util.List;
 
 import at.rags.morpheus.Error;
@@ -23,7 +28,7 @@ public class ListManager {
   }
 
   public void downloadContent(final int adapterPosition, final List<String> tags, int pageSize,
-                              final APIListCallback<List<Content>, List<Error>> callback) {
+                              final APIListCallback<List<Content>, List<Error>> callback, boolean sortAsc) {
     mCallbackHashMap.put(adapterPosition, callback);
     ContentListItem listItem = mContentListItemHashMap.get(adapterPosition);
     if (listItem == null) {
@@ -31,8 +36,15 @@ public class ListManager {
       mContentListItemHashMap.put(adapterPosition, listItem);
     }
 
+    EnumSet<ContentSortFlags> flags = EnumSet.noneOf(ContentSortFlags.class);
+    if (sortAsc) {
+      flags.add(ContentSortFlags.NAME);
+    } else {
+      flags.add(ContentSortFlags.NAME_DESC);
+    }
+
     mEnduserApi.getContentsByTags(tags, listItem.getPageSize(), listItem.getCursor(),
-        null, new APIListCallback<List<Content>, List<Error>>() {
+            flags, new APIListCallback<List<Content>, List<Error>>() {
           @Override
           public void finished(List<Content> result, String cursor, boolean hasMore) {
             mContentListItemHashMap.get(adapterPosition).setCursor(cursor);
