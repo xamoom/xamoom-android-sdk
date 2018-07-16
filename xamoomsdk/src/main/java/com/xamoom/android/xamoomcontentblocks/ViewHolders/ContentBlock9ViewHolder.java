@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -136,16 +137,17 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
     mEnduserApi.getSpotsByTags(tags, PAGE_SIZE, cursor, spotOptions, null, new APIListCallback<List<Spot>, List<Error>>() {
       @Override
       public void finished(List<Spot> result, String cursor, boolean hasMore) {
-        mSpotList.addAll(result);
+        if (!result.isEmpty()) {
+          mSpotList.addAll(result);
+          if (!isStyleLoaded) {
+            getStyle(result.get(0).getSystem().getId());
+          }
 
-        if (!isStyleLoaded) {
-          getStyle(result.get(0).getSystem().getId());
-        }
-
-        if (hasMore) {
-          downloadAllSpots(tags, cursor, callback);
-        } else {
-          callback.finished(mSpotList, "", false);
+          if (hasMore) {
+            downloadAllSpots(tags, cursor, callback);
+          } else {
+            callback.finished(mSpotList, "", false);
+          }
         }
       }
 
@@ -185,7 +187,10 @@ public class ContentBlock9ViewHolder extends RecyclerView.ViewHolder implements 
       mMarkerArray.put(marker, s);
     }
 
-    mGoogleMap.animateCamera(ContentBlock9ViewHolderUtils.zoomToDisplayAllMarker(mMarkerArray.keySet(), 20));
+    CameraUpdate update = ContentBlock9ViewHolderUtils.zoomToDisplayAllMarker(mMarkerArray.keySet(), 20);
+    if (update != null) {
+      mGoogleMap.animateCamera(update);
+    }
   }
 
   private void openMapFragment(Marker activeMarker) {
