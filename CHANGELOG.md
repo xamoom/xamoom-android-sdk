@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.10.3](https://github.com/xamoom/xamoom-ios-sdk/compare/3.10.2...3.10.3) - 16.07.2018
+
+- Fixed spotmap crash when no spot is shown
+- Fixed issue where lists do not order descending.
+- Fixed scrolling issue when content only contains a list.
+
 ## [3.10.2](https://github.com/xamoom/xamoom-ios-sdk/compare/3.10.1...3.10.2) - 12.06.2018
 
 - Added missing ephemeral header to calls
