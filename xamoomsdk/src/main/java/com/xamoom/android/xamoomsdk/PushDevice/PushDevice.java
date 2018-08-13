@@ -30,6 +30,8 @@ public class PushDevice extends Resource {
   private String updatedAt;
   @SerializedName("created-at")
   private String createdAt;
+  @SerializedName("language")
+  private String language;
 
   public PushDevice(String token, Map<String, Float> location, String appVersion, String appId) {
     this.uid = token;
@@ -45,6 +47,7 @@ public class PushDevice extends Resource {
     this.lastOpen = formattedDate;
     this.updatedAt = "";
     this.createdAt = "";
+    this.language = Locale.getDefault().getLanguage();
   }
 
   public String getUid() {
