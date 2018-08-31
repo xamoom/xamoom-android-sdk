@@ -402,7 +402,7 @@ public class MainActivity extends XamoomPushActivity
     mEnduserApi.searchContentsByName("Test", 10, null, null, filter, new APIListCallback<List<Content>, List<Error>>() {
       @Override
       public void finished(List<Content> result, String cursor, boolean hasMore) {
-        Log.v(TAG, "searchContent: " + result.get(0));
+        //Log.v(TAG, "searchContent: " + result.get(0));
 
         ContentDatabaseAdapter databaseAdapter = ContentDatabaseAdapter.getInstance(getApplicationContext());
         for (Content content : result) {
@@ -458,7 +458,7 @@ public class MainActivity extends XamoomPushActivity
     mEnduserApi.getSpotsByLocation(location, 1000, null, null, new APIListCallback<List<Spot>, List<Error>>() {
       @Override
       public void finished(List<Spot> result, String cursor, boolean hasMore) {
-        Log.v(TAG, "getSpotsWithLocation: " + result.get(0));
+        //Log.v(TAG, "getSpotsWithLocation: " + result.get(0));
         Log.v(TAG, "getSpotsWithLocation: " + cursor);
         Log.v(TAG, "getSpotsWithLocation: " + hasMore);
       }
@@ -477,14 +477,16 @@ public class MainActivity extends XamoomPushActivity
         null, new APIListCallback<List<Spot>, List<Error>>() {
           @Override
           public void finished(List<Spot> result, String cursor, boolean hasMore) {
-            Log.v(TAG, "getSpotsWithTags: " + result.get(0));
-            Log.v(TAG, "getSpotsWithTags: " + cursor);
-            Log.v(TAG, "getSpotsWithTags: " + hasMore);
+            if (result.size() != 0) {
+              Log.v(TAG, "getSpotsWithTags: " + result.get(0));
+              Log.v(TAG, "getSpotsWithTags: " + cursor);
+              Log.v(TAG, "getSpotsWithTags: " + hasMore);
 
-            SpotDatabaseAdapter spotDatabaseAdapter = SpotDatabaseAdapter.getInstance(getApplicationContext());
-            spotDatabaseAdapter.insertOrUpdateSpot(result.get(0));
-            Spot savedSpot = spotDatabaseAdapter.getSpot(result.get(0).getId());
-            Log.v(TAG, "Saved spot: " + savedSpot);
+              SpotDatabaseAdapter spotDatabaseAdapter = SpotDatabaseAdapter.getInstance(getApplicationContext());
+              spotDatabaseAdapter.insertOrUpdateSpot(result.get(0));
+              Spot savedSpot = spotDatabaseAdapter.getSpot(result.get(0).getId());
+              Log.v(TAG, "Saved spot: " + savedSpot);
+            }
           }
 
           @Override
