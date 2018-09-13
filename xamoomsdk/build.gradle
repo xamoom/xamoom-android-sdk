@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
-def versionString = "3.10.2"
+def versionString = "3.10.3-beta1"
 
 version = versionString
 group = "com.xamoom.android"
@@ -12,8 +12,8 @@ android {
 
 	defaultConfig {
 		minSdkVersion 18
-		targetSdkVersion 25
-		versionCode 15
+		targetSdkVersion 26
+		versionCode 17
 		versionName versionString
 		testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
 	}

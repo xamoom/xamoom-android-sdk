@@ -1,4 +1,6 @@
 # Changelog
+## [3.10.2](https://github.com/xamoom/xamoom-ios-sdk/compare/3.10.2...3.10.3-beta1) - 12.09.2018
+- Xamoom 3 backend
 
 ## [3.10.2](https://github.com/xamoom/xamoom-ios-sdk/compare/3.10.1...3.10.2) - 12.06.2018
 
