@@ -29,5 +29,5 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:3.0.1'
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
     testImplementation 'com.squareup.okhttp3:mockwebserver:3.8.0'
-    api project(':xamoomsdk')
+    implementation 'com.xamoom.android:xamoomsdk:3.10.3-beta1'
 }
