@@ -11,6 +11,7 @@ package com.xamoom.android.xamoomsdk;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -24,6 +25,8 @@ import com.xamoom.android.xamoomsdk.Enums.ContentSortFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotSortFlags;
 import com.xamoom.android.xamoomsdk.Offline.OfflineEnduserApi;
+import com.xamoom.android.xamoomsdk.PushDevice.PushDevice;
+import com.xamoom.android.xamoomsdk.PushDevice.PushDeviceUtil;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Resource.Marker;
@@ -48,11 +51,13 @@ import java.util.TimeZone;
 
 import at.rags.morpheus.Deserializer;
 import at.rags.morpheus.Error;
+import at.rags.morpheus.JsonApiObject;
 import at.rags.morpheus.Morpheus;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Retrofit;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 /**
  * EnduserApi is the main part of the XamoomSDK. You can use it to send api request to
@@ -68,8 +73,9 @@ import retrofit2.Retrofit;
  */
 public class EnduserApi implements CallHandler.CallHandlerListener {
   private static final String TAG = EnduserApi.class.getSimpleName();
-  private static final String API_URL = "https://xamoom-cloud.appspot.com/";
+  private static final String API_URL = "https://xamoom.appspot.com";
   private static final String PREF_EPHEMERAL_ID = "com.xamoom.android.xamoomsdk.ephemeralid";
+  private static final String PREF_AUTHORIZATION_ID = "com.xamoom.android.xamoomsdk.authorization";
 
   private static EnduserApi sharedInstance;
 
@@ -83,6 +89,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
   private boolean offline;
   private SharedPreferences sharedPref;
   private String ephemeralId;
+  private String authorizationId;
 
   public EnduserApi(@NonNull final String apikey, @NonNull Context context) {
     this.apiKey = apikey;
@@ -125,6 +132,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     Retrofit retrofit = new Retrofit.Builder()
         .client(httpClient)
         .baseUrl(API_URL)
+        .addConverterFactory(ScalarsConverterFactory.create())
         .build();
     enduserApiInterface = retrofit.create(EnduserApiInterface.class);
   }
@@ -143,6 +151,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     Deserializer.registerResourceClass("menus", Menu.class);
     Deserializer.registerResourceClass("settings", SystemSetting.class);
     Deserializer.registerResourceClass("styles", Style.class);
+    Deserializer.registerResourceClass("push-device", PushDevice.class);
   }
 
   private void initVars() {
@@ -204,9 +213,12 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     Map<String, String> params = UrlUtil.addContentParameter(UrlUtil.getUrlParameter(language),
         contentFlags);
 
-    HashMap<String, String> headers = new HashMap<>(2);
+    HashMap<String, String> headers = new HashMap<>(3);
     if (getEphemeralId() != null) {
       headers.put(EnduserApiInterface.HEADER_EPHEMERAL, getEphemeralId());
+    }
+    if (getAuthorizationId() != null) {
+      headers.put(EnduserApiInterface.HEADER_AUTHORIZATION, getAuthorizationId());
     }
     if (reason != null) {
       headers.put(EnduserApiInterface.HEADER_REASON, String.valueOf(reason.getValue()));
@@ -293,9 +305,12 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     params = UrlUtil.addContentParameter(params, contentFlags);
     params = UrlUtil.addConditionsToUrl(params, conditions);
 
-    HashMap<String, String> headers = new HashMap<>(2);
+    HashMap<String, String> headers = new HashMap<>(3);
     if (getEphemeralId() != null) {
       headers.put(EnduserApiInterface.HEADER_EPHEMERAL, getEphemeralId());
+    }
+    if (getAuthorizationId() != null) {
+      headers.put(EnduserApiInterface.HEADER_AUTHORIZATION, getAuthorizationId());
     }
     if (reason != null) {
       headers.put(EnduserApiInterface.HEADER_REASON, String.valueOf(reason.getValue()));
@@ -397,13 +412,8 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     params.put("filter[lat]", Double.toString(location.getLatitude()));
     params.put("filter[lon]", Double.toString(location.getLongitude()));
 
-    HashMap<String, String> headers = new HashMap<>(1);
-    if (getEphemeralId() != null) {
-      headers.put(EnduserApiInterface.HEADER_EPHEMERAL, getEphemeralId());
-    }
-
     Call<ResponseBody> call = enduserApiInterface.getContents(
-        headers, params);
+        getHeaders(), params);
     callHandler.enqueListCall(call, callback);
     return call;
   }
@@ -462,12 +472,8 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
     params = UrlUtil.addFilters(params, filter);
 
-    HashMap<String, String> headers = new HashMap<>(1);
-    if (getEphemeralId() != null) {
-      headers.put(EnduserApiInterface.HEADER_EPHEMERAL, getEphemeralId());
-    }
 
-    Call<ResponseBody> call = enduserApiInterface.getContents(headers, params);
+    Call<ResponseBody> call = enduserApiInterface.getContents(getHeaders(), params);
     callHandler.enqueListCall(call, callback);
     return call;
   }
@@ -526,12 +532,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
     params = UrlUtil.addFilters(params, filter);
 
-    HashMap<String, String> headers = new HashMap<>(1);
-    if (getEphemeralId() != null) {
-      headers.put(EnduserApiInterface.HEADER_EPHEMERAL, getEphemeralId());
-    }
-
-    Call<ResponseBody> call = enduserApiInterface.getContents(headers, params);
+    Call<ResponseBody> call = enduserApiInterface.getContents(getHeaders(), params);
     callHandler.enqueListCall(call, callback);
     return call;
   }
@@ -581,12 +582,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
     params = UrlUtil.addFilters(params, filter);
 
-    HashMap<String, String> headers = new HashMap<>(1);
-    if (getEphemeralId() != null) {
-      headers.put(EnduserApiInterface.HEADER_EPHEMERAL, getEphemeralId());
-    }
-
-    Call<ResponseBody> call = enduserApiInterface.getContents(headers, params);
+    Call<ResponseBody> call = enduserApiInterface.getContents(getHeaders(), params);
     callHandler.enqueListCall(call, callback);
     return call;
   }
@@ -607,12 +603,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     Map<String, String> params = UrlUtil.getUrlParameter(language);
     params = UrlUtil.addRecommend(params);
 
-    HashMap<String, String> headers = new HashMap<>(1);
-    if (getEphemeralId() != null) {
-      headers.put(EnduserApiInterface.HEADER_EPHEMERAL, getEphemeralId());
-    }
-
-    Call<ResponseBody> call = enduserApiInterface.getContents(headers, params);
+    Call<ResponseBody> call = enduserApiInterface.getContents(getHeaders(), params);
     callHandler.enqueListCall(call, callback);
 
     return call;
@@ -646,7 +637,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     Map<String, String> params = UrlUtil.getUrlParameter(this.language);
     params = UrlUtil.addSpotParameter(params, spotFlags);
 
-    Call<ResponseBody> call = enduserApiInterface.getSpot(getEphemeralId(), spotId, params);
+    Call<ResponseBody> call = enduserApiInterface.getSpot(getHeaders(), spotId, params);
     callHandler.enqueCall(call, callback);
     return call;
   }
@@ -697,7 +688,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     params.put("filter[lon]", Double.toString(location.getLongitude()));
     params.put("filter[radius]", Integer.toString(radius));
 
-    Call<ResponseBody> call = enduserApiInterface.getSpots(getEphemeralId(), params);
+    Call<ResponseBody> call = enduserApiInterface.getSpots(getHeaders(), params);
     callHandler.enqueListCall(call, callback);
     return call;
   }
@@ -746,7 +737,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
     params.put("filter[tags]", JsonListUtil.listToJsonArray(tags, ","));
 
-    Call<ResponseBody> call = enduserApiInterface.getSpots(getEphemeralId(), params);
+    Call<ResponseBody> call = enduserApiInterface.getSpots(getHeaders(), params);
     callHandler.enqueListCall(call, callback);
     return call;
   }
@@ -778,7 +769,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
     params.put("filter[name]", name);
 
-    Call<ResponseBody> call = enduserApiInterface.getSpots(getEphemeralId(), params);
+    Call<ResponseBody> call = enduserApiInterface.getSpots(getHeaders(), params);
     callHandler.enqueListCall(call, callback);
     return call;
   }
@@ -796,7 +787,8 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     }
 
     Map<String, String> params = UrlUtil.getUrlParameter(language);
-    Call<ResponseBody> call = enduserApiInterface.getSystem(getEphemeralId(), params);
+
+    Call<ResponseBody> call = enduserApiInterface.getSystem(getHeaders(), params);
     callHandler.enqueCall(call, callback);
     return call;
   }
@@ -815,7 +807,8 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     }
 
     Map<String, String> params = UrlUtil.getUrlParameter(language);
-    Call<ResponseBody> call = enduserApiInterface.getMenu(getEphemeralId(), systemId, params);
+
+    Call<ResponseBody> call = enduserApiInterface.getMenu(getHeaders(), systemId, params);
     callHandler.enqueCall(call, callback);
     return call;
   }
@@ -834,7 +827,8 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     }
 
     Map<String, String> params = UrlUtil.getUrlParameter(language);
-    Call<ResponseBody> call = enduserApiInterface.getSetting(getEphemeralId(), systemId, params);
+
+    Call<ResponseBody> call = enduserApiInterface.getSetting(getHeaders(), systemId, params);
     callHandler.enqueCall(call, callback);
     return call;
   }
@@ -853,9 +847,51 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     }
 
     Map<String, String> params = UrlUtil.getUrlParameter(language);
-    Call<ResponseBody> call = enduserApiInterface.getStyle(getEphemeralId(), systemId, params);
+
+    Call<ResponseBody> call = enduserApiInterface.getStyle(getHeaders(), systemId, params);
     callHandler.enqueCall(call, callback);
     return call;
+  }
+
+  public void pushDevice(PushDeviceUtil util) {
+    String token = util.getSavedToken();
+    Map<String, Float> location = util.getSavedLocation();
+    String packageName = context.getPackageName();
+
+    String version = null;
+    try {
+      PackageInfo pInfo = context.getPackageManager().getPackageInfo(packageName, 0);
+      version = pInfo.versionName;
+    } catch (PackageManager.NameNotFoundException e) {
+      e.printStackTrace();
+    }
+
+    if (token == null || location == null || version == null) {
+      return;
+    }
+
+    PushDevice device = new PushDevice(token, location, version, packageName);
+
+    JsonApiObject jsonApiObject = new JsonApiObject();
+    jsonApiObject.setResource(device);
+
+    Morpheus morpheus = new Morpheus();
+    String json = morpheus.createJson(jsonApiObject, false);
+
+    APICallback<PushDevice, List<Error>> callback = new APICallback<PushDevice, List<Error>>() {
+      @Override
+      public void finished(PushDevice result) {
+        Log.d("Push Registration", "Success");
+      }
+
+      @Override
+      public void error(List<Error> error) {
+        Log.e("Push Registration", error.get(0).getCode() + " " + error.get(0).getDetail());
+      }
+    };
+
+    Call<ResponseBody> call = enduserApiInterface.pushDevice(getHeaders(), device.getUid(), json);
+    callHandler.enqueCall(call, callback);
   }
 
   /*
@@ -898,6 +934,18 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     }
   }
 
+  @Override
+  public void gotAuthorizationId(String authorizationId) {
+    if (getAuthorizationId() == null ||
+        !getAuthorizationId().equals(authorizationId)) {
+      this.authorizationId = authorizationId;
+
+      SharedPreferences.Editor editor = sharedPref.edit();
+      editor.putString(PREF_AUTHORIZATION_ID, authorizationId);
+      editor.apply();
+    }
+  }
+
   private String getEphemeralId() {
     if (ephemeralId != null) {
       return ephemeralId;
@@ -905,6 +953,27 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
 
     ephemeralId = sharedPref.getString(PREF_EPHEMERAL_ID, null);
     return ephemeralId;
+  }
+
+  private String getAuthorizationId() {
+    if (authorizationId != null) {
+      return authorizationId;
+    }
+
+    authorizationId = sharedPref.getString(PREF_AUTHORIZATION_ID, null);
+    return authorizationId;
+  }
+
+  private HashMap<String, String> getHeaders() {
+    HashMap<String, String> headers = new HashMap<>(2);
+    if (getEphemeralId() != null) {
+      headers.put(EnduserApiInterface.HEADER_EPHEMERAL, getEphemeralId());
+    }
+    if (getAuthorizationId() != null) {
+      headers.put(EnduserApiInterface.HEADER_AUTHORIZATION, getAuthorizationId());
+    }
+
+    return headers;
   }
 
   // helper

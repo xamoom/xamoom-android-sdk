@@ -11,6 +11,7 @@ package com.xamoom.android.xamoomsdk.xamoomsdk;
 import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.APIListCallback;
 import com.xamoom.android.xamoomsdk.CallHandler;
+import com.xamoom.android.xamoomsdk.EnduserApiInterface;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 
 import org.json.JSONException;
@@ -42,7 +43,6 @@ import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.fail;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
@@ -86,6 +86,7 @@ public class CallHandlerTest {
   public void testEnqueCallSuccessfull() throws InterruptedException {
     Headers headers = new Headers.Builder()
         .add("X-Ephemeral-Id", "1234")
+        .add(EnduserApiInterface.HEADER_AUTHORIZATION, "abcd")
         .build();
     final Response<ResponseBody> response =
         Response.success(ResponseBody.create(null, ""), headers);
@@ -127,6 +128,7 @@ public class CallHandlerTest {
     semaphore.acquire();
 
     Mockito.verify(mockEventListener).gotEphemeralId(eq("1234"));
+    Mockito.verify(mockEventListener).gotAuthorizationId("abcd");
   }
 
   /**
@@ -325,6 +327,7 @@ public class CallHandlerTest {
   public void testEnqueListCallSuccessfull() throws InterruptedException {
     Headers headers = new Headers.Builder()
         .add("X-Ephemeral-Id", "1234")
+        .add(EnduserApiInterface.HEADER_AUTHORIZATION, "abcd")
         .build();
     final Response<ResponseBody> response =
         Response.success(ResponseBody.create(null, ""), headers);
@@ -374,5 +377,6 @@ public class CallHandlerTest {
     semaphore.acquire();
 
     Mockito.verify(mockEventListener).gotEphemeralId(eq("1234"));
+    Mockito.verify(mockEventListener).gotAuthorizationId(eq("abcd"));
   }
 }

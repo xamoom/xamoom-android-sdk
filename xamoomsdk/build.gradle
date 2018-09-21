@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
-def versionString = "3.10.3"
+def versionString = "3.10.3-beta1"
 
 version = versionString
 group = "com.xamoom.android"
@@ -12,8 +12,8 @@ android {
 
 	defaultConfig {
 		minSdkVersion 18
-		targetSdkVersion 25
-		versionCode 16
+		targetSdkVersion 26
+		versionCode 17
 		versionName versionString
 		testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
 	}
@@ -61,16 +61,17 @@ dependencies {
 	implementation "com.android.support:recyclerview-v7:$supportLibaryVersion"
 	implementation "com.android.support:appcompat-v7:$supportLibaryVersion"
 	implementation "com.android.support:design:$supportLibaryVersion"
-	implementation 'com.google.android.gms:play-services-maps:11.0.4'
+	implementation 'com.google.android.gms:play-services-maps:11.8.0'
 	implementation 'com.google.android.exoplayer:exoplayer-core:2.6.1'
 	implementation 'com.squareup.retrofit2:retrofit:2.3.0'
 	implementation 'com.squareup.okhttp3:logging-interceptor:3.0.1'
-	implementation 'com.xamoom.android:morpheus:0.4.3'
+	implementation 'com.xamoom.android:morpheus:0.5.2'
 	implementation 'com.github.bumptech.glide:glide:3.7.0'
 	implementation 'com.pushwoosh:pushwoosh:4.12.2'
-	implementation 'com.google.android.gms:play-services-gcm:11.0.4'
-	implementation 'com.google.android.gms:play-services-location:11.0.4'
+	implementation 'com.google.android.gms:play-services-gcm:11.8.0'
+	implementation 'com.google.android.gms:play-services-location:11.8.0'
 	implementation 'com.xamoom.android:htmltextview:1.0.9'
+	implementation 'com.squareup.retrofit2:converter-scalars:2.1.0'
 }
 
 ext {
