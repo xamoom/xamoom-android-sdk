@@ -108,7 +108,8 @@
     <orderEntry type="library" name="Gradle: com.google.code.gson:gson:2.6.2@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.squareup.okio:okio:1.13.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:transition-26.1.0" level="project" />
-    <orderEntry type="library" name="Gradle: com.xamoom.android:morpheus-0.4.3" level="project" />
+    <orderEntry type="library" name="Gradle: com.xamoom.android:xamoomsdk-3.10.6" level="project" />
+    <orderEntry type="library" name="Gradle: com.xamoom.android:morpheus-0.5.2" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:appcompat-v7-26.1.0" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:support-fragment-26.1.0" level="project" />
     <orderEntry type="library" name="Gradle: android.arch.core:common:1.0.0@jar" level="project" />
@@ -131,6 +132,5 @@
     <orderEntry type="library" scope="TEST" name="Gradle: com.squareup.okhttp3:mockwebserver:3.8.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:design-26.1.0" level="project" />
     <orderEntry type="library" name="Gradle: android.arch.lifecycle:runtime-1.0.0" level="project" />
-    <orderEntry type="module" module-name="xamoomsdk" />
   </component>
 </module>

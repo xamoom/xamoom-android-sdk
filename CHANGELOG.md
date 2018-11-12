@@ -1,4 +1,15 @@
 # Changelog
+## [3.10.6](https://github.com/xamoom/xamoom-ios-sdk/compare/3.10.5...3.10.6) - 25.09.2018
+- Correct Production Endpoint for Xamoom 3
+
+## [3.10.5](https://github.com/xamoom/xamoom-ios-sdk/compare/3.10.4...3.10.5) - 24.09.2018
+- Production Endpoint for Xamoom 3
+
+## [3.10.4](https://github.com/xamoom/xamoom-ios-sdk/compare/3.10.3-beta1...3.10.4) - 21.09.2018
+- Production Endpoint for Xamoom 3
+
+## [3.10.2](https://github.com/xamoom/xamoom-ios-sdk/compare/3.10.2...3.10.3-beta1) - 12.09.2018
+- Xamoom 3 backend
 
 ## [3.10.3](https://github.com/xamoom/xamoom-ios-sdk/compare/3.10.2...3.10.3) - 16.07.2018
 

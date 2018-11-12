@@ -38,6 +38,7 @@ public class CallHandler <T extends Resource> {
       "Check if data really exists.";
 
   private static final String HEADER_EPHEMERAL = "X-Ephemeral-Id";
+  private static final String HEADER_AUTHORIZATION = "Authorization";
 
   private Morpheus morpheus;
   private CallHandlerListener listener;
@@ -53,6 +54,7 @@ public class CallHandler <T extends Resource> {
       public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
         // checks if there is a ephemeral id and calls listeners gotEphemeralId method
         notifyEphemeralId(response.headers());
+        notifyAuthorizationId(response.headers());
 
         JsonApiObject jsonApiObject;
         try {
@@ -86,6 +88,7 @@ public class CallHandler <T extends Resource> {
       public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
         // checks if there is a ephemeral id and calls listeners gotEphemeralId method
         notifyEphemeralId(response.headers());
+        notifyAuthorizationId(response.headers());
 
         JsonApiObject jsonApiObject;
         try {
@@ -185,8 +188,16 @@ public class CallHandler <T extends Resource> {
     }
   }
 
+  private void notifyAuthorizationId(Headers headers) {
+    String authorizationId = headers.get(HEADER_AUTHORIZATION);
+    if (authorizationId != null && listener != null) {
+      listener.gotAuthorizationId(authorizationId);
+    }
+  }
+
   public interface CallHandlerListener {
     void gotEphemeralId(String ephemeralId);
+    void gotAuthorizationId(String authorizationId);
   }
 
   public void setMorpheus(Morpheus morpheus) {
