@@ -38,99 +38,13 @@ a geo api key.
         android:name="com.google.android.geo.API_KEY"
         android:value="YOUR_API_KEY" />
 
-## Make your first call
+## Java Implementation
 
-Grab a contentId from your [xamoom-system](https://xamoom.net/) (open a page and copy id from url) and make your first call like this:
+Check out the [documentation](https://github.com/xamoom/xamoom-android-sdk/wiki/Java-Implementation-Guide)
 
-```java
-EnduserApi mEnduserApi = new EnduserApi(API_KEY, context);
-mEnduserApi.getContent(CONTENT_ID, new APICallback<Content, List<Error>>() {
-  @Override
-  public void finished(Content result) {
-    Log.v(TAG, "Content: " + result;)
-  }
+## Kotlin Implementation
 
-  @Override
-  public void error(List<Error> error) {
-
-  }
-});
-```
-
-## Show your content
-
-Use the XamoomContentFragment to show your content.
-
-```java
-XamoomContentFragment xamoomFragment = XamoomContentFragment.newInstance("YOUTUBE_API_KEY"); //create new instance
-xamoomFragment.setEnduserApi(mEnduserApi);
-xamoomFragment.setDisplayAllStoreLinks(true);
-xamoomFragment.setContent(result);
-xamoomFragment.setShowSpotMapContentLinks(true);
-getSupportFragmentManager().beginTransaction()
-    .replace(R.id.main_frame, xamoomFragment, "XamoomFragment")
-    .commit();
-```
-
-## Beacons
-
-To monitor and range beacons use the [Android-Beacon-Library](https://github.com/AltBeacon/android-beacon-library).
-Then get your connected content with:
-```java
-mEnduserApi.getContentByBeacon(MAJOR, MINOR, new APICallback<Content, List<Error>>() {
-      @Override
-      public void finished(Content result) {
-        Log.v(TAG, "Content: " + result;)
-      }
-
-      @Override
-      public void error(List<Error> error) {
-
-      }
-    });
-```
-
-## Offline
-
-### Save & get entities offline
-
-You can save your entities offline and use them even if you are not connected
-to the internet.
-
-To save entities offline use `OfflineStorageManager` methods for saving.
-For example to save a content works like this:
-
-```java
-OfflineStorageManager manager =
-OfflineStorageManager.getInstance(getApplicationContext());
-       try {
-         manager.saveContent(result, false, new DownloadManager.OnDownloadManagerCompleted() {
-           @Override
-           public void completed(String urlString) {
-             Log.v(TAG, "Content image saved: " + urlString);
-           }
-
-           @Override
-           public void failed(String urlString, DownloadError downloadError) {
-             Log.v(TAG, "Failed saving: " + urlString);
-           }
-         });
-       } catch (MalformedURLException e) {
-         e.printStackTrace();
-       }
-```
-
-To get offline saved entities use the `EnduserApi` and set the offline property
-to true:
-```java
-mEnduserApi.setOffline(true);
-```
-All `EnduserApi` calls will now return you the offline saved entities.
-
-### Push Notification
-
-To use our Push Notifications please check our [Push Notification Documentation](https://github.com/xamoom/xamoom-android-sdk/wiki/Push-Notifications).
-
+Check out the [documentation](https://github.com/xamoom/xamoom-android-sdk/wiki/Kotlin-Implementation-Guide)
 
 ### Documentation
 
