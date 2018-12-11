@@ -17,22 +17,91 @@ More informations about xamoom and how xamoom works? Visit our Github page [xamo
 
 ## Installation with Gradle
 
-Add in your Gradle in dependencies
+Add xamoom-sdk dependencie to your Gradle
 
     compile 'com.xamoom.android:xamoomsdk:3.10.6'
+    
+## Requirements with Gradle
+
+We are using following techiques
+* Gradle version 3.1.3
+* Kotlin version 1.2.50
+* Google Service Version 3.0.0
+
+        buildscript {
+            ext.kotlin_version = '1.2.50'
+            repositories {
+                jcenter()
+                maven {
+                    url 'https://maven.google.com/'
+                    name 'Google'
+                }
+                google()
+            }
+            dependencies {
+                classpath 'com.android.tools.build:gradle:3.1.3'
+                classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+                classpath 'com.google.gms:google-services:3.0.0'
+            }
+        }
+
+        allprojects {
+            repositories {
+                jcenter()
+                maven {
+                    url 'https://maven.google.com/'
+                    name 'Google'
+                }
+            }
+        }
+    
+XamoomSdk also requires following dependencie (Since Gradle update)
+
+    implementation 'com.android.support:multidex:1.0.3'
+    implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
+    implementation "com.android.support:support-v4:$supportLibraryVersion"
+    implementation "com.android.support:design:$supportLibraryVersion"
+    implementation "com.android.support:support-v4:$supportLibraryVersion"
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation 'com.jakewharton:butterknife:8.8.1'
+    implementation 'com.google.dagger:dagger:2.15'
+    implementation 'com.google.dagger:dagger-android:2.15'
+    implementation 'com.google.dagger:dagger-android-support:2.15'
+    implementation 'com.squareup.picasso:picasso:2.3.2'
+    implementation 'com.nineoldandroids:library:2.4.0'
+    implementation 'com.daimajia.slider:library:1.1.5@aar'
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
+    implementation 'org.altbeacon:android-beacon-library:2.15'
+    implementation 'com.google.android.gms:play-services-maps:11.8.0'
+    implementation 'com.google.android.gms:play-services-location:11.8.0'
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.7.0'
+    implementation 'com.xamoom.android:morpheus:0.5.2'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.0.1'
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-scalars:2.1.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.xamoom.android:htmltextview:1.0.9'
+    
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.15'
+    annotationProcessor 'com.google.dagger:dagger-android-processor:2.15'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+    
+    // If you are using FCM (Geo Push)
+    implementation 'com.google.firebase:firebase-core:11.8.0'
+    implementation 'com.google.firebase:firebase-messaging:11.8.0'
 
 # Usage
 
-## Setup XamoomEnduserApi
+## Setup Manifest
 
 Add internet permission to your manifest and your google play services with
 a geo api key.
 
     <uses-permission android:name="android.permission.INTERNET"/>
-
-    <meta-data
-        android:name="com.google.android.gms.version"
-        android:value="@integer/google_play_services_version" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
 
     <meta-data
         android:name="com.google.android.geo.API_KEY"
@@ -40,11 +109,11 @@ a geo api key.
 
 ## Java Implementation
 
-Check out the [documentation](https://github.com/xamoom/xamoom-android-sdk/wiki/Java-Implementation-Guide)
+Check out the [java documentation](https://github.com/xamoom/xamoom-android-sdk/wiki/Java-Implementation-Guide)
 
 ## Kotlin Implementation
 
-Check out the [documentation](https://github.com/xamoom/xamoom-android-sdk/wiki/Kotlin-Implementation-Guide)
+Check out the [kotlin documentation](https://github.com/xamoom/xamoom-android-sdk/wiki/Kotlin-Implementation-Guide)
 
 ### Documentation
 
