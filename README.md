@@ -58,10 +58,10 @@ We are using following techiques
 XamoomSdk also requires following dependencie (Since Gradle update)
 
     implementation 'com.android.support:multidex:1.0.3'
-    implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
-    implementation "com.android.support:support-v4:$supportLibraryVersion"
-    implementation "com.android.support:design:$supportLibraryVersion"
-    implementation "com.android.support:support-v4:$supportLibraryVersion"
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support:support-v4:26.1.0'
+    implementation 'com.android.support:design:26.1.0'
+    implementation "com.android.support:support-v4:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation 'com.jakewharton:butterknife:8.8.1'
     implementation 'com.google.dagger:dagger:2.15'
@@ -79,7 +79,7 @@ XamoomSdk also requires following dependencie (Since Gradle update)
     implementation 'com.squareup.okhttp3:logging-interceptor:3.0.1'
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
     implementation 'com.squareup.retrofit2:converter-scalars:2.1.0'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.50'
     implementation 'com.xamoom.android:htmltextview:1.0.9'
     
     annotationProcessor 'com.google.dagger:dagger-compiler:2.15'
@@ -89,6 +89,20 @@ XamoomSdk also requires following dependencie (Since Gradle update)
     // If you are using FCM (Geo Push)
     implementation 'com.google.firebase:firebase-core:11.8.0'
     implementation 'com.google.firebase:firebase-messaging:11.8.0'
+    
+Also add on top of the app build.gradle file following lines
+
+    apply plugin: 'kotlin-android'
+    apply plugin: 'kotlin-kapt'
+    apply plugin: 'io.fabric'
+    apply plugin: 'kotlin-android-extensions'
+ 
+ Also enable multidexing
+      
+    defaultConfig {
+        ...
+        multiDexEnabled true
+    }
 
 # Usage
 
