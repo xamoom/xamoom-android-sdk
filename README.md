@@ -8,16 +8,8 @@ But before you start, you should read the about the [Core Concepts](https://gith
 
 # Developing with the SDK
 
-* [Getting Started](https://github.com/xamoom/xamoom-ios-sdk/wiki/Getting-started)
-* [API Calls](https://github.com/xamoom/xamoom-ios-sdk/wiki/API-Calls)
-* [Working with Pages](https://github.com/xamoom/xamoom-ios-sdk/wiki/Working-with-pages)
-  * [ContentBlock Customizing](https://github.com/xamoom/xamoom-ios-sdk/wiki/Customize-XMMContentBlocks-cell)
-* [Working with Spots](https://github.com/xamoom/xamoom-ios-sdk/wiki/Working-with-spots)
-* [iBeacons](https://github.com/xamoom/xamoom-ios-sdk/wiki/iBeacons)
-* [Push Notifications](https://github.com/xamoom/xamoom-ios-sdk/wiki/Push-Notifications)
-* [Offline usage](https://github.com/xamoom/xamoom-ios-sdk/wiki/Offline-usage)
+* [Getting Started](https://github.com/xamoom/xamoom-android-sdk/wiki/Getting-Started)
 
 # Requirements
 
-* ARC
-* Minimum iOS Target: iOS 8
+* Minimum Android SDK version: 18
