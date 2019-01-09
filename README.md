@@ -9,6 +9,7 @@ But before you start, you should read the about the [Core Concepts](https://gith
 # Developing with the SDK
 
 * [Getting Started](https://github.com/xamoom/xamoom-android-sdk/wiki/Getting-Started)
+* [API Calls](https://github.com/xamoom/xamoom-android-sdk/wiki/API-Calls)
 
 # Requirements
 
