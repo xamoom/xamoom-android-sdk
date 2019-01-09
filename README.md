@@ -12,6 +12,7 @@ But before you start, you should read the about the [Core Concepts](https://gith
 * [API Calls](https://github.com/xamoom/xamoom-android-sdk/wiki/API-Calls)
 * [Working with Pages](https://github.com/xamoom/xamoom-android-sdk/wiki/Working-with-pages)
   * [View Customizing](https://github.com/xamoom/xamoom-android-sdk/wiki/Customize-Views)
+* [Working with Spots](https://github.com/xamoom/xamoom-android-sdk/wiki/Working-with-Spots)
 
 # Requirements
 
