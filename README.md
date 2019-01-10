@@ -13,6 +13,10 @@ But before you start, you should read the about the [Core Concepts](https://gith
 * [Working with Pages](https://github.com/xamoom/xamoom-android-sdk/wiki/Working-with-pages)
   * [View Customizing](https://github.com/xamoom/xamoom-android-sdk/wiki/Customize-Views)
 * [Working with Spots](https://github.com/xamoom/xamoom-android-sdk/wiki/Working-with-Spots)
+* [Beacons](https://github.com/xamoom/xamoom-android-sdk/wiki/Beacons)
+* [Beacon Notification](https://github.com/xamoom/xamoom-android-sdk/wiki/Beacon-Notification)
+* [Push Notification](https://github.com/xamoom/xamoom-android-sdk/wiki/Push-Notification)
+* [Offline usage] (https://github.com/xamoom/xamoom-android-sdk/wiki/Offline-handling)
 
 # Requirements
 
