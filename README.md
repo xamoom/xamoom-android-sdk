@@ -16,7 +16,7 @@ But before you start, you should read the about the [Core Concepts](https://gith
 * [Beacons](https://github.com/xamoom/xamoom-android-sdk/wiki/Beacons)
 * [Beacon Notification](https://github.com/xamoom/xamoom-android-sdk/wiki/Beacon-Notification)
 * [Push Notification](https://github.com/xamoom/xamoom-android-sdk/wiki/Push-Notification)
-* [Offline usage] (https://github.com/xamoom/xamoom-android-sdk/wiki/Offline-handling)
+* [Offline usage](https://github.com/xamoom/xamoom-android-sdk/wiki/Offline-usageg)
 
 # Requirements
 
