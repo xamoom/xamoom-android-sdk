@@ -26,7 +26,6 @@
             android:name="com.xamoom.android.xamoomsdk.version"
             android:value="${xamoomSDKVersion}"/>
 
-
         <provider
             android:name=".Storage.XamoomFileProvider"
             android:authorities="${applicationId}.xamoomsdk.fileprovider"
@@ -37,6 +36,8 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
+        <activity android:name="com.xamoom.android.XamoomContentWebViewActivity"/>
 
         <receiver android:name="android.support.v4.media.session.MediaButtonReceiver">
             <intent-filter>

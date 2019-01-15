@@ -23,6 +23,7 @@ import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Resource.Style;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,6 +43,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   private ListManager mListManager;
   private boolean showContentLinks;
   private boolean offline;
+  private ArrayList<String> urlScheme;
 
   private String mLinkColor = "00F";
   private String mBackgroundColor = "000";
@@ -59,12 +61,14 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
    */
   public ContentBlockAdapter(Fragment fragment, List<ContentBlock> contentBlocks,
                              boolean showSpotMapContentLinks, String youtubeApiKey,
-                             ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener contentBlock3ViewHolderInteractionListener) {
+                             ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener contentBlock3ViewHolderInteractionListener,
+                             ArrayList<String> contentBlockUrlScheme) {
     mOnContentBlock3ViewHolderInteractionListener = contentBlock3ViewHolderInteractionListener;
     mFragment = fragment;
     mContentBlocks = contentBlocks;
     showContentLinks = showSpotMapContentLinks;
     mYoutubeApiKey = youtubeApiKey;
+    urlScheme = contentBlockUrlScheme;
 
     setupAdapters();
   }
@@ -98,7 +102,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     return mDelegatesManager.onCreateViewHolder(parent, viewType, mFragment, mEnduserApi, mYoutubeApiKey,
         mBitmapCache, mContentCache, showContentLinks, mListManager,
-        mOnContentBlock3ViewHolderInteractionListener, mOnXamoomContentFragmentInteractionListener);
+        mOnContentBlock3ViewHolderInteractionListener, mOnXamoomContentFragmentInteractionListener, urlScheme);
   }
 
   @Override
@@ -170,5 +174,9 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
   public void setOffline(boolean offline) {
     this.offline = offline;
+  }
+
+  public void setContentBlockUrlScheme(ArrayList<String> url) {
+    urlScheme = url;
   }
 }

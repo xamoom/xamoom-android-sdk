@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.net.Uri;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -19,8 +20,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.xamoom.android.XamoomContentWebViewActivity;
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
+
+import java.util.ArrayList;
 
 /**
  * LinkBlock
@@ -32,14 +36,16 @@ public class ContentBlock4ViewHolder extends RecyclerView.ViewHolder {
   private TextView mTitleTextView;
   private TextView mContentTextView;
   private ImageView mIcon;
+  private ArrayList<String> urls;
 
-  public ContentBlock4ViewHolder(View itemView, Fragment fragment) {
+  public ContentBlock4ViewHolder(View itemView, Fragment fragment, @Nullable ArrayList<String> urls) {
     super(itemView);
     mFragment = fragment;
     mRootLayout = (LinearLayout) itemView.findViewById(R.id.linkBlockLinearLayout);
     mTitleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
     mContentTextView = (TextView) itemView.findViewById(R.id.contentTextView);
     mIcon = (ImageView) itemView.findViewById(R.id.iconImageView);
+    this.urls = urls;
   }
 
   public void setupContentBlock(final ContentBlock contentBlock, boolean offline) {
@@ -58,8 +64,31 @@ public class ContentBlock4ViewHolder extends RecyclerView.ViewHolder {
     mRootLayout.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(contentBlock.getLinkUrl()));
-        mFragment.getActivity().startActivity(i);
+        String contentUrl = contentBlock.getLinkUrl();
+
+        if (urls == null) {
+          Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(contentBlock.getLinkUrl()));
+          mFragment.getActivity().startActivity(i);
+          return;
+        }
+
+        boolean openInternal = false;
+
+        for (int i = 0; i < urls.size(); i++) {
+          String url = urls.get(i);
+          if (contentUrl.contains(url)) {
+            openInternal = true;
+            break;
+          }
+        }
+        if (openInternal) {
+          Intent intent = new Intent(mFragment.getActivity(), XamoomContentWebViewActivity.class);
+          intent.putExtra("url", contentUrl);
+          mFragment.getActivity().startActivity(intent);
+        } else {
+          Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(contentBlock.getLinkUrl()));
+          mFragment.getActivity().startActivity(i);
+        }
       }
     });
     mIcon.setColorFilter(Color.BLACK);

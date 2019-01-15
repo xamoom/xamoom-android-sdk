@@ -20,6 +20,8 @@ import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.Resource.Style;
 
+import java.util.ArrayList;
+
 public interface AdapterDelegate<T> {
   /**
    * Returns if the item on position is the right viewType for the adapter.
@@ -45,12 +47,12 @@ public interface AdapterDelegate<T> {
    * @return Custom contentBlock viewholder.
    */
   @NonNull RecyclerView.ViewHolder onCreateViewHolder(
-      ViewGroup parent, Fragment fragment, EnduserApi enduserApi, String youtubeApiKey,
-      LruCache bitmapCache, LruCache contentCache, boolean showContentLinks, ListManager listManager, AdapterDelegatesManager adapterDelegatesManager,
-      ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener
+          ViewGroup parent, Fragment fragment, EnduserApi enduserApi, String youtubeApiKey,
+          LruCache bitmapCache, LruCache contentCache, boolean showContentLinks, ListManager listManager, AdapterDelegatesManager adapterDelegatesManager,
+          ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener
           onContentBlock3ViewHolderInteractionListener,
-      XamoomContentFragment.OnXamoomContentFragmentInteractionListener
-          onXamoomContentFragmentInteractionListener);
+          XamoomContentFragment.OnXamoomContentFragmentInteractionListener
+          onXamoomContentFragmentInteractionListener, ArrayList<String> urls);
 
   /**
    * Called before recyclerview shows viewholder.

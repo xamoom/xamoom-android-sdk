@@ -17,6 +17,8 @@ import android.graphics.Color;
 import android.graphics.drawable.PictureDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -36,6 +38,7 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.caverock.androidsvg.SVG;
+import com.xamoom.android.XamoomContentWebViewActivity;
 import com.xamoom.android.xamoomcontentblocks.Helper.SvgDecoder;
 import com.xamoom.android.xamoomcontentblocks.Helper.SvgDrawableTranscoder;
 import com.xamoom.android.xamoomcontentblocks.Helper.SvgSoftwareLayerSetter;
@@ -45,6 +48,7 @@ import com.xamoom.android.xamoomsdk.Resource.Style;
 import com.xamoom.android.xamoomsdk.Storage.FileManager;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 
 /**
  * ImageBlock
@@ -58,11 +62,13 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
   private Integer mTextColor = null;
   private GenericRequestBuilder<Uri, InputStream, SVG, PictureDrawable> requestBuilder;
   private FileManager mFileManager;
+  private ArrayList<String> urls;
+  private Fragment fragment;
 
   private OnContentBlock3ViewHolderInteractionListener mListener;
 
   public ContentBlock3ViewHolder(View itemView, Context context,
-                                 OnContentBlock3ViewHolderInteractionListener listener) {
+                                 OnContentBlock3ViewHolderInteractionListener listener, @Nullable ArrayList<String> urls, Fragment fragment) {
     super(itemView);
     mContext = context;
     mTitleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
@@ -70,6 +76,8 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
     mImageView = (ImageView) itemView.findViewById(R.id.imageImageView);
     mImageProgressBar = (ProgressBar) itemView.findViewById(R.id.imageProgressBar);
     mListener = listener;
+    this.urls = urls;
+    this.fragment = fragment;
 
     mFileManager = FileManager.getInstance(context);
 
@@ -152,8 +160,32 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
       mImageView.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-          Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(contentBlock.getLinkUrl()));
-          mContext.startActivity(intent);
+
+          String contentUrl = contentBlock.getLinkUrl();
+
+          if (urls == null) {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(contentBlock.getLinkUrl()));
+            mContext.startActivity(intent);
+            return;
+          }
+
+          boolean openInternal = false;
+
+          for (int i = 0; i < urls.size(); i++) {
+            String url = urls.get(i);
+            if (contentUrl.contains(url)) {
+              openInternal = true;
+              break;
+            }
+          }
+          if (openInternal) {
+            Intent intent = new Intent(fragment.getActivity(), XamoomContentWebViewActivity.class);
+            intent.putExtra("url", contentUrl);
+            fragment.getActivity().startActivity(intent);
+          } else {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(contentBlock.getLinkUrl()));
+            mContext.startActivity(intent);
+          }
         }
       });
     }

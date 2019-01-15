@@ -9,6 +9,7 @@
 package com.xamoom.android.xamoomcontentblocks.Adapters;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.LruCache;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +25,7 @@ import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Resource.Style;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ContentBlock3Adapter implements AdapterDelegate<List<ContentBlock>> {
@@ -38,13 +40,13 @@ public class ContentBlock3Adapter implements AdapterDelegate<List<ContentBlock>>
   @NonNull
   @Override
   public RecyclerView.ViewHolder onCreateViewHolder(
-      ViewGroup parent, Fragment fragment, EnduserApi enduserApi, String youtubeApiKey,
-      LruCache bitmapCache, LruCache contentCache, boolean showContentLinks, ListManager listManager, AdapterDelegatesManager adapterDelegatesManager,
-      ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener onContentBlock3ViewHolderInteractionListener, XamoomContentFragment.OnXamoomContentFragmentInteractionListener
-                                                        onXamoomContentFragmentInteractionListener) {
+          ViewGroup parent, Fragment fragment, EnduserApi enduserApi, String youtubeApiKey,
+          LruCache bitmapCache, LruCache contentCache, boolean showContentLinks, ListManager listManager, AdapterDelegatesManager adapterDelegatesManager,
+          ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener onContentBlock3ViewHolderInteractionListener, XamoomContentFragment.OnXamoomContentFragmentInteractionListener
+                                                        onXamoomContentFragmentInteractionListener, @Nullable ArrayList<String> urls) {
     View view = LayoutInflater.from(parent.getContext())
         .inflate(R.layout.content_block_3_layout, parent, false);
-    return new ContentBlock3ViewHolder(view, fragment.getContext(), onContentBlock3ViewHolderInteractionListener);
+    return new ContentBlock3ViewHolder(view, fragment.getContext(), onContentBlock3ViewHolderInteractionListener, urls, fragment);
   }
 
   @Override
