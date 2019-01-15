@@ -9,6 +9,7 @@
 package com.xamoom.android.xamoomcontentblocks.Adapters;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.LruCache;
 import android.support.v4.util.SparseArrayCompat;
@@ -20,6 +21,8 @@ import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolde
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.Resource.Style;
+
+import java.util.ArrayList;
 
 public class AdapterDelegatesManager<T> {
   private static final String TAG = AdapterDelegate.class.getSimpleName();
@@ -51,7 +54,7 @@ public class AdapterDelegatesManager<T> {
       ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener
           onContentBlock3ViewHolderInteractionListener,
       XamoomContentFragment.OnXamoomContentFragmentInteractionListener
-          onXamoomContentFragmentInteractionListener) {
+          onXamoomContentFragmentInteractionListener, @Nullable ArrayList<String> url) {
 
     AdapterDelegate<T> delegate = adapterDelegates.get(viewType);
 
@@ -65,7 +68,7 @@ public class AdapterDelegatesManager<T> {
 
     RecyclerView.ViewHolder vh = delegate.onCreateViewHolder(parent, fragment, enduserApi,
         youtubeApiKey, bitmapCache, contentCache, showContentLinks, listManager, this,
-        onContentBlock3ViewHolderInteractionListener, onXamoomContentFragmentInteractionListener);
+        onContentBlock3ViewHolderInteractionListener, onXamoomContentFragmentInteractionListener, url);
 
     return vh;
   }

@@ -67,6 +67,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   private static final String SHOW_SPOT_MAP_CONTENT_LINKS = "ContentLinksSpotMaps";
   private static final String STYLE = "Style";
   private static final String BACKGROUND_COLOR = "BackgroundColor";
+  private static final String URL_SCHEME = "UrlScheme";
 
   private static final int WRITE_STORAGE_PERMISSION = 0;
 
@@ -87,6 +88,11 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   private boolean displayAllStoreLinks = false;
   private boolean showSpotMapContentLinks = false;
   private boolean isAnimated = false;
+  private ArrayList<String> contentBlockUrlScheme;
+
+  public static XamoomContentFragment newInstance(@NonNull String youtubeApiKey) {
+    return newInstance(youtubeApiKey, null);
+  }
 
   /**
    * Use this factory method to create a new instance.
@@ -94,11 +100,13 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
    *
    * @return XamoomContentFragment Returns an Instance of XamoomContentFragment
    */
-  public static XamoomContentFragment newInstance(@NonNull String youtubeApiKey) {
+  public static XamoomContentFragment newInstance(@NonNull String youtubeApiKey, ArrayList<String> url) {
     XamoomContentFragment fragment = new XamoomContentFragment();
     Bundle args = new Bundle();
 
     args.putString(YOUTUBE_API_KEY, youtubeApiKey);
+    args.putStringArrayList(URL_SCHEME, url);
+
     fragment.setArguments(args);
 
     return fragment;
@@ -106,13 +114,15 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
 
   public XamoomContentFragment() {
     mContentBlockAdapter = new ContentBlockAdapter(this, mContentBlocks,
-        showSpotMapContentLinks, mYoutubeApiKey, this);
+        showSpotMapContentLinks, mYoutubeApiKey, this, contentBlockUrlScheme);
   }
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     if (getArguments() != null) {
+      contentBlockUrlScheme = getArguments().getStringArrayList(URL_SCHEME);
+      mContentBlockAdapter.setContentBlockUrlScheme(contentBlockUrlScheme);
       mYoutubeApiKey = getArguments().getString(YOUTUBE_API_KEY);
       mContentBlockAdapter.setYoutubeApiKey(mYoutubeApiKey);
     }
