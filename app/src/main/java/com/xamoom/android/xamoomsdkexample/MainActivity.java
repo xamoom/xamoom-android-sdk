@@ -194,7 +194,7 @@ public class MainActivity extends AppCompatActivity
   public void getContent() {
     List tags = new ArrayList();
     tags.add("x-start");
-    mEnduserApi = new EnduserApi("3226a5a4-451e-4f40-943e-be55d43266f1", getApplicationContext());
+    mEnduserApi = new EnduserApi("3226a5a4-451e-4f40-943e-be55d43266f1", getApplicationContext(), false);
     mEnduserApi.getContentsByTags(tags, 10, null, null, new APIListCallback<List<Content>, List<Error>>() {
       @Override
       public void finished(List<Content> result, String cursor, boolean hasMore) {
@@ -203,7 +203,10 @@ public class MainActivity extends AppCompatActivity
           return;
         }
 
-        XamoomContentFragment xamoomFragment = XamoomContentFragment.newInstance(getResources().getString(R.string.youtube_key)); //create new instance
+
+        ArrayList<String> urls = new ArrayList<>();
+        urls.add("google.com");
+        XamoomContentFragment xamoomFragment = XamoomContentFragment.newInstance(getResources().getString(R.string.youtube_key), urls); //create new instance
         xamoomFragment.setEnduserApi(mEnduserApi);
         xamoomFragment.setDisplayAllStoreLinks(true);
         xamoomFragment.setContent(result.get(0), false, mOffline);
