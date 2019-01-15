@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest package="com.xamoom.android.xamoomsdkexample"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -15,15 +16,9 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyC3Kx8mi6YERm24w8-q9WU_34onXI2QC9c" />
 
-        <!-- PushWoosh -->
-        <meta-data android:name="PW_APPID" android:value="8AF88-DDD2D" />
-        <meta-data android:name="PW_PROJECT_ID" android:value="A166892001074" />
-
-        <!-- PushWoosh End -->
-
-        <receiver android:name=".NotificationHandler"></receiver>
-        <meta-data android:name="XAMOOM_PUSH_HANDLE"
-                   android:value="com.xamoom.android.xamoomsdkexample.NotificationHandler"/>
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
 
         <activity
             android:name=".MainActivity"

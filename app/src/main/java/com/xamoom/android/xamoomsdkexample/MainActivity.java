@@ -31,12 +31,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.xamoom.android.pushnotifications.XamoomPushActivity;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.APIListCallback;
@@ -69,7 +69,7 @@ import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 
-public class MainActivity extends XamoomPushActivity
+public class MainActivity extends AppCompatActivity
     implements XamoomContentFragment.OnXamoomContentFragmentInteractionListener {
   private static final String TAG = MainActivity.class.getSimpleName();
   private static final String API_URL = "https://xamoom3-dev.appspot.com/";
@@ -90,27 +90,7 @@ public class MainActivity extends XamoomPushActivity
 
     setupEnduserApi();
 
-    // register custom notification factory
-    registerNotificationFactory(new CustomNotification());
-
-
     getContent();
-    getContentOption();
-    getContentLocationIdentifier();
-    getContentWithConditions();
-    getContentsWithTags();
-    getContentByDates();
-    getContentsLocation();
-    searchContent();
-    getRecommendations();
-    getSpot();
-    getSpotsWithLocation();
-    getSpotsWithTags();
-    searchSpots();
-    getSystem();
-    getMenu();
-    getSystemSetting();
-    getStyle();
   }
 
   @Override
@@ -209,42 +189,32 @@ public class MainActivity extends XamoomPushActivity
         .client(httpClient)
         .build();
 
-    mEnduserApi = new EnduserApi(retrofit, getApplicationContext());
-    EnduserApi.setSharedInstance(mEnduserApi);
   }
 
   public void getContent() {
-    mEnduserApi.getContent("5f6a24e9ec5e4090890b7911c791a0c7", new APICallback<Content, List<at.rags.morpheus.Error>>() {
+    List tags = new ArrayList();
+    tags.add("x-start");
+    mEnduserApi = new EnduserApi("3226a5a4-451e-4f40-943e-be55d43266f1", getApplicationContext());
+    mEnduserApi.getContentsByTags(tags, 10, null, null, new APIListCallback<List<Content>, List<Error>>() {
       @Override
-      public void finished(Content result) {
-        Log.v(TAG, "getContent: " + result);
-        Log.v(TAG, "Test: " + result);
-        /*
-        OfflineStorageManager manager =
-            OfflineStorageManager.getInstance(getApplicationContext());
-        try {
-          manager.saveContent(result, false, new DownloadManager.OnDownloadManagerCompleted() {
-            @Override
-            public void completed(String urlString) {
-              Log.v(TAG, "File saved: " + urlString);
-            }
+      public void finished(List<Content> result, String cursor, boolean hasMore) {
 
-            @Override
-            public void failed(String urlString, DownloadError downloadError) {
-              Log.v(TAG, "Failed saving: " + urlString);
-            }
-          });
-        } catch (MalformedURLException e) {
-          e.printStackTrace();
+        if (result.size() == 0) {
+          return;
         }
 
-        boolean deleted = manager.deleteContent(result.getId());
-*/
+        XamoomContentFragment xamoomFragment = XamoomContentFragment.newInstance(getResources().getString(R.string.youtube_key)); //create new instance
+        xamoomFragment.setEnduserApi(mEnduserApi);
+        xamoomFragment.setDisplayAllStoreLinks(true);
+        xamoomFragment.setContent(result.get(0), false, mOffline);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.main_frame, xamoomFragment, "XamoomFragment")
+                .commit(); //replace with xamoomFragment
       }
 
       @Override
       public void error(List<Error> error) {
-        Log.v(TAG, "error: " + error);
+          Log.e("Error", error.get(0).getDetail());
       }
     });
   }
@@ -267,8 +237,8 @@ public class MainActivity extends XamoomPushActivity
 
 
             getSupportFragmentManager().beginTransaction()
-                .replace(R.id.main_frame, xamoomFragment, "XamoomFragment")
-                .commit(); //replace with xamoomFragment
+                    .replace(R.id.main_frame, xamoomFragment, "XamoomFragment")
+                    .commit(); //replace with xamoomFragment
           }
 
           @Override

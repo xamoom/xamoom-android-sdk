@@ -73,7 +73,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
  */
 public class EnduserApi implements CallHandler.CallHandlerListener {
   private static final String TAG = EnduserApi.class.getSimpleName();
-  private static final String API_URL = "https://xamoom-217413.appspot.com";
+  private static final String API_URL = "https://xamoom-dev.appspot.com";
   private static final String PREF_EPHEMERAL_ID = "com.xamoom.android.xamoomsdk.ephemeralid";
   private static final String PREF_AUTHORIZATION_ID = "com.xamoom.android.xamoomsdk.authorization";
 

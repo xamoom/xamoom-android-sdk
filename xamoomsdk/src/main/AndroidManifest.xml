@@ -26,9 +26,6 @@
             android:name="com.xamoom.android.xamoomsdk.version"
             android:value="${xamoomSDKVersion}"/>
 
-        <receiver android:name="com.xamoom.android.pushnotifications.XamoomNotificationReceiver" />
-        <meta-data android:name="PW_NOTIFICATION_RECEIVER"
-                   android:value="com.xamoom.android.pushnotifications.XamoomNotificationReceiver"/>
 
         <provider
             android:name=".Storage.XamoomFileProvider"
@@ -40,8 +37,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
-        <activity android:name="com.xamoom.android.pushnotifications.XamoomPushActivity"/>
 
         <receiver android:name="android.support.v4.media.session.MediaButtonReceiver">
             <intent-filter>
