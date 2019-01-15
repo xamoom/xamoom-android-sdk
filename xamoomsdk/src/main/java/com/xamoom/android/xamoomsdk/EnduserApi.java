@@ -73,7 +73,8 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
  */
 public class EnduserApi implements CallHandler.CallHandlerListener {
   private static final String TAG = EnduserApi.class.getSimpleName();
-  private static final String API_URL = "https://xamoom-dev.appspot.com";
+  private static final String API_URL_DEV = "https://xamoom-dev.appspot.com";
+  private static final String API_URL_PROD = "https://api.xamoom.net";
   private static final String PREF_EPHEMERAL_ID = "com.xamoom.android.xamoomsdk.ephemeralid";
   private static final String PREF_AUTHORIZATION_ID = "com.xamoom.android.xamoomsdk.authorization";
 
@@ -90,11 +91,31 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
   private SharedPreferences sharedPref;
   private String ephemeralId;
   private String authorizationId;
+  private String apiUrl;
 
   public EnduserApi(@NonNull final String apikey, @NonNull Context context) {
     this.apiKey = apikey;
     this.context = context;
     this.offlineEnduserApi = new OfflineEnduserApi(context);
+
+    apiUrl = API_URL_PROD;
+
+    initRetrofit(apiKey);
+    initMorpheus();
+    initVars();
+    initSharedPreferences();
+  }
+
+  public EnduserApi(@NonNull final String apikey, @NonNull Context context, boolean isProduction) {
+    this.apiKey = apikey;
+    this.context = context;
+    this.offlineEnduserApi = new OfflineEnduserApi(context);
+
+    if (isProduction) {
+      apiUrl = API_URL_PROD;
+    } else {
+      apiUrl = API_URL_DEV;
+    }
 
     initRetrofit(apiKey);
     initMorpheus();
@@ -131,7 +152,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
 
     Retrofit retrofit = new Retrofit.Builder()
         .client(httpClient)
-        .baseUrl(API_URL)
+        .baseUrl(apiUrl)
         .addConverterFactory(ScalarsConverterFactory.create())
         .build();
     enduserApiInterface = retrofit.create(EnduserApiInterface.class);
