@@ -272,7 +272,6 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
       contentBlock0.setBlockType(-1);
       contentBlock0.setPublicStatus(true);
       contentBlock0.setText(mContent.getDescription());
-      contentBlock0.setCoverImageCopyRight(mContent.getCoverImageCopyRight());
       mContentBlocks.add(0, contentBlock0);
     }
 
@@ -283,6 +282,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
       contentBlock3.setPublicStatus(true);
       contentBlock3.setFileId(mContent.getPublicImageUrl());
       contentBlock3.setScaleX(0);
+      contentBlock3.setCopyright(mContent.getCoverImageCopyRight());
       mContentBlocks.add(1, contentBlock3);
     }
   }

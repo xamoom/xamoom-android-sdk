@@ -232,7 +232,7 @@ public class MainActivity extends AppCompatActivity
             xamoomFragment.setEnduserApi(mEnduserApi);
             xamoomFragment.setDisplayAllStoreLinks(true);
 
-            xamoomFragment.setContent(result, false, mOffline);
+            xamoomFragment.setContent(result, true, mOffline);
             xamoomFragment.setShowSpotMapContentLinks(true);
             //xamoomFragment.setStyle(mStyle);
             xamoomFragment.setBackgroundColor(Color.TRANSPARENT);

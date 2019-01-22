@@ -34,6 +34,7 @@
             android:layout_marginTop="@dimen/contentblock_3_caption_negative_margin"
             android:layout_marginBottom="@dimen/contentblock_3_caption_negative_margin"
             android:textAlignment="viewEnd"
+            android:textColor="@color/black"
             android:layout_alignParentEnd="true"
             android:layout_toRightOf="@id/titleTextView"
             />
