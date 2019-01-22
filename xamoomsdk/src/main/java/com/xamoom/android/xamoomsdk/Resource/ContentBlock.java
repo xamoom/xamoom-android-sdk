@@ -58,6 +58,7 @@ public class ContentBlock extends Resource implements Parcelable {
   private boolean contentListSortAsc;
   @SerializedName("content-list-page-size")
   private int contentListPageSize;
+  private String coverImageCopyRight;
 
   public ContentBlock() {
     contentListSortAsc = true;
@@ -257,6 +258,14 @@ public class ContentBlock extends Resource implements Parcelable {
 
   public void setContentListPageSize(Integer contentListPageSize) {
     this.contentListPageSize = contentListPageSize;
+  }
+
+  public String getCoverImageCopyRight() {
+    return coverImageCopyRight;
+  }
+
+  public void setCoverImageCopyRight(String coverImageCopyRight) {
+    this.coverImageCopyRight = coverImageCopyRight;
   }
 
   @Override

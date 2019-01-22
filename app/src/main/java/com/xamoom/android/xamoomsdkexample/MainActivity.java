@@ -209,7 +209,7 @@ public class MainActivity extends AppCompatActivity
         XamoomContentFragment xamoomFragment = XamoomContentFragment.newInstance(getResources().getString(R.string.youtube_key), urls); //create new instance
         xamoomFragment.setEnduserApi(mEnduserApi);
         xamoomFragment.setDisplayAllStoreLinks(true);
-        xamoomFragment.setContent(result.get(0), false, mOffline);
+        xamoomFragment.setContent(result.get(0), true, mOffline);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.main_frame, xamoomFragment, "XamoomFragment")
                 .commit(); //replace with xamoomFragment

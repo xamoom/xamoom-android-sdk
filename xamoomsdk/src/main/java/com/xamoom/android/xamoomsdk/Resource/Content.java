@@ -49,6 +49,8 @@ public class Content extends Resource implements Parcelable {
   private String fromDate;
   @SerializedName("meta-datetime-to")
   private String toDate;
+  @SerializedName("cover-image-copyright")
+  private String coverImageCopyRight;
 
   public Content() {
   }
@@ -67,6 +69,7 @@ public class Content extends Resource implements Parcelable {
     relatedSpot = in.readParcelable(Spot.class.getClassLoader());
     fromDate = in.readString();
     toDate = in.readString();
+    coverImageCopyRight = in.readString();
   }
 
   public static final Creator<Content> CREATOR = new Creator<Content>() {
@@ -96,6 +99,7 @@ public class Content extends Resource implements Parcelable {
     dest.writeParcelable(relatedSpot, flags);
     dest.writeString(fromDate);
     dest.writeString(toDate);
+    dest.writeString(coverImageCopyRight);
   }
 
   public String getTitle() {
@@ -226,6 +230,14 @@ public class Content extends Resource implements Parcelable {
 
   public void setToDate(Date toDate) {
     this.toDate = DateUtil.format(toDate);
+  }
+
+  public String getCoverImageCopyRight() {
+    return coverImageCopyRight;
+  }
+
+  public void setCoverImageCopyRight(String coverImageCopyRight) {
+    this.coverImageCopyRight = coverImageCopyRight;
   }
 
   @Override

@@ -10,13 +10,35 @@
               android:theme="@style/ContentBlocksTheme"
               tools:ignore="WebViewLayout">
 
-    <TextView
-        android:id="@+id/titleTextView"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/contentHeader_title_size"
-        android:textColor="@color/black"
-        />
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/titleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/contentHeader_title_size"
+            android:textColor="@color/black"
+            android:text=""
+            android:layout_alignParentStart="true"
+            android:ellipsize="end"
+            android:layout_marginEnd="8dp"
+            android:lines="1"
+            android:layout_toStartOf="@+id/coverImageCopyRight"
+            />
+
+        <TextView
+            android:id="@+id/coverImageCopyRight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:textAlignment="viewEnd"
+            android:textColor="@color/black"
+            android:lines="1"
+            android:text="copyright"/>
+    </RelativeLayout>
+
 
     <TextView
         android:id="@+id/textView"

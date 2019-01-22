@@ -272,6 +272,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
       contentBlock0.setBlockType(-1);
       contentBlock0.setPublicStatus(true);
       contentBlock0.setText(mContent.getDescription());
+      contentBlock0.setCoverImageCopyRight(mContent.getCoverImageCopyRight());
       mContentBlocks.add(0, contentBlock0);
     }
 
@@ -430,6 +431,8 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
     // add header if needed choosen
     if (addHeader) {
       addContentTitleAndImage();
+    } else if (mContent.getContentBlocks().get(0) != null) {
+      mContent.getContentBlocks().get(0).setCoverImageCopyRight(mContent.getCoverImageCopyRight());
     }
 
     // set offline modus inside adapter & remove blocks that cannot be displayed offline (like maps)
