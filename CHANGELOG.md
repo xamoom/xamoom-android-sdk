@@ -1,4 +1,11 @@
 # Changelog
+## [3.10.7](https://github.com/xamoom/xamoom-ios-sdk/compare/3.10.6...3.10.7) - 28.01.2019
+- Added web view for open links in app (with given url format)
+- Added copyright label for coverimage
+- Added new endpoint urls
+
+- Improved image title font size
+
 ## [3.10.6](https://github.com/xamoom/xamoom-ios-sdk/compare/3.10.5...3.10.6) - 25.09.2018
 - Correct Production Endpoint for Xamoom 3
 
