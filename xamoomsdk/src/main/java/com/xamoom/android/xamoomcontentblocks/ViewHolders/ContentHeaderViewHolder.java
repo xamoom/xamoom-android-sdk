@@ -24,6 +24,7 @@ import com.xamoom.android.xamoomsdk.Resource.Style;
 public class ContentHeaderViewHolder extends RecyclerView.ViewHolder {
   private TextView mTitleTextView;
   private TextView mTextView;
+  private TextView mCoverImageCopyRight;
   private String mLinkColor = "00F";
   private Style mStyle;
   private float mTextSize = 18.0f;
@@ -32,6 +33,7 @@ public class ContentHeaderViewHolder extends RecyclerView.ViewHolder {
     super(itemView);
     mTitleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
     mTextView = (TextView) itemView.findViewById(R.id.textView);
+    mCoverImageCopyRight = itemView.findViewById(R.id.coverImageCopyRight);
   }
 
   public void setupContentBlock(ContentBlock contentblock, boolean offline){
@@ -56,7 +58,10 @@ public class ContentHeaderViewHolder extends RecyclerView.ViewHolder {
     if (mStyle != null && mStyle.getForegroundFontColor() != null) {
       mTitleTextView.setTextColor(Color.parseColor(mStyle.getForegroundFontColor()));
       mTextView.setTextColor(Color.parseColor(mStyle.getForegroundFontColor()));
+      mCoverImageCopyRight.setTextColor(Color.parseColor(mStyle.getForegroundFontColor()));
     }
+
+    mCoverImageCopyRight.setText(contentblock.getCoverImageCopyRight());
   }
 
   public void setLinkColor(String mLinkColor) {
