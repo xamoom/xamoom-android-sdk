@@ -19,7 +19,9 @@ import android.view.ViewGroup;
 
 import com.xamoom.android.xamoomcontentblocks.ListManager;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
+import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock91ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock9ViewHolder;
+import com.xamoom.android.xamoomcontentblocks.Views.MapBoxFragment;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.R;
@@ -45,15 +47,18 @@ public class ContentBlock9Adapter implements AdapterDelegate<List<ContentBlock>>
       LruCache bitmapCache, LruCache contentCache, boolean showContentLinks, ListManager listManager, AdapterDelegatesManager adapterDelegatesManager,
       ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener onContentBlock3ViewHolderInteractionListener, XamoomContentFragment.OnXamoomContentFragmentInteractionListener onXamoomContentFragmentInteractionListener, @Nullable ArrayList<String> urls) {
     View view = LayoutInflater.from(parent.getContext())
-        .inflate(R.layout.content_block_9_layout, parent, false);
-    return new ContentBlock9ViewHolder(view, fragment, enduserApi);
+        .inflate(R.layout.content_block_9_1_layout, parent, false);
+    ContentBlock91ViewHolder vh = new ContentBlock91ViewHolder(view, fragment, enduserApi);
+    return vh;
   }
 
   @Override
   public void onBindViewHolder(@NonNull List<ContentBlock> items, int position,
                                @NonNull RecyclerView.ViewHolder holder, Style style, boolean offline) {
+
     ContentBlock cb = items.get(position);
-    ContentBlock9ViewHolder newHolder = (ContentBlock9ViewHolder) holder;
+    ContentBlock91ViewHolder newHolder = (ContentBlock91ViewHolder) holder;
+    holder.setIsRecyclable(false);
     newHolder.setStyle(style);
     newHolder.setupContentBlock(cb, offline);
   }

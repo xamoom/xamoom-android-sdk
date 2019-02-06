@@ -9,14 +9,17 @@
 package com.xamoom.android.xamoomcontentblocks.Adapters;
 
 import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.LruCache;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.ViewGroup;
 
 import com.xamoom.android.xamoomcontentblocks.ListManager;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock2ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
+import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock91ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.Resource.Content;
@@ -121,6 +124,24 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     mOnContentBlock3ViewHolderInteractionListener = null;
     mOnXamoomContentFragmentInteractionListener = null;
     super.onDetachedFromRecyclerView(recyclerView);
+  }
+
+  @Override
+  public void onViewAttachedToWindow(@NonNull RecyclerView.ViewHolder holder) {
+    super.onViewAttachedToWindow(holder);
+
+    if (holder instanceof ContentBlock91ViewHolder) {
+      ((ContentBlock91ViewHolder) holder).createMap(mContentBlocks.get(holder.getAdapterPosition()));
+    }
+  }
+
+  @Override
+  public void onViewDetachedFromWindow(@NonNull RecyclerView.ViewHolder holder) {
+    super.onViewDetachedFromWindow(holder);
+
+    if (holder instanceof ContentBlock91ViewHolder) {
+      ((ContentBlock91ViewHolder) holder).destroyMapView();
+    }
   }
 
   private void cleanViewHolders(RecyclerView recyclerView) {
