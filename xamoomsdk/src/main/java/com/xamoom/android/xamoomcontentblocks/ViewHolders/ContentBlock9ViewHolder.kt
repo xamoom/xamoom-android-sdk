@@ -68,6 +68,11 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
         mapView.setOnTouchListener { view, motionEvent ->
             view.parent.requestDisallowInterceptTouchEvent(true)
             mapView.onTouchEvent(motionEvent)
+
+            if (motionEvent.action == MotionEvent.ACTION_DOWN) {
+                closeBottomSheet = true
+            }
+            
             if (motionEvent.action == MotionEvent.ACTION_MOVE) {
                 closeBottomSheet = false
             }
