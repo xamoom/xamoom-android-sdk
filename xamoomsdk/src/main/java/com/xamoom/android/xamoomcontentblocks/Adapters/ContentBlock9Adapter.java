@@ -18,11 +18,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mapbox.mapboxsdk.maps.MapView;
 import com.xamoom.android.xamoomcontentblocks.ListManager;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
-import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock91ViewHolder;
-import com.xamoom.android.xamoomcontentblocks.ViewHolders.MapHolder;
+import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock9ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.Views.CustomMapView;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.EnduserApi;
@@ -35,7 +33,7 @@ import java.util.List;
 
 public class ContentBlock9Adapter implements AdapterDelegate<List<ContentBlock>> {
   private static final int BLOCK_TYPE = 9;
-  private MapHolder mapholder = null;
+  private ContentBlock9ViewHolder mapholder = null;
   private Bundle bundle = null;
 
   @Override
@@ -50,8 +48,8 @@ public class ContentBlock9Adapter implements AdapterDelegate<List<ContentBlock>>
       ViewGroup parent, Fragment fragment, EnduserApi enduserApi, String youtubeApiKey,
       LruCache bitmapCache, LruCache contentCache, boolean showContentLinks, ListManager listManager, AdapterDelegatesManager adapterDelegatesManager,
       ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener onContentBlock3ViewHolderInteractionListener, XamoomContentFragment.OnXamoomContentFragmentInteractionListener onXamoomContentFragmentInteractionListener, @Nullable ArrayList<String> urls) {
-    View v = LayoutInflater.from(fragment.getContext()).inflate(R.layout.content_block_9_1_layout, parent, false);
-    mapholder = new MapHolder(((CustomMapView) v), bundle, enduserApi, fragment, onXamoomContentFragmentInteractionListener);
+    View v = LayoutInflater.from(fragment.getContext()).inflate(R.layout.content_block_9_layout, parent, false);
+    mapholder = new ContentBlock9ViewHolder(((CustomMapView) v), bundle, enduserApi, fragment, onXamoomContentFragmentInteractionListener);
     mapholder.setShowContentLinks(showContentLinks);
     return mapholder;
   }
@@ -61,8 +59,7 @@ public class ContentBlock9Adapter implements AdapterDelegate<List<ContentBlock>>
                                @NonNull RecyclerView.ViewHolder holder, Style style, boolean offline) {
 
     ContentBlock cb = items.get(position);
-    MapHolder newHolder = (MapHolder) holder;
-    //newHolder.setIsRecyclable(false);
+    ContentBlock9ViewHolder newHolder = (ContentBlock9ViewHolder) holder;
     newHolder.setStyle(style);
     newHolder.setupContentBlock(cb, offline);
   }
@@ -78,12 +75,12 @@ public class ContentBlock9Adapter implements AdapterDelegate<List<ContentBlock>>
     }
   }
 
-  public void onViewAttachedToWindow(MapHolder holder) {
+  public void onViewAttachedToWindow(ContentBlock9ViewHolder holder) {
     holder.getMapView().onStart();
     holder.getMapView().onResume();
   }
 
-  public void onViewDettachToWindow(MapHolder holder) {
+  public void onViewDettachToWindow(ContentBlock9ViewHolder holder) {
     holder.getMapView().onPause();
     holder.getMapView().onStop();
   }

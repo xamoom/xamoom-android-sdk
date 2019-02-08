@@ -2,17 +2,12 @@ package com.xamoom.android.xamoomcontentblocks.ViewHolders
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.res.ColorStateList
-import android.graphics.Bitmap
 import android.graphics.Color
 import android.support.v4.app.Fragment
-import android.support.v4.util.ArrayMap
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.TextView
 import at.rags.morpheus.Error
-import com.google.android.gms.maps.GoogleMap
-import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.xamoom.android.xamoomsdk.APIListCallback
@@ -25,15 +20,7 @@ import com.xamoom.android.xamoomsdk.Resource.Style
 import java.util.*
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
-import android.graphics.BitmapFactory
-import android.os.Handler
-import android.support.design.widget.BottomSheetBehavior
-import android.support.design.widget.FloatingActionButton
-import android.util.Base64
 import android.util.Log
-import android.widget.Button
-import android.widget.ImageView
-import com.google.android.gms.maps.model.*
 import com.mapbox.geojson.Feature
 import com.mapbox.geojson.FeatureCollection
 import com.mapbox.geojson.Point
@@ -41,10 +28,8 @@ import com.mapbox.mapboxsdk.camera.CameraPosition
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.geometry.LatLngBounds
-import com.mapbox.mapboxsdk.style.expressions.Expression.zoom
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconOffset
-import com.xamoom.android.xamoomcontentblocks.XamoomMapFragment
 import com.xamoom.android.xamoomsdk.APICallback
 import kotlin.collections.ArrayList
 

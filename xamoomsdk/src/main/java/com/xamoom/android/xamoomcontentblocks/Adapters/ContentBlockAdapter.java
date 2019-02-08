@@ -14,14 +14,12 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.LruCache;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.ViewGroup;
 
 import com.xamoom.android.xamoomcontentblocks.ListManager;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock2ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
-import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock91ViewHolder;
-import com.xamoom.android.xamoomcontentblocks.ViewHolders.MapHolder;
+import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock9ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.Resource.Content;
@@ -135,8 +133,8 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   public void onViewAttachedToWindow(@NonNull RecyclerView.ViewHolder holder) {
     super.onViewAttachedToWindow(holder);
 
-    if (holder instanceof MapHolder) {
-      contentBlock9Adapter.onViewAttachedToWindow(((MapHolder) holder));
+    if (holder instanceof ContentBlock9ViewHolder) {
+      contentBlock9Adapter.onViewAttachedToWindow(((ContentBlock9ViewHolder) holder));
     }
   }
 
@@ -144,8 +142,8 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   public void onViewDetachedFromWindow(@NonNull RecyclerView.ViewHolder holder) {
     super.onViewDetachedFromWindow(holder);
 
-    if (holder instanceof MapHolder) {
-      contentBlock9Adapter.onViewDettachToWindow(((MapHolder) holder));
+    if (holder instanceof ContentBlock9ViewHolder) {
+      contentBlock9Adapter.onViewDettachToWindow(((ContentBlock9ViewHolder) holder));
     }
   }
 

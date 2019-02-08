@@ -14,30 +14,16 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
 import at.rags.morpheus.Error
 import com.bumptech.glide.Glide
-import com.mapbox.geojson.Feature
-import com.mapbox.geojson.FeatureCollection
-import com.mapbox.geojson.Point
-import com.mapbox.mapboxsdk.annotations.Icon
 import com.mapbox.mapboxsdk.annotations.IconFactory
 import com.mapbox.mapboxsdk.annotations.Marker
 import com.mapbox.mapboxsdk.annotations.MarkerOptions
 import com.mapbox.mapboxsdk.camera.CameraPosition
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.geometry.LatLngBounds
-import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
-import com.mapbox.mapboxsdk.style.layers.PropertyFactory
-import com.mapbox.mapboxsdk.style.layers.SymbolLayer
-import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.xamoom.android.xamoomcontentblocks.Views.CustomMapView
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment
 import com.xamoom.android.xamoomsdk.APICallback
@@ -52,11 +38,10 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 @SuppressLint("ClickableViewAccessibility")
-class MapHolder(val view: CustomMapView, bundle: Bundle?, val enduserApi: EnduserApi, fragment: Fragment, val listener: XamoomContentFragment.OnXamoomContentFragmentInteractionListener) : RecyclerView.ViewHolder(view), OnMapReadyCallback {
+class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val enduserApi: EnduserApi, fragment: Fragment, val listener: XamoomContentFragment.OnXamoomContentFragmentInteractionListener) : RecyclerView.ViewHolder(view), OnMapReadyCallback {
 
     private var mapBoxStyle: com.mapbox.mapboxsdk.maps.Style? = null
     private var mapBoxMap: MapboxMap? = null
-    private val PAGE_SIZE = 100
     private var mContext: Context? = null
     private var mContentBlock: ContentBlock? = null
     private var mBase64Icon: String? = null
@@ -107,7 +92,6 @@ class MapHolder(val view: CustomMapView, bundle: Bundle?, val enduserApi: Enduse
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 if (newState == BottomSheetBehavior.STATE_EXPANDED) {
                     setBottomPadding(bottomSheet.height)
-                    //zoomToMarker(mActiveMarker, true)
                 }
 
                 if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
@@ -134,7 +118,6 @@ class MapHolder(val view: CustomMapView, bundle: Bundle?, val enduserApi: Enduse
     }
 
     private fun setBottomPadding(padding: Int) {
-        //mapView.setPadding(0, 0, 0, padding)
         mapView.layoutParams = CoordinatorLayout.LayoutParams(mapView.layoutParams.width, padding)
     }
 
@@ -186,7 +169,7 @@ class MapHolder(val view: CustomMapView, bundle: Bundle?, val enduserApi: Enduse
         enduserApi.getStyle(systemId, object : APICallback<Style, List<Error>> {
             override fun finished(result: Style) {
                 mBase64Icon = result.customMarker
-                mapView.getMapAsync(this@MapHolder)
+                mapView.getMapAsync(this@ContentBlock9ViewHolder)
             }
 
             override fun error(error: List<Error>) {
@@ -213,14 +196,8 @@ class MapHolder(val view: CustomMapView, bundle: Bundle?, val enduserApi: Enduse
             var image = ContentBlock9ViewHolderUtils.getIcon(mBase64Icon, mContext)
             val icon = IconFactory.getInstance(mContext!!)
 
-            var coordinates: MutableList<Feature> = mutableListOf()
             var markers: ArrayList<Marker> = arrayListOf()
-            val latLngBounds = LatLngBounds.Builder()
             for (s in mSpotList) {
-                /** coordinates.add(Feature.fromGeometry(
-                        Point.fromLngLat(s.location.longitude, s.location.latitude))) */
-                latLngBounds.include(LatLng(s.location.latitude, s.location.longitude))
-
                 val marker = MarkerOptions()
                         .position(LatLng(s.location.latitude, s.location.longitude))
                         .title(s.name)
@@ -239,9 +216,9 @@ class MapHolder(val view: CustomMapView, bundle: Bundle?, val enduserApi: Enduse
 
             mapBoxStyle = style
             if (mSpotList.size > 1) {
-                mapBoxMap!!.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds.build(), 50))
+                mapBoxMap!!.animateCamera(ContentBlock9ViewHolderUtils.zoomToDisplayAllSpots(mSpotList, 50))
             } else {
-                val position = CameraPosition.Builder().target(com.mapbox.mapboxsdk.geometry.LatLng(mSpotList.get(0).location.latitude, mSpotList.get(0).location.longitude)).zoom(10.0).tilt(20.0).build()
+                val position = CameraPosition.Builder().target(com.mapbox.mapboxsdk.geometry.LatLng(mSpotList[0].location.latitude, mSpotList[0].location.longitude)).zoom(10.0).tilt(0.0).build()
                 mapBoxMap!!.animateCamera(CameraUpdateFactory.newCameraPosition(position))
             }
         }
@@ -250,7 +227,7 @@ class MapHolder(val view: CustomMapView, bundle: Bundle?, val enduserApi: Enduse
     private fun showSpotDetails(spot: Spot) {
         mActiveSpot = spot
 
-        val position = CameraPosition.Builder().target(com.mapbox.mapboxsdk.geometry.LatLng(spot.location.latitude - 0.0015, spot.location.longitude)).zoom(16.0).tilt(20.0).build()
+        val position = CameraPosition.Builder().target(com.mapbox.mapboxsdk.geometry.LatLng(spot.location.latitude, spot.location.longitude)).zoom(16.0).tilt(0.0).build()
         mapBoxMap!!.animateCamera(CameraUpdateFactory.newCameraPosition(position))
         bottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
 
@@ -269,6 +246,7 @@ class MapHolder(val view: CustomMapView, bundle: Bundle?, val enduserApi: Enduse
         } else {
             spotContentButton.visibility = View.GONE
         }
+
         fab.setOnClickListener {
             val lat = spot.location.latitude
             val lon = spot.location.longitude
@@ -281,5 +259,9 @@ class MapHolder(val view: CustomMapView, bundle: Bundle?, val enduserApi: Enduse
             }
         }
         fab.visibility = View.VISIBLE
+    }
+
+    companion object {
+        val PAGE_SIZE = 100
     }
 }
