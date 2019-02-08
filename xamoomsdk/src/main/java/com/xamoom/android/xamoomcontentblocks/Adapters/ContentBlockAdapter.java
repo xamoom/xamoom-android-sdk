@@ -9,6 +9,7 @@
 package com.xamoom.android.xamoomcontentblocks.Adapters;
 
 import android.graphics.Bitmap;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.LruCache;
@@ -20,6 +21,7 @@ import com.xamoom.android.xamoomcontentblocks.ListManager;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock2ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock91ViewHolder;
+import com.xamoom.android.xamoomcontentblocks.ViewHolders.MapHolder;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.Resource.Content;
@@ -47,6 +49,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   private boolean showContentLinks;
   private boolean offline;
   private ArrayList<String> urlScheme;
+  private ContentBlock9Adapter contentBlock9Adapter;
 
   private String mLinkColor = "00F";
   private String mBackgroundColor = "000";
@@ -77,6 +80,8 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   }
 
   private void setupAdapters() {
+
+    contentBlock9Adapter = new ContentBlock9Adapter();
     mDelegatesManager.addDelegate(-1, new ContentBlockHeaderAdapter());
     mDelegatesManager.addDelegate(0, new ContentBlock0Adapter());
     mDelegatesManager.addDelegate(1, new ContentBlock1Adapter());
@@ -87,7 +92,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     mDelegatesManager.addDelegate(6, new ContentBlock6Adapter());
     mDelegatesManager.addDelegate(7, new ContentBlock7Adapter());
     mDelegatesManager.addDelegate(8, new ContentBlock8Adapter());
-    mDelegatesManager.addDelegate(9, new ContentBlock9Adapter());
+    mDelegatesManager.addDelegate(9, contentBlock9Adapter);
     mDelegatesManager.addDelegate(11, new ContentBlock11Adapter());
   }
 
@@ -130,8 +135,8 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   public void onViewAttachedToWindow(@NonNull RecyclerView.ViewHolder holder) {
     super.onViewAttachedToWindow(holder);
 
-    if (holder instanceof ContentBlock91ViewHolder) {
-      ((ContentBlock91ViewHolder) holder).createMap(mContentBlocks.get(holder.getAdapterPosition()));
+    if (holder instanceof MapHolder) {
+      contentBlock9Adapter.onViewAttachedToWindow(((MapHolder) holder));
     }
   }
 
@@ -139,8 +144,8 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   public void onViewDetachedFromWindow(@NonNull RecyclerView.ViewHolder holder) {
     super.onViewDetachedFromWindow(holder);
 
-    if (holder instanceof ContentBlock91ViewHolder) {
-      ((ContentBlock91ViewHolder) holder).destroyMapView();
+    if (holder instanceof MapHolder) {
+      contentBlock9Adapter.onViewDettachToWindow(((MapHolder) holder));
     }
   }
 
@@ -154,6 +159,18 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         contentBlock2ViewHolder.unregisterBroadcast();
       }
     }
+  }
+
+  public void onSaveInstanceState(Bundle bundle) {
+    contentBlock9Adapter.onSavedInstanceState(bundle);
+  }
+
+  public void onDestroy() {
+    contentBlock9Adapter.onDestroy();
+  }
+
+  public void onLowMemory() {
+    contentBlock9Adapter.onLowMemory();
   }
 
   public AdapterDelegatesManager getDelegatesManager() {
@@ -199,5 +216,9 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
   public void setContentBlockUrlScheme(ArrayList<String> url) {
     urlScheme = url;
+  }
+
+  public void setShowContentLinks(boolean showContentLinks) {
+    this.showContentLinks = showContentLinks;
   }
 }

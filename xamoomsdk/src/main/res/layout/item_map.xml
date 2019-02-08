@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootLayout"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/contentblock_to_contentblock_margin"
+    android:theme="@style/ContentBlocksTheme">
+
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/contentblock_title_size"
+        android:textColor="@color/black"
+        android:layout_marginStart="@dimen/contentblock_standard_padding"
+        android:layout_marginEnd="@dimen/contentblock_standard_padding"
+        android:layout_marginBottom="@dimen/contentblock_children_margin"
+        />
+
+    <com.mapbox.mapboxsdk.maps.MapView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@id/mapImageView"
+        android:layout_marginTop="40dp"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:layout_below="@+id/titleTextView"
+        app:mapbox_renderTextureMode="true"
+        app:mapbox_cameraZoom="7"/>
+
+    <LinearLayout
+        android:id="@+id/bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:clipToPadding="true"
+        android:background="@android:color/white"
+        android:layout_alignBottom="@+id/mapImageView"
+        app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+
+        <LinearLayout
+            android:id="@+id/map_detail_inner_view"
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            android:orientation="vertical"
+            android:layout_marginTop="8dp"
+            android:background="@android:color/white">
+
+            <TextView
+                android:id="@+id/spot_title_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:text="vdbbefbsbgbfgfgn"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end"/>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_marginBottom="8dp">
+
+                <ImageView
+                    android:id="@+id/spot_image_view"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:src="@drawable/ic_navigation"
+                    android:scaleType="centerCrop"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:weightSum="5">
+
+                    <TextView
+                        android:id="@+id/spot_excerpt_text_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="4"
+                        android:ellipsize="end"
+                        android:layout_weight="4"
+                        android:text="wlrngpwn wpk "
+                        android:textColor="@android:color/black"
+                        />
+
+                    <Button
+                        android:id="@+id/spot_content_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minHeight="40dp"
+                        android:maxHeight="70dp"
+                        android:layout_gravity="end|bottom"
+                        android:layout_marginTop="4dp"
+                        android:layout_weight="1"
+                        android:textStyle="bold"
+                        android:text="@string/open"
+                        android:textColor="@android:color/black"
+                        style="@style/Widget.AppCompat.Button.Borderless"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/spot_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_anchor="@id/bottom_sheet"
+        app:layout_anchorGravity="right|end"
+        android:src="@drawable/ic_navigation"
+        android:tint="@android:color/white"
+        app:rippleColor="@color/linkblock_facebook_background_color"
+        android:layout_marginEnd="16dp"
+        />
+
+</android.support.design.widget.CoordinatorLayout>

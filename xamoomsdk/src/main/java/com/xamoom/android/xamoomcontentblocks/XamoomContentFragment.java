@@ -123,6 +123,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
     if (getArguments() != null) {
       contentBlockUrlScheme = getArguments().getStringArrayList(URL_SCHEME);
       mContentBlockAdapter.setContentBlockUrlScheme(contentBlockUrlScheme);
+      mContentBlockAdapter.setShowContentLinks(showSpotMapContentLinks);
       mYoutubeApiKey = getArguments().getString(YOUTUBE_API_KEY);
       mContentBlockAdapter.setYoutubeApiKey(mYoutubeApiKey);
     }
@@ -145,6 +146,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
       mContentBlockAdapter.setEnduserApi(mEnduserApi);
       mContentBlockAdapter.setOffline(offline);
       mContentBlockAdapter.setStyle(style);
+      mContentBlockAdapter.setShowContentLinks(showSpotMapContentLinks);
     }
   }
 
@@ -194,6 +196,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
     outState.putInt(BACKGROUND_COLOR, mBackgroundColor);
 
     ContentFragmentCache.getSharedInstance().save(mContentID, mContentBlocks);
+    mContentBlockAdapter.onSaveInstanceState(outState);
   }
 
   @Override
@@ -202,12 +205,19 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
       mRecyclerView.setAdapter(null);
       mRecyclerView.setLayoutManager(null);
     }
+    mContentBlockAdapter.onDestroy();
     mContentBlockAdapter = null;
     mRecyclerView = null;
     mContent = null;
     mContentBlocks = null;
 
     super.onDestroy();
+  }
+
+  @Override
+  public void onLowMemory() {
+    super.onLowMemory();
+    mContentBlockAdapter.onLowMemory();
   }
 
   /**

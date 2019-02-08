@@ -1,29 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:mapbox="http://schemas.android.com/apk/res-auto"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/rootLayout"
-    android:orientation="vertical"
+<com.xamoom.android.xamoomcontentblocks.Views.CustomMapView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/contentblock_to_contentblock_margin"
-    android:theme="@style/ContentBlocksTheme">
-
-    <TextView
-        android:id="@+id/titleTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/contentblock_title_size"
-        android:textColor="@color/black"
-        android:layout_marginStart="@dimen/contentblock_standard_padding"
-        android:layout_marginEnd="@dimen/contentblock_standard_padding"
-        android:layout_marginBottom="@dimen/contentblock_children_margin"
-        />
-
-    <com.mapbox.mapboxsdk.maps.MapView
-        android:id="@+id/mapImageView"
-        android:layout_width="match_parent"
-        android:layout_height="350dp"
-        mapbox:mapbox_cameraZoom="15" />
-
-</android.support.design.widget.CoordinatorLayout>
+    android:layout_height="wrap_content" />

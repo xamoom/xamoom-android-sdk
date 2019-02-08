@@ -210,6 +210,7 @@ public class MainActivity extends AppCompatActivity
         ArrayList<String> urls = new ArrayList<>();
         urls.add("google.com");
         XamoomContentFragment xamoomFragment = XamoomContentFragment.newInstance(getResources().getString(R.string.youtube_key), urls); //create new instance
+        xamoomFragment.setShowSpotMapContentLinks(true);
         xamoomFragment.setEnduserApi(mEnduserApi);
         xamoomFragment.setDisplayAllStoreLinks(true);
         xamoomFragment.setContent(result.get(0), true, mOffline);
