@@ -221,7 +221,18 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
                 val position = CameraPosition.Builder().target(com.mapbox.mapboxsdk.geometry.LatLng(mSpotList[0].location.latitude, mSpotList[0].location.longitude)).zoom(10.0).tilt(0.0).build()
                 mapBoxMap!!.animateCamera(CameraUpdateFactory.newCameraPosition(position))
             }
+
+            enableLocationComponent(style)
         }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun enableLocationComponent(loadedMapStyle: com.mapbox.mapboxsdk.maps.Style) {
+        val locationComponent = mapBoxMap!!.getLocationComponent()
+
+        locationComponent.activateLocationComponent(mContext!!, loadedMapStyle)
+
+        locationComponent.setLocationComponentEnabled(true)
     }
 
     private fun showSpotDetails(spot: Spot) {
