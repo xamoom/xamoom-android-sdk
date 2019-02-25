@@ -36,7 +36,6 @@ public class ContentBlock0ViewHolder extends RecyclerView.ViewHolder {
     mTitleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
     mHtmlTextView = (HtmlTextView) itemView.findViewById(R.id.htmlTextView);
     mHtmlTextView.setRemoveTrailingNewLines(true);
-
     childrenMargin = itemView.getContext().getResources().getDimensionPixelSize(R.dimen.contentblock_children_margin);
   }
 

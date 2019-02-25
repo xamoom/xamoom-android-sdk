@@ -61,7 +61,11 @@ public class ContentHeaderViewHolder extends RecyclerView.ViewHolder {
       mCoverImageCopyRight.setTextColor(Color.parseColor(mStyle.getForegroundFontColor()));
     }
 
-    mCoverImageCopyRight.setText(contentblock.getCoverImageCopyRight());
+    if (contentblock.getCoverImageCopyRight() != null && !contentblock.getCoverImageCopyRight().equals("")) {
+      mCoverImageCopyRight.setText(contentblock.getCoverImageCopyRight());
+    } else {
+      mCoverImageCopyRight.setVisibility(View.GONE);
+    }
   }
 
   public void setLinkColor(String mLinkColor) {
