@@ -1,10 +1,10 @@
 /*
-* Copyright (c) 2017 xamoom GmbH <apps@xamoom.com>
-*
-* Licensed under the MIT License (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at the root of this project.
-*/
+ * Copyright (c) 2017 xamoom GmbH <apps@xamoom.com>
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at the root of this project.
+ */
 
 package com.xamoom.android.xamoomsdk;
 
@@ -92,11 +92,13 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
   private String ephemeralId;
   private String authorizationId;
   private String apiUrl;
+  private String majorId;
 
-  public EnduserApi(@NonNull final String apikey, @NonNull Context context) {
+  public EnduserApi(@NonNull final String apikey, @NonNull Context context, @Nullable String majorId) {
     this.apiKey = apikey;
     this.context = context;
     this.offlineEnduserApi = new OfflineEnduserApi(context);
+    this.majorId = majorId;
 
     apiUrl = API_URL_PROD;
 
@@ -104,12 +106,15 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     initMorpheus();
     initVars();
     initSharedPreferences();
+
+    sharedInstance = this;
   }
 
-  public EnduserApi(@NonNull final String apikey, @NonNull Context context, boolean isProduction) {
+  public EnduserApi(@NonNull final String apikey, @NonNull Context context, boolean isProduction, @Nullable String majorId) {
     this.apiKey = apikey;
     this.context = context;
     this.offlineEnduserApi = new OfflineEnduserApi(context);
+    this.majorId = majorId;
 
     if (isProduction) {
       apiUrl = API_URL_PROD;
@@ -121,6 +126,8 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     initMorpheus();
     initVars();
     initSharedPreferences();
+
+    sharedInstance = this;
   }
 
   public EnduserApi(@NonNull Retrofit retrofit, @NonNull Context context) {
@@ -128,10 +135,10 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     this.context = context;
     this.offlineEnduserApi = new OfflineEnduserApi(context);
 
-
     initMorpheus();
     initVars();
     initSharedPreferences();
+    sharedInstance = this;
   }
 
   /*
@@ -151,10 +158,10 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     OkHttpClient httpClient = builder.build();
 
     Retrofit retrofit = new Retrofit.Builder()
-        .client(httpClient)
-        .baseUrl(apiUrl)
-        .addConverterFactory(ScalarsConverterFactory.create())
-        .build();
+            .client(httpClient)
+            .baseUrl(apiUrl)
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .build();
     enduserApiInterface = retrofit.create(EnduserApiInterface.class);
   }
 
@@ -186,9 +193,9 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     }
     // generate unique name for preferences => {appid}.xamoomsdk.preferences
     String preferencesName = String.format("%s.xamoomsdk.preferences",
-        context.getApplicationInfo().loadLabel(context.getPackageManager()).toString());
+            context.getApplicationInfo().loadLabel(context.getPackageManager()).toString());
     sharedPref = context.getSharedPreferences(preferencesName,
-        Context.MODE_PRIVATE);
+            Context.MODE_PRIVATE);
   }
 
   /**
@@ -211,7 +218,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
    * @return Used call object
    */
   public Call getContent(String contentID, EnumSet<ContentFlags> contentFlags, APICallback<Content,
-      List<at.rags.morpheus.Error>> callback) {
+          List<at.rags.morpheus.Error>> callback) {
     return getContent(contentID, contentFlags, null, callback);
   }
 
@@ -232,7 +239,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     }
 
     Map<String, String> params = UrlUtil.addContentParameter(UrlUtil.getUrlParameter(language),
-        contentFlags);
+            contentFlags);
 
     HashMap<String, String> headers = new HashMap<>(3);
     if (getEphemeralId() != null) {
@@ -257,7 +264,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
    * @return Used call object
    */
   public Call getContentByLocationIdentifier(String locationIdentifier, APICallback<Content,
-      List<Error>> callback) {
+          List<Error>> callback) {
     return getContentByLocationIdentifier(locationIdentifier, null, callback);
   }
 
@@ -351,7 +358,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
    * @return Used call object
    */
   public Call getContentByBeacon(int major, int minor, APICallback<Content, List<Error>>
-      callback) {
+          callback) {
     return getContentByLocationIdentifier(String.format("%s|%s", major, minor), callback);
   }
 
@@ -385,7 +392,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
                                  HashMap<String, Object> conditions,
                                  APICallback<Content, List<Error>> callback) {
     return getContentByLocationIdentifier(String.format("%s|%s", major, minor), contentFlags,
-        conditions, callback);
+            conditions, callback);
   }
 
   /**
@@ -404,7 +411,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
                                  HashMap<String, Object> conditions,
                                  ContentReason reason, APICallback<Content, List<Error>> callback) {
     return getContentByLocationIdentifier(String.format("%s|%s", major, minor),contentFlags,
-        conditions, reason, callback);
+            conditions, reason, callback);
   }
 
   /**
@@ -420,7 +427,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
   public Call getContentsByLocation(Location location, int pageSize, @Nullable String cursor,
                                     final EnumSet<ContentSortFlags> sortFlags,
                                     APIListCallback<List<Content>,
-      List<Error>> callback) {
+                                            List<Error>> callback) {
 
     if (offline) {
       offlineEnduserApi.getContentsByLocation(location, 10, null, null, null);
@@ -428,13 +435,13 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     }
 
     Map<String, String> params = UrlUtil.addContentSortingParameter(UrlUtil.getUrlParameter(language),
-        sortFlags);
+            sortFlags);
     params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
     params.put("filter[lat]", Double.toString(location.getLatitude()));
     params.put("filter[lon]", Double.toString(location.getLongitude()));
 
     Call<ResponseBody> call = enduserApiInterface.getContents(
-        getHeaders(), params);
+            getHeaders(), params);
     callHandler.enqueListCall(call, callback);
     return call;
   }
@@ -471,16 +478,16 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
                                 APIListCallback<List<Content>, List<Error>> callback) {
     if (filter != null) {
       filter = new Filter.FilterBuilder()
-          .name(filter.getName())
-          .tags((ArrayList<String>) tags)
-          .fromDate(filter.getFromDate())
-          .toDate(filter.getToDate())
-          .relatedSpotId(filter.getRelatedSpotId())
-          .build();
+              .name(filter.getName())
+              .tags((ArrayList<String>) tags)
+              .fromDate(filter.getFromDate())
+              .toDate(filter.getToDate())
+              .relatedSpotId(filter.getRelatedSpotId())
+              .build();
     }else {
       filter = new Filter.FilterBuilder()
-          .tags((ArrayList<String>) tags)
-          .build();
+              .tags((ArrayList<String>) tags)
+              .build();
     }
 
     if (offline) {
@@ -489,7 +496,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     }
 
     Map<String, String> params = UrlUtil.addContentSortingParameter(UrlUtil.getUrlParameter(language),
-        sortFlags);
+            sortFlags);
     params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
     params = UrlUtil.addFilters(params, filter);
 
@@ -531,16 +538,16 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
                                    APIListCallback<List<Content>, List<Error>> callback) {
     if (filter != null) {
       filter = new Filter.FilterBuilder()
-          .name(name)
-          .tags(filter.getTags())
-          .fromDate(filter.getFromDate())
-          .toDate(filter.getToDate())
-          .relatedSpotId(filter.getRelatedSpotId())
-          .build();
+              .name(name)
+              .tags(filter.getTags())
+              .fromDate(filter.getFromDate())
+              .toDate(filter.getToDate())
+              .relatedSpotId(filter.getRelatedSpotId())
+              .build();
     } else {
       filter = new Filter.FilterBuilder()
-          .name(name)
-          .build();
+              .name(name)
+              .build();
     }
 
     if (offline) {
@@ -549,7 +556,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     }
 
     Map<String, String> params = UrlUtil.addContentSortingParameter(UrlUtil.getUrlParameter(language),
-        sortFlags);
+            sortFlags);
     params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
     params = UrlUtil.addFilters(params, filter);
 
@@ -573,24 +580,24 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
    */
   public Call getContentByDates(@Nullable Date fromDate, @Nullable Date toDate,
                                 @Nullable String relatedSpotId, int pageSize,
-                           @Nullable String cursor, EnumSet<ContentSortFlags> sortFlags,
-                           @Nullable Filter filter,
-                           APIListCallback<List<Content>, List<Error>> callback) {
+                                @Nullable String cursor, EnumSet<ContentSortFlags> sortFlags,
+                                @Nullable Filter filter,
+                                APIListCallback<List<Content>, List<Error>> callback) {
 
     if (filter != null) {
       filter = new Filter.FilterBuilder()
-          .name(filter.getName())
-          .tags(filter.getTags())
-          .fromDate(fromDate)
-          .toDate(toDate)
-          .relatedSpotId(relatedSpotId)
-          .build();
+              .name(filter.getName())
+              .tags(filter.getTags())
+              .fromDate(fromDate)
+              .toDate(toDate)
+              .relatedSpotId(relatedSpotId)
+              .build();
     } else {
       filter = new Filter.FilterBuilder()
-          .fromDate(fromDate)
-          .toDate(toDate)
-          .relatedSpotId(relatedSpotId)
-          .build();
+              .fromDate(fromDate)
+              .toDate(toDate)
+              .relatedSpotId(relatedSpotId)
+              .build();
     }
 
     if (offline) {
@@ -599,7 +606,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     }
 
     Map<String, String> params = UrlUtil.addContentSortingParameter(UrlUtil.getUrlParameter(language),
-        sortFlags);
+            sortFlags);
     params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
     params = UrlUtil.addFilters(params, filter);
 
@@ -697,12 +704,12 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
                                  APIListCallback<List<Spot>, List<Error>> callback) {
     if (offline) {
       offlineEnduserApi.getSpotsByLocation(location, radius, pageSize, cursor,
-          spotFlags, sortFlags, callback);
+              spotFlags, sortFlags, callback);
       return null;
     }
 
     Map<String, String> params = UrlUtil.addSpotParameter(UrlUtil.getUrlParameter(language),
-        spotFlags);
+            spotFlags);
     params = UrlUtil.addSpotSortingParameter(params, sortFlags);
     params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
     params.put("filter[lat]", Double.toString(location.getLatitude()));
@@ -748,12 +755,12 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
                              APIListCallback<List<Spot>, List<Error>> callback) {
     if (offline) {
       offlineEnduserApi.getSpotsByTags(tags, pageSize, cursor, spotFlags, sortFlags,
-          callback);
+              callback);
       return null;
     }
 
     Map<String, String> params = UrlUtil.addSpotParameter(UrlUtil.getUrlParameter(language),
-        spotFlags);
+            spotFlags);
     params = UrlUtil.addSpotSortingParameter(params, sortFlags);
     params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
     params.put("filter[tags]", JsonListUtil.listToJsonArray(tags, ","));
@@ -780,12 +787,12 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
                                 APIListCallback<List<Spot>, List<Error>> callback) {
     if (offline) {
       offlineEnduserApi.searchSpotsByName(name, pageSize, cursor, spotFlags,
-          sortFlags, callback);
+              sortFlags, callback);
       return null;
     }
 
     Map<String, String> params = UrlUtil.addSpotParameter(UrlUtil.getUrlParameter(language),
-        spotFlags);
+            spotFlags);
     params = UrlUtil.addSpotSortingParameter(params, sortFlags);
     params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
     params.put("filter[name]", name);
@@ -946,7 +953,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
   @Override
   public void gotEphemeralId(String ephemeralId) {
     if (getEphemeralId() == null ||
-        !getEphemeralId().equals(ephemeralId)) {
+            !getEphemeralId().equals(ephemeralId)) {
       this.ephemeralId = ephemeralId;
 
       SharedPreferences.Editor editor = sharedPref.edit();
@@ -958,7 +965,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
   @Override
   public void gotAuthorizationId(String authorizationId) {
     if (getAuthorizationId() == null ||
-        !getAuthorizationId().equals(authorizationId)) {
+            !getAuthorizationId().equals(authorizationId)) {
       this.authorizationId = authorizationId;
 
       SharedPreferences.Editor editor = sharedPref.edit();
@@ -1007,7 +1014,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     String sdkversion = "";
     try {
       ApplicationInfo ai = context.getPackageManager().getApplicationInfo(context.getPackageName(),
-          PackageManager.GET_META_DATA);
+              PackageManager.GET_META_DATA);
       Bundle bundle = ai.metaData;
       sdkversion = bundle.getString("com.xamoom.android.xamoomsdk.version");
     } catch (PackageManager.NameNotFoundException e) {
@@ -1021,10 +1028,10 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     appName = appName.replaceAll("[^\\p{ASCII}]", "");
 
     String builder = "Xamoom SDK Android" +
-        "|" +
-        appName +
-        "|" +
-        sdkversion;
+            "|" +
+            appName +
+            "|" +
+            sdkversion;
 
     return builder;
   }
@@ -1065,13 +1072,13 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
    * @param apikey Your xamoom api key.
    * @return EnduserApi instance.
    */
-  public static EnduserApi getSharedInstance(@NonNull String apikey, Context context) {
+  public static EnduserApi getSharedInstance(@NonNull String apikey, Context context, @Nullable String majorId) {
     if (apikey == null) {
       throw new NullPointerException("Apikey should not be null.");
     }
 
     if (EnduserApi.sharedInstance == null) {
-      EnduserApi.sharedInstance = new EnduserApi(apikey, context);
+      EnduserApi.sharedInstance = new EnduserApi(apikey, context, majorId);
     }
     return EnduserApi.sharedInstance;
   }
@@ -1083,7 +1090,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
   public static EnduserApi getSharedInstance() {
     if (EnduserApi.sharedInstance == null) {
       throw new NullPointerException("Instance is null. Please use getSharedInstance(apikey, context) " +
-          "or setSharedInstance");
+              "or setSharedInstance");
     }
     return EnduserApi.sharedInstance;
   }
@@ -1114,5 +1121,13 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
    */
   public void setOffline(boolean offline) {
     this.offline = offline;
+  }
+
+  public String getMajorId() {
+    return majorId;
+  }
+
+  public void setMajorId(String majorId) {
+    this.majorId = majorId;
   }
 }

@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 def versionString = "3.10.8"
 
@@ -73,6 +74,14 @@ dependencies {
 	implementation 'com.google.android.gms:play-services-location:11.8.0'
 	implementation 'com.xamoom.android:htmltextview:1.0.9'
 	implementation 'com.squareup.retrofit2:converter-scalars:2.1.0'
+	implementation 'com.google.firebase:firebase-core:11.8.0'
+	implementation 'com.google.firebase:firebase-messaging:11.8.0'
+    implementation 'com.google.dagger:dagger:2.15'
+    implementation 'com.google.dagger:dagger-android:2.15'
+    implementation 'com.google.dagger:dagger-android-support:2.15'
+	kapt 'com.google.dagger:dagger-compiler:2.15'
+	kapt 'com.google.dagger:dagger-android-processor:2.15'
+	implementation 'org.altbeacon:android-beacon-library:2.15'
 }
 
 ext {

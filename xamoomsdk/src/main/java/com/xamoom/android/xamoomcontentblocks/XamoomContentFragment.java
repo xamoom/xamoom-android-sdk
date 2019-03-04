@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.DividerItemDecoration;
@@ -68,6 +69,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   private static final String STYLE = "Style";
   private static final String BACKGROUND_COLOR = "BackgroundColor";
   private static final String URL_SCHEME = "UrlScheme";
+  private static final String BEACON_MAJOR = "beaconMajor";
 
   private static final int WRITE_STORAGE_PERMISSION = 0;
 
@@ -89,9 +91,10 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   private boolean showSpotMapContentLinks = false;
   private boolean isAnimated = false;
   private ArrayList<String> contentBlockUrlScheme;
+  private String majorId;
 
-  public static XamoomContentFragment newInstance(@NonNull String youtubeApiKey) {
-    return newInstance(youtubeApiKey, null);
+  public static XamoomContentFragment newInstance(@NonNull String youtubeApiKey, @Nullable String beaconMajorId) {
+    return newInstance(youtubeApiKey, null, beaconMajorId);
   }
 
   /**
@@ -100,12 +103,13 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
    *
    * @return XamoomContentFragment Returns an Instance of XamoomContentFragment
    */
-  public static XamoomContentFragment newInstance(@NonNull String youtubeApiKey, ArrayList<String> url) {
+  public static XamoomContentFragment newInstance(@NonNull String youtubeApiKey, ArrayList<String> url, @Nullable String beaconMajorId) {
     XamoomContentFragment fragment = new XamoomContentFragment();
     Bundle args = new Bundle();
 
     args.putString(YOUTUBE_API_KEY, youtubeApiKey);
     args.putStringArrayList(URL_SCHEME, url);
+    args.putString(BEACON_MAJOR, beaconMajorId);
 
     fragment.setArguments(args);
 
@@ -125,12 +129,13 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
       mContentBlockAdapter.setContentBlockUrlScheme(contentBlockUrlScheme);
       mYoutubeApiKey = getArguments().getString(YOUTUBE_API_KEY);
       mContentBlockAdapter.setYoutubeApiKey(mYoutubeApiKey);
+      this.majorId = getArguments().getString(BEACON_MAJOR);
     }
 
     if (savedInstanceState != null) {
       mYoutubeApiKey = savedInstanceState.getString(YOUTUBE_API_KEY);
       showSpotMapContentLinks = savedInstanceState.getBoolean(SHOW_SPOT_MAP_CONTENT_LINKS);
-      mEnduserApi = new EnduserApi(savedInstanceState.getString(ENDUSER_API_KEY), getContext());
+      mEnduserApi = new EnduserApi(savedInstanceState.getString(ENDUSER_API_KEY), getContext(), this.majorId);
       mContentID = savedInstanceState.getString(CONTENT_ID);
       mListState = savedInstanceState.getParcelable(LIST_STATE);
       offline = savedInstanceState.getBoolean(OFFLINE);
