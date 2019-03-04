@@ -1,4 +1,7 @@
 # Changelog
+## [3.10.8](https://github.com/xamoom/xamoom-ios-sdk/compare/3.10.6...3.10.7) - 25.02.2019
+- UI improvements
+
 ## [3.10.7](https://github.com/xamoom/xamoom-ios-sdk/compare/3.10.6...3.10.7) - 28.01.2019
 - Added web view for open links in app (with given url format)
 - Added copyright label for coverimage
