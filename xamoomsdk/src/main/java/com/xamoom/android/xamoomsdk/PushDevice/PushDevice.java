@@ -32,13 +32,16 @@ public class PushDevice extends Resource {
   private String createdAt;
   @SerializedName("language")
   private String language;
+  @SerializedName("sdk-version")
+  private String sdkVersion;
 
-  public PushDevice(String token, Map<String, Float> location, String appVersion, String appId) {
+  public PushDevice(String token, Map<String, Float> location, String appVersion, String appId, String sdkVersion) {
     this.uid = token;
     this.os = "Android";
     this.appVersion = appVersion;
     this.appId = appId;
     this.location = location;
+    this.sdkVersion = sdkVersion;
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
     sdf.setTimeZone(TimeZone.getTimeZone("UTC"));

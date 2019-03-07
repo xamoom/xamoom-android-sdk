@@ -7,6 +7,7 @@ import com.google.firebase.messaging.RemoteMessage
 import javax.inject.Inject
 import android.support.v4.content.LocalBroadcastManager
 import android.content.Intent
+import android.util.Log
 import com.xamoom.android.xamoomsdk.EnduserApi
 import com.xamoom.android.xamoomsdk.PushDevice.PushDeviceUtil
 
@@ -34,10 +35,17 @@ class PushService: FirebaseMessagingService() {
 
             LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
         } else {
+
             sharedPreferences = applicationContext.getSharedPreferences(PushDeviceUtil.PREFES_NAME,
                     Context.MODE_PRIVATE)
-            EnduserApi.getSharedInstance().pushDevice(PushDeviceUtil(sharedPreferences))
-            XamoomBeaconService.getInstance(applicationContext).startBeaconService(EnduserApi.getSharedInstance().majorId)
+
+            val enduserApi = EnduserApi.getSharedInstance(applicationContext)
+            if (enduserApi != null) {
+                enduserApi.pushDevice(PushDeviceUtil(sharedPreferences))
+                XamoomBeaconService.getInstance(applicationContext).startBeaconService(enduserApi.majorId)
+            } else {
+                Log.w("xamoom PushService", "Xamoom EnduserApi is not initialized")
+            }
         }
     }
 }

@@ -63,7 +63,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
  * EnduserApi is the main part of the XamoomSDK. You can use it to send api request to
  * the xamoom cloud.
  *
- * Use {@link #EnduserApi(String, Context)} to initialize.
+ * Use {@link #EnduserApi(String, Context, String)} to initialize.
  *
  * Change the requested language by  setting {@link #language}. The users language is saved
  * in {@link #systemLanguage}.
@@ -77,6 +77,11 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
   private static final String API_URL_PROD = "https://api.xamoom.net";
   private static final String PREF_EPHEMERAL_ID = "com.xamoom.android.xamoomsdk.ephemeralid";
   private static final String PREF_AUTHORIZATION_ID = "com.xamoom.android.xamoomsdk.authorization";
+
+
+  public static final String PREF_ENDUSER_API_KEY = "com.xamoom.android.xamoomsdk.api.key";
+  public static final String PREF_ENDUSER_API_KEY_IS_PRODUCTION = "com.xamoom.android.xamoomsdk.is.production";
+  public static final String PREF_ENDUSER_API_KEY_MAJOR_ID = "com.xamoom.android.xamoomsdk.major.id";
 
   private static EnduserApi sharedInstance;
 
@@ -108,6 +113,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     initSharedPreferences();
 
     sharedInstance = this;
+    preserveEnduserApi(apiKey, true, majorId);
   }
 
   public EnduserApi(@NonNull final String apikey, @NonNull Context context, boolean isProduction, @Nullable String majorId) {
@@ -128,6 +134,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     initSharedPreferences();
 
     sharedInstance = this;
+    preserveEnduserApi(apiKey, isProduction, majorId);
   }
 
   public EnduserApi(@NonNull Retrofit retrofit, @NonNull Context context) {
@@ -140,6 +147,27 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     initSharedPreferences();
     sharedInstance = this;
   }
+
+    private void preserveEnduserApi(String key, boolean isProduction, @Nullable String beaconMajorId) {
+        sharedPref.edit().putString(PREF_ENDUSER_API_KEY, key).putBoolean(PREF_ENDUSER_API_KEY_IS_PRODUCTION, isProduction).putString(PREF_ENDUSER_API_KEY_MAJOR_ID, beaconMajorId).apply();
+    }
+
+    private static EnduserApi restoreEnduserApi(Context context) {
+        String preferencesName = String.format("%s.xamoomsdk.preferences",
+                context.getApplicationInfo().loadLabel(context.getPackageManager()).toString());
+        SharedPreferences sharedPref = context.getSharedPreferences(preferencesName,
+                Context.MODE_PRIVATE);
+
+        String apiKey = sharedPref.getString(PREF_ENDUSER_API_KEY, null);
+        Boolean isProduction = sharedPref.getBoolean(PREF_ENDUSER_API_KEY_IS_PRODUCTION, true);
+        String majorId = sharedPref.getString(PREF_ENDUSER_API_KEY_MAJOR_ID, null);
+
+        if (apiKey == null) {
+            return null;
+        }
+
+        return new EnduserApi(apiKey, context, isProduction, majorId);
+    }
 
   /*
   protected EnduserApi(Parcel in) {
@@ -882,9 +910,16 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
   }
 
   public void pushDevice(PushDeviceUtil util) {
+
+    Long lastPush = sharedPref.getLong("xamoom-last-push-register", -1);
+    if (lastPush >= java.lang.System.currentTimeMillis() - (60 * 1000)) {
+      return;
+    }
+
     String token = util.getSavedToken();
     Map<String, Float> location = util.getSavedLocation();
     String packageName = context.getPackageName();
+    String sdkVersion = context.getString(R.string.sdk_version);
 
     String version = null;
     try {
@@ -898,7 +933,9 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
       return;
     }
 
-    PushDevice device = new PushDevice(token, location, version, packageName);
+    sharedPref.edit().putLong("xamoom-last-push-register", java.lang.System.currentTimeMillis()).apply();
+
+    PushDevice device = new PushDevice(token, location, version, packageName, sdkVersion);
 
     JsonApiObject jsonApiObject = new JsonApiObject();
     jsonApiObject.setResource(device);
@@ -914,6 +951,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
 
       @Override
       public void error(List<Error> error) {
+        sharedPref.edit().putLong("xamoom-last-push-register", -1).apply();
         Log.e("Push Registration", error.get(0).getCode() + " " + error.get(0).getDetail());
       }
     };
@@ -1094,6 +1132,19 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     }
     return EnduserApi.sharedInstance;
   }
+
+    public static EnduserApi getSharedInstance(Context context) {
+        if (EnduserApi.sharedInstance == null) {
+            EnduserApi restoredApi = EnduserApi.restoreEnduserApi(context);
+            if (restoredApi == null) {
+                throw new NullPointerException("Instance is null. Please use getSharedInstance(apikey, context) " +
+                        "or setSharedInstance");
+            }
+
+            EnduserApi.setSharedInstance(restoredApi);
+        }
+        return EnduserApi.sharedInstance;
+    }
 
   /**
    * Set your the sharedInstance with your Instance of EnduserApi.
