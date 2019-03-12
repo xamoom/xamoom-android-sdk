@@ -60,32 +60,44 @@ public class ContentBlock9Adapter implements AdapterDelegate<List<ContentBlock>>
 
     ContentBlock cb = items.get(position);
     ContentBlock9ViewHolder newHolder = (ContentBlock9ViewHolder) holder;
+    newHolder.setIsRecyclable(false);
     newHolder.setStyle(style);
     newHolder.setupContentBlock(cb, offline);
   }
 
   public void onSavedInstanceState(Bundle bundle) {
     this.bundle = bundle;
-    mapholder.getMapView().onSaveInstanceState(bundle);
+    if (isMapViewActive()) {
+      mapholder.getMapView().onSaveInstanceState(bundle);
+    }
   }
 
   public void onDestroy() {
-    if (mapholder != null && mapholder.getMapView() != null) {
+    if (isMapViewActive()) {
       mapholder.getMapView().onDestroy();
     }
   }
 
   public void onViewAttachedToWindow(ContentBlock9ViewHolder holder) {
-    holder.getMapView().onStart();
-    holder.getMapView().onResume();
+    if (isMapViewActive()) {
+      holder.getMapView().onStart();
+      holder.getMapView().onResume();
+    }
   }
 
   public void onViewDettachToWindow(ContentBlock9ViewHolder holder) {
-    holder.getMapView().onPause();
-    holder.getMapView().onStop();
+    if (isMapViewActive()) {
+      holder.getMapView().onPause();
+      holder.getMapView().onStop();
+      holder.getMapView().onDestroy();
+    }
   }
 
   public void onLowMemory() {
     mapholder.getMapView().onLowMemory();
+  }
+
+  private boolean isMapViewActive() {
+    return mapholder != null && !mapholder.getMapView().isDestroyed();
   }
 }

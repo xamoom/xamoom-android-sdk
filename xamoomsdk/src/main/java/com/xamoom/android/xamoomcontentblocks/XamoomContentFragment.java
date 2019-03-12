@@ -204,13 +204,18 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
       mRecyclerView.setAdapter(null);
       mRecyclerView.setLayoutManager(null);
     }
-    mContentBlockAdapter.onDestroy();
     mContentBlockAdapter = null;
     mRecyclerView = null;
     mContent = null;
     mContentBlocks = null;
 
     super.onDestroy();
+  }
+
+  @Override
+  public void onDestroyView() {
+    super.onDestroyView();
+    mContentBlockAdapter.onDestroy();
   }
 
   @Override

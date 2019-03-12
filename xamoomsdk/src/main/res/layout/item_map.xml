@@ -27,7 +27,6 @@
         android:layout_width="match_parent"
         android:layout_height="350dp"
         android:layout_below="@+id/titleTextView"
-        app:mapbox_renderTextureMode="true"
         app:mapbox_cameraZoom="7"/>
 
     <LinearLayout

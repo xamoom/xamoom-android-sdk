@@ -174,6 +174,9 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
         enduserApi.getStyle(systemId, object : APICallback<Style, List<Error>> {
             override fun finished(result: Style) {
                 mBase64Icon = result.customMarker
+                if (mapView.isDestroyed) {
+                    return
+                }
                 mapView.getMapAsync(this@ContentBlock9ViewHolder)
             }
 
@@ -195,6 +198,10 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
+        if (mapView.isDestroyed) {
+            return
+        }
+
         mapBoxMap = mapboxMap
         mapBoxMap!!.setStyle(com.mapbox.mapboxsdk.maps.Style.LIGHT) { style ->
 
