@@ -1,4 +1,7 @@
 # Changelog
+## [3.10.9-beta1](https://github.com/xamoom/xamoom-ios-sdk/compare/3.10.8...3.10.9-beta1) - 04.03.2019
+- Mapbox
+
 ## [3.10.8](https://github.com/xamoom/xamoom-ios-sdk/compare/3.10.6...3.10.7) - 25.02.2019
 - UI improvements
 

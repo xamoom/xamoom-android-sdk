@@ -2,19 +2,19 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
-def versionString = "3.10.8"
+def versionString = "3.10.9-beta1"
 
 version = versionString
 group = "com.xamoom.android"
 
 android {
-	compileSdkVersion 26
+	compileSdkVersion 27
 	buildToolsVersion '27.0.3'
 
 	defaultConfig {
 		minSdkVersion 18
 		targetSdkVersion 26
-		versionCode 22
+		versionCode 23
 		versionName versionString
 		testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
 		multiDexEnabled true
@@ -42,7 +42,7 @@ android {
 	}
 }
 
-def supportLibaryVersion = "26.1.0"
+def supportLibaryVersion = "27.1.1"
 
 dependencies {
 	implementation fileTree(include: ['*.jar'], dir: 'libs')
@@ -82,6 +82,8 @@ dependencies {
 	kapt 'com.google.dagger:dagger-compiler:2.15'
 	kapt 'com.google.dagger:dagger-android-processor:2.15'
 	implementation 'org.altbeacon:android-beacon-library:2.15'
+	implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:7.1.0'
+	implementation 'com.jakewharton.timber:timber:4.7.1'
 }
 
 ext {

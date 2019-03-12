@@ -37,6 +37,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.mapbox.mapboxsdk.Mapbox;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.APIListCallback;
@@ -81,6 +82,8 @@ public class MainActivity extends AppCompatActivity
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
+
+    Mapbox.getInstance(this, "pk.eyJ1IjoieGFtb29tLWJydW5vIiwiYSI6ImNqcmc1MWxqbTFsNms0Nm1yZGcycTFqbjAifQ.sDuEiFnBOHNoS-o7uTHvdA");
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -207,6 +210,7 @@ public class MainActivity extends AppCompatActivity
         ArrayList<String> urls = new ArrayList<>();
         urls.add("google.com");
         XamoomContentFragment xamoomFragment = XamoomContentFragment.newInstance(getResources().getString(R.string.youtube_key), urls); //create new instance
+        xamoomFragment.setShowSpotMapContentLinks(true);
         xamoomFragment.setEnduserApi(mEnduserApi);
         xamoomFragment.setDisplayAllStoreLinks(true);
         xamoomFragment.setContent(result.get(0), true, mOffline);

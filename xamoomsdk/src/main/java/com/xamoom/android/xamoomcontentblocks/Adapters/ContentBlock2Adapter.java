@@ -55,6 +55,7 @@ public class ContentBlock2Adapter implements AdapterDelegate<List<ContentBlock>>
                                @NonNull RecyclerView.ViewHolder holder, Style style, boolean offline) {
     ContentBlock cb = items.get(position);
     ContentBlock2ViewHolder newHolder = (ContentBlock2ViewHolder) holder;
+    newHolder.setIsRecyclable(false);
     newHolder.setStyle(style);
     newHolder.setupContentBlock(cb, offline);
   }

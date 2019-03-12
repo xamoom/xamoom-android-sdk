@@ -16,14 +16,15 @@ import android.util.Base64;
 
 import com.caverock.androidsvg.SVG;
 import com.caverock.androidsvg.SVGParseException;
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Marker;
+import com.mapbox.mapboxsdk.camera.CameraUpdate;
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
+import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 import com.xamoom.android.xamoomsdk.R;
+import com.xamoom.android.xamoomsdk.Resource.Spot;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Set;
+import java.util.ArrayList;
 
 /**
  * Image and map utils for the spotmap block.
@@ -33,18 +34,18 @@ public class ContentBlock9ViewHolderUtils {
   /**
    * Returns camera update for all markers on map with specific padding.
    *
-   * @param markers Set of markers.
+   * @param spots ArrayList of spots.
    * @param padding Padding for LatLngBounds.
    * @return Camera update to see all markers on map.
    */
-  public static CameraUpdate zoomToDisplayAllMarker(Set<Marker> markers, int padding) {
-    if (markers.size() == 0) {
+  public static CameraUpdate zoomToDisplayAllSpots(ArrayList<Spot> spots, int padding) {
+    if (spots.size() == 0) {
       return null;
     }
     
     LatLngBounds.Builder builder = new LatLngBounds.Builder();
-    for (Marker marker :markers) {
-      builder.include(marker.getPosition());
+    for (Spot spot : spots) {
+      builder.include(new LatLng(spot.getLocation().getLatitude(), spot.getLocation().getLongitude()));
     }
 
     LatLngBounds bounds = builder.build();
