@@ -3,6 +3,8 @@ package com.xamoom.android.xamoomsdk.Helpers;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+
+import android.content.SharedPreferences;
 import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,6 +14,7 @@ import android.util.Log;
 import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.Enums.ContentReason;
+import com.xamoom.android.xamoomsdk.PushDevice.PushDeviceUtil;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 
 import org.altbeacon.beacon.Beacon;
@@ -59,6 +62,7 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
     private BeaconManager mBeaconManager;
     private Region mRegion;
     private RegionBootstrap mRegionBootstrap;
+    private EnduserApi api;
 
     private ArrayList<Beacon> mBeacons = new ArrayList<>();
     private ArrayList<Beacon> immediateBeacons = new ArrayList<>();
@@ -70,7 +74,6 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
     public boolean approximateDistanceRanging = false;
     public boolean fastInsideRegionScanning = true;
     private boolean areBeaconsLoading = false;
-    private String majorId;
 
     /**
      * Method to get the singleton on XamoomBeaconService.
@@ -83,6 +86,7 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
             mInstance = new XamoomBeaconService();
             mInstance.mContext = context;
             mInstance.mBeaconManager = org.altbeacon.beacon.BeaconManager.getInstanceForApplication(context);
+            mInstance.api = EnduserApi.getSharedInstance(context);
         }
 
         return mInstance;
@@ -92,16 +96,15 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
      * Start the XamoomBeaconService with a beacon majorId.
      * This will automatically start (background-)monitoring for xamoom beacons
      * with the used majorId.
-     *
-     * @param majorId MajorId you get from your xamoom system.
      */
-    public void startBeaconService(@NonNull String majorId) {
+    public void startBeaconService() {
         Log.i(TAG, "startBeaconService");
+
+        String majorId = api.getMajorId();
 
         if (majorId.equalsIgnoreCase("")) {
             throw new IllegalArgumentException("MajorId should not be a number.");
         }
-        this.majorId = majorId;
         mRegion = new Region("at.visitklagenfurt.beacons", Identifier.parse("de2b94ae-ed98-11e4-3432-78616d6f6f6d"),
                 Identifier.parse(majorId), null);
         mRegionBootstrap = new RegionBootstrap(this, mRegion);
@@ -241,13 +244,16 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
             return;
         }
 
+        SharedPreferences prefs = mContext.getSharedPreferences(PushDeviceUtil.PREFES_NAME,
+                Context.MODE_PRIVATE);
+        PushDeviceUtil pUtil = new PushDeviceUtil(prefs);
+        api.pushDevice(pUtil);
+
         mBeacons.clear();
         beaconContents.clear();
         immediateBeacons.clear();
         nearBeacons.clear();
         farBeacons.clear();
-
-
 
         if (areBeaconsLoading || beacons.size() == 0) {
             mBeacons.clear();
@@ -296,8 +302,7 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
         for (int i = 0; i < beacons.size(); i++) {
             final Beacon beacon = (Beacon) beacons.toArray()[i];
 
-            int mId = Integer.getInteger(this.majorId);
-            EnduserApi.getSharedInstance().getContentByBeacon(mId, beacon.getId3().toInt(), null, null, ContentReason.NOTIFICATION, new APICallback<Content, List<Error>>() {
+            api.getContentByBeacon(Integer.getInteger(api.getMajorId()), beacon.getId3().toInt(), null, null, ContentReason.NOTIFICATION, new APICallback<Content, List<Error>>() {
                 @Override
                 public void finished(Content result) {
                     if (result != null) {
@@ -318,7 +323,7 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
 
                 @Override
                 public void error(List<Error> error) {
-
+                    callback.finish(null, null);
                 }
             });
         }

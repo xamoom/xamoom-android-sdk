@@ -197,7 +197,7 @@ public class MainActivity extends AppCompatActivity
   public void getContent() {
     List tags = new ArrayList();
     tags.add("x-start");
-    mEnduserApi = new EnduserApi("3226a5a4-451e-4f40-943e-be55d43266f1", getApplicationContext(), false);
+    mEnduserApi = new EnduserApi("3226a5a4-451e-4f40-943e-be55d43266f1", getApplicationContext(), false, null);
     mEnduserApi.getContentsByTags(tags, 10, null, null, new APIListCallback<List<Content>, List<Error>>() {
       @Override
       public void finished(List<Content> result, String cursor, boolean hasMore) {
@@ -209,7 +209,7 @@ public class MainActivity extends AppCompatActivity
 
         ArrayList<String> urls = new ArrayList<>();
         urls.add("google.com");
-        XamoomContentFragment xamoomFragment = XamoomContentFragment.newInstance(getResources().getString(R.string.youtube_key), urls); //create new instance
+        XamoomContentFragment xamoomFragment = XamoomContentFragment.newInstance(getResources().getString(R.string.youtube_key), urls, "", com.mapbox.mapboxsdk.maps.Style.LIGHT); //create new instance
         xamoomFragment.setShowSpotMapContentLinks(true);
         xamoomFragment.setEnduserApi(mEnduserApi);
         xamoomFragment.setDisplayAllStoreLinks(true);
@@ -232,7 +232,7 @@ public class MainActivity extends AppCompatActivity
           @Override
           public void finished(Content result) {
             Log.v(TAG, "getContent: " + result);
-            XamoomContentFragment xamoomFragment = XamoomContentFragment.newInstance(getResources().getString(R.string.youtube_key)); //create new instance
+            XamoomContentFragment xamoomFragment = XamoomContentFragment.newInstance(getResources().getString(R.string.youtube_key), "", com.mapbox.mapboxsdk.maps.Style.LIGHT); //create new instance
             xamoomFragment.setEnduserApi(mEnduserApi);
             xamoomFragment.setDisplayAllStoreLinks(true);
 
@@ -559,7 +559,7 @@ public class MainActivity extends AppCompatActivity
 
   @Override
   public void clickedContentBlock(Content content) {
-    XamoomContentFragment xamoomFragment = XamoomContentFragment.newInstance("AIzaSyBNZUh3-dj4YYY9-csOtQeHG_MpoE8x69Q"); //create new instance
+    XamoomContentFragment xamoomFragment = XamoomContentFragment.newInstance("AIzaSyBNZUh3-dj4YYY9-csOtQeHG_MpoE8x69Q", "", com.mapbox.mapboxsdk.maps.Style.LIGHT); //create new instance
     xamoomFragment.setEnduserApi(mEnduserApi);
     xamoomFragment.setDisplayAllStoreLinks(true);
     xamoomFragment.setContent(content);

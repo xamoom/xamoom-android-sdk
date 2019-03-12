@@ -35,7 +35,7 @@ public class ContentBlock11Adapter implements AdapterDelegate<List<ContentBlock>
   public RecyclerView.ViewHolder onCreateViewHolder(
       ViewGroup parent, Fragment fragment, EnduserApi enduserApi, String youtubeApiKey,
       LruCache bitmapCache, LruCache contentCache, boolean showContentLinks, ListManager listManager, AdapterDelegatesManager adapterDelegatesManager,
-      ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener onContentBlock3ViewHolderInteractionListener, XamoomContentFragment.OnXamoomContentFragmentInteractionListener onXamoomContentFragmentInteractionListener, @Nullable ArrayList<String> urls) {
+      ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener onContentBlock3ViewHolderInteractionListener, XamoomContentFragment.OnXamoomContentFragmentInteractionListener onXamoomContentFragmentInteractionListener, @Nullable ArrayList<String> urls, @Nullable String mapboxStyleString) {
     View view = LayoutInflater.from(parent.getContext())
         .inflate(R.layout.content_block_11_layout, parent, false);
     return new ContentBlock11ViewHolder(view, fragment, enduserApi, listManager, adapterDelegatesManager, onXamoomContentFragmentInteractionListener);

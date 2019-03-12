@@ -43,7 +43,7 @@ public class ContentBlock3Adapter implements AdapterDelegate<List<ContentBlock>>
           ViewGroup parent, Fragment fragment, EnduserApi enduserApi, String youtubeApiKey,
           LruCache bitmapCache, LruCache contentCache, boolean showContentLinks, ListManager listManager, AdapterDelegatesManager adapterDelegatesManager,
           ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener onContentBlock3ViewHolderInteractionListener, XamoomContentFragment.OnXamoomContentFragmentInteractionListener
-                                                        onXamoomContentFragmentInteractionListener, @Nullable ArrayList<String> urls) {
+                                                        onXamoomContentFragmentInteractionListener, @Nullable ArrayList<String> urls, @Nullable String mapboxStyleString) {
     View view = LayoutInflater.from(parent.getContext())
         .inflate(R.layout.content_block_3_layout, parent, false);
     return new ContentBlock3ViewHolder(view, fragment.getContext(), onContentBlock3ViewHolderInteractionListener, urls, fragment);

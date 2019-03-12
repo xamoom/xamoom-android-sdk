@@ -38,7 +38,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 @SuppressLint("ClickableViewAccessibility")
-class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val enduserApi: EnduserApi, fragment: Fragment, val listener: XamoomContentFragment.OnXamoomContentFragmentInteractionListener) : RecyclerView.ViewHolder(view), OnMapReadyCallback {
+class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val enduserApi: EnduserApi, fragment: Fragment, val listener: XamoomContentFragment.OnXamoomContentFragmentInteractionListener, private val mapBoxStyleString: String? = com.mapbox.mapboxsdk.maps.Style.MAPBOX_STREETS) : RecyclerView.ViewHolder(view), OnMapReadyCallback {
 
     private var mapBoxStyle: com.mapbox.mapboxsdk.maps.Style? = null
     private var mapBoxMap: MapboxMap? = null
@@ -202,8 +202,12 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
             return
         }
 
+        var style = com.mapbox.mapboxsdk.maps.Style.MAPBOX_STREETS
+        if (!mapBoxStyleString.isNullOrEmpty()) {
+            style = mapBoxStyleString!!
+        }
         mapBoxMap = mapboxMap
-        mapBoxMap!!.setStyle(com.mapbox.mapboxsdk.maps.Style.LIGHT) { style ->
+        mapBoxMap!!.setStyle(style) { style ->
 
             var image = ContentBlock9ViewHolderUtils.getIcon(mBase64Icon, mContext)
             val icon = IconFactory.getInstance(mContext!!)

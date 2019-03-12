@@ -54,7 +54,7 @@ public class AdapterDelegatesManager<T> {
       ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener
           onContentBlock3ViewHolderInteractionListener,
       XamoomContentFragment.OnXamoomContentFragmentInteractionListener
-          onXamoomContentFragmentInteractionListener, @Nullable ArrayList<String> url) {
+          onXamoomContentFragmentInteractionListener, @Nullable ArrayList<String> url, @Nullable String mapboxStyleString) {
 
     AdapterDelegate<T> delegate = adapterDelegates.get(viewType);
 
@@ -68,7 +68,7 @@ public class AdapterDelegatesManager<T> {
 
     RecyclerView.ViewHolder vh = delegate.onCreateViewHolder(parent, fragment, enduserApi,
         youtubeApiKey, bitmapCache, contentCache, showContentLinks, listManager, this,
-        onContentBlock3ViewHolderInteractionListener, onXamoomContentFragmentInteractionListener, url);
+        onContentBlock3ViewHolderInteractionListener, onXamoomContentFragmentInteractionListener, url, mapboxStyleString);
 
     return vh;
   }

@@ -52,7 +52,7 @@ public interface AdapterDelegate<T> {
           ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener
           onContentBlock3ViewHolderInteractionListener,
           XamoomContentFragment.OnXamoomContentFragmentInteractionListener
-          onXamoomContentFragmentInteractionListener, ArrayList<String> urls);
+          onXamoomContentFragmentInteractionListener, ArrayList<String> urls, String mapboxStyleString);
 
   /**
    * Called before recyclerview shows viewholder.

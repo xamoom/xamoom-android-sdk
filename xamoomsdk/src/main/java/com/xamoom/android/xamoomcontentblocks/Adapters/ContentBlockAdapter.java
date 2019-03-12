@@ -48,6 +48,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   private boolean offline;
   private ArrayList<String> urlScheme;
   private ContentBlock9Adapter contentBlock9Adapter;
+  private String mapboxStyleString;
 
   private String mLinkColor = "00F";
   private String mBackgroundColor = "000";
@@ -66,14 +67,14 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   public ContentBlockAdapter(Fragment fragment, List<ContentBlock> contentBlocks,
                              boolean showSpotMapContentLinks, String youtubeApiKey,
                              ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener contentBlock3ViewHolderInteractionListener,
-                             ArrayList<String> contentBlockUrlScheme) {
+                             ArrayList<String> contentBlockUrlScheme, String mapboxStyle) {
     mOnContentBlock3ViewHolderInteractionListener = contentBlock3ViewHolderInteractionListener;
     mFragment = fragment;
     mContentBlocks = contentBlocks;
     showContentLinks = showSpotMapContentLinks;
     mYoutubeApiKey = youtubeApiKey;
     urlScheme = contentBlockUrlScheme;
-
+    mapboxStyleString = mapboxStyle;
     setupAdapters();
   }
 
@@ -108,7 +109,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     return mDelegatesManager.onCreateViewHolder(parent, viewType, mFragment, mEnduserApi, mYoutubeApiKey,
         mBitmapCache, mContentCache, showContentLinks, mListManager,
-        mOnContentBlock3ViewHolderInteractionListener, mOnXamoomContentFragmentInteractionListener, urlScheme);
+        mOnContentBlock3ViewHolderInteractionListener, mOnXamoomContentFragmentInteractionListener, urlScheme, mapboxStyleString);
   }
 
   @Override
@@ -218,5 +219,9 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
   public void setShowContentLinks(boolean showContentLinks) {
     this.showContentLinks = showContentLinks;
+  }
+
+  public void setMapboxStyleString(String mapboxStyleString) {
+    this.mapboxStyleString = mapboxStyleString;
   }
 }
