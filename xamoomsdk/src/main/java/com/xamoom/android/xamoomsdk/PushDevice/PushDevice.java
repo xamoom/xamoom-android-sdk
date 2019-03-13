@@ -36,7 +36,7 @@ public class PushDevice extends Resource {
   private String sdkVersion;
 
   public PushDevice() {
-    
+
   }
 
   public PushDevice(String token, Map<String, Float> location, String appVersion, String appId, String sdkVersion) {
