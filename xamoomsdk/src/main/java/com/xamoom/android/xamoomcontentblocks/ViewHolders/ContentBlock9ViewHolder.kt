@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import at.rags.morpheus.Error
 import com.bumptech.glide.Glide
 import com.mapbox.mapboxsdk.annotations.IconFactory
@@ -58,12 +59,10 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
     var spotExcerptTextView = view.spotExcerptTextView
     var spotContentButton = view.spotContentButton
     var spotImageView = view.spotImageView
-    var mapViewHeight = 0
 
     init {
         mContext = fragment.context
         mapView.onCreate(bundle)
-        mapViewHeight = mapView.layoutParams.height
 
         mapView.setOnTouchListener { view, motionEvent ->
             view.parent.requestDisallowInterceptTouchEvent(true)
@@ -72,9 +71,9 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
             if (motionEvent.action == MotionEvent.ACTION_DOWN) {
                 closeBottomSheet = true
             }
-            
+
             if (motionEvent.action == MotionEvent.ACTION_MOVE) {
-                closeBottomSheet = false
+                closeBottomSheet = true
             }
 
             if (motionEvent.action == MotionEvent.ACTION_UP) {
@@ -85,45 +84,36 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
                 } else {
                     closeBottomSheet = true
                 }
-             }
+            }
             true
         }
 
-        bottomSheet.peekHeight = 325
+        bottomSheet.peekHeight = 350
         bottomSheet.isHideable = true
         bottomSheet.state = BottomSheetBehavior.STATE_HIDDEN
 
         bottomSheet.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-                    setBottomPadding(bottomSheet.height)
+                    //setBottomPadding(350)
                 }
 
                 if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-                    setBottomPadding(350)
+                    //setBottomPadding(350)
                 }
 
                 if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-                    setBottomPadding(mapViewHeight)
                     fab.hide()
                 }
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                if (mActiveSpot != null) {
-                    val position = CameraPosition.Builder().target(com.mapbox.mapboxsdk.geometry.LatLng(mActiveSpot!!.location.latitude, mActiveSpot!!.location.longitude)).zoom(16.0).tilt(20.0).build()
-                    mapBoxMap!!.animateCamera(CameraUpdateFactory.newCameraPosition(position))
-                }
             }
         })
 
         fab.backgroundTintList = ColorStateList.valueOf(mContext!!.resources
                 .getColor(R.color.linkblock_navigation_background_color))
         fab.visibility = View.GONE
-    }
-
-    private fun setBottomPadding(padding: Int) {
-        mapView.layoutParams = CoordinatorLayout.LayoutParams(mapView.layoutParams.width, padding)
     }
 
     fun setupContentBlock(contentBlock: ContentBlock, offline: Boolean) {
@@ -229,7 +219,6 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
                 return@setOnMarkerClickListener true
             }
 
-
             mapBoxStyle = style
             if (mSpotList.size > 1) {
                 mapBoxMap!!.animateCamera(ContentBlock9ViewHolderUtils.zoomToDisplayAllSpots(mSpotList, 50))
@@ -254,9 +243,8 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
     private fun showSpotDetails(spot: Spot) {
         mActiveSpot = spot
 
-        val position = CameraPosition.Builder().target(com.mapbox.mapboxsdk.geometry.LatLng(spot.location.latitude, spot.location.longitude)).zoom(16.0).tilt(0.0).build()
+        val position = CameraPosition.Builder().target(com.mapbox.mapboxsdk.geometry.LatLng(spot.location.latitude - 0.001, spot.location.longitude)).zoom(15.0).tilt(0.0).build()
         mapBoxMap!!.animateCamera(CameraUpdateFactory.newCameraPosition(position))
-        bottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
 
         spotTitleTextView.text = spot.name
         spotExcerptTextView.text = spot.description
@@ -285,6 +273,8 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
                 mContext!!.startActivity(mapIntent)
             }
         }
+        bottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
+
         fab.visibility = View.VISIBLE
     }
 
