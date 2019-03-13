@@ -114,7 +114,6 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
         mBeaconManager.getBeaconParsers().add(new BeaconParser().
                 setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
         mBeaconManager.setRangeNotifier(this);
-
         mBeaconManager.bind(this);
     }
 
@@ -239,15 +238,16 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
      */
     @Override
     public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
-        if (region.getId2() == mRegion.getId2()) {
-            Log.i(TAG, "false region");
-            return;
-        }
 
         SharedPreferences prefs = mContext.getSharedPreferences(PushDeviceUtil.PREFES_NAME,
                 Context.MODE_PRIVATE);
         PushDeviceUtil pUtil = new PushDeviceUtil(prefs);
         api.pushDevice(pUtil);
+
+        if (region.getId2() == mRegion.getId2()) {
+            Log.i(TAG, "false region");
+            return;
+        }
 
         mBeacons.clear();
         beaconContents.clear();
@@ -272,6 +272,7 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
 
                     sendBroadcast(FOUND_BEACON_BROADCAST, mBeacons, beaconContents);
                 } else {
+                    sendBroadcast(FOUND_BEACON_BROADCAST, new ArrayList<Beacon>(), new ArrayList<Content>());
                     sendBroadcast(NO_BEACON_BROADCAST, null, null);
                 }
 
@@ -290,8 +291,6 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-
     }
 
     private void downloadBeacons(final Collection<Beacon> beacons, final BeaconDownloadCallback callback) throws InterruptedException {
@@ -302,7 +301,7 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
         for (int i = 0; i < beacons.size(); i++) {
             final Beacon beacon = (Beacon) beacons.toArray()[i];
 
-            api.getContentByBeacon(Integer.getInteger(api.getMajorId()), beacon.getId3().toInt(), null, null, ContentReason.NOTIFICATION, new APICallback<Content, List<Error>>() {
+            api.getContentByBeacon(Integer.parseInt(api.getMajorId()), beacon.getId3().toInt(), null, null, ContentReason.NOTIFICATION, new APICallback<Content, List<Error>>() {
                 @Override
                 public void finished(Content result) {
                     if (result != null) {
@@ -323,7 +322,7 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
 
                 @Override
                 public void error(List<Error> error) {
-                    callback.finish(null, null);
+                    signal.countDown();
                 }
             });
         }

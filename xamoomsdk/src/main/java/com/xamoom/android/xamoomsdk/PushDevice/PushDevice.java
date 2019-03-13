@@ -35,6 +35,10 @@ public class PushDevice extends Resource {
   @SerializedName("sdk-version")
   private String sdkVersion;
 
+  public PushDevice() {
+    
+  }
+
   public PushDevice(String token, Map<String, Float> location, String appVersion, String appId, String sdkVersion) {
     this.uid = token;
     this.os = "Android";

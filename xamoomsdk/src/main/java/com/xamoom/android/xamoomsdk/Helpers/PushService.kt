@@ -36,10 +36,6 @@ class PushService: FirebaseMessagingService() {
 
             LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
         } else {
-
-            sharedPreferences = applicationContext.getSharedPreferences(PushDeviceUtil.PREFES_NAME,
-                    Context.MODE_PRIVATE)
-
             if (enduserApi != null) {
                 XamoomBeaconService.getInstance(applicationContext).startBeaconService()
             } else {
@@ -47,6 +43,8 @@ class PushService: FirebaseMessagingService() {
             }
         }
 
+        sharedPreferences = applicationContext.getSharedPreferences(PushDeviceUtil.PREFES_NAME,
+                Context.MODE_PRIVATE)
         enduserApi?.pushDevice(PushDeviceUtil(sharedPreferences))
     }
 }
