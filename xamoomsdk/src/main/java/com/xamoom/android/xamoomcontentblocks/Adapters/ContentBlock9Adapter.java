@@ -50,7 +50,6 @@ public class ContentBlock9Adapter implements AdapterDelegate<List<ContentBlock>>
       ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener onContentBlock3ViewHolderInteractionListener, XamoomContentFragment.OnXamoomContentFragmentInteractionListener onXamoomContentFragmentInteractionListener, @Nullable ArrayList<String> urls, @Nullable String mapboxStyleString) {
     View v = LayoutInflater.from(fragment.getContext()).inflate(R.layout.content_block_9_layout, parent, false);
     mapholder = new ContentBlock9ViewHolder(((CustomMapView) v), bundle, enduserApi, fragment, onXamoomContentFragmentInteractionListener, mapboxStyleString);
-    mapholder.setShowContentLinks(showContentLinks);
     return mapholder;
   }
 
@@ -62,7 +61,7 @@ public class ContentBlock9Adapter implements AdapterDelegate<List<ContentBlock>>
     ContentBlock9ViewHolder newHolder = (ContentBlock9ViewHolder) holder;
     newHolder.setIsRecyclable(false);
     newHolder.setStyle(style);
-    newHolder.setupContentBlock(cb, offline);
+    newHolder.setupContentBlock(cb, offline, cb.isShowContentOnSpotmap());
   }
 
   public void onSavedInstanceState(Bundle bundle) {

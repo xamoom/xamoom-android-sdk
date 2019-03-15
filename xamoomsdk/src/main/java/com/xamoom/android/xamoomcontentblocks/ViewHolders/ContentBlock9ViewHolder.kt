@@ -116,9 +116,9 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
         fab.visibility = View.GONE
     }
 
-    fun setupContentBlock(contentBlock: ContentBlock, offline: Boolean) {
+    fun setupContentBlock(contentBlock: ContentBlock, offline: Boolean, showContentInSpotMap: Boolean) {
         mContentBlock = contentBlock
-
+        showContentLinks = showContentInSpotMap
         titleView.text = contentBlock.title
 
         if (mSpotList.isEmpty()) {

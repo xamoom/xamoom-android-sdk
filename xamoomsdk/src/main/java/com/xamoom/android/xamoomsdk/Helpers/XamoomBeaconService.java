@@ -5,9 +5,12 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -115,6 +118,7 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
                 setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
         mBeaconManager.setRangeNotifier(this);
         mBeaconManager.bind(this);
+        mBeaconManager.setForegroundBetweenScanPeriod(1500);
     }
 
     /**
@@ -239,15 +243,28 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
     @Override
     public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
 
-        SharedPreferences prefs = mContext.getSharedPreferences(PushDeviceUtil.PREFES_NAME,
-                Context.MODE_PRIVATE);
-        PushDeviceUtil pUtil = new PushDeviceUtil(prefs);
-        api.pushDevice(pUtil);
+        if (areBeaconsLoading) {
+            return;
+        }
 
         if (region.getId2() == mRegion.getId2()) {
             Log.i(TAG, "false region");
             return;
         }
+
+        SharedPreferences prefs = mContext.getSharedPreferences(PushDeviceUtil.PREFES_NAME,
+                Context.MODE_PRIVATE);
+        final PushDeviceUtil pUtil = new PushDeviceUtil(prefs);
+        api.pushDevice(pUtil);
+
+        int lastBeaconCount = prefs.getInt("last_beacon_count", -1);
+
+        if (beacons.size() == 0 && lastBeaconCount == beacons.size()) {
+            prefs.edit().putInt("last_beacon_count", -1).apply();
+            return;
+        }
+
+        prefs.edit().putInt("last_beacon_count", beacons.size()).apply();
 
         mBeacons.clear();
         beaconContents.clear();
@@ -255,7 +272,7 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
         nearBeacons.clear();
         farBeacons.clear();
 
-        if (areBeaconsLoading || beacons.size() == 0) {
+        if (beacons.size() == 0) {
             mBeacons.clear();
             beaconContents.clear();
             sendBroadcast(FOUND_BEACON_BROADCAST, new ArrayList<Beacon>(), new ArrayList<Content>());
@@ -292,12 +309,12 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
             e.printStackTrace();
         }
     }
-
     private void downloadBeacons(final Collection<Beacon> beacons, final BeaconDownloadCallback callback) throws InterruptedException {
         final ArrayList<Beacon> loadedBeacons = new ArrayList<>();
         final ArrayList<Content> loadedContents = new ArrayList<>();
 
-        final CountDownLatch signal = new CountDownLatch(beacons.size());
+        final ArrayList<Beacon> calledBeacons = new ArrayList<>();
+
         for (int i = 0; i < beacons.size(); i++) {
             final Beacon beacon = (Beacon) beacons.toArray()[i];
 
@@ -317,18 +334,23 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
                         }
                     }
 
-                    signal.countDown();
+                    calledBeacons.add(beacon);
+
+                    if (calledBeacons.size() == beacons.size()) {
+                        callback.finish(loadedBeacons, loadedContents);
+                    }
                 }
 
                 @Override
                 public void error(List<Error> error) {
-                    signal.countDown();
+                    calledBeacons.add(beacon);
+
+                    if (calledBeacons.size() == beacons.size()) {
+                        callback.finish(loadedBeacons, loadedContents);
+                    }
                 }
             });
         }
-
-        signal.await();
-        callback.finish(loadedBeacons, loadedContents);
     }
 
     /**
