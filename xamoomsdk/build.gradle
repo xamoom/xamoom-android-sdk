@@ -14,7 +14,7 @@ android {
 	defaultConfig {
 		minSdkVersion 18
 		targetSdkVersion 26
-		versionCode 23
+		versionCode 24
 		versionName versionString
 		testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
 		multiDexEnabled true
@@ -111,5 +111,5 @@ repositories {
 	mavenCentral()
 }
 
-//apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
-//apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
