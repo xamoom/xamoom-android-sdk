@@ -8,27 +8,31 @@
     android:layout_marginBottom="@dimen/contentblock_to_contentblock_margin"
     android:theme="@style/ContentBlocksTheme">
 
-    <TextView
-        android:id="@+id/titleTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/contentblock_title_size"
-        android:textColor="@color/black"
-        android:layout_marginStart="@dimen/contentblock_standard_padding"
-        android:layout_marginEnd="@dimen/contentblock_standard_padding"
-        android:layout_marginBottom="@dimen/contentblock_children_margin"
-        />
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-    <com.mapbox.mapboxsdk.maps.MapView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/mapImageView"
-        android:layout_marginTop="40dp"
-        android:layout_width="match_parent"
-        android:layout_height="350dp"
-        app:mapbox_renderTextureMode="true"
-        android:layout_below="@+id/titleTextView"
-        app:mapbox_cameraZoom="7"/>
+        <TextView
+            android:id="@+id/titleTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/contentblock_title_size"
+            android:textColor="@color/black"
+            android:layout_marginStart="@dimen/contentblock_standard_padding"
+            android:layout_marginEnd="@dimen/contentblock_standard_padding"
+            android:layout_marginBottom="@dimen/contentblock_children_margin"
+            />
+
+        <com.mapbox.mapboxsdk.maps.MapView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/mapImageView"
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            app:mapbox_renderTextureMode="true"
+            android:layout_below="@+id/titleTextView"
+            app:mapbox_cameraZoom="7"/>
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/bottom_sheet"

@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
-def versionString = "3.10.9-beta1"
+def versionString = "3.11.0"
 
 version = versionString
 group = "com.xamoom.android"

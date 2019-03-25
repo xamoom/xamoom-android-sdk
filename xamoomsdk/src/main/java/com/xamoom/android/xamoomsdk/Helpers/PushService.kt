@@ -37,7 +37,7 @@ class PushService: FirebaseMessagingService() {
             LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
         } else {
             if (enduserApi != null) {
-                XamoomBeaconService.getInstance(applicationContext).startBeaconService()
+                XamoomBeaconService.getInstance(applicationContext, enduserApi).startBeaconService()
             } else {
                 Log.w("xamoom PushService", "Xamoom EnduserApi is not initialized")
             }

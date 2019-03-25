@@ -84,12 +84,12 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
      * @param context A context.
      * @return An instance of XamoomBeaconService.
      */
-    public static XamoomBeaconService getInstance(Context context) {
+    public static XamoomBeaconService getInstance(Context context, EnduserApi api) {
         if (mInstance == null) {
             mInstance = new XamoomBeaconService();
             mInstance.mContext = context;
             mInstance.mBeaconManager = org.altbeacon.beacon.BeaconManager.getInstanceForApplication(context);
-            mInstance.api = EnduserApi.getSharedInstance(context);
+            mInstance.api = api;
         }
 
         return mInstance;
