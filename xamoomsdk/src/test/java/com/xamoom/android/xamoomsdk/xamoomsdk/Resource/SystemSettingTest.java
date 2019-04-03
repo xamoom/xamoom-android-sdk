@@ -37,6 +37,9 @@ public class SystemSettingTest {
     mSystemSetting.setGooglePlayAppId("googleplayappid");
     mSystemSetting.setItunesAppId("itunesappid");
     mSystemSetting.setSocialSharingEnabled(true);
+    mSystemSetting.setCookieWarningEnabled(true);
+    mSystemSetting.setRecommandationEnabled(true);
+    mSystemSetting.setEventPackageEnabled(true);
   }
 
   @Test
@@ -57,6 +60,9 @@ public class SystemSettingTest {
     assertEquals(mSystemSetting.getGooglePlayAppId(), createdFromParcel.getGooglePlayAppId());
     assertEquals(mSystemSetting.getItunesAppId(), createdFromParcel.getItunesAppId());
     assertEquals(mSystemSetting.getSocialSharingEnabled(), createdFromParcel.getSocialSharingEnabled());
+    assertEquals(mSystemSetting.getCookieWarningEnabled(), createdFromParcel.getCookieWarningEnabled());
+    assertEquals(mSystemSetting.getRecommandationEnabled(), createdFromParcel.getRecommandationEnabled());
+    assertEquals(mSystemSetting.getEventPackageEnabled(), createdFromParcel.getEventPackageEnabled());
   }
 
 }

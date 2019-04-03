@@ -25,6 +25,12 @@ public class SystemSetting extends Resource implements Parcelable {
   private String itunesAppId;
   @SerializedName("is-social-sharing-active")
   private Boolean socialSharingEnabled;
+  @SerializedName("is-cookie-warning-enabled")
+  private Boolean cookieWarningEnabled;
+  @SerializedName("is-recommendations-active")
+  private Boolean recommandationEnabled;
+  @SerializedName("is-event-package-active")
+  private Boolean eventPackageEnabled;
 
   public SystemSetting() {
   }
@@ -34,6 +40,9 @@ public class SystemSetting extends Resource implements Parcelable {
     googlePlayAppId = in.readString();
     itunesAppId = in.readString();
     socialSharingEnabled = (Boolean) in.readSerializable();
+    cookieWarningEnabled = (Boolean) in.readSerializable();
+    recommandationEnabled = (Boolean) in.readSerializable();
+    eventPackageEnabled = (Boolean) in.readSerializable();
   }
 
   public static final Creator<SystemSetting> CREATOR = new Creator<SystemSetting>() {
@@ -59,6 +68,9 @@ public class SystemSetting extends Resource implements Parcelable {
     dest.writeString(googlePlayAppId);
     dest.writeString(itunesAppId);
     dest.writeSerializable(socialSharingEnabled);
+    dest.writeSerializable(cookieWarningEnabled);
+    dest.writeSerializable(recommandationEnabled);
+    dest.writeSerializable(eventPackageEnabled);
   }
 
   public String getGooglePlayAppId() {
@@ -85,5 +97,27 @@ public class SystemSetting extends Resource implements Parcelable {
     this.socialSharingEnabled = socialSharingEnabled;
   }
 
+  public Boolean getCookieWarningEnabled() {
+    return cookieWarningEnabled;
+  }
 
+  public void setCookieWarningEnabled(Boolean cookieWarningEnabled) {
+    this.cookieWarningEnabled = cookieWarningEnabled;
+  }
+
+  public Boolean getRecommandationEnabled() {
+    return recommandationEnabled;
+  }
+
+  public void setRecommandationEnabled(Boolean recommandationEnabled) {
+    this.recommandationEnabled = recommandationEnabled;
+  }
+
+  public Boolean getEventPackageEnabled() {
+    return eventPackageEnabled;
+  }
+
+  public void setEventPackageEnabled(Boolean eventPackageEnabled) {
+    this.eventPackageEnabled = eventPackageEnabled;
+  }
 }
