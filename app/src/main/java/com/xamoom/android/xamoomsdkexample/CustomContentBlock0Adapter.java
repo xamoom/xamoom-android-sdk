@@ -69,7 +69,7 @@ public class CustomContentBlock0Adapter implements AdapterDelegate<List<ContentB
     ContentBlock0ViewHolder newHolder = (ContentBlock0ViewHolder) holder;
     newHolder.setStyle(style);
     newHolder.setTextSize(10.0f);
-    newHolder.setupContentBlock(cb, offline);
+    newHolder.setupContentBlock(cb, offline, 0);
   }
 
 }

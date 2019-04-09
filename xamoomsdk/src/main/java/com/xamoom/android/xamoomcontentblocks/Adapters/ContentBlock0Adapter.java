@@ -57,7 +57,7 @@ public class ContentBlock0Adapter implements AdapterDelegate<List<ContentBlock>>
     ContentBlock cb = items.get(position);
     ContentBlock0ViewHolder newHolder = (ContentBlock0ViewHolder) holder;
     newHolder.setStyle(style);
-    newHolder.setupContentBlock(cb, offline);
+    newHolder.setupContentBlock(cb, offline, 0);
   }
 
 }

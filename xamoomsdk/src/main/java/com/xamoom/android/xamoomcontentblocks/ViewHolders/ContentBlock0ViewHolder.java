@@ -9,7 +9,9 @@
 package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
 import android.graphics.Color;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -39,13 +41,12 @@ public class ContentBlock0ViewHolder extends RecyclerView.ViewHolder {
     childrenMargin = itemView.getContext().getResources().getDimensionPixelSize(R.dimen.contentblock_children_margin);
   }
 
-  public void setupContentBlock(ContentBlock contentBlock, boolean offline){
+  public void setupContentBlock(ContentBlock contentBlock, boolean offline, @Nullable int maxLines){
     mTitleTextView.setVisibility(View.VISIBLE);
     mHtmlTextView.setVisibility(View.VISIBLE);
     LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mHtmlTextView.getLayoutParams();
     params.setMargins(0,childrenMargin,0, 0);
     mHtmlTextView.setLayoutParams(params);
-
 
     if(contentBlock.getTitle() != null && !contentBlock.getTitle().equalsIgnoreCase("")) {
       mTitleTextView.setTextSize(mTextSize);
@@ -62,6 +63,12 @@ public class ContentBlock0ViewHolder extends RecyclerView.ViewHolder {
     }
 
     if((contentBlock.getText() != null) && !(contentBlock.getText().equalsIgnoreCase("<p><br></p>"))) {
+
+      if (maxLines > 0) {
+        mHtmlTextView.setMaxLines(maxLines);
+        mHtmlTextView.setEllipsize(TextUtils.TruncateAt.END);
+      }
+
       mHtmlTextView.setHtmlText(contentBlock.getText());
     } else {
       mHtmlTextView.setVisibility(View.GONE);
