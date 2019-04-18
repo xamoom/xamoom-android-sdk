@@ -1,5 +1,8 @@
 # Changelog
 
+## [3.11.1](https://github.com/xamoom/xamoom-ios-sdk/compare/3.10.8...3.10.9-beta1) - 18.04.2019
+- Fix crash when cancel XamoomContentFragment loading
+
 ## [3.11.0](https://github.com/xamoom/xamoom-ios-sdk/compare/3.10.8...3.10.9-beta1) - 25.03.2019
 - Add Mapbox
 - Add Beacon logic
