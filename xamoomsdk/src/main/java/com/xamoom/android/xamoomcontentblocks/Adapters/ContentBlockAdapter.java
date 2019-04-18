@@ -135,7 +135,9 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     super.onViewAttachedToWindow(holder);
 
     if (holder instanceof ContentBlock9ViewHolder) {
-      contentBlock9Adapter.onViewAttachedToWindow(((ContentBlock9ViewHolder) holder));
+      if (contentBlock9Adapter != null) {
+        contentBlock9Adapter.onViewAttachedToWindow(((ContentBlock9ViewHolder) holder));
+      }
     }
   }
 
@@ -144,7 +146,9 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     super.onViewDetachedFromWindow(holder);
 
     if (holder instanceof ContentBlock9ViewHolder) {
-      contentBlock9Adapter.onViewDettachToWindow(((ContentBlock9ViewHolder) holder));
+      if (contentBlock9Adapter != null) {
+        contentBlock9Adapter.onViewDettachToWindow(((ContentBlock9ViewHolder) holder));
+      }
     }
   }
 
@@ -161,15 +165,21 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   }
 
   public void onSaveInstanceState(Bundle bundle) {
-    contentBlock9Adapter.onSavedInstanceState(bundle);
+    if (contentBlock9Adapter != null) {
+      contentBlock9Adapter.onSavedInstanceState(bundle);
+    }
   }
 
   public void onDestroy() {
-    contentBlock9Adapter.onDestroy();
+    if (contentBlock9Adapter != null) {
+      contentBlock9Adapter.onDestroy();
+    }
   }
 
   public void onLowMemory() {
-    contentBlock9Adapter.onLowMemory();
+    if (contentBlock9Adapter != null) {
+      contentBlock9Adapter.onLowMemory();
+    }
   }
 
   public AdapterDelegatesManager getDelegatesManager() {

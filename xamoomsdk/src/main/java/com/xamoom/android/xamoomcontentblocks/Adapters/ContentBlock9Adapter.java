@@ -97,6 +97,6 @@ public class ContentBlock9Adapter implements AdapterDelegate<List<ContentBlock>>
   }
 
   private boolean isMapViewActive() {
-    return mapholder != null && !mapholder.getMapView().isDestroyed();
+    return mapholder != null  && !mapholder.getMapView().isDestroyed();
   }
 }

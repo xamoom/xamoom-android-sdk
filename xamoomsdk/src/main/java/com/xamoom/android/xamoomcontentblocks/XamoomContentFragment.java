@@ -237,13 +237,17 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   @Override
   public void onDestroyView() {
     super.onDestroyView();
-    mContentBlockAdapter.onDestroy();
+    if (mContentBlockAdapter != null) {
+      mContentBlockAdapter.onDestroy();
+    }
   }
 
   @Override
   public void onLowMemory() {
     super.onLowMemory();
-    mContentBlockAdapter.onLowMemory();
+    if (mContentBlockAdapter != null) {
+      mContentBlockAdapter.onLowMemory();
+    }
   }
 
   /**
