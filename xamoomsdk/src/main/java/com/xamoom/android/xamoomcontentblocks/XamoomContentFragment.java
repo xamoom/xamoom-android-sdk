@@ -18,6 +18,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -26,6 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 
 import com.xamoom.android.xamoomcontentblocks.Adapters.ContentBlockAdapter;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock1ViewHolder;
@@ -178,6 +180,9 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
     mRootView.setBackgroundColor(mBackgroundColor);
 
     mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.contentblock_recycler_view);
+    DefaultItemAnimator animator = new DefaultItemAnimator();
+    animator.setMoveDuration(1050);
+    mRecyclerView.setItemAnimator(animator);
     setupRecyclerView();
 
     return mRootView;
@@ -259,6 +264,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
 
     mRecyclerView.setLayoutManager(layoutManager);
     mRecyclerView.setAdapter(mContentBlockAdapter);
+    mRecyclerView.setItemAnimator(new MyAnimator());
   }
 
   /**
@@ -527,5 +533,31 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
 
   public void setShowAllBlocksWhenOffline(boolean showAllBlocksWhenOffline) {
     this.showAllBlocksWhenOffline = showAllBlocksWhenOffline;
+  }
+}
+
+class MyAnimator extends DefaultItemAnimator {
+  @Override
+  public boolean animateAdd(RecyclerView.ViewHolder holder) {
+    Log.d("foo", "animateAdd");
+    return super.animateAdd(holder);
+  }
+
+  @Override
+  public boolean animateChange(RecyclerView.ViewHolder oldHolder, RecyclerView.ViewHolder newHolder, int fromX, int fromY, int toX, int toY) {
+    Log.d("foo", "animateChange");
+    return super.animateChange(oldHolder, newHolder, fromX, fromY, toX, toY);
+  }
+
+  @Override
+  public boolean animateMove(RecyclerView.ViewHolder holder, int fromX, int fromY, int toX, int toY) {
+    Log.d("foo", "animateMove");
+    return super.animateMove(holder, fromX, fromY, toX, toY);
+  }
+
+  @Override
+  public boolean animateRemove(RecyclerView.ViewHolder holder) {
+    Log.d("foo", "animateRemove");
+    return super.animateRemove(holder);
   }
 }

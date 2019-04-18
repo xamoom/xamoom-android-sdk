@@ -14,7 +14,7 @@ import com.xamoom.android.xamoomcontentblocks.Helper.LinePagerIndicatorDecoratio
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock
 
 
-class ContentBlock12ViewHolder(val view: View, val context: Context, val fragment: Fragment?, val youtubeApiKey: String?, val bitmapCache: android.support.v4.util.LruCache<String, Bitmap>?): RecyclerView.ViewHolder(view) {
+class ContentBlock12ViewHolder(val view: View, val context: Context, val fragment: Fragment?, val youtubeApiKey: String?, val bitmapCache: android.support.v4.util.LruCache<String, Bitmap>?, parentRecyclerView: RecyclerView?): RecyclerView.ViewHolder(view) {
     private var recyclerView: RecyclerView = view.findViewById(R.id.horizontal_recycler_view)
     private var titleTextView: TextView = view.findViewById(R.id.horizontal_recycler_title)
 
@@ -27,6 +27,7 @@ class ContentBlock12ViewHolder(val view: View, val context: Context, val fragmen
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
+                //parentRecyclerView!!.adapter.notifyItemChanged(parentRecyclerView.getChildAdapterPosition(view))
                 recyclerView!!.adapter.notifyDataSetChanged()
             }
         })

@@ -33,6 +33,9 @@ class ContentBlock12Adapter: AdapterDelegate<ArrayList<ContentBlock>> {
         val view = LayoutInflater.from(context)
                 .inflate(R.layout.content_block_12_layout, parent, false)
         val cache = bitmapCache as LruCache<String, Bitmap>
-        return ContentBlock12ViewHolder(view, context, fragment, youtubeApiKey, cache)
+        if (parent is RecyclerView) {
+            return ContentBlock12ViewHolder(view, context, fragment, youtubeApiKey, cache, parent)
+        }
+        return ContentBlock12ViewHolder(view, context, fragment, youtubeApiKey, cache, null)
     }
 }
