@@ -105,7 +105,7 @@ public class ContentBlock9ViewHolderUtils {
           svg.setDocumentWidth(newImageWidth);
           svg.setDocumentHeight(newImageWidth / imageRatio);
 
-          icon = Bitmap.createBitmap((int) svg.getDocumentWidth(), (int) svg.getDocumentHeight(), Bitmap.Config.ARGB_8888);
+          icon = Bitmap.createBitmap((int) svg.getDocumentWidth(), (int) (svg.getDocumentHeight() + svg.getDocumentHeight() / 2), Bitmap.Config.ARGB_8888);
           Canvas canvas1 = new Canvas(icon);
           svg.renderToCanvas(canvas1);
         }
@@ -115,7 +115,7 @@ public class ContentBlock9ViewHolderUtils {
         //resize the icon
         double imageRatio = (double) icon.getWidth() / (double) icon.getHeight();
         double newHeight = newImageWidth / imageRatio;
-        icon = Bitmap.createScaledBitmap(icon, (int) newImageWidth, (int) newHeight, false);
+        icon = Bitmap.createScaledBitmap(icon, (int) newImageWidth, (int) (newHeight + newHeight / 2), false);
       }
     } catch (UnsupportedEncodingException e) {
       e.printStackTrace();

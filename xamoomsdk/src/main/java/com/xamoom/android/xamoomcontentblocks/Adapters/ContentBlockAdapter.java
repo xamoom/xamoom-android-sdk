@@ -49,6 +49,8 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   private ArrayList<String> urlScheme;
   private ContentBlock9Adapter contentBlock9Adapter;
   private String mapboxStyleString;
+  private String navigationButtonTintColorString;
+  private String contentButtonTextColorString;
 
   private String mLinkColor = "00F";
   private String mBackgroundColor = "000";
@@ -63,11 +65,15 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
    * @param showSpotMapContentLinks Toggle links from your spotmap spots to content.
    * @param youtubeApiKey Youtube api key from Google Developer Console.
    * @param contentBlock3ViewHolderInteractionListener Listener for viewHolder3 interactions.
+   * @param contentBlockUrlScheme ArrayList of urls as String, which should be openend in a WebView.
+   * @param mapboxStyle The mapbox style for ContentBlock9ViewHolder. Default is street style.
+   * @param navigationButtonTintColorString The color for ContentBlock9ViewHolder navigation FAB button.
+   * @param contentButtonTextColorString The color for ContentBlock9ViewHolder content button text.
    */
   public ContentBlockAdapter(Fragment fragment, List<ContentBlock> contentBlocks,
                              boolean showSpotMapContentLinks, String youtubeApiKey,
                              ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener contentBlock3ViewHolderInteractionListener,
-                             ArrayList<String> contentBlockUrlScheme, String mapboxStyle) {
+                             ArrayList<String> contentBlockUrlScheme, String mapboxStyle, String navigationButtonTintColorString, String contentButtonTextColorString) {
     mOnContentBlock3ViewHolderInteractionListener = contentBlock3ViewHolderInteractionListener;
     mFragment = fragment;
     mContentBlocks = contentBlocks;
@@ -75,6 +81,8 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     mYoutubeApiKey = youtubeApiKey;
     urlScheme = contentBlockUrlScheme;
     mapboxStyleString = mapboxStyle;
+    this.navigationButtonTintColorString = navigationButtonTintColorString;
+    this.contentButtonTextColorString = contentButtonTextColorString;
     setupAdapters();
   }
 
@@ -109,7 +117,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     return mDelegatesManager.onCreateViewHolder(parent, viewType, mFragment, mEnduserApi, mYoutubeApiKey,
         mBitmapCache, mContentCache, showContentLinks, mListManager,
-        mOnContentBlock3ViewHolderInteractionListener, mOnXamoomContentFragmentInteractionListener, urlScheme, mapboxStyleString);
+        mOnContentBlock3ViewHolderInteractionListener, mOnXamoomContentFragmentInteractionListener, urlScheme, mapboxStyleString, navigationButtonTintColorString, contentButtonTextColorString);
   }
 
   @Override
@@ -233,5 +241,13 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
   public void setMapboxStyleString(String mapboxStyleString) {
     this.mapboxStyleString = mapboxStyleString;
+  }
+
+  public void setNavigationButtonTintColorString(String navigationButtonTintColorString) {
+    this.navigationButtonTintColorString = navigationButtonTintColorString;
+  }
+
+  public void setContentButtonTextColorString(String contentButtonTextColorString) {
+    this.contentButtonTextColorString = contentButtonTextColorString;
   }
 }

@@ -39,7 +39,8 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 @SuppressLint("ClickableViewAccessibility")
-class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val enduserApi: EnduserApi, fragment: Fragment, val listener: XamoomContentFragment.OnXamoomContentFragmentInteractionListener, private val mapBoxStyleString: String? = com.mapbox.mapboxsdk.maps.Style.MAPBOX_STREETS) : RecyclerView.ViewHolder(view), OnMapReadyCallback {
+class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val enduserApi: EnduserApi, fragment: Fragment, val listener: XamoomContentFragment.OnXamoomContentFragmentInteractionListener,
+                              private val mapBoxStyleString: String? = com.mapbox.mapboxsdk.maps.Style.MAPBOX_STREETS, private val navigationTintColorString: String?, private val contentButtonTextColorString: String?) : RecyclerView.ViewHolder(view), OnMapReadyCallback {
 
     private var mapBoxStyle: com.mapbox.mapboxsdk.maps.Style? = null
     private var mapBoxMap: MapboxMap? = null
@@ -111,8 +112,17 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
             }
         })
 
-        fab.backgroundTintList = ColorStateList.valueOf(mContext!!.resources
-                .getColor(R.color.linkblock_navigation_background_color))
+        if (navigationTintColorString != null) {
+            fab.backgroundTintList = ColorStateList.valueOf(Color.parseColor(navigationTintColorString))
+        } else {
+            fab.backgroundTintList = ColorStateList.valueOf(mContext!!.resources
+                    .getColor(R.color.linkblock_navigation_background_color))
+        }
+
+        if (contentButtonTextColorString != null) {
+            spotContentButton.setTextColor(Color.parseColor(contentButtonTextColorString))
+        }
+
         fab.visibility = View.GONE
     }
 
@@ -196,6 +206,7 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
         if (!mapBoxStyleString.isNullOrEmpty()) {
             style = mapBoxStyleString!!
         }
+        mapboxMap.setMaxZoomPreference(17.4)
         mapBoxMap = mapboxMap
         mapBoxMap!!.setStyle(style) { style ->
 
@@ -222,7 +233,7 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
             mapBoxStyle = style
             if (mSpotList.size > 1) {
                 mapBoxMap!!.animateCamera(ContentBlock9ViewHolderUtils.zoomToDisplayAllSpots(mSpotList, 50))
-            } else {
+            } else if (mSpotList.size == 1) {
                 val position = CameraPosition.Builder().target(com.mapbox.mapboxsdk.geometry.LatLng(mSpotList[0].location.latitude, mSpotList[0].location.longitude)).zoom(10.0).tilt(0.0).build()
                 mapBoxMap!!.animateCamera(CameraUpdateFactory.newCameraPosition(position))
             }
@@ -243,7 +254,7 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
     private fun showSpotDetails(spot: Spot) {
         mActiveSpot = spot
 
-        val position = CameraPosition.Builder().target(com.mapbox.mapboxsdk.geometry.LatLng(spot.location.latitude - 0.001, spot.location.longitude)).zoom(15.0).tilt(0.0).build()
+        val position = CameraPosition.Builder().target(com.mapbox.mapboxsdk.geometry.LatLng(spot.location.latitude - 0.0002, spot.location.longitude)).zoom(mapBoxMap?.maxZoomLevel!!).tilt(0.0).build()
         mapBoxMap!!.animateCamera(CameraUpdateFactory.newCameraPosition(position))
 
         spotTitleTextView.text = spot.name

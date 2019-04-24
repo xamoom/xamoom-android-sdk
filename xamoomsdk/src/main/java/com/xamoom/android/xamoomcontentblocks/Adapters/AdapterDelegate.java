@@ -9,6 +9,7 @@
 package com.xamoom.android.xamoomcontentblocks.Adapters;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.LruCache;
 import android.support.v7.widget.RecyclerView;
@@ -44,6 +45,10 @@ public interface AdapterDelegate<T> {
    * @param showContentLinks Toggle links from your spotmap spots to content.
    * @param onContentBlock3ViewHolderInteractionListener Listener for viewHolder3 interactions.
    * @param onXamoomContentFragmentInteractionListener Listener for XamoomContent interactions.
+   * @param urls ArrayList of urls, which should be opened in WebView.
+   * @param mapboxStyleString The custom mapbox style. Default is street.
+   * @param navigationButtonTintColorString The ContentBlock9ViewHolder FAB tinti color as String.
+   * @param contentButtonTextColorString The ContentBlock9ViewHolder content button text color.
    * @return Custom contentBlock viewholder.
    */
   @NonNull RecyclerView.ViewHolder onCreateViewHolder(
@@ -52,7 +57,8 @@ public interface AdapterDelegate<T> {
           ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener
           onContentBlock3ViewHolderInteractionListener,
           XamoomContentFragment.OnXamoomContentFragmentInteractionListener
-          onXamoomContentFragmentInteractionListener, ArrayList<String> urls, String mapboxStyleString);
+          onXamoomContentFragmentInteractionListener, ArrayList<String> urls, String mapboxStyleString,
+          @Nullable String navigationButtonTintColorString, @Nullable String contentButtonTextColorString);
 
   /**
    * Called before recyclerview shows viewholder.

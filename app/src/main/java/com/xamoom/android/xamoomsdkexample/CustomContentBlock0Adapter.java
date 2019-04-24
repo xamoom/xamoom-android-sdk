@@ -55,7 +55,11 @@ public class CustomContentBlock0Adapter implements AdapterDelegate<List<ContentB
 
   @NonNull
   @Override
-  public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, Fragment fragment, EnduserApi enduserApi, String youtubeApiKey, LruCache bitmapCache, LruCache contentCache, boolean showContentLinks, ListManager listManager, AdapterDelegatesManager adapterDelegatesManager, ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener onContentBlock3ViewHolderInteractionListener, XamoomContentFragment.OnXamoomContentFragmentInteractionListener onXamoomContentFragmentInteractionListener, ArrayList<String> urls, @Nullable String mapboxStyleString) {
+  public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, Fragment fragment, EnduserApi enduserApi, String youtubeApiKey, LruCache bitmapCache, LruCache contentCache,
+                                                    boolean showContentLinks, ListManager listManager, AdapterDelegatesManager adapterDelegatesManager,
+                                                    ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener onContentBlock3ViewHolderInteractionListener,
+                                                    XamoomContentFragment.OnXamoomContentFragmentInteractionListener onXamoomContentFragmentInteractionListener, ArrayList<String> urls,
+                                                    @Nullable String mapboxStyleString, @Nullable String navigationButtonTintColorString, @Nullable String contentButtonTextColorString) {
     View view = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.content_block_0_layout, parent, false);
     return new ContentBlock0ViewHolder(view);
