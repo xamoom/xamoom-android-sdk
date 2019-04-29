@@ -31,6 +31,7 @@ import org.altbeacon.beacon.startup.BootstrapNotifier;
 import org.altbeacon.beacon.startup.RegionBootstrap;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -78,10 +79,13 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
     public boolean fastInsideRegionScanning = true;
     private boolean areBeaconsLoading = false;
 
+    private int cooldownTime = 0;
+
     /**
      * Method to get the singleton on XamoomBeaconService.
      *
      * @param context A context.
+     * @param api The enduser api.
      * @return An instance of XamoomBeaconService.
      */
     public static XamoomBeaconService getInstance(Context context, EnduserApi api) {
@@ -92,6 +96,26 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
             mInstance.api = api;
         }
 
+        return mInstance;
+    }
+
+    /**
+     * Method to get the singleton on XamoomBeaconService.
+     *
+     * @param context A context.
+     * @param api The enduser api.
+     * @param cooldownTime The beacon cooldown time in milliseconds.
+     * @return An instance of XamoomBeaconService.
+     */
+    public static XamoomBeaconService getInstance(Context context, EnduserApi api, int cooldownTime) {
+        if (mInstance == null) {
+            mInstance = new XamoomBeaconService();
+            mInstance.mContext = context;
+            mInstance.mBeaconManager = org.altbeacon.beacon.BeaconManager.getInstanceForApplication(context);
+            mInstance.api = api;
+        }
+
+        mInstance.cooldownTime = cooldownTime;
         return mInstance;
     }
 
@@ -318,6 +342,13 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
         for (int i = 0; i < beacons.size(); i++) {
             final Beacon beacon = (Beacon) beacons.toArray()[i];
 
+            if (isOnCooldown(beacon, mContext.getSharedPreferences(PushDeviceUtil.PREFES_NAME,
+                    Context.MODE_PRIVATE))) {
+                areBeaconsLoading = false;
+                break;
+            }
+
+            areBeaconsLoading = true;
             api.getContentByBeacon(Integer.parseInt(api.getMajorId()), beacon.getId3().toInt(), null, null, ContentReason.NOTIFICATION, new APICallback<Content, List<Error>>() {
                 @Override
                 public void finished(Content result) {
@@ -406,6 +437,27 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
         sendBroadcast(BEACON_SERVICE_CONNECT_BROADCAST, null, null);
 
         setBackgroundScanningSpeeds(BETWEEN_SCAN_PERIOD, SCAN_PERIOD);
+    }
+
+    private boolean isOnCooldown(Beacon beacon, SharedPreferences sharedPreferences) {
+        float timestamp = sharedPreferences.getFloat(beacon.getId3().toString(), -1);
+        if (timestamp == -1) {
+            sharedPreferences.edit()
+                    .putFloat(beacon.getId3().toString(), Calendar.getInstance().getTimeInMillis())
+                    .apply();
+            return false;
+        }
+
+        float diff = Calendar.getInstance().getTimeInMillis() - timestamp;
+
+        if (diff > this.cooldownTime) {
+            sharedPreferences.edit()
+                    .putFloat(beacon.getId3().toString(), Calendar.getInstance().getTimeInMillis())
+                    .apply();
+            return false;
+        }
+
+        return true;
     }
 
     @Override
