@@ -78,10 +78,10 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
   private static final String PREF_EPHEMERAL_ID = "com.xamoom.android.xamoomsdk.ephemeralid";
   private static final String PREF_AUTHORIZATION_ID = "com.xamoom.android.xamoomsdk.authorization";
 
-
   public static final String PREF_ENDUSER_API_KEY = "com.xamoom.android.xamoomsdk.api.key";
   public static final String PREF_ENDUSER_API_KEY_IS_PRODUCTION = "com.xamoom.android.xamoomsdk.is.production";
   public static final String PREF_ENDUSER_API_KEY_MAJOR_ID = "com.xamoom.android.xamoomsdk.major.id";
+  public static final String PREF_ENDUSER_BEACON_COOLDOWN = "com.xamoom.android.xamoomsdk.beacon.cooldown";
 
   private static EnduserApi sharedInstance;
 
@@ -98,12 +98,14 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
   private String authorizationId;
   private String apiUrl;
   private String majorId;
+  private int cooldown;
 
-  public EnduserApi(@NonNull final String apikey, @NonNull Context context, @Nullable String majorId) {
+  public EnduserApi(@NonNull final String apikey, @NonNull Context context, @Nullable String majorId, @Nullable int cooldown) {
     this.apiKey = apikey;
     this.context = context;
     this.offlineEnduserApi = new OfflineEnduserApi(context);
     this.majorId = majorId;
+    this.cooldown = cooldown;
 
     apiUrl = API_URL_PROD;
 
@@ -116,11 +118,12 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     preserveEnduserApi(apiKey, true, majorId);
   }
 
-  public EnduserApi(@NonNull final String apikey, @NonNull Context context, boolean isProduction, @Nullable String majorId) {
+  public EnduserApi(@NonNull final String apikey, @NonNull Context context, boolean isProduction, @Nullable String majorId, @Nullable int cooldown) {
     this.apiKey = apikey;
     this.context = context;
     this.offlineEnduserApi = new OfflineEnduserApi(context);
     this.majorId = majorId;
+    this.cooldown = cooldown;
 
     if (isProduction) {
       apiUrl = API_URL_PROD;
@@ -149,7 +152,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
   }
 
     private void preserveEnduserApi(String key, boolean isProduction, @Nullable String beaconMajorId) {
-        sharedPref.edit().putString(PREF_ENDUSER_API_KEY, key).putBoolean(PREF_ENDUSER_API_KEY_IS_PRODUCTION, isProduction).putString(PREF_ENDUSER_API_KEY_MAJOR_ID, beaconMajorId).apply();
+        sharedPref.edit().putString(PREF_ENDUSER_API_KEY, key).putBoolean(PREF_ENDUSER_API_KEY_IS_PRODUCTION, isProduction).putString(PREF_ENDUSER_API_KEY_MAJOR_ID, beaconMajorId).putInt(PREF_ENDUSER_BEACON_COOLDOWN, cooldown).apply();
     }
 
     private static EnduserApi restoreEnduserApi(Context context) {
@@ -161,12 +164,12 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
         String apiKey = sharedPref.getString(PREF_ENDUSER_API_KEY, null);
         Boolean isProduction = sharedPref.getBoolean(PREF_ENDUSER_API_KEY_IS_PRODUCTION, true);
         String majorId = sharedPref.getString(PREF_ENDUSER_API_KEY_MAJOR_ID, null);
-
+        int cooldown = sharedPref.getInt(PREF_ENDUSER_BEACON_COOLDOWN, 0);
         if (apiKey == null) {
             return null;
         }
 
-        return new EnduserApi(apiKey, context, isProduction, majorId);
+        return new EnduserApi(apiKey, context, isProduction, majorId, cooldown);
     }
 
   /*
@@ -1103,6 +1106,10 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     return apiKey;
   }
 
+  public int getCooldown() {
+    return this.cooldown;
+  }
+
   /**
    * Use this to get your instance. It will create a new one with your api key, when
    * there is no isntance.
@@ -1110,13 +1117,13 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
    * @param apikey Your xamoom api key.
    * @return EnduserApi instance.
    */
-  public static EnduserApi getSharedInstance(@NonNull String apikey, Context context, @Nullable String majorId) {
+  public static EnduserApi getSharedInstance(@NonNull String apikey, Context context, @Nullable String majorId, @Nullable int cooldown) {
     if (apikey == null) {
       throw new NullPointerException("Apikey should not be null.");
     }
 
     if (EnduserApi.sharedInstance == null) {
-      EnduserApi.sharedInstance = new EnduserApi(apikey, context, majorId);
+      EnduserApi.sharedInstance = new EnduserApi(apikey, context, majorId, cooldown);
     }
     return EnduserApi.sharedInstance;
   }

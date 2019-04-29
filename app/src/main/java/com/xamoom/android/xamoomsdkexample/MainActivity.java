@@ -197,7 +197,7 @@ public class MainActivity extends AppCompatActivity
   public void getContent() {
     List tags = new ArrayList();
     tags.add("x-start");
-    mEnduserApi = new EnduserApi("3226a5a4-451e-4f40-943e-be55d43266f1", getApplicationContext(), false, null);
+    mEnduserApi = new EnduserApi("3226a5a4-451e-4f40-943e-be55d43266f1", getApplicationContext(), false, null, 0);
     mEnduserApi.getContentsByTags(tags, 10, null, null, new APIListCallback<List<Content>, List<Error>>() {
       @Override
       public void finished(List<Content> result, String cursor, boolean hasMore) {
