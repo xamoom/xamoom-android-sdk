@@ -34,12 +34,14 @@ public class PushDevice extends Resource {
   private String language;
   @SerializedName("sdk-version")
   private String sdkVersion;
+  @SerializedName("with-sound")
+  private boolean sound;
 
   public PushDevice() {
 
   }
 
-  public PushDevice(String token, Map<String, Float> location, String appVersion, String appId, String sdkVersion) {
+  public PushDevice(String token, Map<String, Float> location, String appVersion, String appId, String sdkVersion, boolean sound) {
     this.uid = token;
     this.os = "Android";
     this.appVersion = appVersion;
@@ -55,6 +57,7 @@ public class PushDevice extends Resource {
     this.updatedAt = "";
     this.createdAt = "";
     this.language = Locale.getDefault().getLanguage();
+    this.sound = sound;
   }
 
   public String getUid() {
@@ -119,5 +122,13 @@ public class PushDevice extends Resource {
 
   public void setCreatedAt(String createdAt) {
     this.createdAt = createdAt;
+  }
+
+  public boolean isSound() {
+    return sound;
+  }
+
+  public void setSound(boolean sound) {
+    this.sound = sound;
   }
 }

@@ -935,7 +935,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
 
     sharedPref.edit().putLong("xamoom-last-push-register", java.lang.System.currentTimeMillis()).apply();
 
-    PushDevice device = new PushDevice(token, location, version, packageName, sdkVersion);
+    PushDevice device = new PushDevice(token, location, version, packageName, sdkVersion, util.getSound());
 
     JsonApiObject jsonApiObject = new JsonApiObject();
     jsonApiObject.setResource(device);
