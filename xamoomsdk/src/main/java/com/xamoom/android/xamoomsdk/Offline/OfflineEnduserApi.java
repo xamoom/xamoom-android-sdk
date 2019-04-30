@@ -16,6 +16,7 @@ import android.support.annotation.Nullable;
 
 import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.APIListCallback;
+import com.xamoom.android.xamoomsdk.APIPasswordCallback;
 import com.xamoom.android.xamoomsdk.Enums.ContentSortFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotSortFlags;
@@ -40,7 +41,7 @@ public class OfflineEnduserApi {
     mOfflineStorageManager = OfflineStorageManager.getInstance(context);
   }
 
-  public void getContent(String contentID, APICallback<Content, List<Error>> callback) {
+  public void getContent(String contentID, APIPasswordCallback<Content, List<Error>> callback) {
     Content content = mOfflineStorageManager.getContent(contentID);
 
     if (callback != null) {
@@ -48,8 +49,8 @@ public class OfflineEnduserApi {
     }
   }
 
-  public void getContentByLocationIdentifier(String locationIdentifier, APICallback<Content,
-      List<Error>> callback) {
+  public void getContentByLocationIdentifier(String locationIdentifier, APIPasswordCallback<Content,
+        List<Error>> callback) {
     Content content = mOfflineStorageManager.getContentWithLocationIdentifier(locationIdentifier);
 
     if (callback != null) {
@@ -57,7 +58,7 @@ public class OfflineEnduserApi {
     }
   }
 
-  public void getContentByBeacon(int major, int minor, APICallback<Content, List<Error>>
+  public void getContentByBeacon(int major, int minor, APIPasswordCallback<Content, List<Error>>
       callback) {
     @SuppressLint("DefaultLocale") String beaconIds = String.format("%d|%d", major, minor);
     getContentByLocationIdentifier(beaconIds, callback);

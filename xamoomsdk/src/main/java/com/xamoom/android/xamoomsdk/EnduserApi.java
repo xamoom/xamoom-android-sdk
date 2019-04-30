@@ -8,7 +8,9 @@
 
 package com.xamoom.android.xamoomsdk;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -17,7 +19,13 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
 import com.xamoom.android.xamoomsdk.Enums.ContentReason;
@@ -41,6 +49,7 @@ import com.xamoom.android.xamoomsdk.Utils.UrlUtil;
 import java.text.Normalizer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -151,26 +160,26 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     sharedInstance = this;
   }
 
-    private void preserveEnduserApi(String key, boolean isProduction, @Nullable String beaconMajorId) {
-        sharedPref.edit().putString(PREF_ENDUSER_API_KEY, key).putBoolean(PREF_ENDUSER_API_KEY_IS_PRODUCTION, isProduction).putString(PREF_ENDUSER_API_KEY_MAJOR_ID, beaconMajorId).putInt(PREF_ENDUSER_BEACON_COOLDOWN, cooldown).apply();
+  private void preserveEnduserApi(String key, boolean isProduction, @Nullable String beaconMajorId) {
+    sharedPref.edit().putString(PREF_ENDUSER_API_KEY, key).putBoolean(PREF_ENDUSER_API_KEY_IS_PRODUCTION, isProduction).putString(PREF_ENDUSER_API_KEY_MAJOR_ID, beaconMajorId).putInt(PREF_ENDUSER_BEACON_COOLDOWN, cooldown).apply();
+  }
+
+  private static EnduserApi restoreEnduserApi(Context context) {
+    String preferencesName = String.format("%s.xamoomsdk.preferences",
+            context.getApplicationInfo().loadLabel(context.getPackageManager()).toString());
+    SharedPreferences sharedPref = context.getSharedPreferences(preferencesName,
+            Context.MODE_PRIVATE);
+
+    String apiKey = sharedPref.getString(PREF_ENDUSER_API_KEY, null);
+    Boolean isProduction = sharedPref.getBoolean(PREF_ENDUSER_API_KEY_IS_PRODUCTION, true);
+    String majorId = sharedPref.getString(PREF_ENDUSER_API_KEY_MAJOR_ID, null);
+    int cooldown = sharedPref.getInt(PREF_ENDUSER_BEACON_COOLDOWN, 0);
+    if (apiKey == null) {
+      return null;
     }
 
-    private static EnduserApi restoreEnduserApi(Context context) {
-        String preferencesName = String.format("%s.xamoomsdk.preferences",
-                context.getApplicationInfo().loadLabel(context.getPackageManager()).toString());
-        SharedPreferences sharedPref = context.getSharedPreferences(preferencesName,
-                Context.MODE_PRIVATE);
-
-        String apiKey = sharedPref.getString(PREF_ENDUSER_API_KEY, null);
-        Boolean isProduction = sharedPref.getBoolean(PREF_ENDUSER_API_KEY_IS_PRODUCTION, true);
-        String majorId = sharedPref.getString(PREF_ENDUSER_API_KEY_MAJOR_ID, null);
-        int cooldown = sharedPref.getInt(PREF_ENDUSER_BEACON_COOLDOWN, 0);
-        if (apiKey == null) {
-            return null;
-        }
-
-        return new EnduserApi(apiKey, context, isProduction, majorId, cooldown);
-    }
+    return new EnduserApi(apiKey, context, isProduction, majorId, cooldown);
+  }
 
   /*
   protected EnduserApi(Parcel in) {
@@ -236,8 +245,8 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
    * @param callback {@link APICallback}
    * @return Used call object
    */
-  public Call getContent(String contentID, APICallback<Content, List<Error>> callback) {
-    return getContent(contentID, null, null, callback);
+  public Call getContent(String contentID, String password, APIPasswordCallback<Content,  List<Error>> callback) {
+    return getContent(contentID, null, null, password, callback);
   }
 
   /**
@@ -248,9 +257,9 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
    * @param callback {@link APICallback}
    * @return Used call object
    */
-  public Call getContent(String contentID, EnumSet<ContentFlags> contentFlags, APICallback<Content,
+  public Call getContent(String contentID, EnumSet<ContentFlags> contentFlags, String password, APIPasswordCallback<Content,
           List<at.rags.morpheus.Error>> callback) {
-    return getContent(contentID, contentFlags, null, callback);
+    return getContent(contentID, contentFlags, null, password, callback);
   }
 
   /**
@@ -262,8 +271,8 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
    * @param callback {@link APICallback}
    * @return Used call object
    */
-  public Call getContent(String contentID, EnumSet<ContentFlags> contentFlags, ContentReason reason,
-                         APICallback<Content, List<at.rags.morpheus.Error>> callback) {
+  public Call getContent(final String contentID, final EnumSet<ContentFlags> contentFlags, final ContentReason reason, String password,
+                         final APIPasswordCallback<Content, List<at.rags.morpheus.Error>> callback) {
     if (offline) {
       offlineEnduserApi.getContent(contentID, callback);
       return null;
@@ -282,8 +291,58 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     if (reason != null) {
       headers.put(EnduserApiInterface.HEADER_REASON, String.valueOf(reason.getValue()));
     }
+
+    if (password != null) {
+      headers.put(EnduserApiInterface.HEADER_PASSWORD, password);
+    }
+
     Call<ResponseBody> call = enduserApiInterface.getContent(headers, contentID, params);
-    callHandler.enqueCall(call, callback);
+
+    APIPasswordCallback<Content, List<Error>> passwordCallback = new APIPasswordCallback<Content, List<Error>>() {
+      @Override
+      public void finished(Content result) {
+        callback.finished(result);
+      }
+
+      @Override
+      public void error(final List<Error> error) {
+        callback.error(error);
+      }
+
+      @Override
+      public void passwordRequested() {
+        int contentIdOpens = sharedPref.getInt(contentID, 0);
+        float contentNextOpen = sharedPref.getFloat(contentID+"_next_open", -1);
+
+        Date n = new Date();
+        float now = n.getTime();
+        float diff = now - (15 * 60 * 1000);
+
+        if (contentNextOpen == -1 && contentIdOpens <= 2) {
+          callback.passwordRequested();
+          sharedPref.edit().putInt(contentID, contentIdOpens + 1).apply();
+        } else if (contentIdOpens == 3 && diff > contentNextOpen && contentNextOpen != -1) {
+          sharedPref.edit().putInt(contentID, 1).apply();
+          callback.passwordRequested();
+          sharedPref.edit().putFloat(contentID+"_next_open", -1).apply();
+        } else {
+          Error e = new Error();
+          e.setStatus("404");
+          e.setDetail("Password to often");
+          e.setCode("92");
+          ArrayList<Error> eList = new ArrayList<>();
+          eList.add(e);
+
+          if (contentNextOpen == -1) {
+            sharedPref.edit().putFloat(contentID+"_next_open", now).apply();
+          }
+
+          callback.error(eList);
+        }
+      }
+    };
+
+    callHandler.enquePasswordCall(call, passwordCallback);
     return call;
   }
 
@@ -294,9 +353,9 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
    * @param callback {@link APICallback}
    * @return Used call object
    */
-  public Call getContentByLocationIdentifier(String locationIdentifier, APICallback<Content,
+  public Call getContentByLocationIdentifier(String locationIdentifier, String password, APIPasswordCallback<Content,
           List<Error>> callback) {
-    return getContentByLocationIdentifier(locationIdentifier, null, callback);
+    return getContentByLocationIdentifier(locationIdentifier, null, password, callback);
   }
 
   /**
@@ -309,8 +368,9 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
    */
   public Call getContentByLocationIdentifier(String locationIdentifier,
                                              EnumSet<ContentFlags> contentFlags,
-                                             APICallback<Content, List<Error>> callback) {
-    return getContentByLocationIdentifier(locationIdentifier, contentFlags, null, callback);
+                                             String password,
+                                             APIPasswordCallback<Content, List<Error>> callback) {
+    return getContentByLocationIdentifier(locationIdentifier, contentFlags, null, password, callback);
   }
 
   /**
@@ -326,8 +386,9 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
   public Call getContentByLocationIdentifier(String locationIdentifier,
                                              EnumSet<ContentFlags> contentFlags,
                                              HashMap<String, Object> conditions,
-                                             APICallback<Content, List<Error>> callback) {
-    return getContentByLocationIdentifier(locationIdentifier, contentFlags, conditions, null, callback);
+                                             String password,
+                                             APIPasswordCallback<Content, List<Error>> callback) {
+    return getContentByLocationIdentifier(locationIdentifier, contentFlags, conditions, null, password, callback);
   }
 
   /**
@@ -341,11 +402,12 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
    * @param callback {@link APICallback}
    * @return Used call object
    */
-  public Call getContentByLocationIdentifier(String locationIdentifier,
+  public Call getContentByLocationIdentifier(final String locationIdentifier,
                                              EnumSet<ContentFlags> contentFlags,
                                              HashMap<String, Object> conditions,
                                              ContentReason reason,
-                                             APICallback<Content, List<Error>> callback) {
+                                             String password,
+                                             final APIPasswordCallback<Content, List<Error>> callback) {
     if (offline) {
       offlineEnduserApi.getContentByLocationIdentifier(locationIdentifier, callback);
       return null;
@@ -354,6 +416,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     if (conditions == null) {
       conditions = new HashMap<>();
     }
+
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
     sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -374,9 +437,57 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     if (reason != null) {
       headers.put(EnduserApiInterface.HEADER_REASON, String.valueOf(reason.getValue()));
     }
+    if (password != null) {
+      headers.put(EnduserApiInterface.HEADER_PASSWORD, password);
+    }
 
     Call<ResponseBody> call = enduserApiInterface.getContents(headers, params);
-    callHandler.enqueCall(call, callback);
+
+    APIPasswordCallback<Content, List<Error>> passwordCallback = new APIPasswordCallback<Content, List<Error>>() {
+      @Override
+      public void finished(Content result) {
+        callback.finished(result);
+      }
+
+      @Override
+      public void error(final List<Error> error) {
+        callback.error(error);
+      }
+
+      @Override
+      public void passwordRequested() {
+        int contentIdOpens = sharedPref.getInt(locationIdentifier, 0);
+        float contentNextOpen = sharedPref.getFloat(locationIdentifier+"_next_open", -1);
+
+        Date n = new Date();
+        float now = n.getTime();
+        float diff = now - (15 * 60 * 1000);
+
+        if (contentNextOpen == -1 && contentIdOpens <= 2) {
+          callback.passwordRequested();
+          sharedPref.edit().putInt(locationIdentifier, contentIdOpens + 1).apply();
+        } else if (contentIdOpens == 3 && diff > contentNextOpen && contentNextOpen != -1) {
+          sharedPref.edit().putInt(locationIdentifier, 1).apply();
+          callback.passwordRequested();
+          sharedPref.edit().putFloat(locationIdentifier+"_next_open", -1).apply();
+        } else {
+          Error e = new Error();
+          e.setStatus("404");
+          e.setDetail("Password to often");
+          e.setCode("92");
+          ArrayList<Error> eList = new ArrayList<>();
+          eList.add(e);
+
+          if (contentNextOpen == -1) {
+            sharedPref.edit().putFloat(locationIdentifier+"_next_open", now).apply();
+          }
+
+          callback.error(eList);
+        }
+      }
+    };
+
+    callHandler.enquePasswordCall(call, passwordCallback);
     return call;
   }
 
@@ -388,9 +499,9 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
    * @param callback {@link APICallback}
    * @return Used call object
    */
-  public Call getContentByBeacon(int major, int minor, APICallback<Content, List<Error>>
+  public Call getContentByBeacon(int major, int minor, String password, APIPasswordCallback<Content, List<Error>>
           callback) {
-    return getContentByLocationIdentifier(String.format("%s|%s", major, minor), callback);
+    return getContentByLocationIdentifier(String.format("%s|%s", major, minor), password, callback);
   }
 
   /**
@@ -403,8 +514,9 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
    * @return Used call object
    */
   public Call getContentByBeacon(int major, int minor, EnumSet<ContentFlags> contentFlags,
-                                 APICallback<Content, List<Error>> callback) {
-    return getContentByLocationIdentifier(String.format("%s|%s", major, minor), contentFlags, callback);
+                                 String password,
+                                 APIPasswordCallback<Content, List<Error>> callback) {
+    return getContentByLocationIdentifier(String.format("%s|%s", major, minor), contentFlags, password, callback);
   }
 
 
@@ -421,9 +533,10 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
    */
   public Call getContentByBeacon(int major, int minor, EnumSet<ContentFlags> contentFlags,
                                  HashMap<String, Object> conditions,
-                                 APICallback<Content, List<Error>> callback) {
+                                 String password,
+                                 APIPasswordCallback<Content, List<Error>> callback) {
     return getContentByLocationIdentifier(String.format("%s|%s", major, minor), contentFlags,
-            conditions, callback);
+            conditions, password, callback);
   }
 
   /**
@@ -440,9 +553,11 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
    */
   public Call getContentByBeacon(int major, int minor, EnumSet<ContentFlags> contentFlags,
                                  HashMap<String, Object> conditions,
-                                 ContentReason reason, APICallback<Content, List<Error>> callback) {
+                                 ContentReason reason,
+                                 String password,
+                                 APIPasswordCallback<Content, List<Error>> callback) {
     return getContentByLocationIdentifier(String.format("%s|%s", major, minor),contentFlags,
-            conditions, reason, callback);
+            conditions, reason, password, callback);
   }
 
   /**
@@ -946,7 +1061,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     Morpheus morpheus = new Morpheus();
     String json = morpheus.createJson(jsonApiObject, false);
 
-    APICallback<PushDevice, List<Error>> callback = new APICallback<PushDevice, List<Error>>() {
+    final APICallback<PushDevice, List<Error>> callback = new APICallback<PushDevice, List<Error>>() {
       @Override
       public void finished(PushDevice result) {
         Log.d("Push Registration", "Success");
@@ -1140,18 +1255,18 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     return EnduserApi.sharedInstance;
   }
 
-    public static EnduserApi getSharedInstance(Context context) {
-        if (EnduserApi.sharedInstance == null) {
-            EnduserApi restoredApi = EnduserApi.restoreEnduserApi(context);
-            if (restoredApi == null) {
-                throw new NullPointerException("Instance is null. Please use getSharedInstance(apikey, context) " +
-                        "or setSharedInstance");
-            }
+  public static EnduserApi getSharedInstance(Context context) {
+    if (EnduserApi.sharedInstance == null) {
+      EnduserApi restoredApi = EnduserApi.restoreEnduserApi(context);
+      if (restoredApi == null) {
+        throw new NullPointerException("Instance is null. Please use getSharedInstance(apikey, context) " +
+                "or setSharedInstance");
+      }
 
-            EnduserApi.setSharedInstance(restoredApi);
-        }
-        return EnduserApi.sharedInstance;
+      EnduserApi.setSharedInstance(restoredApi);
     }
+    return EnduserApi.sharedInstance;
+  }
 
   /**
    * Set your the sharedInstance with your Instance of EnduserApi.

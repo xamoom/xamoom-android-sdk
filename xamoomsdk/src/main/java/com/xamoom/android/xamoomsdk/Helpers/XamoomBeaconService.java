@@ -15,6 +15,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.xamoom.android.xamoomsdk.APICallback;
+import com.xamoom.android.xamoomsdk.APIPasswordCallback;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.Enums.ContentReason;
 import com.xamoom.android.xamoomsdk.PushDevice.PushDeviceUtil;
@@ -381,7 +382,7 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
                     callback.finish(lastBeacons, lastContents);
                 }
             } else {
-                api.getContentByBeacon(Integer.parseInt(api.getMajorId()), beacon.getId3().toInt(), null, null, ContentReason.NOTIFICATION, new APICallback<Content, List<Error>>() {
+                api.getContentByBeacon(Integer.parseInt(api.getMajorId()), beacon.getId3().toInt(), null, null, ContentReason.NOTIFICATION, null, new APIPasswordCallback<Content, List<Error>>() {
                     @Override
                     public void finished(Content result) {
                         if (result != null) {
@@ -411,6 +412,11 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
                         if (calledBeacons.size() == beacons.size()) {
                             callback.finish(lastBeacons, lastContents);
                         }
+                    }
+
+                    @Override
+                    public void passwordRequested() {
+                        // Do nothing
                     }
                 });
             }
