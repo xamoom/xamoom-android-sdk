@@ -162,7 +162,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
     if (savedInstanceState != null) {
       mYoutubeApiKey = savedInstanceState.getString(YOUTUBE_API_KEY);
       showSpotMapContentLinks = savedInstanceState.getBoolean(SHOW_SPOT_MAP_CONTENT_LINKS);
-      mEnduserApi = new EnduserApi(savedInstanceState.getString(ENDUSER_API_KEY), getContext(), this.majorId);
+      mEnduserApi = new EnduserApi(savedInstanceState.getString(ENDUSER_API_KEY), getContext(), this.majorId, 5000);
       mContentID = savedInstanceState.getString(CONTENT_ID);
       mListState = savedInstanceState.getParcelable(LIST_STATE);
       offline = savedInstanceState.getBoolean(OFFLINE);
