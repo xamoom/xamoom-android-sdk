@@ -314,7 +314,9 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
 
                         if (removeMinor) {
                             minorBeacons.remove(Integer.valueOf(minor));
-                            mContext.getSharedPreferences(PushDeviceUtil.PREFES_NAME, Context.MODE_PRIVATE).edit().remove(String.valueOf(minor)).apply();
+                            mContext.getSharedPreferences(PushDeviceUtil.PREFES_NAME, Context.MODE_PRIVATE).edit()
+                                    .putFloat(String.valueOf(minor), -1)
+                                    .apply();
                         }
                     }
 
@@ -323,11 +325,12 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
 
                     sendBroadcast(FOUND_BEACON_BROADCAST, mBeacons, beaconContents);
                 } else {
-
                     for (int a = minorBeacons.size() - 1; a >= 0; a--) {
                         int minor = minorBeacons.get(a);
                         minorBeacons.remove(Integer.valueOf(minor));
-                        mContext.getSharedPreferences(PushDeviceUtil.PREFES_NAME, Context.MODE_PRIVATE).edit().remove(String.valueOf(minor)).apply();
+                        mContext.getSharedPreferences(PushDeviceUtil.PREFES_NAME, Context.MODE_PRIVATE).edit()
+                                .putFloat(String.valueOf(minor), -1)
+                                .apply();
                     }
 
                     sendBroadcast(FOUND_BEACON_BROADCAST, new ArrayList<Beacon>(), new ArrayList<Content>());
@@ -364,7 +367,8 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
         for (int i = 0; i < beacons.size(); i++) {
             final Beacon beacon = (Beacon) beacons.toArray()[i];
 
-            if (isOnCooldown(beacon, mContext.getSharedPreferences(PushDeviceUtil.PREFES_NAME, Context.MODE_PRIVATE))) {
+            final SharedPreferences pref = mContext.getSharedPreferences(PushDeviceUtil.PREFES_NAME, Context.MODE_PRIVATE);
+            if (beaconAlreadyLoaded(beacon, pref) && isOnCooldown(beacon, pref)) {
                 if (oldBeacons.size() > 0 && oldContents.size() > 0) {
                     for (int a = 0; a < oldBeacons.size(); a++) {
                         int oldI3 = oldBeacons.get(a).getId3().toInt();
@@ -386,6 +390,12 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
                     @Override
                     public void finished(Content result) {
                         if (result != null) {
+                            pref.edit()
+                                    .putFloat(beacon.getId3().toString(), Calendar.getInstance().getTimeInMillis())
+                                    .apply();
+                            if (!minorBeacons.contains(beacon.getId3().toInt())) {
+                                minorBeacons.add(beacon.getId3().toInt());
+                            }
                             lastBeacons.add(beacon);
                             lastContents.add(result);
 
@@ -417,11 +427,6 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
                     @Override
                     public void passwordRequested() {
                         // Do nothing
-                        calledBeacons.add(beacon);
-
-                        if (calledBeacons.size() == beacons.size()) {
-                            callback.finish(lastBeacons, lastContents);
-                        }
                     }
                 });
             }
@@ -483,16 +488,16 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
         setBackgroundScanningSpeeds(BETWEEN_SCAN_PERIOD, SCAN_PERIOD);
     }
 
+    private boolean beaconAlreadyLoaded(Beacon beacon, SharedPreferences sharedPreferences) {
+        return minorBeacons.contains(beacon.getId3().toString());
+    }
+
     private boolean isOnCooldown(Beacon beacon, SharedPreferences sharedPreferences) {
         float timestamp = sharedPreferences.getFloat(beacon.getId3().toString(), -1);
         if (timestamp == -1) {
             sharedPreferences.edit()
                     .putFloat(beacon.getId3().toString(), Calendar.getInstance().getTimeInMillis())
                     .apply();
-
-            if (!minorBeacons.contains(beacon.getId3().toInt())) {
-                minorBeacons.add(beacon.getId3().toInt());
-            }
             return false;
         }
 
@@ -502,9 +507,6 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
             sharedPreferences.edit()
                     .putFloat(beacon.getId3().toString(), Calendar.getInstance().getTimeInMillis())
                     .apply();
-            if (!minorBeacons.contains(beacon.getId3().toInt())) {
-                minorBeacons.add(beacon.getId3().toInt());
-            }
             return false;
         }
 
