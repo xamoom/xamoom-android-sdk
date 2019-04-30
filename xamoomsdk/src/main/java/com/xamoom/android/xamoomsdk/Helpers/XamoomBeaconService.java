@@ -417,6 +417,11 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
                     @Override
                     public void passwordRequested() {
                         // Do nothing
+                        calledBeacons.add(beacon);
+
+                        if (calledBeacons.size() == beacons.size()) {
+                            callback.finish(lastBeacons, lastContents);
+                        }
                     }
                 });
             }
