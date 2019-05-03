@@ -57,6 +57,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 import at.rags.morpheus.Deserializer;
 import at.rags.morpheus.Error;
@@ -301,6 +302,8 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     APIPasswordCallback<Content, List<Error>> passwordCallback = new APIPasswordCallback<Content, List<Error>>() {
       @Override
       public void finished(Content result) {
+        sharedPref.edit().putFloat(contentID+"_next_open", -1).apply();
+        sharedPref.edit().putInt(contentID,  0).apply();
         callback.finished(result);
       }
 
@@ -334,19 +337,19 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
       @Override
       public void passwordRequested() {
         int contentIdOpens = sharedPref.getInt(contentID, 0);
-        float contentNextOpen = sharedPref.getFloat(contentID+"_next_open", -1);
+        long contentNextOpen = (long) sharedPref.getFloat(contentID+"_next_open", -1);
 
         Date n = new Date();
-        float now = n.getTime();
-        float diff = now - (15 * 60 * 1000);
+        long now = n.getTime();
+        long diff = TimeUnit.MILLISECONDS.toSeconds(now) - (1 * 60);
+        long contentNextOpenSeconds = -1;
+        if (contentNextOpen != -1) {
+          contentNextOpenSeconds = TimeUnit.MILLISECONDS.toSeconds(contentNextOpen);
+        }
 
-        if (contentNextOpen == -1 && contentIdOpens <= 2) {
+        if ((contentNextOpenSeconds == -1 || diff > contentNextOpenSeconds) && contentIdOpens <= 2) {
           callback.passwordRequested();
           sharedPref.edit().putInt(contentID, contentIdOpens + 1).apply();
-        } else if (contentIdOpens == 3 && diff > contentNextOpen && contentNextOpen != -1) {
-          sharedPref.edit().putInt(contentID, 1).apply();
-          callback.passwordRequested();
-          sharedPref.edit().putFloat(contentID+"_next_open", -1).apply();
         } else {
           Error e = new Error();
           e.setStatus("404");
@@ -354,10 +357,8 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
           e.setCode("92");
           ArrayList<Error> eList = new ArrayList<>();
           eList.add(e);
-
-          if (contentNextOpen == -1) {
-            sharedPref.edit().putFloat(contentID+"_next_open", now).apply();
-          }
+          sharedPref.edit().putFloat(contentID+"_next_open", now).apply();
+          sharedPref.edit().putInt(contentID,  0).apply();
 
           callback.error(eList);
         }
@@ -439,7 +440,6 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
       conditions = new HashMap<>();
     }
 
-
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
     sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
     conditions.put("x-datetime", sdf.format(new Date()));
@@ -468,52 +468,33 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     APIPasswordCallback<Content, List<Error>> passwordCallback = new APIPasswordCallback<Content, List<Error>>() {
       @Override
       public void finished(Content result) {
+        sharedPref.edit().putFloat(locationIdentifier+"_next_open", -1).apply();
+        sharedPref.edit().putInt(locationIdentifier,  0).apply();
+
         callback.finished(result);
       }
 
       @Override
       public void error(final List<Error> error) {
-        Error e = error.get(0);
-        if (e.getCode().equals("93") && e.getStatus().equals("404")) {
-          ArrayList<String> tags = new ArrayList<String>();
-          tags.add("x-forbidden");
-
-          getContentsByTags(tags, 1, null, null, new APIListCallback<List<Content>, List<Error>>() {
-            @Override
-            public void finished(List<Content> result, String cursor, boolean hasMore) {
-              if (result.size() > 0) {
-                callback.finished(result.get(0));
-              } else {
-                callback.finished(null);
-              }
-            }
-
-            @Override
-            public void error(List<Error> error) {
-              callback.error(error);
-            }
-          });
-        } else {
-          callback.error(error);
-        }
+        callback.error(error);
       }
 
       @Override
       public void passwordRequested() {
         int contentIdOpens = sharedPref.getInt(locationIdentifier, 0);
-        float contentNextOpen = sharedPref.getFloat(locationIdentifier+"_next_open", -1);
+        long contentNextOpen = (long) sharedPref.getFloat(locationIdentifier + "_next_open", -1);
 
         Date n = new Date();
-        float now = n.getTime();
-        float diff = now - (15 * 60 * 1000);
+        long now = n.getTime();
+        long diff = TimeUnit.MILLISECONDS.toSeconds(now) - (1 * 60);
+        long contentNextOpenSeconds = -1;
+        if (contentNextOpen != -1) {
+          contentNextOpenSeconds = TimeUnit.MILLISECONDS.toSeconds(contentNextOpen);
+        }
 
-        if (contentNextOpen == -1 && contentIdOpens <= 2) {
+        if ((contentNextOpenSeconds == -1 || diff > contentNextOpenSeconds) && contentIdOpens <= 2) {
           callback.passwordRequested();
           sharedPref.edit().putInt(locationIdentifier, contentIdOpens + 1).apply();
-        } else if (contentIdOpens == 3 && diff > contentNextOpen && contentNextOpen != -1) {
-          sharedPref.edit().putInt(locationIdentifier, 1).apply();
-          callback.passwordRequested();
-          sharedPref.edit().putFloat(locationIdentifier+"_next_open", -1).apply();
         } else {
           Error e = new Error();
           e.setStatus("404");
@@ -521,10 +502,8 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
           e.setCode("92");
           ArrayList<Error> eList = new ArrayList<>();
           eList.add(e);
-
-          if (contentNextOpen == -1) {
-            sharedPref.edit().putFloat(locationIdentifier+"_next_open", now).apply();
-          }
+          sharedPref.edit().putFloat(locationIdentifier + "_next_open", now).apply();
+          sharedPref.edit().putInt(locationIdentifier,  0).apply();
 
           callback.error(eList);
         }
