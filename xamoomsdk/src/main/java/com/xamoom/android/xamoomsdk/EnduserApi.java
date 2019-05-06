@@ -341,7 +341,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
 
         Date n = new Date();
         long now = n.getTime();
-        long diff = TimeUnit.MILLISECONDS.toSeconds(now) - (1 * 60);
+        long diff = TimeUnit.MILLISECONDS.toSeconds(now) - (15 * 60);
         long contentNextOpenSeconds = -1;
         if (contentNextOpen != -1) {
           contentNextOpenSeconds = TimeUnit.MILLISECONDS.toSeconds(contentNextOpen);
@@ -486,7 +486,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
 
         Date n = new Date();
         long now = n.getTime();
-        long diff = TimeUnit.MILLISECONDS.toSeconds(now) - (1 * 60);
+        long diff = TimeUnit.MILLISECONDS.toSeconds(now) - (15 * 60);
         long contentNextOpenSeconds = -1;
         if (contentNextOpen != -1) {
           contentNextOpenSeconds = TimeUnit.MILLISECONDS.toSeconds(contentNextOpen);
