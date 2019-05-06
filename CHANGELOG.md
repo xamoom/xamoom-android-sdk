@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.11.2](https://github.com/xamoom/xamoom-ios-sdk/compare/3.11.1...3.11.2) - 06.05.2019
+- Add function for "x-forbidden" handling
+- Add callback for content password protection
+
+- Improvements for Beacon ranging in XamoomBeaconService
+
 ## [3.11.1](https://github.com/xamoom/xamoom-ios-sdk/compare/3.10.8...3.10.9-beta1) - 18.04.2019
 - Fix crash when cancel XamoomContentFragment loading
 
