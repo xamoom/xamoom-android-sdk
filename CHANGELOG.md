@@ -1,6 +1,6 @@
 # Changelog
 
-## [3.11.2](https://github.com/xamoom/xamoom-ios-sdk/compare/3.11.1...3.11.2) - 06.05.2019
+## [3.11.3](https://github.com/xamoom/xamoom-ios-sdk/compare/3.11.1...3.11.2) - 06.05.2019
 - Add function for "x-forbidden" handling
 - Add callback for content password protection
 
