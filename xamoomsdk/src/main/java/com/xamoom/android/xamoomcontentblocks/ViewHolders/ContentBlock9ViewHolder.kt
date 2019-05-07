@@ -112,15 +112,23 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
             }
         })
 
-        if (navigationTintColorString != null) {
-            fab.backgroundTintList = ColorStateList.valueOf(Color.parseColor(navigationTintColorString))
+        if (!navigationTintColorString.isNullOrEmpty()) {
+            try {
+                fab.backgroundTintList = ColorStateList.valueOf(Color.parseColor(navigationTintColorString))
+            } catch (exc: IllegalArgumentException) {
+                fab.backgroundTintList = ColorStateList.valueOf(mContext!!.resources
+                        .getColor(R.color.linkblock_navigation_background_color))
+            }
         } else {
             fab.backgroundTintList = ColorStateList.valueOf(mContext!!.resources
                     .getColor(R.color.linkblock_navigation_background_color))
         }
 
-        if (contentButtonTextColorString != null) {
-            spotContentButton.setTextColor(Color.parseColor(contentButtonTextColorString))
+        if (!contentButtonTextColorString.isNullOrEmpty()) {
+            try {
+                spotContentButton.setTextColor(Color.parseColor(contentButtonTextColorString))
+            } catch (exc: IllegalArgumentException) {
+            }
         }
 
         fab.visibility = View.GONE
