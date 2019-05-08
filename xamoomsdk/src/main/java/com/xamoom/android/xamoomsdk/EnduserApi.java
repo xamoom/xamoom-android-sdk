@@ -351,16 +351,26 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
           callback.passwordRequested();
           sharedPref.edit().putInt(contentID, contentIdOpens + 1).apply();
         } else {
-          Error e = new Error();
-          e.setStatus("404");
-          e.setDetail("Password to often");
-          e.setCode("92");
-          ArrayList<Error> eList = new ArrayList<>();
-          eList.add(e);
+          ArrayList<String> tags = new ArrayList<String>();
+          tags.add("x-forbidden");
+
+          getContentsByTags(tags, 1, null, null, new APIListCallback<List<Content>, List<Error>>() {
+            @Override
+            public void finished(List<Content> result, String cursor, boolean hasMore) {
+              if (result.size() > 0) {
+                callback.finished(result.get(0));
+              } else {
+                callback.finished(null);
+              }
+            }
+
+            @Override
+            public void error(List<Error> error) {
+              callback.error(error);
+            }
+          });
           sharedPref.edit().putFloat(contentID+"_next_open", now).apply();
           sharedPref.edit().putInt(contentID,  0).apply();
-
-          callback.error(eList);
         }
       }
     };
@@ -496,16 +506,26 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
           callback.passwordRequested();
           sharedPref.edit().putInt(locationIdentifier, contentIdOpens + 1).apply();
         } else {
-          Error e = new Error();
-          e.setStatus("404");
-          e.setDetail("Password to often");
-          e.setCode("92");
-          ArrayList<Error> eList = new ArrayList<>();
-          eList.add(e);
+          ArrayList<String> tags = new ArrayList<String>();
+          tags.add("x-forbidden");
+
+          getContentsByTags(tags, 1, null, null, new APIListCallback<List<Content>, List<Error>>() {
+            @Override
+            public void finished(List<Content> result, String cursor, boolean hasMore) {
+              if (result.size() > 0) {
+                callback.finished(result.get(0));
+              } else {
+                callback.finished(null);
+              }
+            }
+
+            @Override
+            public void error(List<Error> error) {
+              callback.error(error);
+            }
+          });
           sharedPref.edit().putFloat(locationIdentifier + "_next_open", now).apply();
           sharedPref.edit().putInt(locationIdentifier,  0).apply();
-
-          callback.error(eList);
         }
       }
     };
