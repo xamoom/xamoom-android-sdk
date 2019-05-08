@@ -207,13 +207,6 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
         "height=\"100%%\" frameborder=\"0\" webkitallowfullscreen mozallowfullscreen " +
         "allowfullscreen></iframe>";
     mVideoWebView.loadData(vimeoEmbed, "text/html", "UTF-8");
-    mWebViewOverlay.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View view) {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(contentBlock.getVideoUrl()));
-        mContext.startActivity(intent);
-      }
-    });
   }
 
   private void setupHTMLPlayer(final String videoPath, boolean offline) {
