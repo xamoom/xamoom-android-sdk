@@ -1,6 +1,14 @@
 # Changelog
 
-## [3.11.3](https://github.com/xamoom/xamoom-ios-sdk/compare/3.11.1...3.11.2) - 06.05.2019
+## [3.11.4](https://github.com/xamoom/xamoom-ios-sdk/compare/3.11.3...3.11.4) - 13.05.2019
+- Improvments for content password challange
+- Show x-forbidden after three times wrong password entry
+- UI improvements for ContentBlock2 (Video Block)
+
+- Fix crash for ContentBlock9Adapter if reopen a content with a spot map
+- Fix issue for Vimeo videos, which were not able to play (opened an intent)
+
+## [3.11.3](https://github.com/xamoom/xamoom-ios-sdk/compare/3.11.1...3.11.3) - 06.05.2019
 - Add function for "x-forbidden" handling
 - Add callback for content password protection
 
