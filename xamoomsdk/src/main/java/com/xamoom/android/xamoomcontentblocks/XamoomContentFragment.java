@@ -1,10 +1,10 @@
 /*
-* Copyright (c) 2017 xamoom GmbH <apps@xamoom.com>
-*
-* Licensed under the MIT License (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at the root of this project.
-*/
+ * Copyright (c) 2017 xamoom GmbH <apps@xamoom.com>
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at the root of this project.
+ */
 
 package com.xamoom.android.xamoomcontentblocks;
 
@@ -170,7 +170,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
       mBackgroundColor = savedInstanceState.getInt(BACKGROUND_COLOR);
 
       mContentBlocks = (ArrayList<ContentBlock>)
-          ContentFragmentCache.getSharedInstance().get(mContentID);
+              ContentFragmentCache.getSharedInstance().get(mContentID);
 
       mContentBlockAdapter.setYoutubeApiKey(mYoutubeApiKey);
       mContentBlockAdapter.setContentBlocks(mContentBlocks);
@@ -206,11 +206,33 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   }
 
   @Override
+  public void onResume() {
+    super.onResume();
+
+    mRecyclerView.scrollToPosition(0);
+    mContentBlockAdapter.notifyDataSetChanged();
+  }
+
+  @Override
+  public void onStop() {
+    if (mContentBlockAdapter != null) {
+      mContentBlockAdapter.onStop();
+    }
+    super.onStop();
+
+  }
+
+  @Override
   public void onPause() {
     Intent intent = new Intent(ContentBlock2ViewHolder.RESET_YOUTUBE);
     LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
     Intent intent2 = new Intent(ContentBlock1ViewHolder.PAUSE_INTENT_ACTION);
     LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent2);
+
+    if (mContentBlockAdapter != null) {
+      mContentBlockAdapter.onPause();
+    }
+
     super.onPause();
   }
 
@@ -316,7 +338,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
    */
   private void addContentTitleAndImage() {
     if (mContent.getTitle() != null && !mContent.getTitle().equalsIgnoreCase("") ||
-        mContent.getDescription() != null && !mContent.getDescription().equalsIgnoreCase("")) {
+            mContent.getDescription() != null && !mContent.getDescription().equalsIgnoreCase("")) {
       ContentBlock contentBlock0 = new ContentBlock();
       contentBlock0.setTitle(mContent.getTitle());
       contentBlock0.setBlockType(-1);
@@ -341,13 +363,13 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
     ArrayList<ContentBlock> removeBlocks = new ArrayList<>();
     for (ContentBlock block : mContentBlocks) {
       if (block.getBlockType() == 9 ||
-          block.getBlockType() == 7) {
+              block.getBlockType() == 7) {
         removeBlocks.add(block);
       }
 
       if (block.getBlockType() == 2) {
         if (block.getVideoUrl().contains("youtu") ||
-            block.getVideoUrl().contains("vimeo")) {
+                block.getVideoUrl().contains("vimeo")) {
           removeBlocks.add(block);
         }
       }
@@ -393,7 +415,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
         mContentBlockAdapter.setOnXamoomContentFragmentInteractionListener(listener);
       } catch (ClassCastException e) {
         throw new ClassCastException(activity.toString()
-            + " must implement OnXamoomContentFragmentInteractionListener");
+                + " must implement OnXamoomContentFragmentInteractionListener");
       }
     }
   }
@@ -405,7 +427,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
 
   @Override
   public void needExternalStoragePermission() {
-   requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_STORAGE_PERMISSION);
+    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_STORAGE_PERMISSION);
   }
 
   @Override

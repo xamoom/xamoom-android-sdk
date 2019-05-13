@@ -1,10 +1,10 @@
 /*
-* Copyright (c) 2017 xamoom GmbH <apps@xamoom.com>
-*
-* Licensed under the MIT License (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at the root of this project.
-*/
+ * Copyright (c) 2017 xamoom GmbH <apps@xamoom.com>
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at the root of this project.
+ */
 
 package com.xamoom.android.xamoomcontentblocks.Adapters;
 
@@ -116,8 +116,8 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   @Override
   public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     return mDelegatesManager.onCreateViewHolder(parent, viewType, mFragment, mEnduserApi, mYoutubeApiKey,
-        mBitmapCache, mContentCache, showContentLinks, mListManager,
-        mOnContentBlock3ViewHolderInteractionListener, mOnXamoomContentFragmentInteractionListener, urlScheme, mapboxStyleString, navigationButtonTintColorString, contentButtonTextColorString);
+            mBitmapCache, mContentCache, showContentLinks, mListManager,
+            mOnContentBlock3ViewHolderInteractionListener, mOnXamoomContentFragmentInteractionListener, urlScheme, mapboxStyleString, navigationButtonTintColorString, contentButtonTextColorString);
   }
 
   @Override
@@ -172,20 +172,44 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
   }
 
+  public void onStart() {
+    if (contentBlock9Adapter != null && contentBlock9Adapter.mapholder != null) {
+      contentBlock9Adapter.onStart();
+    }
+  }
+
+  public void onStop() {
+    if (contentBlock9Adapter != null && contentBlock9Adapter.mapholder != null) {
+      contentBlock9Adapter.onStop();
+    }
+  }
+
+  public void onResume() {
+    if (contentBlock9Adapter != null && contentBlock9Adapter.mapholder != null) {
+      contentBlock9Adapter.onResume();
+    }
+  }
+
+  public void onPause() {
+    if (contentBlock9Adapter != null && contentBlock9Adapter.mapholder != null) {
+      contentBlock9Adapter.onPause();
+    }
+  }
+
   public void onSaveInstanceState(Bundle bundle) {
-    if (contentBlock9Adapter != null) {
+    if (contentBlock9Adapter != null && contentBlock9Adapter.mapholder != null) {
       contentBlock9Adapter.onSavedInstanceState(bundle);
     }
   }
 
   public void onDestroy() {
-    if (contentBlock9Adapter != null) {
+    if (contentBlock9Adapter != null && contentBlock9Adapter.mapholder != null) {
       contentBlock9Adapter.onDestroy();
     }
   }
 
   public void onLowMemory() {
-    if (contentBlock9Adapter != null) {
+    if (contentBlock9Adapter != null && contentBlock9Adapter.mapholder != null) {
       contentBlock9Adapter.onLowMemory();
     }
   }
