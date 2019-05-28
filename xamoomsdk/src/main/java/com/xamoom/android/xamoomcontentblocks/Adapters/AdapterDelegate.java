@@ -49,6 +49,7 @@ public interface AdapterDelegate<T> {
    * @param mapboxStyleString The custom mapbox style. Default is street.
    * @param navigationButtonTintColorString The ContentBlock9ViewHolder FAB tinti color as String.
    * @param contentButtonTextColorString The ContentBlock9ViewHolder content button text color.
+   * @param navigationMode String for the google maps navigation mode ("w", "b", "d")
    * @return Custom contentBlock viewholder.
    */
   @NonNull RecyclerView.ViewHolder onCreateViewHolder(
@@ -58,7 +59,7 @@ public interface AdapterDelegate<T> {
           onContentBlock3ViewHolderInteractionListener,
           XamoomContentFragment.OnXamoomContentFragmentInteractionListener
           onXamoomContentFragmentInteractionListener, ArrayList<String> urls, String mapboxStyleString,
-          @Nullable String navigationButtonTintColorString, @Nullable String contentButtonTextColorString);
+          @Nullable String navigationButtonTintColorString, @Nullable String contentButtonTextColorString, @Nullable String navigationMode);
 
   /**
    * Called before recyclerview shows viewholder.

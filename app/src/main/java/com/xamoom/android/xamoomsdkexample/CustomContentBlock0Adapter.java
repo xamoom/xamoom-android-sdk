@@ -59,7 +59,7 @@ public class CustomContentBlock0Adapter implements AdapterDelegate<List<ContentB
                                                     boolean showContentLinks, ListManager listManager, AdapterDelegatesManager adapterDelegatesManager,
                                                     ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener onContentBlock3ViewHolderInteractionListener,
                                                     XamoomContentFragment.OnXamoomContentFragmentInteractionListener onXamoomContentFragmentInteractionListener, ArrayList<String> urls,
-                                                    @Nullable String mapboxStyleString, @Nullable String navigationButtonTintColorString, @Nullable String contentButtonTextColorString) {
+                                                    @Nullable String mapboxStyleString, @Nullable String navigationButtonTintColorString, @Nullable String contentButtonTextColorString, @Nullable String navigationMode) {
     View view = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.content_block_0_layout, parent, false);
     return new ContentBlock0ViewHolder(view);

@@ -40,7 +40,7 @@ import kotlin.collections.ArrayList
 
 @SuppressLint("ClickableViewAccessibility")
 class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val enduserApi: EnduserApi, fragment: Fragment, val listener: XamoomContentFragment.OnXamoomContentFragmentInteractionListener,
-                              private val mapBoxStyleString: String? = com.mapbox.mapboxsdk.maps.Style.MAPBOX_STREETS, private val navigationTintColorString: String?, private val contentButtonTextColorString: String?) : RecyclerView.ViewHolder(view), OnMapReadyCallback {
+                              private val mapBoxStyleString: String? = com.mapbox.mapboxsdk.maps.Style.MAPBOX_STREETS, private val navigationTintColorString: String?, private val contentButtonTextColorString: String?, private val navigationMode: String? = "d") : RecyclerView.ViewHolder(view), OnMapReadyCallback {
 
     private var mapBoxStyle: com.mapbox.mapboxsdk.maps.Style? = null
     private var mapBoxMap: MapboxMap? = null
@@ -282,10 +282,9 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
         }
 
         fab.setOnClickListener {
-            val lat = spot.location.latitude
-            val lon = spot.location.longitude
-            val query = "$lat,$lon(${spot.name})"
-            val gmmIntentUri = Uri.parse("geo:$lat+,$lon?q=$query")
+            val query = "${spot.location.latitude},${spot.location.longitude}(${spot.name})"
+            val urlString = String.format(Locale.US, "google.navigation:q=$query&mode=%s", this.navigationMode)
+            val gmmIntentUri = Uri.parse(urlString)
             val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
             mapIntent.setPackage("com.google.android.apps.maps")
             if (mapIntent.resolveActivity(mContext!!.getPackageManager()) != null) {
