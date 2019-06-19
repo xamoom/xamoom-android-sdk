@@ -30,6 +30,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 
 import com.xamoom.android.xamoomcontentblocks.Adapters.ContentBlockAdapter;
+import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock12ViewHolderInterface;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock1ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock2ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
@@ -60,7 +61,7 @@ import java.util.List;
  * @author Raphael Seher
  *
  */
-public class XamoomContentFragment extends Fragment implements ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener {
+public class XamoomContentFragment extends Fragment implements ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener, ContentBlock12ViewHolderInterface {
   private static final String YOUTUBE_API_KEY = "YoutubeAPIKey";
   private static final String LIST_STATE = "LayoutManagerState";
   private static final String CONTENT_ID = "ContentID";
@@ -134,7 +135,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
 
   public XamoomContentFragment() {
     mContentBlockAdapter = new ContentBlockAdapter(this, mContentBlocks,
-        showSpotMapContentLinks, mYoutubeApiKey, this, contentBlockUrlScheme, mapboxStyleString);
+        showSpotMapContentLinks, mYoutubeApiKey, this, contentBlockUrlScheme, mapboxStyleString, this);
   }
 
   @Override
@@ -533,6 +534,13 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
 
   public void setShowAllBlocksWhenOffline(boolean showAllBlocksWhenOffline) {
     this.showAllBlocksWhenOffline = showAllBlocksWhenOffline;
+  }
+
+
+  @Override
+  public void didScroll(int position) {
+    //getRecyclerView().getAdapter().notifyDataSetChanged();
+    getRecyclerView().getAdapter().notifyItemRangeChanged(position, getRecyclerView().getAdapter().getItemCount() - position - 1);
   }
 }
 

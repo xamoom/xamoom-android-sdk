@@ -2,6 +2,7 @@ package com.xamoom.android.xamoomcontentblocks.ViewHolders
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.os.Handler
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -14,7 +15,7 @@ import com.xamoom.android.xamoomcontentblocks.Helper.LinePagerIndicatorDecoratio
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock
 
 
-class ContentBlock12ViewHolder(val view: View, val context: Context, val fragment: Fragment?, val youtubeApiKey: String?, val bitmapCache: android.support.v4.util.LruCache<String, Bitmap>?, parentRecyclerView: RecyclerView?): RecyclerView.ViewHolder(view) {
+class ContentBlock12ViewHolder(val view: View, val context: Context, val fragment: Fragment?, val youtubeApiKey: String?, val bitmapCache: android.support.v4.util.LruCache<String, Bitmap>?, parentRecyclerView: RecyclerView?, val interf: ContentBlock12ViewHolderInterface): RecyclerView.ViewHolder(view) {
     private var recyclerView: RecyclerView = view.findViewById(R.id.horizontal_recycler_view)
     private var titleTextView: TextView = view.findViewById(R.id.horizontal_recycler_title)
 
@@ -28,7 +29,10 @@ class ContentBlock12ViewHolder(val view: View, val context: Context, val fragmen
             override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 //parentRecyclerView!!.adapter.notifyItemChanged(parentRecyclerView.getChildAdapterPosition(view))
-                recyclerView!!.adapter.notifyDataSetChanged()
+                if (newState == 0) {
+                    recyclerView!!.adapter.notifyDataSetChanged()
+                    interf.didScroll(parentRecyclerView!!.getChildAdapterPosition(view) + 1)
+                }
             }
         })
         val snapHelper = PagerSnapHelper()
@@ -48,4 +52,8 @@ class ContentBlock12ViewHolder(val view: View, val context: Context, val fragmen
         }
         recyclerView.adapter = HorizontalRecyclerViewAdapter(cbList, context, fragment, youtubeApiKey, bitmapCache)
     }
+}
+
+interface ContentBlock12ViewHolderInterface {
+    fun didScroll(position: Int)
 }

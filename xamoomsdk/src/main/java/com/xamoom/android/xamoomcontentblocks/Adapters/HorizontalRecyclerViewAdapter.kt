@@ -45,7 +45,9 @@ class HorizontalRecyclerViewAdapter(val items : ArrayList<ContentBlock>, val con
             }
         }
 
-        return ViewHolder1(LayoutInflater.from(context).inflate(R.layout.rva_test, parent, false))
+        val contentView = LayoutInflater.from(parent.context)
+                .inflate(R.layout.content_block_0_layout, parent, false)
+        return ContentBlock0ViewHolder(contentView)
     }
 
     override fun getItemCount(): Int {
@@ -83,41 +85,5 @@ class HorizontalRecyclerViewAdapter(val items : ArrayList<ContentBlock>, val con
                 newHolder.setupContentBlock(cb, false)
             }
         }
-    }
-}
-
-class ViewHolder1 (view: View) : RecyclerView.ViewHolder(view) {
-    // Holds the TextView that will add each animal to
-    val tvAnimalType = view.findViewById<TextView>(R.id.testTextView)
-    val testLayout = view.findViewById<LinearLayout>(R.id.testLayout)
-
-    fun resize() {
-        val params = testLayout.layoutParams
-        params.height = 200
-        testLayout.layoutParams = params
-    }
-}
-
-class ViewHolder2 (view: View) : RecyclerView.ViewHolder(view) {
-    // Holds the TextView that will add each animal to
-    val tvAnimalType = view.findViewById<TextView>(R.id.testTextView)
-    val testLayout = view.findViewById<LinearLayout>(R.id.testLayout)
-
-    fun resize() {
-        val params = testLayout.layoutParams
-        params.height = 600
-        testLayout.layoutParams = params
-    }
-}
-
-class ViewHolder3 (view: View) : RecyclerView.ViewHolder(view) {
-    // Holds the TextView that will add each animal to
-    val tvAnimalType = view.findViewById<TextView>(R.id.testTextView)
-    val testLayout = view.findViewById<LinearLayout>(R.id.testLayout)
-
-    fun resize() {
-        val params = testLayout.layoutParams
-        params.height = 100
-        testLayout.layoutParams = params
     }
 }

@@ -31,7 +31,7 @@ import java.util.List;
 
 import at.rags.morpheus.Error;
 
-public class ContentBlock11ViewHolder extends RecyclerView.ViewHolder  {
+public class ContentBlock11ViewHolder extends RecyclerView.ViewHolder implements ContentBlock12ViewHolderInterface {
   private TextView mErrorTextView;
   private TextView mTitleTextView;
   private RecyclerView mRecyclerView;
@@ -95,7 +95,7 @@ public class ContentBlock11ViewHolder extends RecyclerView.ViewHolder  {
     XamoomContentFragment contentFragment = (XamoomContentFragment) fragment;
 
     adapter = new ContentBlockAdapter(fragment, new ArrayList<ContentBlock>(),
-        contentFragment.isShowSpotMapContentLinks(), contentFragment.getYoutubeApiKey(), contentFragment, null, null);
+        contentFragment.isShowSpotMapContentLinks(), contentFragment.getYoutubeApiKey(), contentFragment, null, null, this);
     adapter.setEnduserApi(enduserApi);
     adapter.setOnXamoomContentFragmentInteractionListener(onXamoomContentFragmentInteractionListener);
     adapter.getDelegatesManager().setAdapterDelegates(adapterDelegatesManager.getAdapterDelegates());
@@ -201,5 +201,11 @@ public class ContentBlock11ViewHolder extends RecyclerView.ViewHolder  {
   public void setStyle(Style style) {
     mStyle = style;
     adapter.setStyle(style);
+  }
+
+  @Override
+  public void didScroll(int position) {
+    //mRecyclerView.getAdapter().notifyDataSetChanged();
+    mRecyclerView.getAdapter().notifyItemRangeChanged(position, mRecyclerView.getAdapter().getItemCount() - position - 1);
   }
 }

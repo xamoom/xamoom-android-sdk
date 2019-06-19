@@ -17,6 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import com.xamoom.android.xamoomcontentblocks.ListManager;
+import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock12ViewHolderInterface;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock2ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock9ViewHolder;
@@ -55,6 +56,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   private String mFontColor = "FFF";
   private LruCache<String, Bitmap> mBitmapCache = new LruCache<>(8*1024*1024);
   private LruCache<String, Content> mContentCache = new LruCache<>(2*1024*1024);
+  private ContentBlock12ViewHolderInterface inter;
 
   /**
    * Constructor for the Adapter.
@@ -67,7 +69,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   public ContentBlockAdapter(Fragment fragment, List<ContentBlock> contentBlocks,
                              boolean showSpotMapContentLinks, String youtubeApiKey,
                              ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener contentBlock3ViewHolderInteractionListener,
-                             ArrayList<String> contentBlockUrlScheme, String mapboxStyle) {
+                             ArrayList<String> contentBlockUrlScheme, String mapboxStyle, ContentBlock12ViewHolderInterface inter) {
     mOnContentBlock3ViewHolderInteractionListener = contentBlock3ViewHolderInteractionListener;
     mFragment = fragment;
     mContentBlocks = contentBlocks;
@@ -75,6 +77,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     mYoutubeApiKey = youtubeApiKey;
     urlScheme = contentBlockUrlScheme;
     mapboxStyleString = mapboxStyle;
+    this.inter = inter;
     setupAdapters();
   }
 
@@ -93,7 +96,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     mDelegatesManager.addDelegate(8, new ContentBlock8Adapter());
     mDelegatesManager.addDelegate(9, contentBlock9Adapter);
     mDelegatesManager.addDelegate(11, new ContentBlock11Adapter());
-    mDelegatesManager.addDelegate(12, new ContentBlock12Adapter());
+    mDelegatesManager.addDelegate(12, new ContentBlock12Adapter(inter));
   }
 
   @Override

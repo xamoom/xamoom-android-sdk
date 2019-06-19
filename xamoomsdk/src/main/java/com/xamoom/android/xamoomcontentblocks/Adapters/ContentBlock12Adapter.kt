@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.xamoom.android.xamoomcontentblocks.ListManager
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock12ViewHolder
+import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock12ViewHolderInterface
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment
 import com.xamoom.android.xamoomsdk.EnduserApi
@@ -16,7 +17,8 @@ import com.xamoom.android.xamoomsdk.Resource.ContentBlock
 import com.xamoom.android.xamoomsdk.Resource.Style
 import java.util.ArrayList
 
-class ContentBlock12Adapter: AdapterDelegate<ArrayList<ContentBlock>> {
+class ContentBlock12Adapter(val inter: ContentBlock12ViewHolderInterface): AdapterDelegate<ArrayList<ContentBlock>> {
+
     override fun isForViewType(items: ArrayList<ContentBlock>, position: Int): Boolean {
         return true
     }
@@ -34,8 +36,8 @@ class ContentBlock12Adapter: AdapterDelegate<ArrayList<ContentBlock>> {
                 .inflate(R.layout.content_block_12_layout, parent, false)
         val cache = bitmapCache as LruCache<String, Bitmap>
         if (parent is RecyclerView) {
-            return ContentBlock12ViewHolder(view, context, fragment, youtubeApiKey, cache, parent)
+            return ContentBlock12ViewHolder(view, context, fragment, youtubeApiKey, cache, parent, inter)
         }
-        return ContentBlock12ViewHolder(view, context, fragment, youtubeApiKey, cache, null)
+        return ContentBlock12ViewHolder(view, context, fragment, youtubeApiKey, cache, null, inter)
     }
 }
