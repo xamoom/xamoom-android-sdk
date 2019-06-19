@@ -36,7 +36,7 @@ public class ContentBlock11Adapter implements AdapterDelegate<List<ContentBlock>
       ViewGroup parent, Fragment fragment, EnduserApi enduserApi, String youtubeApiKey,
       LruCache bitmapCache, LruCache contentCache, boolean showContentLinks, ListManager listManager, AdapterDelegatesManager adapterDelegatesManager,
       ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener onContentBlock3ViewHolderInteractionListener, XamoomContentFragment.OnXamoomContentFragmentInteractionListener onXamoomContentFragmentInteractionListener,
-      @Nullable ArrayList<String> urls, @Nullable String mapboxStyleString, @Nullable String navigationButtonTintColorString, @Nullable String contentButtonTextColorString) {
+      @Nullable ArrayList<String> urls, @Nullable String mapboxStyleString, @Nullable String navigationButtonTintColorString, @Nullable String contentButtonTextColorString, @Nullable String navigationMode) {
     View view = LayoutInflater.from(parent.getContext())
         .inflate(R.layout.content_block_11_layout, parent, false);
     return new ContentBlock11ViewHolder(view, fragment, enduserApi, listManager, adapterDelegatesManager, onXamoomContentFragmentInteractionListener);

@@ -1,10 +1,10 @@
 /*
-* Copyright (c) 2017 xamoom GmbH <apps@xamoom.com>
-*
-* Licensed under the MIT License (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at the root of this project.
-*/
+ * Copyright (c) 2017 xamoom GmbH <apps@xamoom.com>
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at the root of this project.
+ */
 
 package com.xamoom.android.xamoomcontentblocks.Adapters;
 
@@ -51,6 +51,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   private String mapboxStyleString;
   private String navigationButtonTintColorString;
   private String contentButtonTextColorString;
+  private String navigationMode;
 
   private String mLinkColor = "00F";
   private String mBackgroundColor = "000";
@@ -73,7 +74,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   public ContentBlockAdapter(Fragment fragment, List<ContentBlock> contentBlocks,
                              boolean showSpotMapContentLinks, String youtubeApiKey,
                              ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener contentBlock3ViewHolderInteractionListener,
-                             ArrayList<String> contentBlockUrlScheme, String mapboxStyle, String navigationButtonTintColorString, String contentButtonTextColorString) {
+                             ArrayList<String> contentBlockUrlScheme, String mapboxStyle, String navigationButtonTintColorString, String contentButtonTextColorString, String navigationMode) {
     mOnContentBlock3ViewHolderInteractionListener = contentBlock3ViewHolderInteractionListener;
     mFragment = fragment;
     mContentBlocks = contentBlocks;
@@ -83,6 +84,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     mapboxStyleString = mapboxStyle;
     this.navigationButtonTintColorString = navigationButtonTintColorString;
     this.contentButtonTextColorString = contentButtonTextColorString;
+    this.navigationMode = navigationMode;
     setupAdapters();
   }
 
@@ -116,8 +118,8 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   @Override
   public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     return mDelegatesManager.onCreateViewHolder(parent, viewType, mFragment, mEnduserApi, mYoutubeApiKey,
-        mBitmapCache, mContentCache, showContentLinks, mListManager,
-        mOnContentBlock3ViewHolderInteractionListener, mOnXamoomContentFragmentInteractionListener, urlScheme, mapboxStyleString, navigationButtonTintColorString, contentButtonTextColorString);
+            mBitmapCache, mContentCache, showContentLinks, mListManager,
+            mOnContentBlock3ViewHolderInteractionListener, mOnXamoomContentFragmentInteractionListener, urlScheme, mapboxStyleString, navigationButtonTintColorString, contentButtonTextColorString, navigationMode);
   }
 
   @Override
@@ -172,20 +174,44 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
   }
 
+  public void onStart() {
+    if (contentBlock9Adapter != null && contentBlock9Adapter.mapholder != null) {
+      contentBlock9Adapter.onStart();
+    }
+  }
+
+  public void onStop() {
+    if (contentBlock9Adapter != null && contentBlock9Adapter.mapholder != null) {
+      contentBlock9Adapter.onStop();
+    }
+  }
+
+  public void onResume() {
+    if (contentBlock9Adapter != null && contentBlock9Adapter.mapholder != null) {
+      contentBlock9Adapter.onResume();
+    }
+  }
+
+  public void onPause() {
+    if (contentBlock9Adapter != null && contentBlock9Adapter.mapholder != null) {
+      contentBlock9Adapter.onPause();
+    }
+  }
+
   public void onSaveInstanceState(Bundle bundle) {
-    if (contentBlock9Adapter != null) {
+    if (contentBlock9Adapter != null && contentBlock9Adapter.mapholder != null) {
       contentBlock9Adapter.onSavedInstanceState(bundle);
     }
   }
 
   public void onDestroy() {
-    if (contentBlock9Adapter != null) {
+    if (contentBlock9Adapter != null && contentBlock9Adapter.mapholder != null) {
       contentBlock9Adapter.onDestroy();
     }
   }
 
   public void onLowMemory() {
-    if (contentBlock9Adapter != null) {
+    if (contentBlock9Adapter != null && contentBlock9Adapter.mapholder != null) {
       contentBlock9Adapter.onLowMemory();
     }
   }
@@ -249,5 +275,9 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
   public void setContentButtonTextColorString(String contentButtonTextColorString) {
     this.contentButtonTextColorString = contentButtonTextColorString;
+  }
+
+  public void setNavigationMode(String mode) {
+    this.navigationMode = mode;
   }
 }

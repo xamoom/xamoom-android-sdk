@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_marginStart="@dimen/contentblock_padding_0dp"
-              android:layout_marginEnd="@dimen/contentblock_padding_0dp"
-              android:layout_marginBottom="@dimen/contentblock_to_contentblock_margin"
-              android:theme="@style/ContentBlocksTheme">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/contentblock_padding_0dp"
+    android:layout_marginEnd="@dimen/contentblock_padding_0dp"
+    android:layout_marginBottom="@dimen/contentblock_to_contentblock_margin"
+    android:theme="@style/ContentBlocksTheme">
 
     <TextView
         android:id="@+id/titleTextView"
@@ -21,7 +21,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="260dp"
+        android:background="@color/black"
         tools:ignore="WebViewLayout">
 
         <VideoView
@@ -45,13 +46,13 @@
         <com.google.android.youtube.player.YouTubeThumbnailView
             android:id="@+id/youtube_thumbnail_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="260dp"
             android:adjustViewBounds="true"/>
 
         <FrameLayout
             android:id="@+id/youtube_frame_layout"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="260dp"
             android:adjustViewBounds="true"/>
 
         <ImageView
