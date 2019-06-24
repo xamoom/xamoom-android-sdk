@@ -1,5 +1,8 @@
 # Changelog
 
+## [3.11.5](https://github.com/xamoom/xamoom-ios-sdk/compare/3.11.4...3.11.5) - 24.06.2019
+- Add function for setting ContentBlock9ViewHolder navigation type 
+
 ## [3.11.4](https://github.com/xamoom/xamoom-ios-sdk/compare/3.11.3...3.11.4) - 13.05.2019
 - Improvments for content password challange
 - Show x-forbidden after three times wrong password entry
