@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/contentblock_to_contentblock_margin"
+    android:layout_marginBottom="12dp"
     android:theme="@style/ContentBlocksTheme">
 
     <TextView

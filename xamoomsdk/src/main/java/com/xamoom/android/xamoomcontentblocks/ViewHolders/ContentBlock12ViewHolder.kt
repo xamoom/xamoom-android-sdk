@@ -31,7 +31,7 @@ class ContentBlock12ViewHolder(val view: View, val context: Context, val fragmen
                 //parentRecyclerView!!.adapter.notifyItemChanged(parentRecyclerView.getChildAdapterPosition(view))
                 if (newState == 0) {
                     recyclerView!!.adapter.notifyDataSetChanged()
-                    interf.didScroll(parentRecyclerView!!.getChildAdapterPosition(view) + 1)
+                    //interf.didScroll(parentRecyclerView!!.getChildAdapterPosition(view) + 1)
                 }
             }
         })
