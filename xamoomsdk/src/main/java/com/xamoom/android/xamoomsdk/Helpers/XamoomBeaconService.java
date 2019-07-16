@@ -386,7 +386,7 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
                     callback.finish(lastBeacons, lastContents);
                 }
             } else {
-                api.getContentByBeacon(Integer.parseInt(api.getMajorId()), beacon.getId3().toInt(), null, null, ContentReason.NOTIFICATION, null, new APIPasswordCallback<Content, List<Error>>() {
+                api.getContentByBeacon(Integer.parseInt(api.getMajorId()), beacon.getId3().toInt(), null, null, ContentReason.BEACON, null, new APIPasswordCallback<Content, List<Error>>() {
                     @Override
                     public void finished(Content result) {
                         if (result != null) {
