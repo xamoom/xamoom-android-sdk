@@ -1,4 +1,6 @@
 # Changelog
+## [3.11.6](https://github.com/xamoom/xamoom-ios-sdk/compare/3.11.4...3.11.5) - 16.07.2019
+- set correct ContentReason when loading Beacons in XamoomBeaconService  
 
 ## [3.11.5](https://github.com/xamoom/xamoom-ios-sdk/compare/3.11.4...3.11.5) - 24.06.2019
 - Add function for setting ContentBlock9ViewHolder navigation type 
