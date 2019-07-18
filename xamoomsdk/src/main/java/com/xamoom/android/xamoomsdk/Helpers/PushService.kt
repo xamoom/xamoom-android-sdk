@@ -26,7 +26,8 @@ class PushService: FirebaseMessagingService() {
         val body = data["body"]
         val wakeup = data["wake-up"]
         val enduserApi = EnduserApi.getSharedInstance(applicationContext)
-
+        sharedPreferences = applicationContext.getSharedPreferences(PushDeviceUtil.PREFES_NAME,
+                Context.MODE_PRIVATE)
         if (wakeup == null) {
             val intent = Intent("xamoom-push-notification-received")
             // You can also include some extra data.
@@ -35,16 +36,16 @@ class PushService: FirebaseMessagingService() {
             intent.putExtra("body", body)
 
             LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
+            enduserApi?.pushDevice(PushDeviceUtil(sharedPreferences), true)
         } else {
             if (enduserApi != null) {
                 XamoomBeaconService.getInstance(applicationContext, enduserApi).startBeaconService()
+                enduserApi?.pushDevice(PushDeviceUtil(sharedPreferences), false)
             } else {
                 Log.w("xamoom PushService", "Xamoom EnduserApi is not initialized")
             }
         }
 
-        sharedPreferences = applicationContext.getSharedPreferences(PushDeviceUtil.PREFES_NAME,
-                Context.MODE_PRIVATE)
-        enduserApi?.pushDevice(PushDeviceUtil(sharedPreferences))
+
     }
 }

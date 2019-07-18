@@ -50,12 +50,14 @@ import java.text.Normalizer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -109,6 +111,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     private String apiUrl;
     private String majorId;
     private int cooldown;
+    private Location lastLocation;
 
     public EnduserApi(@NonNull final String apikey, @NonNull Context context, @Nullable String majorId, @Nullable int cooldown) {
         this.apiKey = apikey;
@@ -116,6 +119,13 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
         this.offlineEnduserApi = new OfflineEnduserApi(context);
         this.majorId = majorId;
         this.cooldown = cooldown;
+
+        if (this.lastLocation == null) {
+            Location defaultLocation = new Location("");
+            defaultLocation.setLatitude(0.0);
+            defaultLocation.setLongitude(0.0);
+            this.lastLocation = defaultLocation;
+        }
 
         apiUrl = API_URL_PROD;
 
@@ -134,6 +144,13 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
         this.offlineEnduserApi = new OfflineEnduserApi(context);
         this.majorId = majorId;
         this.cooldown = cooldown;
+
+        if (this.lastLocation == null) {
+            Location defaultLocation = new Location("");
+            defaultLocation.setLatitude(0.0);
+            defaultLocation.setLongitude(0.0);
+            this.lastLocation = defaultLocation;
+        }
 
         if (isProduction) {
             apiUrl = API_URL_PROD;
@@ -154,6 +171,13 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
         this.enduserApiInterface = retrofit.create(EnduserApiInterface.class);
         this.context = context;
         this.offlineEnduserApi = new OfflineEnduserApi(context);
+
+        if (this.lastLocation == null) {
+            Location defaultLocation = new Location("");
+            defaultLocation.setLatitude(0.0);
+            defaultLocation.setLongitude(0.0);
+            this.lastLocation = defaultLocation;
+        }
 
         initMorpheus();
         initVars();
@@ -1072,15 +1096,37 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
         return call;
     }
 
-    public void pushDevice(PushDeviceUtil util) {
+    public void pushDevice(PushDeviceUtil util, boolean instantPush) {
 
         Long lastPush = sharedPref.getLong("xamoom-last-push-register", -1);
-        if (lastPush >= java.lang.System.currentTimeMillis() - (60 * 1000)) {
+        Map<String, Float> location = util.getSavedLocation();
+        Location l = new Location("");
+
+        if (location != null) {
+            Float lat = location.get("lat");
+            Float lon = location.get("lon");
+
+            l.setLatitude(lat);
+            l.setLongitude(lon);
+        } else {
+            l.setLongitude(0.0);
+            l.setLatitude(0.0);
+
+            location = new HashMap<String, Float>();
+            location.put("lat", 0.0F);
+            location.put("lon", 0.0F);
+        }
+
+        if (!instantPush && this.lastLocation.distanceTo(l) > 100) {
+            return;
+        }
+
+        if (!instantPush && lastPush >= java.lang.System.currentTimeMillis() - (30 * 60 * 1000)) {
             return;
         }
 
         String token = util.getSavedToken();
-        Map<String, Float> location = util.getSavedLocation();
+
         String packageName = context.getPackageName();
         String sdkVersion = context.getString(R.string.sdk_version);
 
@@ -1092,13 +1138,13 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
             e.printStackTrace();
         }
 
-        if (token == null || location == null || version == null) {
+        if (token == null || version == null) {
             return;
         }
 
+        PushDevice device = new PushDevice(token, location, version, packageName, sdkVersion, util.getSound(), util.getNoNotification());
         sharedPref.edit().putLong("xamoom-last-push-register", java.lang.System.currentTimeMillis()).apply();
-
-        PushDevice device = new PushDevice(token, location, version, packageName, sdkVersion, util.getSound());
+        lastLocation = l;
 
         JsonApiObject jsonApiObject = new JsonApiObject();
         jsonApiObject.setResource(device);

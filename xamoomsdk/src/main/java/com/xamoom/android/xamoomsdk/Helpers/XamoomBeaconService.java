@@ -202,6 +202,11 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
     public void didEnterRegion(Region region) {
         Log.i(TAG, "didEnterRegion");
 
+        SharedPreferences prefs = mContext.getSharedPreferences(PushDeviceUtil.PREFES_NAME,
+                Context.MODE_PRIVATE);
+        final PushDeviceUtil pUtil = new PushDeviceUtil(prefs);
+        api.pushDevice(pUtil, false);
+
         sendBroadcast(ENTER_REGION_BROADCAST, null, null);
 
         if (fastInsideRegionScanning) {
@@ -268,8 +273,6 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
 
         SharedPreferences prefs = mContext.getSharedPreferences(PushDeviceUtil.PREFES_NAME,
                 Context.MODE_PRIVATE);
-        final PushDeviceUtil pUtil = new PushDeviceUtil(prefs);
-        api.pushDevice(pUtil);
 
         int lastBeaconCount = prefs.getInt("last_beacon_count", -1);
 

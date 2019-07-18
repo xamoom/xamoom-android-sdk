@@ -22,7 +22,7 @@ class GeofenceBroadcastReceiver: BroadcastReceiver() {
                             Context.MODE_PRIVATE)
                     val util = PushDeviceUtil(sharedPref)
                     util.storeLocation(locations[0])
-                    EnduserApi.getSharedInstance(context).pushDevice(util)
+                    EnduserApi.getSharedInstance(context).pushDevice(util, false)
                 }
             }
         }
