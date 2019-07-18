@@ -37,6 +37,10 @@ class CustomMapView : CoordinatorLayout {
         mapView = v.findViewById(R.id.mapImageView)
         textView = v.findViewById(R.id.titleTextView)
         val view: View = v.findViewById(R.id.bottom_sheet)
+        view.setOnTouchListener { _, event ->
+            view.onTouchEvent(event)
+            true
+        }
         bottomSheetBehavior = BottomSheetBehavior.from<View>(view)
         floatingActionButton = v.findViewById(R.id.spot_fab)
         spotTitleTextView = v.findViewById(R.id.spot_title_text_view)
