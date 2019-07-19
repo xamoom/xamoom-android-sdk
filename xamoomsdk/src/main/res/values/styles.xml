@@ -82,6 +82,8 @@
     <style name="ContentBlocksTheme.Download" parent="ContentBlocksTheme">
         <item name="calendar_background_color">@color/downloadblock_calendar_background_color</item>
         <item name="calendar_tint_color">@color/downloadblock_calendar_tint_color</item>
+        <item name="gpx_background_color">@color/downloadblock_gpx_background_color</item>
+        <item name="gpx_tint_color">@color/downloadblock_gpx_tint_color</item>
         <item name="contact_background_color">@color/downloadblock_contact_background_color</item>
         <item name="contact_tint_color">@color/downloadblock_contact_tint_color</item>
         <item name="default_background_color">@color/downloadblock_default_background_color</item>

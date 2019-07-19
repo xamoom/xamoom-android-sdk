@@ -20,4 +20,5 @@ public class Config {
    * Uses the applicationId so it can be used in different apps.
    */
   public static final String AUTHORITY = BuildConfig.APPLICATION_ID + ".xamoomsdk.fileprovider";
+  public static final String FILE_PROVIDER = "xamoomsdk";
 }
