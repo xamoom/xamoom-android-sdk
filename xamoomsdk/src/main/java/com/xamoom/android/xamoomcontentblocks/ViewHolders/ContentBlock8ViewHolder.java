@@ -139,8 +139,9 @@ public class ContentBlock8ViewHolder extends RecyclerView.ViewHolder {
               return;
             }
 
+            String providerAuthorities = mFragment.getContext().getPackageName() + ".xamoomsdk.fileprovider";
             Uri fileUri = FileProvider.getUriForFile(mFragment.getContext(),
-                    Config.FILE_PROVIDER, file);
+                    providerAuthorities, file);
 
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setDataAndType(fileUri, mFragment.getContext().getContentResolver().getType(fileUri));

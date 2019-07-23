@@ -1,5 +1,5 @@
 # Changelog
-## [3.11.7](https://github.com/xamoom/xamoom-ios-sdk/compare/3.11.6...3.11.7) - 23.07.2019
+## [3.11.8](https://github.com/xamoom/xamoom-ios-sdk/compare/3.11.6...3.11.8) - 23.07.2019
 - Add download block type 2 (GPX)
 - Improve download type (ContentBlock8ViewHolder) logic, opens ChooserIntent
 
