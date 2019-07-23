@@ -1,5 +1,11 @@
 # Changelog
-## [3.11.6](https://github.com/xamoom/xamoom-ios-sdk/compare/3.11.4...3.11.5) - 16.07.2019
+## [3.11.7](https://github.com/xamoom/xamoom-ios-sdk/compare/3.11.6...3.11.7) - 23.07.2019
+- Add download block type 2 (GPX)
+- Improve download type (ContentBlock8ViewHolder) logic, opens ChooserIntent
+
+- Fixing UI issues in ContentBlock9ViewHolder
+
+## [3.11.6](https://github.com/xamoom/xamoom-ios-sdk/compare/3.11.5...3.11.6) - 16.07.2019
 - set correct ContentReason when loading Beacons in XamoomBeaconService  
 
 ## [3.11.5](https://github.com/xamoom/xamoom-ios-sdk/compare/3.11.4...3.11.5) - 24.06.2019
