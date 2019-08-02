@@ -1,20 +1,24 @@
 /*
-* Copyright (c) 2017 xamoom GmbH <apps@xamoom.com>
-*
-* Licensed under the MIT License (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at the root of this project.
-*/
+ * Copyright (c) 2017 xamoom GmbH <apps@xamoom.com>
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at the root of this project.
+ */
 
 package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.net.Uri;
+import android.provider.Contacts;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -24,19 +28,23 @@ import android.widget.Toast;
 import com.xamoom.android.xamoomcontentblocks.Config;
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
+import com.xamoom.android.xamoomsdk.Storage.DownloadError;
+import com.xamoom.android.xamoomsdk.Storage.DownloadManager;
 import com.xamoom.android.xamoomsdk.Storage.FileManager;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * DownloadBlock
  */
 public class ContentBlock8ViewHolder extends RecyclerView.ViewHolder {
   private static final int[] ATTRS = {
-      R.attr.calendar_background_color, R.attr.calendar_tint_color,
-      R.attr.contact_background_color, R.attr.contact_tint_color,
-      R.attr.default_background_color, R.attr.default_tint_color
+          R.attr.calendar_background_color, R.attr.calendar_tint_color,
+          R.attr.contact_background_color, R.attr.contact_tint_color,
+          R.attr.default_background_color, R.attr.default_tint_color
   };
   private static final int CALENDAR_BACKGROUND_COLOR = 0;
   private static final int CALENDAR_TINT_COLOR = 1;
@@ -78,20 +86,12 @@ public class ContentBlock8ViewHolder extends RecyclerView.ViewHolder {
     mRootLayout.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        Uri fileUri = null;
-        if (!offline) {
-          fileUri = Uri.parse(contentBlock.getFileId());
-          Intent i = new Intent(Intent.ACTION_VIEW, fileUri);
-          mFragment.getActivity().startActivity(i);
-          return;
-        }
-
         startShareIntent(contentBlock.getFileId());
       }
     });
 
     TypedArray ta = mFragment.getContext()
-        .obtainStyledAttributes(R.style.ContentBlocksTheme_Download, R.styleable.Download);
+            .obtainStyledAttributes(R.style.ContentBlocksTheme_Download, R.styleable.Download);
 
     int backgroundColor = 0;
     int tintColor = 0;
@@ -105,6 +105,11 @@ public class ContentBlock8ViewHolder extends RecyclerView.ViewHolder {
         backgroundColor = ta.getResourceId(R.styleable.Download_calendar_background_color, 0);
         tintColor = ta.getColor(R.styleable.Download_calendar_tint_color, Color.BLACK);
         mIconImageView.setImageResource(R.drawable.ic_calendar);
+        break;
+      case 2:
+        backgroundColor = ta.getResourceId(R.styleable.Download_gpx_background_color, 0);
+        tintColor = ta.getColor(R.styleable.Download_gpx_tint_color, Color.BLACK);
+        mIconImageView.setImageResource(R.drawable.ic_gpx);
         break;
       default:
         backgroundColor = ta.getResourceId(R.styleable.Download_download_default_background_color, 0);
@@ -120,26 +125,42 @@ public class ContentBlock8ViewHolder extends RecyclerView.ViewHolder {
   }
 
   private void startShareIntent(String fileUrl) {
-    File file = null;
+
+    DownloadManager m = new DownloadManager(mFileManager);
+
     try {
-      file = mFileManager.getFile(fileUrl);
-    } catch (IOException e) {
+      m.saveFileFromUrl(new URL(fileUrl), false, new DownloadManager.OnDownloadManagerCompleted() {
+        @Override
+        public void completed(String urlString) {
+          try {
+            File file = mFileManager.getFile(urlString);
+            if (file == null && !file.exists()) {
+              fileNotFoundToast();
+              return;
+            }
+
+            String providerAuthorities = mFragment.getContext().getPackageName() + ".xamoomsdk.fileprovider";
+            Uri fileUri = FileProvider.getUriForFile(mFragment.getContext(),
+                    providerAuthorities, file);
+
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(fileUri, mFragment.getContext().getContentResolver().getType(fileUri));
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.putExtra(Intent.EXTRA_STREAM, fileUri);
+            mFragment.getActivity().startActivity(Intent.createChooser(intent, "ABC"));
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
+        }
+
+        @Override
+        public void failed(String urlString, DownloadError downloadError) {
+          fileNotFoundToast();
+        }
+      });
+    } catch (MalformedURLException e) {
       e.printStackTrace();
     }
-
-    if (file == null) {
-      fileNotFoundToast();
-      return;
-    }
-
-    Uri fileUri = FileProvider.getUriForFile(mFragment.getContext(),
-        Config.AUTHORITY, file);
-
-    Intent intent = new Intent(Intent.ACTION_VIEW);
-    intent.setDataAndType(fileUri, mFragment.getContext().getContentResolver().getType(fileUri));
-    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-
-    mFragment.getActivity().startActivity(intent);
   }
 
   private void fileNotFoundToast() {

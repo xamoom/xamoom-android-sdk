@@ -1,27 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:attrs="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
     android:theme="@style/ContentBlocksTheme">
 
-    <TextView
-        android:id="@+id/horizontal_recycler_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/contentblock_title_size"
-        android:textColor="@color/black"
-        android:layout_marginStart="@dimen/contentblock_standard_padding"
-        android:layout_marginEnd="@dimen/contentblock_standard_padding"
-        android:layout_marginBottom="@dimen/contentblock_children_margin"
-        />
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/horizontal_recycler_view"
-        android:layout_below="@+id/horizontal_recycler_title"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:layout_width="match_parent"

@@ -23,6 +23,7 @@ import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.APICallback;
+import com.xamoom.android.xamoomsdk.APIPasswordCallback;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
 import com.xamoom.android.xamoomsdk.Enums.ContentReason;
@@ -100,7 +101,7 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
     }
 
     mCall = mEnduserApi.getContent(contentId, EnumSet.of(ContentFlags.PREVIEW),
-        ContentReason.LINKED_CONTENT, new APICallback<Content, List<at.rags.morpheus.Error>>() {
+        ContentReason.LINKED_CONTENT, null, new APIPasswordCallback<Content, List<Error>>() {
       @Override
       public void finished(Content result) {
         if (result == null) {
@@ -129,6 +130,11 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
           }
           mProgressBar.setVisibility(View.GONE);
         }
+      }
+
+      @Override
+      public void passwordRequested() {
+        //DO nothing
       }
     });
   }

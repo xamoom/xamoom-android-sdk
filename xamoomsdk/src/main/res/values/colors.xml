@@ -51,6 +51,8 @@
     <color name="downloadblock_calendar_tint_color">@android:color/white</color>
     <color name="downloadblock_contact_background_color">#AA3F41</color>
     <color name="downloadblock_contact_tint_color">@android:color/white</color>
+    <color name="downloadblock_gpx_background_color">#CC38B1</color>
+    <color name="downloadblock_gpx_tint_color">@android:color/white</color>
     <color name="downloadblock_default_background_color">#d1d1d1</color>
     <color name="downloadblock_default_tint_color">#333333</color>
 

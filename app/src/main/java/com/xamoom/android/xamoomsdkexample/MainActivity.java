@@ -41,6 +41,7 @@ import com.mapbox.mapboxsdk.Mapbox;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.APIListCallback;
+import com.xamoom.android.xamoomsdk.APIPasswordCallback;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
@@ -197,7 +198,7 @@ public class MainActivity extends AppCompatActivity
   public void getContent() {
     List tags = new ArrayList();
     tags.add("x-start");
-    mEnduserApi = new EnduserApi("3226a5a4-451e-4f40-943e-be55d43266f1", getApplicationContext(), false, null);
+    mEnduserApi = new EnduserApi("3226a5a4-451e-4f40-943e-be55d43266f1", getApplicationContext(), false, null, 0);
     mEnduserApi.getContentsByTags(tags, 10, null, null, new APIListCallback<List<Content>, List<Error>>() {
       @Override
       public void finished(List<Content> result, String cursor, boolean hasMore) {
@@ -209,7 +210,7 @@ public class MainActivity extends AppCompatActivity
 
         ArrayList<String> urls = new ArrayList<>();
         urls.add("google.com");
-        XamoomContentFragment xamoomFragment = XamoomContentFragment.newInstance(getResources().getString(R.string.youtube_key), urls, "", com.mapbox.mapboxsdk.maps.Style.LIGHT); //create new instance
+        XamoomContentFragment xamoomFragment = XamoomContentFragment.newInstance(getResources().getString(R.string.youtube_key), urls, "", com.mapbox.mapboxsdk.maps.Style.LIGHT, "#ABCDEF", "#FEDCBA", "w"); //create new instance
         xamoomFragment.setShowSpotMapContentLinks(true);
         xamoomFragment.setEnduserApi(mEnduserApi);
         xamoomFragment.setDisplayAllStoreLinks(true);
@@ -227,8 +228,8 @@ public class MainActivity extends AppCompatActivity
   }
 
   public void getContentOption() {
-    mEnduserApi.getContent("7cf2c58e6d374ce3888c32eb80be53b5", EnumSet.of(ContentFlags.PREVIEW, ContentFlags.PRIVATE),
-        new APICallback<Content, List<Error>>() {
+    mEnduserApi.getContent("7cf2c58e6d374ce3888c32eb80be53b5", EnumSet.of(ContentFlags.PREVIEW, ContentFlags.PRIVATE), null,
+        new APIPasswordCallback<Content, List<Error>>() {
           @Override
           public void finished(Content result) {
             Log.v(TAG, "getContent: " + result);
@@ -252,12 +253,18 @@ public class MainActivity extends AppCompatActivity
           public void error(List<Error> error) {
             Log.e(TAG, "Error: " + error);
           }
+
+          @Override
+          public void passwordRequested() {
+
+          }
         });
+
   }
 
   public void getContentLocationIdentifier() {
-    mEnduserApi.getContentByLocationIdentifier(getResources().getString(R.string.qrMarker),
-        new APICallback<Content, List<Error>>() {
+    mEnduserApi.getContentByLocationIdentifier(getResources().getString(R.string.qrMarker), null,
+        new APIPasswordCallback<Content, List<Error>>() {
           @Override
           public void finished(Content result) {
             Log.v(TAG, "getContentByLocationIdentifier: " + result);
@@ -267,10 +274,15 @@ public class MainActivity extends AppCompatActivity
           public void error(List<Error> error) {
 
           }
+
+          @Override
+          public void passwordRequested() {
+
+          }
         });
 
     mEnduserApi.getContentByLocationIdentifier(getResources().getString(R.string.qrMarker),
-        EnumSet.of(ContentFlags.PREVIEW), new APICallback<Content, List<Error>>() {
+        EnumSet.of(ContentFlags.PREVIEW), null, new APIPasswordCallback<Content, List<Error>>() {
           @Override
           public void finished(Content result) {
             Log.v(TAG, "getContentByLocationIdentifier: " + result);
@@ -280,7 +292,12 @@ public class MainActivity extends AppCompatActivity
           public void error(List<Error> error) {
 
           }
-        });
+
+              @Override
+              public void passwordRequested() {
+
+              }
+            });
   }
 
   private void getContentWithConditions() {
@@ -291,7 +308,7 @@ public class MainActivity extends AppCompatActivity
     conditions.put("double", (double) 1.000002358923523523523523535);
     conditions.put("date", new Date());
 
-    mEnduserApi.getContentByLocationIdentifier(getResources().getString(R.string.qrMarker), null, conditions, new APICallback<Content, List<Error>>() {
+    mEnduserApi.getContentByLocationIdentifier(getResources().getString(R.string.qrMarker), null, conditions, null, new APIPasswordCallback<Content, List<Error>>() {
       @Override
       public void finished(Content result) {
         Log.v(TAG, "getContentByLocationIdentifier: " + result);
@@ -300,6 +317,11 @@ public class MainActivity extends AppCompatActivity
       @Override
       public void error(List<Error> error) {
         Log.e(TAG, "Error contentByLocationIdentifier: " + error);
+      }
+
+      @Override
+      public void passwordRequested() {
+
       }
     });
   }
@@ -574,7 +596,7 @@ public class MainActivity extends AppCompatActivity
   @Override
   public void clickedSpotMapContentLink(String contentId) {
     Log.v(TAG, "Click Map Content: " + contentId);
-    mEnduserApi.getContent(contentId, new APICallback<Content, List<Error>>() {
+    mEnduserApi.getContent(contentId, null, new APIPasswordCallback<Content, List<Error>>() {
       @Override
       public void finished(Content result) {
         clickedContentBlock(result);
@@ -582,6 +604,11 @@ public class MainActivity extends AppCompatActivity
 
       @Override
       public void error(List<Error> error) {
+
+      }
+
+      @Override
+      public void passwordRequested() {
 
       }
     });

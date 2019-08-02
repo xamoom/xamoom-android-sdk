@@ -13,6 +13,7 @@ import android.util.Log;
 
 import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.APIListCallback;
+import com.xamoom.android.xamoomsdk.APIPasswordCallback;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
 import com.xamoom.android.xamoomsdk.Resource.Content;
@@ -147,7 +148,7 @@ public class OfflineStorageTagModule {
         contentCount++;
         final int finalContentCount = contentCount;
 
-        mEnduserApi.getContent(spot.getContent().getId(), new APICallback<Content, List<Error>>() {
+        mEnduserApi.getContent(spot.getContent().getId(), null, new APIPasswordCallback<Content, List<Error>>() {
           @Override
           public void finished(Content result) {
             contents.add(result);
@@ -160,6 +161,11 @@ public class OfflineStorageTagModule {
           @Override
           public void error(List<Error> error) {
             callback.error(error);
+          }
+
+          @Override
+          public void passwordRequested() {
+            // Do nothing
           }
         });
       }

@@ -35,6 +35,22 @@ class PushDeviceUtil(val preferences: SharedPreferences) {
         return token
     }
 
+    fun setSound(sound: Boolean) {
+        preferences.edit().putBoolean("xamoom_push_device_sound", sound).apply()
+    }
+
+    fun getSound(): Boolean {
+        return preferences.getBoolean("xamoom_push_device_sound", true)
+    }
+
+    fun setNoNotification(noNotification: Boolean) {
+        preferences.edit().putBoolean("xamoom_push_device_no_notification", noNotification).apply()
+    }
+
+    fun getNoNotification(): Boolean {
+        return preferences.getBoolean("xamoom_push_device_no_notification", false)
+    }
+
     companion object {
         const val PREFES_NAME = "push_device_util_preferences"
     }

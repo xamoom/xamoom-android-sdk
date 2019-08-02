@@ -1,14 +1,15 @@
 /*
-* Copyright (c) 2017 xamoom GmbH <apps@xamoom.com>
-*
-* Licensed under the MIT License (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at the root of this project.
-*/
+ * Copyright (c) 2017 xamoom GmbH <apps@xamoom.com>
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at the root of this project.
+ */
 
 package com.xamoom.android.xamoomsdk;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import org.json.JSONException;
 
@@ -35,7 +36,7 @@ public class CallHandler <T extends Resource> {
   public static final String ERROR_CODE_CONNECTION_FAILURE = "10003";
   public static final String ERROR_CODE_REQUEST_OR_RESPONSE_FAILURE = "10003";
   public static final String ERROR_MESSAGE_RESPONSE_IS_NULL = "Parsed response is null. " +
-      "Check if data really exists.";
+          "Check if data really exists.";
 
   private static final String HEADER_EPHEMERAL = "X-Ephemeral-Id";
   private static final String HEADER_AUTHORIZATION = "Authorization";
@@ -79,8 +80,43 @@ public class CallHandler <T extends Resource> {
     });
   }
 
+  public void enquePasswordCall(@NonNull Call<ResponseBody> call, final APIPasswordCallback<T, List<Error>> callback) {
+    checkForNull(call);
+    call.enqueue(new Callback<ResponseBody>() {
+      @Override
+      public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+        // checks if there is a ephemeral id and calls listeners gotEphemeralId method
+        notifyEphemeralId(response.headers());
+        notifyAuthorizationId(response.headers());
+
+        JsonApiObject jsonApiObject;
+        try {
+          jsonApiObject = parseResponse(response);
+        } catch (Exception e) {
+          callback.error(createError(e));
+          return;
+        }
+
+        if (jsonApiObject.getResource() != null) {
+          T t = (T) jsonApiObject.getResource();
+          callback.finished(t);
+        } else if (jsonApiObject.getErrors() != null && jsonApiObject.getErrors().size() > 0) {
+          if (isPasswordError(jsonApiObject.getErrors())) {
+            callback.passwordRequested();
+          } else {
+            callback.error(jsonApiObject.getErrors());
+          }
+        }
+      }
+
+      @Override
+      public void onFailure(Call<ResponseBody> call, Throwable t) {
+        callback.error(createError(t));
+      }
+    });
+  }
   public void enqueListCall(@NonNull Call<ResponseBody> call, final APIListCallback<List<T>,
-      List<Error>> callback) {
+          List<Error>> callback) {
     checkForNull(call);
 
     call.enqueue(new Callback<ResponseBody>() {
@@ -183,7 +219,7 @@ public class CallHandler <T extends Resource> {
   private void notifyEphemeralId(Headers headers) {
     String ephemeralId = headers.get(HEADER_EPHEMERAL);
     if (ephemeralId != null
-          && listener != null) {
+            && listener != null) {
       listener.gotEphemeralId(ephemeralId);
     }
   }
@@ -193,6 +229,26 @@ public class CallHandler <T extends Resource> {
     if (authorizationId != null && listener != null) {
       listener.gotAuthorizationId(authorizationId);
     }
+  }
+
+  private boolean isPasswordError(List<Error> errors) {
+    for (Error error : errors) {
+      StringBuilder builder = new StringBuilder();
+      builder.append("code " + error.getCode());
+      builder.append("\n");
+      builder.append("status " + error.getStatus());
+      builder.append("\n");
+      builder.append("detail " + error.getDetail());
+      Log.e("Error: ", "Error: " + builder.toString());
+
+      if (Integer.parseInt(error.getStatus()) == 401 && Integer.parseInt(error.getCode()) == 92) {
+        return true;
+      }
+
+      return false;
+    }
+
+    return false;
   }
 
   public interface CallHandlerListener {

@@ -1,10 +1,10 @@
 /*
-* Copyright (c) 2017 xamoom GmbH <apps@xamoom.com>
-*
-* Licensed under the MIT License (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at the root of this project.
-*/
+ * Copyright (c) 2017 xamoom GmbH <apps@xamoom.com>
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at the root of this project.
+ */
 
 package com.xamoom.android.xamoomcontentblocks;
 
@@ -73,6 +73,9 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   private static final String URL_SCHEME = "UrlScheme";
   private static final String BEACON_MAJOR = "beaconMajor";
   private static final String MAPBOX_STYLE = "mapbox_style";
+  private static final String NAVIGATION_TINT = "navigation_tint";
+  private static final String CONTENT_BUTTON_TEXT = "content_text_color";
+  private static final String NAVIGATION_MODE = "navigation_mode";
 
   private static final int WRITE_STORAGE_PERMISSION = 0;
 
@@ -96,21 +99,24 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   private ArrayList<String> contentBlockUrlScheme;
   private String majorId;
   private String mapboxStyleString;
+  private String navigationButtonTintColorString;
+  private String contentButtonTextColorString;
+  private String navigationMode;
 
   public static XamoomContentFragment newInstance(@NonNull String youtubeApiKey) {
-    return newInstance(youtubeApiKey, null, null, null);
+    return newInstance(youtubeApiKey, null, null, null, null, null, null);
   }
 
   public static XamoomContentFragment newInstance(@NonNull String youtubeApiKey, @Nullable ArrayList<String> url) {
-    return newInstance(youtubeApiKey, url, null, null);
+    return newInstance(youtubeApiKey, url, null, null, null, null, null);
   }
 
   public static XamoomContentFragment newInstance(@NonNull String youtubeApiKey, @Nullable ArrayList<String> url, @Nullable String beaconMajor) {
-    return newInstance(youtubeApiKey, url, beaconMajor, null);
+    return newInstance(youtubeApiKey, url, beaconMajor, null, null, null, null);
   }
 
   public static XamoomContentFragment newInstance(@NonNull String youtubeApiKey, @Nullable String beaconMajorId, @Nullable String mapboxStyleString) {
-    return newInstance(youtubeApiKey, null, beaconMajorId, mapboxStyleString);
+    return newInstance(youtubeApiKey, null, beaconMajorId, mapboxStyleString, null, null, null);
   }
 
   /**
@@ -119,7 +125,8 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
    *
    * @return XamoomContentFragment Returns an Instance of XamoomContentFragment
    */
-  public static XamoomContentFragment newInstance(@NonNull String youtubeApiKey, ArrayList<String> url, @Nullable String beaconMajorId, @Nullable String mapboxStyleString) {
+  public static XamoomContentFragment newInstance(@NonNull String youtubeApiKey, ArrayList<String> url, @Nullable String beaconMajorId, @Nullable String mapboxStyleString,
+                                                  @Nullable String navigationButtonTintColorString, @Nullable String contentButtonTextColorString, @Nullable String navigationMode) {
     XamoomContentFragment fragment = new XamoomContentFragment();
     Bundle args = new Bundle();
 
@@ -127,6 +134,9 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
     args.putStringArrayList(URL_SCHEME, url);
     args.putString(BEACON_MAJOR, beaconMajorId);
     args.putString(MAPBOX_STYLE, mapboxStyleString);
+    args.putString(NAVIGATION_TINT, navigationButtonTintColorString);
+    args.putString(CONTENT_BUTTON_TEXT, contentButtonTextColorString);
+    args.putString(NAVIGATION_MODE, navigationMode);
 
     fragment.setArguments(args);
 
@@ -135,7 +145,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
 
   public XamoomContentFragment() {
     mContentBlockAdapter = new ContentBlockAdapter(this, mContentBlocks,
-        showSpotMapContentLinks, mYoutubeApiKey, this, contentBlockUrlScheme, mapboxStyleString, this);
+            showSpotMapContentLinks, mYoutubeApiKey, this, contentBlockUrlScheme, mapboxStyleString, navigationButtonTintColorString, contentButtonTextColorString, navigationMode, this);
   }
 
   @Override
@@ -144,9 +154,15 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
     if (getArguments() != null) {
       contentBlockUrlScheme = getArguments().getStringArrayList(URL_SCHEME);
       mapboxStyleString = getArguments().getString(MAPBOX_STYLE);
+      navigationButtonTintColorString = getArguments().getString(NAVIGATION_TINT);
+      contentButtonTextColorString = getArguments().getString(CONTENT_BUTTON_TEXT);
+      navigationMode = getArguments().getString(NAVIGATION_MODE);
       mContentBlockAdapter.setContentBlockUrlScheme(contentBlockUrlScheme);
       mContentBlockAdapter.setMapboxStyleString(mapboxStyleString);
       mContentBlockAdapter.setShowContentLinks(showSpotMapContentLinks);
+      mContentBlockAdapter.setNavigationButtonTintColorString(navigationButtonTintColorString);
+      mContentBlockAdapter.setContentButtonTextColorString(contentButtonTextColorString);
+      mContentBlockAdapter.setNavigationMode(navigationMode);
       mYoutubeApiKey = getArguments().getString(YOUTUBE_API_KEY);
       mContentBlockAdapter.setYoutubeApiKey(mYoutubeApiKey);
       this.majorId = getArguments().getString(BEACON_MAJOR);
@@ -155,7 +171,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
     if (savedInstanceState != null) {
       mYoutubeApiKey = savedInstanceState.getString(YOUTUBE_API_KEY);
       showSpotMapContentLinks = savedInstanceState.getBoolean(SHOW_SPOT_MAP_CONTENT_LINKS);
-      mEnduserApi = new EnduserApi(savedInstanceState.getString(ENDUSER_API_KEY), getContext(), this.majorId);
+      mEnduserApi = new EnduserApi(savedInstanceState.getString(ENDUSER_API_KEY), getContext(), this.majorId, 5000);
       mContentID = savedInstanceState.getString(CONTENT_ID);
       mListState = savedInstanceState.getParcelable(LIST_STATE);
       offline = savedInstanceState.getBoolean(OFFLINE);
@@ -163,7 +179,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
       mBackgroundColor = savedInstanceState.getInt(BACKGROUND_COLOR);
 
       mContentBlocks = (ArrayList<ContentBlock>)
-          ContentFragmentCache.getSharedInstance().get(mContentID);
+              ContentFragmentCache.getSharedInstance().get(mContentID);
 
       mContentBlockAdapter.setYoutubeApiKey(mYoutubeApiKey);
       mContentBlockAdapter.setContentBlocks(mContentBlocks);
@@ -202,11 +218,33 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   }
 
   @Override
+  public void onResume() {
+    super.onResume();
+
+    mRecyclerView.scrollToPosition(0);
+    mContentBlockAdapter.notifyDataSetChanged();
+  }
+
+  @Override
+  public void onStop() {
+    if (mContentBlockAdapter != null) {
+      mContentBlockAdapter.onStop();
+    }
+    super.onStop();
+
+  }
+
+  @Override
   public void onPause() {
     Intent intent = new Intent(ContentBlock2ViewHolder.RESET_YOUTUBE);
     LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
     Intent intent2 = new Intent(ContentBlock1ViewHolder.PAUSE_INTENT_ACTION);
     LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent2);
+
+    if (mContentBlockAdapter != null) {
+      mContentBlockAdapter.onPause();
+    }
+
     super.onPause();
   }
 
@@ -243,13 +281,17 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   @Override
   public void onDestroyView() {
     super.onDestroyView();
-    mContentBlockAdapter.onDestroy();
+    if (mContentBlockAdapter != null) {
+      mContentBlockAdapter.onDestroy();
+    }
   }
 
   @Override
   public void onLowMemory() {
     super.onLowMemory();
-    mContentBlockAdapter.onLowMemory();
+    if (mContentBlockAdapter != null) {
+      mContentBlockAdapter.onLowMemory();
+    }
   }
 
   /**
@@ -309,7 +351,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
    */
   private void addContentTitleAndImage() {
     if (mContent.getTitle() != null && !mContent.getTitle().equalsIgnoreCase("") ||
-        mContent.getDescription() != null && !mContent.getDescription().equalsIgnoreCase("")) {
+            mContent.getDescription() != null && !mContent.getDescription().equalsIgnoreCase("")) {
       ContentBlock contentBlock0 = new ContentBlock();
       contentBlock0.setTitle(mContent.getTitle());
       contentBlock0.setBlockType(-1);
@@ -334,13 +376,13 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
     ArrayList<ContentBlock> removeBlocks = new ArrayList<>();
     for (ContentBlock block : mContentBlocks) {
       if (block.getBlockType() == 9 ||
-          block.getBlockType() == 7) {
+              block.getBlockType() == 7) {
         removeBlocks.add(block);
       }
 
       if (block.getBlockType() == 2) {
         if (block.getVideoUrl().contains("youtu") ||
-            block.getVideoUrl().contains("vimeo")) {
+                block.getVideoUrl().contains("vimeo")) {
           removeBlocks.add(block);
         }
       }
@@ -386,7 +428,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
         mContentBlockAdapter.setOnXamoomContentFragmentInteractionListener(listener);
       } catch (ClassCastException e) {
         throw new ClassCastException(activity.toString()
-            + " must implement OnXamoomContentFragmentInteractionListener");
+                + " must implement OnXamoomContentFragmentInteractionListener");
       }
     }
   }
@@ -398,7 +440,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
 
   @Override
   public void needExternalStoragePermission() {
-   requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_STORAGE_PERMISSION);
+    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_STORAGE_PERMISSION);
   }
 
   @Override
@@ -539,7 +581,6 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
 
   @Override
   public void didScroll(int position) {
-    //getRecyclerView().getAdapter().notifyDataSetChanged();
     getRecyclerView().getAdapter().notifyItemRangeChanged(position, getRecyclerView().getAdapter().getItemCount() - position - 1);
   }
 }

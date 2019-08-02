@@ -16,6 +16,6 @@ class PushTokenListener: FirebaseInstanceIdService() {
                 Context.MODE_PRIVATE)
         val util = PushDeviceUtil(sharedPref)
         util.storeToken(token)
-        EnduserApi.getSharedInstance().pushDevice(util)
+        EnduserApi.getSharedInstance().pushDevice(util, true)
     }
 }

@@ -1,10 +1,10 @@
 /*
-* Copyright (c) 2017 xamoom GmbH <apps@xamoom.com>
-*
-* Licensed under the MIT License (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at the root of this project.
-*/
+ * Copyright (c) 2017 xamoom GmbH <apps@xamoom.com>
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at the root of this project.
+ */
 
 package com.xamoom.android.xamoomcontentblocks.Adapters;
 
@@ -33,7 +33,7 @@ import java.util.List;
 
 public class ContentBlock9Adapter implements AdapterDelegate<List<ContentBlock>> {
   private static final int BLOCK_TYPE = 9;
-  private ContentBlock9ViewHolder mapholder = null;
+  public ContentBlock9ViewHolder mapholder = null;
   private Bundle bundle = null;
 
   @Override
@@ -45,11 +45,12 @@ public class ContentBlock9Adapter implements AdapterDelegate<List<ContentBlock>>
   @NonNull
   @Override
   public RecyclerView.ViewHolder onCreateViewHolder(
-      ViewGroup parent, Fragment fragment, EnduserApi enduserApi, String youtubeApiKey,
-      LruCache bitmapCache, LruCache contentCache, boolean showContentLinks, ListManager listManager, AdapterDelegatesManager adapterDelegatesManager,
-      ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener onContentBlock3ViewHolderInteractionListener, XamoomContentFragment.OnXamoomContentFragmentInteractionListener onXamoomContentFragmentInteractionListener, @Nullable ArrayList<String> urls, @Nullable String mapboxStyleString) {
+          ViewGroup parent, Fragment fragment, EnduserApi enduserApi, String youtubeApiKey,
+          LruCache bitmapCache, LruCache contentCache, boolean showContentLinks, ListManager listManager, AdapterDelegatesManager adapterDelegatesManager,
+          ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener onContentBlock3ViewHolderInteractionListener, XamoomContentFragment.OnXamoomContentFragmentInteractionListener onXamoomContentFragmentInteractionListener,
+          @Nullable ArrayList<String> urls, @Nullable String mapboxStyleString, @Nullable String navigationButtonTintColorString, @Nullable String contentButtonTextColorString, @Nullable String navigationMode) {
     View v = LayoutInflater.from(fragment.getContext()).inflate(R.layout.content_block_9_layout, parent, false);
-    mapholder = new ContentBlock9ViewHolder(((CustomMapView) v), bundle, enduserApi, fragment, onXamoomContentFragmentInteractionListener, mapboxStyleString);
+    mapholder = new ContentBlock9ViewHolder(((CustomMapView) v), bundle, enduserApi, fragment, onXamoomContentFragmentInteractionListener, mapboxStyleString, navigationButtonTintColorString, contentButtonTextColorString, navigationMode);
     return mapholder;
   }
 
@@ -68,6 +69,30 @@ public class ContentBlock9Adapter implements AdapterDelegate<List<ContentBlock>>
     this.bundle = bundle;
     if (isMapViewActive()) {
       mapholder.getMapView().onSaveInstanceState(bundle);
+    }
+  }
+
+  public void onStart() {
+    if (isMapViewActive()) {
+      mapholder.getMapView().onStart();
+    }
+  }
+
+  public void onStop() {
+    if (isMapViewActive()) {
+      mapholder.getMapView().onStop();
+    }
+  }
+
+  public void onPause() {
+    if (isMapViewActive()) {
+      mapholder.getMapView().onPause();
+    }
+  }
+
+  public void onResume() {
+    if (isMapViewActive()) {
+      mapholder.getMapView().onResume();
     }
   }
 
@@ -97,6 +122,6 @@ public class ContentBlock9Adapter implements AdapterDelegate<List<ContentBlock>>
   }
 
   private boolean isMapViewActive() {
-    return mapholder != null && !mapholder.getMapView().isDestroyed();
+    return mapholder != null  && !mapholder.getMapView().isDestroyed();
   }
 }

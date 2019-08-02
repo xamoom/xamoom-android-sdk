@@ -28,6 +28,7 @@ public interface EnduserApiInterface {
   String HEADER_AUTHORIZATION = "Authorization";
   String HEADER_EPHEMERAL = "X-Ephemeral-Id";
   String HEADER_REASON = "X-Reason";
+  String HEADER_PASSWORD = "X-Password";
 
   @GET("consumer/contents/{id}")
   Call<ResponseBody> getContent(@HeaderMap Map<String, String> headers,

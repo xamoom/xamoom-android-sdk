@@ -1,4 +1,32 @@
 # Changelog
+## [3.11.8](https://github.com/xamoom/xamoom-ios-sdk/compare/3.11.6...3.11.8) - 23.07.2019
+- Add download block type 2 (GPX)
+- Improve download type (ContentBlock8ViewHolder) logic, opens ChooserIntent
+
+- Fixing UI issues in ContentBlock9ViewHolder
+
+## [3.11.6](https://github.com/xamoom/xamoom-ios-sdk/compare/3.11.5...3.11.6) - 16.07.2019
+- set correct ContentReason when loading Beacons in XamoomBeaconService  
+
+## [3.11.5](https://github.com/xamoom/xamoom-ios-sdk/compare/3.11.4...3.11.5) - 24.06.2019
+- Add function for setting ContentBlock9ViewHolder navigation type 
+
+## [3.11.4](https://github.com/xamoom/xamoom-ios-sdk/compare/3.11.3...3.11.4) - 13.05.2019
+- Improvments for content password challange
+- Show x-forbidden after three times wrong password entry
+- UI improvements for ContentBlock2 (Video Block)
+
+- Fix crash for ContentBlock9Adapter if reopen a content with a spot map
+- Fix issue for Vimeo videos, which were not able to play (opened an intent)
+
+## [3.11.3](https://github.com/xamoom/xamoom-ios-sdk/compare/3.11.1...3.11.3) - 06.05.2019
+- Add function for "x-forbidden" handling
+- Add callback for content password protection
+
+- Improvements for Beacon ranging in XamoomBeaconService
+
+## [3.11.1](https://github.com/xamoom/xamoom-ios-sdk/compare/3.10.8...3.10.9-beta1) - 18.04.2019
+- Fix crash when cancel XamoomContentFragment loading
 
 ## [3.11.0](https://github.com/xamoom/xamoom-ios-sdk/compare/3.10.8...3.10.9-beta1) - 25.03.2019
 - Add Mapbox

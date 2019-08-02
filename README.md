@@ -12,11 +12,14 @@ But before you start, you should read the about the [Core Concepts](https://gith
 * [API Calls](https://github.com/xamoom/xamoom-android-sdk/wiki/API-Calls)
 * [Working with Pages](https://github.com/xamoom/xamoom-android-sdk/wiki/Working-with-pages)
   * [View Customizing](https://github.com/xamoom/xamoom-android-sdk/wiki/Customize-Views)
+  * [ViewHolder Coloring](https://github.com/xamoom/xamoom-android-sdk/wiki/Custom-ContentBlockCells-Colors)
+  * [Password Protection](https://github.com/xamoom/xamoom-android-sdk/wiki/Password-Protection)
+  * [Open URLs](https://github.com/xamoom/xamoom-android-sdk/wiki/Open-URLs-without-leaving-the-app)
 * [Working with Spots](https://github.com/xamoom/xamoom-android-sdk/wiki/Working-with-Spots)
 * [Beacons](https://github.com/xamoom/xamoom-android-sdk/wiki/Beacons)
 * [Beacon Notification](https://github.com/xamoom/xamoom-android-sdk/wiki/Beacon-Notification)
 * [Push Notification](https://github.com/xamoom/xamoom-android-sdk/wiki/Push-Notification)
-* [Offline usage](https://github.com/xamoom/xamoom-android-sdk/wiki/Offline-usageg)
+* [Offline usage](https://github.com/xamoom/xamoom-android-sdk/wiki/Offline-usage)
 
 # Requirements
 

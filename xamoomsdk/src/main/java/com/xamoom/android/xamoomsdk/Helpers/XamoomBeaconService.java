@@ -15,6 +15,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.xamoom.android.xamoomsdk.APICallback;
+import com.xamoom.android.xamoomsdk.APIPasswordCallback;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.Enums.ContentReason;
 import com.xamoom.android.xamoomsdk.PushDevice.PushDeviceUtil;
@@ -31,7 +32,9 @@ import org.altbeacon.beacon.startup.BootstrapNotifier;
 import org.altbeacon.beacon.startup.RegionBootstrap;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
@@ -72,16 +75,24 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
     private ArrayList<Beacon> nearBeacons = new ArrayList<>();
     private ArrayList<Beacon> farBeacons = new ArrayList<>();
     private ArrayList<Content> beaconContents = new ArrayList<>();
+    private ArrayList<Integer> minorBeacons = new ArrayList<>();
+
+    private ArrayList<Beacon> lastBeacons;
+    private ArrayList<Content> lastContents;
 
     public boolean automaticRanging = false;
     public boolean approximateDistanceRanging = false;
     public boolean fastInsideRegionScanning = true;
     private boolean areBeaconsLoading = false;
 
+    private int cooldownTime = 0;
+
+
     /**
      * Method to get the singleton on XamoomBeaconService.
      *
      * @param context A context.
+     * @param api The enduser api.
      * @return An instance of XamoomBeaconService.
      */
     public static XamoomBeaconService getInstance(Context context, EnduserApi api) {
@@ -90,6 +101,9 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
             mInstance.mContext = context;
             mInstance.mBeaconManager = org.altbeacon.beacon.BeaconManager.getInstanceForApplication(context);
             mInstance.api = api;
+            mInstance.cooldownTime = api.getCooldown();
+            mInstance.lastContents = new ArrayList<Content>();
+            mInstance.lastBeacons = new ArrayList<Beacon>();
         }
 
         return mInstance;
@@ -188,6 +202,11 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
     public void didEnterRegion(Region region) {
         Log.i(TAG, "didEnterRegion");
 
+        SharedPreferences prefs = mContext.getSharedPreferences(PushDeviceUtil.PREFES_NAME,
+                Context.MODE_PRIVATE);
+        final PushDeviceUtil pUtil = new PushDeviceUtil(prefs);
+        api.pushDevice(pUtil, false);
+
         sendBroadcast(ENTER_REGION_BROADCAST, null, null);
 
         if (fastInsideRegionScanning) {
@@ -254,8 +273,6 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
 
         SharedPreferences prefs = mContext.getSharedPreferences(PushDeviceUtil.PREFES_NAME,
                 Context.MODE_PRIVATE);
-        final PushDeviceUtil pUtil = new PushDeviceUtil(prefs);
-        api.pushDevice(pUtil);
 
         int lastBeaconCount = prefs.getInt("last_beacon_count", -1);
 
@@ -284,11 +301,41 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
             @Override
             public void finish(ArrayList<Beacon> beacons, ArrayList<Content> contents) {
                 if (beacons.size() > 0) {
+
+                    for (int a = minorBeacons.size() - 1; a >= 0; a--) {
+
+                        int minor = minorBeacons.get(a);
+                        boolean removeMinor = true;
+
+                        for (int i = 0; i < beacons.size(); i++) {
+                            Beacon beacon = beacons.get(i);
+                            if (minor == beacon.getId3().toInt()) {
+                                removeMinor = false;
+                                break;
+                            }
+                        }
+
+                        if (removeMinor) {
+                            minorBeacons.remove(Integer.valueOf(minor));
+                            mContext.getSharedPreferences(PushDeviceUtil.PREFES_NAME, Context.MODE_PRIVATE).edit()
+                                    .putFloat(String.valueOf(minor), -1)
+                                    .apply();
+                        }
+                    }
+
                     mBeacons.addAll(beacons);
                     beaconContents.addAll(contents);
 
                     sendBroadcast(FOUND_BEACON_BROADCAST, mBeacons, beaconContents);
                 } else {
+                    for (int a = minorBeacons.size() - 1; a >= 0; a--) {
+                        int minor = minorBeacons.get(a);
+                        minorBeacons.remove(Integer.valueOf(minor));
+                        mContext.getSharedPreferences(PushDeviceUtil.PREFES_NAME, Context.MODE_PRIVATE).edit()
+                                .putFloat(String.valueOf(minor), -1)
+                                .apply();
+                    }
+
                     sendBroadcast(FOUND_BEACON_BROADCAST, new ArrayList<Beacon>(), new ArrayList<Content>());
                     sendBroadcast(NO_BEACON_BROADCAST, null, null);
                 }
@@ -310,46 +357,82 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
         }
     }
     private void downloadBeacons(final Collection<Beacon> beacons, final BeaconDownloadCallback callback) throws InterruptedException {
-        final ArrayList<Beacon> loadedBeacons = new ArrayList<>();
-        final ArrayList<Content> loadedContents = new ArrayList<>();
+        final ArrayList<Beacon> oldBeacons = (ArrayList<Beacon>) lastBeacons.clone();
+        final ArrayList<Content> oldContents = (ArrayList<Content>) lastContents.clone();
+        lastBeacons.clear();
+        lastContents.clear();
 
         final ArrayList<Beacon> calledBeacons = new ArrayList<>();
 
+        if (beacons.size() == 0) {
+            callback.finish(new ArrayList<Beacon>(), new ArrayList<Content>());
+        }
         for (int i = 0; i < beacons.size(); i++) {
             final Beacon beacon = (Beacon) beacons.toArray()[i];
 
-            api.getContentByBeacon(Integer.parseInt(api.getMajorId()), beacon.getId3().toInt(), null, null, ContentReason.NOTIFICATION, new APICallback<Content, List<Error>>() {
-                @Override
-                public void finished(Content result) {
-                    if (result != null) {
-                        loadedBeacons.add(beacon);
-                        loadedContents.add(result);
+            final SharedPreferences pref = mContext.getSharedPreferences(PushDeviceUtil.PREFES_NAME, Context.MODE_PRIVATE);
+            if (beaconAlreadyLoaded(beacon, pref) && isOnCooldown(beacon, pref)) {
+                if (oldBeacons.size() > 0 && oldContents.size() > 0) {
+                    for (int a = 0; a < oldBeacons.size(); a++) {
+                        int oldI3 = oldBeacons.get(a).getId3().toInt();
+                        int newI3 = beacon.getId3().toInt();
+                        if (oldI3 == newI3) {
+                            lastBeacons.add(beacon);
+                            lastContents.add(oldContents.get(a));
+                        }
+                    }
+                }
 
-                        if (beacon.getDistance() <= 0.5) {
-                            immediateBeacons.add(beacon);
-                        } else if (beacon.getDistance() < 3.0 && beacon.getDistance() > 0.5) {
-                            nearBeacons.add(beacon);
-                        } else if (beacon.getDistance() >= 3.0) {
-                            farBeacons.add(beacon);
+                calledBeacons.add(beacon);
+
+                if (calledBeacons.size() == beacons.size()) {
+                    callback.finish(lastBeacons, lastContents);
+                }
+            } else {
+                api.getContentByBeacon(Integer.parseInt(api.getMajorId()), beacon.getId3().toInt(), null, null, ContentReason.BEACON, null, new APIPasswordCallback<Content, List<Error>>() {
+                    @Override
+                    public void finished(Content result) {
+                        if (result != null) {
+                            pref.edit()
+                                    .putFloat(beacon.getId3().toString(), Calendar.getInstance().getTimeInMillis())
+                                    .apply();
+                            if (!minorBeacons.contains(beacon.getId3().toInt())) {
+                                minorBeacons.add(beacon.getId3().toInt());
+                            }
+                            lastBeacons.add(beacon);
+                            lastContents.add(result);
+
+                            if (beacon.getDistance() <= 0.5) {
+                                immediateBeacons.add(beacon);
+                            } else if (beacon.getDistance() < 3.0 && beacon.getDistance() > 0.5) {
+                                nearBeacons.add(beacon);
+                            } else if (beacon.getDistance() >= 3.0) {
+                                farBeacons.add(beacon);
+                            }
+                        }
+
+                        calledBeacons.add(beacon);
+
+                        if (calledBeacons.size() == beacons.size()) {
+                            callback.finish(lastBeacons, lastContents);
                         }
                     }
 
-                    calledBeacons.add(beacon);
+                    @Override
+                    public void error(List<Error> error) {
+                        calledBeacons.add(beacon);
 
-                    if (calledBeacons.size() == beacons.size()) {
-                        callback.finish(loadedBeacons, loadedContents);
+                        if (calledBeacons.size() == beacons.size()) {
+                            callback.finish(lastBeacons, lastContents);
+                        }
                     }
-                }
 
-                @Override
-                public void error(List<Error> error) {
-                    calledBeacons.add(beacon);
-
-                    if (calledBeacons.size() == beacons.size()) {
-                        callback.finish(loadedBeacons, loadedContents);
+                    @Override
+                    public void passwordRequested() {
+                        // Do nothing
                     }
-                }
-            });
+                });
+            }
         }
     }
 
@@ -406,6 +489,31 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
         sendBroadcast(BEACON_SERVICE_CONNECT_BROADCAST, null, null);
 
         setBackgroundScanningSpeeds(BETWEEN_SCAN_PERIOD, SCAN_PERIOD);
+    }
+
+    private boolean beaconAlreadyLoaded(Beacon beacon, SharedPreferences sharedPreferences) {
+        return minorBeacons.contains(beacon.getId3().toString());
+    }
+
+    private boolean isOnCooldown(Beacon beacon, SharedPreferences sharedPreferences) {
+        float timestamp = sharedPreferences.getFloat(beacon.getId3().toString(), -1);
+        if (timestamp == -1) {
+            sharedPreferences.edit()
+                    .putFloat(beacon.getId3().toString(), Calendar.getInstance().getTimeInMillis())
+                    .apply();
+            return false;
+        }
+
+        float diff = Calendar.getInstance().getTimeInMillis() - timestamp;
+
+        if (diff > this.cooldownTime) {
+            sharedPreferences.edit()
+                    .putFloat(beacon.getId3().toString(), Calendar.getInstance().getTimeInMillis())
+                    .apply();
+            return false;
+        }
+
+        return true;
     }
 
     @Override

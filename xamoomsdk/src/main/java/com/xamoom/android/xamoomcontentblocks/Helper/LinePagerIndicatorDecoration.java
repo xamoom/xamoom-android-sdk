@@ -64,7 +64,7 @@ public class LinePagerIndicatorDecoration extends RecyclerView.ItemDecoration {
         float indicatorStartX = (parent.getWidth() - indicatorTotalWidth) / 2F;
 
         // center vertically in the allotted space
-        float indicatorPosY = parent.getHeight() - 5;
+        float indicatorPosY = parent.getHeight() - mIndicatorHeight;
 
         drawInactiveIndicators(c, indicatorStartX, indicatorPosY, itemCount);
 
@@ -120,21 +120,21 @@ public class LinePagerIndicatorDecoration extends RecyclerView.ItemDecoration {
 
             c.drawCircle(highlightStart, indicatorPosY, (mIndicatorItemLength) / 2, mPaint);
 /**
-            float highlightStart = indicatorStartX + itemWidth * highlightPosition;
-            // calculate partial highlight
-            float partialLength = mIndicatorItemLength * progress;
+ float highlightStart = indicatorStartX + itemWidth * highlightPosition;
+ // calculate partial highlight
+ float partialLength = mIndicatorItemLength * progress;
 
-            // draw the cut off highlight
-            //    c.drawLine(highlightStart + partialLength, indicatorPosY,highlightStart + mIndicatorItemLength, indicatorPosY, mPaint);
-            c.drawCircle(highlightStart + partialLength, indicatorPosY, (mIndicatorItemLength) / 2, mPaint);
+ // draw the cut off highlight
+ //    c.drawLine(highlightStart + partialLength, indicatorPosY,highlightStart + mIndicatorItemLength, indicatorPosY, mPaint);
+ c.drawCircle(highlightStart + partialLength, indicatorPosY, (mIndicatorItemLength) / 2, mPaint);
 
-            // draw the highlight overlapping to the next item as well
-            if (highlightPosition < itemCount - 1) {
-                highlightStart += itemWidth;
-                //    c.drawLine(highlightStart, indicatorPosY,highlightStart + partialLength, indicatorPosY, mPaint);
-                c.drawCircle(highlightStart, indicatorPosY, (mIndicatorItemLength) / 2, mPaint);
+ // draw the highlight overlapping to the next item as well
+ if (highlightPosition < itemCount - 1) {
+ highlightStart += itemWidth;
+ //    c.drawLine(highlightStart, indicatorPosY,highlightStart + partialLength, indicatorPosY, mPaint);
+ c.drawCircle(highlightStart, indicatorPosY, (mIndicatorItemLength) / 2, mPaint);
 
-            }*/
+ }*/
         }
     }
 

@@ -17,10 +17,8 @@ import com.xamoom.android.xamoomsdk.Resource.ContentBlock
 
 class ContentBlock12ViewHolder(val view: View, val context: Context, val fragment: Fragment?, val youtubeApiKey: String?, val bitmapCache: android.support.v4.util.LruCache<String, Bitmap>?, parentRecyclerView: RecyclerView?, val interf: ContentBlock12ViewHolderInterface): RecyclerView.ViewHolder(view) {
     private var recyclerView: RecyclerView = view.findViewById(R.id.horizontal_recycler_view)
-    private var titleTextView: TextView = view.findViewById(R.id.horizontal_recycler_title)
 
     init {
-        titleTextView.text = "Horizontal RecyclerView Title"
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         layoutManager.isSmoothScrollbarEnabled = false
         recyclerView.layoutManager = layoutManager

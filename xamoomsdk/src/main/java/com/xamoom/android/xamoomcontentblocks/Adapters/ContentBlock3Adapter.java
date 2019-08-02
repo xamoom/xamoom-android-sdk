@@ -42,8 +42,9 @@ public class ContentBlock3Adapter implements AdapterDelegate<List<ContentBlock>>
   public RecyclerView.ViewHolder onCreateViewHolder(
           ViewGroup parent, Fragment fragment, EnduserApi enduserApi, String youtubeApiKey,
           LruCache bitmapCache, LruCache contentCache, boolean showContentLinks, ListManager listManager, AdapterDelegatesManager adapterDelegatesManager,
-          ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener onContentBlock3ViewHolderInteractionListener, XamoomContentFragment.OnXamoomContentFragmentInteractionListener
-                                                        onXamoomContentFragmentInteractionListener, @Nullable ArrayList<String> urls, @Nullable String mapboxStyleString) {
+          ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener onContentBlock3ViewHolderInteractionListener,
+          XamoomContentFragment.OnXamoomContentFragmentInteractionListener onXamoomContentFragmentInteractionListener, @Nullable ArrayList<String> urls, @Nullable String mapboxStyleString,
+          @Nullable String navigationButtonTintColorString, @Nullable String contentButtonTextColorString, @Nullable String navigationMode) {
     View view = LayoutInflater.from(parent.getContext())
         .inflate(R.layout.content_block_3_layout, parent, false);
     return new ContentBlock3ViewHolder(view, fragment.getContext(), onContentBlock3ViewHolderInteractionListener, urls, fragment);

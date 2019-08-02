@@ -57,6 +57,8 @@
     <declare-styleable name="Download">
         <attr name="calendar_background_color" format="reference|color" />
         <attr name="calendar_tint_color" format="reference|color" />
+        <attr name="gpx_background_color" format="reference|color" />
+        <attr name="gpx_tint_color" format="reference|color" />
         <attr name="contact_background_color" format="reference|color" />
         <attr name="contact_tint_color" format="reference|color" />
         <attr name="download_default_background_color" format="reference|color" />
