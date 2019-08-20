@@ -64,7 +64,7 @@ public class ContentBlock9ViewHolderUtils {
     if (customMarker != null) {
       icon = ContentBlock9ViewHolderUtils.getIconFromBase64(customMarker, context);
     } else {
-      icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_default_map_marker);
+      icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.default_marker);
     }
 
     return icon;
