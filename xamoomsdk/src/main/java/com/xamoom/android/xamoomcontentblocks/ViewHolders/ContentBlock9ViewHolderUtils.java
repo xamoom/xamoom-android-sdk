@@ -12,7 +12,10 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.Base64;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 
 import com.caverock.androidsvg.SVG;
 import com.caverock.androidsvg.SVGParseException;
@@ -65,7 +68,13 @@ public class ContentBlock9ViewHolderUtils {
       icon = ContentBlock9ViewHolderUtils.getIconFromBase64(customMarker, context);
     } else {
       icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.default_marker);
+        icon = Bitmap.createScaledBitmap(icon, (int) dipToPixels(context, 20f),
+                (int) dipToPixels(context, 30f), false);
     }
+
+    BitmapDrawable drawable = new BitmapDrawable(icon);
+    drawable.setAntiAlias(true);
+    icon = drawable.getBitmap();
 
     return icon;
   }
@@ -125,4 +134,9 @@ public class ContentBlock9ViewHolderUtils {
 
     return icon;
   }
+
+    public static float dipToPixels(Context context, float dipValue) {
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, metrics);
+    }
 }
