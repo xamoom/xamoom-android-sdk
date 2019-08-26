@@ -13,8 +13,8 @@ import android.view.animation.Interpolator;
 
 public class LinePagerIndicatorDecoration extends RecyclerView.ItemDecoration {
 
-    private int colorActive = 0xFFC8C8C8;
-    private int colorInactive = 0xFFE0E0E0;
+    private int colorActive = 666666;
+    private int colorInactive = 0xFFAAAAAA;
 
     private static final float DP = Resources.getSystem().getDisplayMetrics().density;
 
