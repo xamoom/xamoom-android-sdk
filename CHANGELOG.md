@@ -1,5 +1,5 @@
 # Changelog
-## [3.11.10](https://github.com/xamoom/xamoom-ios-sdk/compare/3.11.8...3.11.10) - 26.08.2019
+## [3.11.11](https://github.com/xamoom/xamoom-ios-sdk/compare/3.11.8...3.11.11) - 26.08.2019
 - Add ContentBlock Gallery
 - Show default map marker if none is set
 
