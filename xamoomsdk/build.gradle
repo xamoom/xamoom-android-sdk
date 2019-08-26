@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
-def versionString = "3.11.10"
+def versionString = "3.11.11-beta1"
 
 version = versionString
 group = "com.xamoom.android"
@@ -14,7 +14,7 @@ android {
 	defaultConfig {
 		minSdkVersion 18
 		targetSdkVersion 26
-		versionCode 34
+		versionCode 35
 		versionName versionString
 		testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
 		multiDexEnabled true
