@@ -45,10 +45,13 @@ class ContentBlock12ViewHolder(val view: View, val context: Context, val fragmen
                 cbList.add(block)
             }
         }
-        recyclerView.adapter = HorizontalRecyclerViewAdapter(cbList, context, fragment, youtubeApiKey, bitmapCache)
-        val snapHelper = PagerSnapHelper()
-        snapHelper.attachToRecyclerView(recyclerView)
-        recyclerView.addItemDecoration(LinePagerIndicatorDecoration())
+
+        if (recyclerView.adapter == null && recyclerView.itemDecorationCount == 0) {
+            recyclerView.adapter = HorizontalRecyclerViewAdapter(cbList, context, fragment, youtubeApiKey, bitmapCache)
+            val snapHelper = PagerSnapHelper()
+            snapHelper.attachToRecyclerView(recyclerView)
+            recyclerView.addItemDecoration(LinePagerIndicatorDecoration())
+        }
     }
 }
 
