@@ -33,9 +33,6 @@ class ContentBlock12ViewHolder(val view: View, val context: Context, val fragmen
                 }
             }
         })
-        val snapHelper = PagerSnapHelper()
-        snapHelper.attachToRecyclerView(recyclerView)
-        recyclerView.addItemDecoration(LinePagerIndicatorDecoration())
     }
 
     fun setupContentBlock(cb: ArrayList<ContentBlock>) {
@@ -49,6 +46,9 @@ class ContentBlock12ViewHolder(val view: View, val context: Context, val fragmen
             }
         }
         recyclerView.adapter = HorizontalRecyclerViewAdapter(cbList, context, fragment, youtubeApiKey, bitmapCache)
+        val snapHelper = PagerSnapHelper()
+        snapHelper.attachToRecyclerView(recyclerView)
+        recyclerView.addItemDecoration(LinePagerIndicatorDecoration())
     }
 }
 
