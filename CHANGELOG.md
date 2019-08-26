@@ -1,4 +1,8 @@
 # Changelog
+## [3.11.9](https://github.com/xamoom/xamoom-ios-sdk/compare/3.11.8...3.11.9) - 26.08.2019
+- Add ContentBlock Gallery
+- Show default map marker if none is set
+
 ## [3.11.8](https://github.com/xamoom/xamoom-ios-sdk/compare/3.11.6...3.11.8) - 23.07.2019
 - Add download block type 2 (GPX)
 - Improve download type (ContentBlock8ViewHolder) logic, opens ChooserIntent
