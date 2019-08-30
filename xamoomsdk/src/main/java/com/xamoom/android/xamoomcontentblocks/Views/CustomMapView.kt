@@ -25,9 +25,11 @@ class CustomMapView : CoordinatorLayout {
     var mapView: MapView
     var textView: TextView
     var bottomSheetBehavior: BottomSheetBehavior<View>
-    var floatingActionButton: FloatingActionButton
+    var centerSpotsButton: FloatingActionButton
+    var centerUserButton: FloatingActionButton
     var spotTitleTextView: TextView
     var spotExcerptTextView: TextView
+    var spotNavigationButton: Button
     var spotContentButton: Button
     var spotImageView: ImageView
 
@@ -42,10 +44,12 @@ class CustomMapView : CoordinatorLayout {
             true
         }
         bottomSheetBehavior = BottomSheetBehavior.from<View>(view)
-        floatingActionButton = v.findViewById(R.id.spot_fab)
+        centerSpotsButton = v.findViewById(R.id.center_spot_fab)
+        centerUserButton = v.findViewById(R.id.user_location_fab)
         spotTitleTextView = v.findViewById(R.id.spot_title_text_view)
         spotExcerptTextView = v.findViewById(R.id.spot_excerpt_text_view)
         spotImageView = v.findViewById(R.id.spot_image_view)
         spotContentButton = v.findViewById(R.id.spot_content_button)
+        spotNavigationButton = v.findViewById(R.id.spot_navigation_button)
     }
 }

@@ -1,15 +1,22 @@
 package com.xamoom.android.xamoomcontentblocks.ViewHolders
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.ColorStateList
+import android.content.res.Resources
 import android.graphics.Color
+import android.graphics.drawable.StateListDrawable
+import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.CoordinatorLayout
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.MotionEvent
@@ -17,12 +24,17 @@ import android.view.View
 import android.view.ViewGroup
 import at.rags.morpheus.Error
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestListener
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.mapboxsdk.annotations.IconFactory
 import com.mapbox.mapboxsdk.annotations.Marker
 import com.mapbox.mapboxsdk.annotations.MarkerOptions
 import com.mapbox.mapboxsdk.camera.CameraPosition
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
+import com.mapbox.mapboxsdk.geometry.LatLngBounds
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.xamoom.android.xamoomcontentblocks.Views.CustomMapView
@@ -55,11 +67,15 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
     var mapView = view.mapView
     var titleView = view.textView
     var bottomSheet = view.bottomSheetBehavior
-    var fab = view.floatingActionButton
+    var centerspotButton = view.centerSpotsButton
+    var centerUserButton = view.centerUserButton
     var spotTitleTextView = view.spotTitleTextView
     var spotExcerptTextView = view.spotExcerptTextView
     var spotContentButton = view.spotContentButton
+    var spotNavigationButton = view.spotNavigationButton
     var spotImageView = view.spotImageView
+    var mLastLocation: Location? = null
+    private var mFusedLocationClient: FusedLocationProviderClient? = null
 
     init {
         mContext = fragment.context
@@ -81,7 +97,6 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
                 if (closeBottomSheet) {
                     bottomSheet.state = BottomSheetBehavior.STATE_HIDDEN
                     mActiveSpot = null
-                    fab.visibility = View.GONE
                 } else {
                     closeBottomSheet = true
                 }
@@ -89,40 +104,9 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
             true
         }
 
-        bottomSheet.peekHeight = 350
+        bottomSheet.peekHeight = 100
         bottomSheet.isHideable = true
         bottomSheet.state = BottomSheetBehavior.STATE_HIDDEN
-
-        bottomSheet.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-                    //setBottomPadding(350)
-                }
-
-                if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-                    //setBottomPadding(350)
-                }
-
-                if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-                    fab.hide()
-                }
-            }
-
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-            }
-        })
-
-        if (!navigationTintColorString.isNullOrEmpty()) {
-            try {
-                fab.backgroundTintList = ColorStateList.valueOf(Color.parseColor(navigationTintColorString))
-            } catch (exc: IllegalArgumentException) {
-                fab.backgroundTintList = ColorStateList.valueOf(mContext!!.resources
-                        .getColor(R.color.linkblock_navigation_background_color))
-            }
-        } else {
-            fab.backgroundTintList = ColorStateList.valueOf(mContext!!.resources
-                    .getColor(R.color.linkblock_navigation_background_color))
-        }
 
         if (!contentButtonTextColorString.isNullOrEmpty()) {
             try {
@@ -131,7 +115,64 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
             }
         }
 
-        fab.visibility = View.GONE
+        val fineLocationPermission = ContextCompat.checkSelfPermission(mContext!!,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+        val locationPermission = ContextCompat.checkSelfPermission(mContext!!,
+                Manifest.permission.ACCESS_COARSE_LOCATION)
+
+        if (fineLocationPermission != PackageManager.PERMISSION_GRANTED
+                || locationPermission != PackageManager.PERMISSION_GRANTED) {
+            centerUserButton.visibility = View.GONE
+        } else {
+            centerUserButton.visibility = View.VISIBLE
+            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(fragment.activity!!)
+            getLastLocation(fragment.activity!!)
+        }
+
+        centerUserButton.setOnClickListener {
+            if (mapBoxMap != null && mLastLocation != null) {
+                val position = CameraPosition.Builder().target(LatLng(mLastLocation!!.latitude, mLastLocation!!.longitude)).zoom(16.0).tilt(0.0).build()
+                mapBoxMap!!.animateCamera(CameraUpdateFactory.newCameraPosition(position))
+            }
+        }
+
+        centerspotButton.setOnClickListener {
+            if (mapBoxMap != null && mSpotList.isNotEmpty()) {
+                val latLngArray = java.util.ArrayList<LatLng>()
+
+                for (spot in mSpotList) {
+                    latLngArray.add(com.mapbox.mapboxsdk.geometry.LatLng(spot.getLocation().getLatitude(), spot.getLocation().getLongitude()))
+                }
+
+                if (!latLngArray.isEmpty()) {
+                    val builder = LatLngBounds.Builder()
+                    for (latLng in latLngArray) {
+                        builder.include(latLng)
+                    }
+
+                    val bounds = builder.build()
+                    mapBoxMap!!.animateCamera(com.mapbox.mapboxsdk.camera.CameraUpdateFactory.newLatLngBounds(bounds, 100))
+                }
+            }
+        }
+
+        spotContentButton.backgroundTintList = ColorStateList.valueOf(Color.parseColor(navigationTintColorString))
+        spotContentButton.setTextColor(Color.parseColor(contentButtonTextColorString))
+        spotNavigationButton.backgroundTintList = ColorStateList.valueOf(Color.parseColor(navigationTintColorString))
+        spotNavigationButton.setTextColor(Color.parseColor(contentButtonTextColorString))
+
+        centerspotButton.requestLayout()
+        centerUserButton.requestLayout()
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun getLastLocation(activity: Activity) {
+        mFusedLocationClient!!.lastLocation
+                .addOnCompleteListener(activity) { task ->
+                    if (task.isSuccessful && task.result != null) {
+                        mLastLocation = task.result
+                    }
+                }
     }
 
     fun setupContentBlock(contentBlock: ContentBlock, offline: Boolean, showContentInSpotMap: Boolean) {
@@ -162,13 +203,15 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
         enduserApi.getSpotsByTags(tags, PAGE_SIZE, cursor, spotOptions, null, object : APIListCallback<List<Spot>, List<Error>> {
             override fun finished(result: List<Spot>, cursor: String, hasMore: Boolean) {
                 if (!result.isEmpty()) {
-                    mSpotList!!.addAll(result)
+                    mSpotList.addAll(result)
                     if (hasMore) {
                         downloadAllSpots(tags, cursor, callback)
                     } else {
                         getStyle(result[0].system.id)
                         callback.finished(mSpotList, "", false)
                     }
+                } else {
+                    centerspotButton.visibility = View.GONE
                 }
             }
 
@@ -210,14 +253,13 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
             return
         }
 
+        this.mapBoxMap = mapboxMap
         var style = com.mapbox.mapboxsdk.maps.Style.MAPBOX_STREETS
         if (!mapBoxStyleString.isNullOrEmpty()) {
             style = mapBoxStyleString!!
         }
         mapboxMap.setMaxZoomPreference(17.4)
-        mapBoxMap = mapboxMap
         mapBoxMap!!.setStyle(style) { style ->
-
             var image = ContentBlock9ViewHolderUtils.getIcon(mBase64Icon, mContext)
             val icon = IconFactory.getInstance(mContext!!)
 
@@ -245,6 +287,21 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
                 val position = CameraPosition.Builder().target(com.mapbox.mapboxsdk.geometry.LatLng(mSpotList[0].location.latitude, mSpotList[0].location.longitude)).zoom(10.0).tilt(0.0).build()
                 mapBoxMap!!.animateCamera(CameraUpdateFactory.newCameraPosition(position))
             }
+
+            enableLocationComponent(mapBoxStyle!!)
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun enableLocationComponent(loadedMapStyle: com.mapbox.mapboxsdk.maps.Style) {
+        if (PermissionsManager.areLocationPermissionsGranted(mContext!!)) {
+            val locationComponent = mapBoxMap!!.locationComponent
+
+            locationComponent.activateLocationComponent(mContext!!, loadedMapStyle)
+
+            locationComponent.isLocationComponentEnabled = true
+        } else {
+            centerUserButton.visibility = View.GONE
         }
     }
 
@@ -255,9 +312,20 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
         mapBoxMap!!.animateCamera(CameraUpdateFactory.newCameraPosition(position))
 
         spotTitleTextView.text = spot.name
+        spotTitleTextView.measure(0,0)
         spotExcerptTextView.text = spot.description
+
+        var imageParams = spotImageView.layoutParams
+        imageParams.height =  mapView.height / 2 - spotTitleTextView.height - (8 * Resources.getSystem().displayMetrics.density).toInt() * 3
+        imageParams.width =  imageParams.height
+        spotImageView.layoutParams = imageParams
+        spotImageView.requestLayout()
+
         Glide.with(mContext!!)
                 .load(spot.publicImageUrl)
+                .dontAnimate()
+                .dontTransform()
+                .override(spotImageView.layoutParams.height, spotImageView.layoutParams.width)
                 .into(spotImageView)
 
         if (spot.content != null && spot.content.id != null) {
@@ -270,7 +338,7 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
             spotContentButton.visibility = View.GONE
         }
 
-        fab.setOnClickListener {
+        spotNavigationButton.setOnClickListener {
             val urlString = String.format(Locale.US, "google.navigation:q=%f,%f&mode=%s", spot.location.latitude, spot.location.longitude, this.navigationMode)
             val gmmIntentUri = Uri.parse(urlString)
             val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
@@ -280,8 +348,6 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
             }
         }
         bottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
-
-        fab.visibility = View.VISIBLE
     }
 
     companion object {
