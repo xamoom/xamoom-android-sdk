@@ -137,23 +137,7 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
         }
 
         centerspotButton.setOnClickListener {
-            if (mapBoxMap != null && mSpotList.isNotEmpty()) {
-                val latLngArray = java.util.ArrayList<LatLng>()
-
-                for (spot in mSpotList) {
-                    latLngArray.add(com.mapbox.mapboxsdk.geometry.LatLng(spot.getLocation().getLatitude(), spot.getLocation().getLongitude()))
-                }
-
-                if (!latLngArray.isEmpty()) {
-                    val builder = LatLngBounds.Builder()
-                    for (latLng in latLngArray) {
-                        builder.include(latLng)
-                    }
-
-                    val bounds = builder.build()
-                    mapBoxMap!!.animateCamera(com.mapbox.mapboxsdk.camera.CameraUpdateFactory.newLatLngBounds(bounds, 100))
-                }
-            }
+            centerSpotBounds()
         }
 
         spotContentButton.backgroundTintList = ColorStateList.valueOf(Color.parseColor(navigationTintColorString))
@@ -189,6 +173,26 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
                     Log.e("", "Error:$error")
                 }
             })
+        }
+    }
+
+    private fun centerSpotBounds() {
+        if (mapBoxMap != null && mSpotList.isNotEmpty()) {
+            val latLngArray = java.util.ArrayList<LatLng>()
+
+            for (spot in mSpotList) {
+                latLngArray.add(com.mapbox.mapboxsdk.geometry.LatLng(spot.getLocation().getLatitude(), spot.getLocation().getLongitude()))
+            }
+
+            if (!latLngArray.isEmpty()) {
+                val builder = LatLngBounds.Builder()
+                for (latLng in latLngArray) {
+                    builder.include(latLng)
+                }
+
+                val bounds = builder.build()
+                mapBoxMap!!.animateCamera(com.mapbox.mapboxsdk.camera.CameraUpdateFactory.newLatLngBounds(bounds, 50))
+            }
         }
     }
 
