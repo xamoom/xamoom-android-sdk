@@ -13,4 +13,8 @@
     <string name="content_list_error_loading_text">Fout bij het laden</string>
     <string name="audioplayer_notification_channel_name">Afspelen van media</string>
     <string name="audioplayer_notification_channel_description">Controle van het afspelen van media als een melding</string>
+    <string name="no_location_alert_title">We hebben uw locatie nodig</string>
+    <string name="no_location_alert_message">De locatieservices zijn uitgeschakeld. Ga naar de instellingen om ze in te schakelen.</string>
+    <string name="no_location_alert_cancel">Afbreken</string>
+    <string name="no_location_alert_settings">Instellingen</string>
 </resources>

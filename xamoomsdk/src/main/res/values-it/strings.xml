@@ -13,4 +13,8 @@
     <string name="content_list_error_loading_text">Errore nel caricamento</string>
     <string name="audioplayer_notification_channel_name">Riproduzione multimediale</string>
     <string name="audioplayer_notification_channel_description">Controllo della riproduzione multimediale come notifica</string>
+    <string name="no_location_alert_title">Abbiamo bisogno della tua posizione</string>
+    <string name="no_location_alert_message">I servizi di localizzazione sono disabilitati. Vai alle impostazioni per attivarle.</string>
+    <string name="no_location_alert_cancel">Abortire</string>
+    <string name="no_location_alert_settings">Impostazioni</string>
 </resources>

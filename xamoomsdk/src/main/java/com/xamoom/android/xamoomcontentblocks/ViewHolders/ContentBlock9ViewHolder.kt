@@ -3,18 +3,25 @@ package com.xamoom.android.xamoomcontentblocks.ViewHolders
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.content.res.Resources
 import android.graphics.Color
+import android.graphics.ColorFilter
+import android.graphics.PorterDuff
 import android.graphics.drawable.StateListDrawable
 import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.CoordinatorLayout
+import android.support.v4.app.ActivityCompat
+import android.support.v4.app.ActivityCompat.requestPermissions
+import android.support.v4.app.ActivityCompat.startActivityForResult
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
@@ -75,11 +82,13 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
     var spotNavigationButton = view.spotNavigationButton
     var spotImageView = view.spotImageView
     var mLastLocation: Location? = null
+    var fragment: Fragment
     private var mFusedLocationClient: FusedLocationProviderClient? = null
 
     init {
         mContext = fragment.context
         mapView.onCreate(bundle)
+        this.fragment = fragment
 
         mapView.setOnTouchListener { view, motionEvent ->
             view.parent.requestDisallowInterceptTouchEvent(true)
@@ -120,20 +129,43 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
         val locationPermission = ContextCompat.checkSelfPermission(mContext!!,
                 Manifest.permission.ACCESS_COARSE_LOCATION)
 
-        if (fineLocationPermission != PackageManager.PERMISSION_GRANTED
-                || locationPermission != PackageManager.PERMISSION_GRANTED) {
-            centerUserButton.visibility = View.GONE
+        if (fineLocationPermission == PackageManager.PERMISSION_GRANTED
+                && locationPermission == PackageManager.PERMISSION_GRANTED) {
+            updateLocation()
         } else {
-            centerUserButton.visibility = View.VISIBLE
-            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(fragment.activity!!)
-            getLastLocation(fragment.activity!!)
+            val icon = mContext!!.resources.getDrawable(R.drawable.ic_user_location)
+            val newIcon = icon.constantState.newDrawable()
+            newIcon.mutate().setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP)
+            centerUserButton.setImageDrawable(newIcon)
         }
 
         centerUserButton.setOnClickListener {
-            if (mapBoxMap != null && mLastLocation != null) {
-                val position = CameraPosition.Builder().target(LatLng(mLastLocation!!.latitude, mLastLocation!!.longitude)).zoom(16.0).tilt(0.0).build()
-                mapBoxMap!!.animateCamera(CameraUpdateFactory.newCameraPosition(position))
+
+            if (fineLocationPermission != PackageManager.PERMISSION_GRANTED && locationPermission != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(mContext!!, android.Manifest.permission.ACCESS_FINE_LOCATION) !== PackageManager.PERMISSION_GRANTED &&
+                        ActivityCompat.checkSelfPermission(mContext!!, android.Manifest.permission.ACCESS_COARSE_LOCATION) !== PackageManager.PERMISSION_GRANTED) {
+
+                    requestPermissions(fragment.activity!!, arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.ACCESS_FINE_LOCATION), 0)
+                } else {
+                    centerSpotToUserLocation()
+                }
+            } else {
+                if (mLastLocation != null) {
+                    centerSpotToUserLocation()
+                } else {
+                    AlertDialog.Builder(fragment.activity!!)
+                            .setTitle(mContext!!.resources.getString(R.string.no_location_alert_title))
+                            .setMessage(mContext!!.resources.getString(R.string.no_location_alert_message))
+                            .setCancelable(false)
+                            .setNegativeButton(mContext!!.resources.getString(R.string.no_location_alert_cancel)) { p0, _ ->
+                                p0!!.dismiss()
+                            }
+                            .setPositiveButton(mContext!!.resources.getString(R.string.no_location_alert_settings)) { _, _ ->
+                                startActivityForResult(fragment.activity!!, Intent(android.provider.Settings.ACTION_SETTINGS), 0, null)
+                            }.show()
+                }
             }
+
             bottomSheet.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
@@ -155,10 +187,36 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
     private fun getLastLocation(activity: Activity) {
         mFusedLocationClient!!.lastLocation
                 .addOnCompleteListener(activity) { task ->
+                    var color = Color.GRAY
                     if (task.isSuccessful && task.result != null) {
                         mLastLocation = task.result
+                        color = Color.BLACK
                     }
+
+                    val icon = mContext!!.resources.getDrawable(R.drawable.ic_user_location)
+                    val newIcon = icon.constantState.newDrawable()
+                    newIcon.mutate().setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
+                    centerUserButton.setImageDrawable(newIcon)
                 }
+    }
+
+    fun updateLocation() {
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(fragment.activity!!)
+        getLastLocation(fragment.activity!!)
+    }
+
+    fun centerUSerLocattonIconColor(color: Int) {
+        var icon = mContext!!.resources.getDrawable(R.drawable.ic_user_location)
+        var newIcon = icon.constantState.newDrawable()
+        newIcon.mutate().setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
+        centerUserButton.setImageDrawable(newIcon)
+    }
+
+    fun centerSpotToUserLocation() {
+        if (mapBoxMap != null && mLastLocation != null) {
+            val position = CameraPosition.Builder().target(LatLng(mLastLocation!!.latitude, mLastLocation!!.longitude)).zoom(16.0).tilt(0.0).build()
+            mapBoxMap!!.animateCamera(CameraUpdateFactory.newCameraPosition(position))
+        }
     }
 
     fun setupContentBlock(contentBlock: ContentBlock, offline: Boolean, showContentInSpotMap: Boolean) {
@@ -306,8 +364,6 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
             locationComponent.activateLocationComponent(mContext!!, loadedMapStyle)
 
             locationComponent.isLocationComponentEnabled = true
-        } else {
-            centerUserButton.visibility = View.GONE
         }
     }
 

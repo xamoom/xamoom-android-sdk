@@ -27,4 +27,8 @@
     <string name="content_list_load_more_button_text">Load more</string>
     <string name="content_list_error_loading_text">Error loading</string>
 
+    <string name="no_location_alert_title">We need your location</string>
+    <string name="no_location_alert_message">The location services are disabled. Please go to the settings to turn them on.</string>
+    <string name="no_location_alert_cancel">Cancel</string>
+    <string name="no_location_alert_settings">Settings</string>
 </resources>
