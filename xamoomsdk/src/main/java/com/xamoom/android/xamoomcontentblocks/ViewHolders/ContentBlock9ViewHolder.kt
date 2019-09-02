@@ -135,7 +135,7 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
         } else {
             val icon = mContext!!.resources.getDrawable(R.drawable.ic_user_location)
             val newIcon = icon.constantState.newDrawable()
-            newIcon.mutate().setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP)
+            newIcon.mutate().setColorFilter(Color.parseColor("#D3D3D3"), PorterDuff.Mode.SRC_ATOP)
             centerUserButton.setImageDrawable(newIcon)
         }
 
@@ -187,7 +187,7 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
     private fun getLastLocation(activity: Activity) {
         mFusedLocationClient!!.lastLocation
                 .addOnCompleteListener(activity) { task ->
-                    var color = Color.GRAY
+                    var color = Color.parseColor("#D3D3D3")
                     if (task.isSuccessful && task.result != null) {
                         mLastLocation = task.result
                         color = Color.BLACK
@@ -203,13 +203,6 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
     fun updateLocation() {
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(fragment.activity!!)
         getLastLocation(fragment.activity!!)
-    }
-
-    fun centerUSerLocattonIconColor(color: Int) {
-        var icon = mContext!!.resources.getDrawable(R.drawable.ic_user_location)
-        var newIcon = icon.constantState.newDrawable()
-        newIcon.mutate().setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
-        centerUserButton.setImageDrawable(newIcon)
     }
 
     fun centerSpotToUserLocation() {
