@@ -5,32 +5,32 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
     android:layout_marginBottom="@dimen/contentblock_to_contentblock_margin"
     android:theme="@style/ContentBlocksTheme">
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/center_spot_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_navigation"
-        android:scaleType="centerCrop"
-        android:layout_gravity="top|end"
-        android:layout_margin="8dp"
-        android:tint="@android:color/black"
-        app:backgroundTint="@android:color/white"
-        />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/user_location_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_margin="8dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_user_location"
+        android:tint="@android:color/black"
+        app:backgroundTint="@android:color/white" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/center_spot_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
         android:layout_marginTop="72dp"
         android:layout_marginEnd="8dp"
-        android:src="@drawable/ic_calendar"
-        android:layout_gravity="top|end"
+        android:src="@drawable/ic_spot_bounds"
         android:tint="@android:color/black"
-        app:backgroundTint="@android:color/white"
-        />
+        app:backgroundTint="@android:color/white" />
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -66,23 +66,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipToPadding="true"
-        android:background="@android:color/white"
+        android:background="#B3FFFFFF"
         app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
         <LinearLayout
             android:id="@+id/map_detail_inner_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:background="@android:color/white">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/spot_title_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
                 android:textSize="20sp"
                 android:textStyle="bold"
@@ -98,7 +95,6 @@
                     android:id="@+id/spot_image_view"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:layout_marginStart="8dp"
                     android:layout_marginBottom="8dp"
                     android:scaleType="centerCrop"
                     />
@@ -107,8 +103,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp">
+                    android:layout_marginStart="8dp">
 
                     <TextView
                         android:id="@+id/spot_excerpt_text_view"
@@ -133,7 +128,6 @@
                             android:layout_height="wrap_content"
                             android:background="@drawable/map_detail_button_style"
                             android:textColor="@color/black"
-                            android:layout_marginStart="8dp"
                             android:layout_marginEnd="4dp"
                             android:textStyle="bold"
                             android:layout_weight="0.5"
@@ -144,20 +138,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="4dp"
-                            android:layout_marginEnd="8dp"
                             android:background="@drawable/map_detail_button_style"
                             android:textColor="@color/black"
                             android:textStyle="bold"
                             android:layout_weight="0.5"
                             android:text="Route"/>
-
-
                     </LinearLayout>
-
                 </LinearLayout>
             </LinearLayout>
-
         </LinearLayout>
     </LinearLayout>
-
 </android.support.design.widget.CoordinatorLayout>
