@@ -134,10 +134,12 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
                 val position = CameraPosition.Builder().target(LatLng(mLastLocation!!.latitude, mLastLocation!!.longitude)).zoom(16.0).tilt(0.0).build()
                 mapBoxMap!!.animateCamera(CameraUpdateFactory.newCameraPosition(position))
             }
+            bottomSheet.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
         centerspotButton.setOnClickListener {
             centerSpotBounds()
+            bottomSheet.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
         spotContentButton.backgroundTintList = ColorStateList.valueOf(Color.parseColor(navigationTintColorString))
@@ -312,7 +314,7 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
     private fun showSpotDetails(spot: Spot) {
         mActiveSpot = spot
 
-        val position = CameraPosition.Builder().target(com.mapbox.mapboxsdk.geometry.LatLng(spot.location.latitude - 0.0002, spot.location.longitude)).zoom(mapBoxMap?.maxZoomLevel!!).tilt(0.0).build()
+        val position = CameraPosition.Builder().target(com.mapbox.mapboxsdk.geometry.LatLng(spot.location.latitude - 0.0005, spot.location.longitude)).zoom(16.0).tilt(0.0).build()
         mapBoxMap!!.animateCamera(CameraUpdateFactory.newCameraPosition(position))
 
         spotTitleTextView.text = spot.name
