@@ -27,7 +27,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;
 
 import com.xamoom.android.xamoomcontentblocks.Adapters.ContentBlockAdapter;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock12ViewHolderInterface;
@@ -41,6 +40,7 @@ import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Resource.Style;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -102,6 +102,8 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   private String navigationButtonTintColorString;
   private String contentButtonTextColorString;
   private String navigationMode;
+
+  private Integer[] validBlockTypes = {-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12};
 
   public static XamoomContentFragment newInstance(@NonNull String youtubeApiKey) {
     return newInstance(youtubeApiKey, null, null, null, null, null, null);
@@ -165,6 +167,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
       mContentBlockAdapter.setNavigationMode(navigationMode);
       mYoutubeApiKey = getArguments().getString(YOUTUBE_API_KEY);
       mContentBlockAdapter.setYoutubeApiKey(mYoutubeApiKey);
+      mContentBlockAdapter.setContentBlocks(mContentBlocks);
       this.majorId = getArguments().getString(BEACON_MAJOR);
     }
 
@@ -531,6 +534,21 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
     if(!displayAllStoreLinks) {
       mContentBlocks = removeStoreLinks(mContentBlocks);
     }
+
+    List<Integer> validTypes = Arrays.asList(validBlockTypes);
+
+    ArrayList<ContentBlock> validContentBlocks = new ArrayList<>();
+
+    for (ContentBlock block: mContentBlocks) {
+      if (validTypes.contains(block.getBlockType())) {
+        validContentBlocks.add(block);
+      } else {
+        String logString = String.format("Block Type %d not supported. ContentBlock at position %d will not be shown", block.getBlockType(), mContentBlocks.indexOf(block));
+        Log.e("XamoomContentFragment", logString);
+      }
+    }
+
+    mContentBlocks = validContentBlocks;
   }
 
   public void setBackgroundColor(int backgroundColor) {
