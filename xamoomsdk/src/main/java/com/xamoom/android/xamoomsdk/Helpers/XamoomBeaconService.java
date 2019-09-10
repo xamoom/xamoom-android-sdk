@@ -492,7 +492,7 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
     }
 
     private boolean beaconAlreadyLoaded(Beacon beacon, SharedPreferences sharedPreferences) {
-        return minorBeacons.contains(beacon.getId3().toString());
+        return minorBeacons.contains(beacon.getId3().toInt());
     }
 
     private boolean isOnCooldown(Beacon beacon, SharedPreferences sharedPreferences) {
