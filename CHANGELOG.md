@@ -1,4 +1,8 @@
 # Changelog
+## [3.11.12](https://github.com/xamoom/xamoom-ios-sdk/compare/3.11.11...3.11.12) - 11.09.2019
+- New Spot Map UI for ContentBlock9
+- Improve Beacon scan logic (number of request)
+
 ## [3.11.11](https://github.com/xamoom/xamoom-ios-sdk/compare/3.11.8...3.11.11) - 26.08.2019
 - Add ContentBlock Gallery
 - Show default map marker if none is set
