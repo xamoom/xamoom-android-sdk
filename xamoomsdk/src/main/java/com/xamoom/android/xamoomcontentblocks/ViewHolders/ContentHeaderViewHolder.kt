@@ -76,8 +76,11 @@ class ContentHeaderViewHolder(itemView: View, val navigationMode: String?, val f
 
             val colorString = style?.chromeHeaderColor ?: "#999999"
             val tintColor = Color.parseColor(colorString)
+
             mEventTimeImageView.setColorFilter(tintColor)
             mEventTimeTextView.setTextColor(tintColor)
+            mEventLocationImageView.setColorFilter(mContext!!.resources.getColor(android.R.color.darker_gray))
+            mEventLocationTextView.setTextColor(mContext!!.resources.getColor(android.R.color.darker_gray))
 
             mEventLocationLayout.setOnClickListener {
                 navigateToSpot(spot)
