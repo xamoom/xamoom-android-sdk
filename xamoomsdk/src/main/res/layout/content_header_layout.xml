@@ -43,6 +43,7 @@
         android:id="@+id/event_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -64,6 +65,8 @@
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/event_time_imageview"
                 android:layout_marginStart="8dp"
+                android:textSize="16sp"
+                android:layout_centerVertical="true"
                 android:text="Mo. 23. Sept 18:00 - \nMo 23. Sep 19:00"
                 android:maxLines="2"/>
         </RelativeLayout>
@@ -87,8 +90,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/event_location_imageView"
+                android:layout_centerVertical="true"
                 android:layout_marginStart="8dp"
                 android:ellipsize="end"
+                android:textSize="16sp"
                 android:text="The awesome location"
                 android:maxLines="1"/>
         </RelativeLayout>
