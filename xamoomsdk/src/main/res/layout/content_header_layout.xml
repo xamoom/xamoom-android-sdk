@@ -53,11 +53,11 @@
 
             <ImageView
                 android:id="@+id/event_time_imageview"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/ic_calendar"
-                android:layout_alignParentStart="true" />
+                android:src="@drawable/ic_time" />
 
             <TextView
                 android:id="@+id/event_time_textview"
@@ -79,11 +79,11 @@
 
             <ImageView
                 android:id="@+id/event_location_imageView"
-                android:layout_width="16dp"
+                android:layout_width="13dp"
                 android:layout_height="16dp"
+                android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/ic_calendar"
-                android:layout_alignParentStart="true" />
+                android:src="@drawable/ic_location" />
 
             <TextView
                 android:id="@+id/event_location_textview"
