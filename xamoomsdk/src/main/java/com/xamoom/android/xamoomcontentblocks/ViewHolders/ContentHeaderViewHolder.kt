@@ -12,6 +12,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.location.Location
 import android.net.Uri
 import android.provider.CalendarContract
 import android.support.v4.app.Fragment
@@ -58,7 +59,7 @@ class ContentHeaderViewHolder(itemView: View, val navigationMode: String?, val f
     }
 
     @SuppressLint("SetTextI18n")
-    fun setupContentBlock(contentBlock: ContentBlock, content: Content?, offline: Boolean) {
+    fun setupContentBlock(contentBlock: ContentBlock, content: Content?, offline: Boolean, style: Style?) {
         mTitleTextView.visibility = View.VISIBLE
         mTextView.visibility = View.VISIBLE
         mCoverImageCopyRight.visibility = View.VISIBLE
@@ -72,6 +73,11 @@ class ContentHeaderViewHolder(itemView: View, val navigationMode: String?, val f
             mEventTimeTextView.text = "$fromDate - \n$toDate"
             mEventLocationTextView.text = spot.name
             mEventLayout.visibility = View.VISIBLE
+
+            val colorString = style?.chromeHeaderColor ?: "#999999"
+            val tintColor = Color.parseColor(colorString)
+            mEventTimeImageView.setColorFilter(tintColor)
+            mEventTimeTextView.setTextColor(tintColor)
 
             mEventLocationLayout.setOnClickListener {
                 navigateToSpot(spot)

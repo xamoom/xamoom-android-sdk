@@ -60,7 +60,7 @@ public class ContentBlockHeaderAdapter implements AdapterDelegate<List<ContentBl
 
   @Override
   public void onBindViewHolder(@NonNull List<ContentBlock> items, int position,
-                               @NonNull RecyclerView.ViewHolder holder, Style style, final boolean offline) {
+                               @NonNull RecyclerView.ViewHolder holder, final Style style, final boolean offline) {
 
     final ContentBlock cb = items.get(position);
     final ContentHeaderViewHolder newHolder = (ContentHeaderViewHolder) holder;
@@ -68,20 +68,34 @@ public class ContentBlockHeaderAdapter implements AdapterDelegate<List<ContentBl
     newHolder.setTextSize(26.0f);
 
     if (mContent.getRelatedSpot() != null) {
-      EnduserApi.getSharedInstance().getSpot(mContent.getRelatedSpot().getId(), new APICallback<Spot, List<Error>>() {
+      EnduserApi.getSharedInstance().getStyle(mContent.getSystem().getId(), new APICallback<Style, List<Error>>() {
         @Override
-        public void finished(Spot result) {
-          mContent.setRelatedSpot(result);
-          newHolder.setupContentBlock(cb, mContent, offline);
+        public void finished(Style result) {
+          setupContentBlockWithSpot(newHolder, cb, offline, result);
         }
 
         @Override
         public void error(List<Error> error) {
-          newHolder.setupContentBlock(cb, null, offline);
+          setupContentBlockWithSpot(newHolder, cb, offline, style);
         }
       });
     } else {
-      newHolder.setupContentBlock(cb, null, offline);
+      newHolder.setupContentBlock(cb, null, offline, style);
     }
+  }
+
+  private void setupContentBlockWithSpot(final ContentHeaderViewHolder vh, final ContentBlock cb, final Boolean offline, final Style style) {
+    EnduserApi.getSharedInstance().getSpot(mContent.getRelatedSpot().getId(), new APICallback<Spot, List<Error>>() {
+      @Override
+      public void finished(Spot result) {
+        mContent.setRelatedSpot(result);
+        vh.setupContentBlock(cb, mContent, offline, style);
+      }
+
+      @Override
+      public void error(List<Error> error) {
+        vh.setupContentBlock(cb, null, offline, style);
+      }
+    });
   }
 }
