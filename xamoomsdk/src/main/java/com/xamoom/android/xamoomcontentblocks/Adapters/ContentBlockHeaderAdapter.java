@@ -55,7 +55,7 @@ public class ContentBlockHeaderAdapter implements AdapterDelegate<List<ContentBl
     mContent = content;
     View view = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.content_header_layout, parent, false);
-    return new ContentHeaderViewHolder(view);
+    return new ContentHeaderViewHolder(view, navigationMode, fragment);
   }
 
   @Override
