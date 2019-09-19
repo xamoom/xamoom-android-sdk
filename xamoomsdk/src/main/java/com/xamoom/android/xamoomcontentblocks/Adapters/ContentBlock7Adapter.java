@@ -23,6 +23,7 @@ import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock7ViewHolde
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.R;
+import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Resource.Style;
 
@@ -45,7 +46,7 @@ public class ContentBlock7Adapter implements AdapterDelegate<List<ContentBlock>>
       LruCache bitmapCache, LruCache contentCache, boolean showContentLinks, ListManager listManager, AdapterDelegatesManager adapterDelegatesManager,
       ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener onContentBlock3ViewHolderInteractionListener,
       XamoomContentFragment.OnXamoomContentFragmentInteractionListener onXamoomContentFragmentInteractionListene, @Nullable ArrayList<String> urls,
-      @Nullable String mapboxStyleString, @Nullable String navigationButtonTintColorString, @Nullable String contentButtonTextColorString, @Nullable String navigationMode) {
+      @Nullable String mapboxStyleString, @Nullable String navigationButtonTintColorString, @Nullable String contentButtonTextColorString, @Nullable String navigationMode, Content content) {
     View view = LayoutInflater.from(parent.getContext())
         .inflate(R.layout.content_block_7_layout, parent, false);
     return new ContentBlock7ViewHolder(view);

@@ -43,6 +43,7 @@ public class ContentBlock11ViewHolder extends RecyclerView.ViewHolder implements
   private Style mStyle;
   private ContentBlock mContentBlock;
   private int childrenMargin;
+  private Content content;
 
   private String mCursor = null;
   private boolean hasMore = true;
@@ -51,7 +52,7 @@ public class ContentBlock11ViewHolder extends RecyclerView.ViewHolder implements
   public ContentBlock11ViewHolder(View view, Fragment fragment, EnduserApi enduserApi,
                                   ListManager listManager,
                                   AdapterDelegatesManager adapterDelegatesManager, XamoomContentFragment.OnXamoomContentFragmentInteractionListener
-                                      onXamoomContentFragmentInteractionListener) {
+                                          onXamoomContentFragmentInteractionListener, Content content) {
     super(view);
     mEnduserApi = enduserApi;
     mListManager = listManager;
@@ -62,6 +63,7 @@ public class ContentBlock11ViewHolder extends RecyclerView.ViewHolder implements
     mRecyclerView = (RecyclerView) view.findViewById(R.id.content_list_recycler_view);
     mProgressBar = (ProgressBar) view.findViewById(R.id.content_list_progress_bar);
     mLoadMoreButton = (Button) view.findViewById(R.id.content_list_load_more_button);
+    this.content = content;
 
     setupButton(fragment.getContext());
     setupRecyclerView(fragment, enduserApi, adapterDelegatesManager,onXamoomContentFragmentInteractionListener);
@@ -95,7 +97,7 @@ public class ContentBlock11ViewHolder extends RecyclerView.ViewHolder implements
     XamoomContentFragment contentFragment = (XamoomContentFragment) fragment;
 
     adapter = new ContentBlockAdapter(fragment, new ArrayList<ContentBlock>(),
-        contentFragment.isShowSpotMapContentLinks(), contentFragment.getYoutubeApiKey(), contentFragment, null, null, null, null, null, this);
+            contentFragment.isShowSpotMapContentLinks(), contentFragment.getYoutubeApiKey(), contentFragment, null, null, null, null, null, this, content);
     adapter.setEnduserApi(enduserApi);
     adapter.setOnXamoomContentFragmentInteractionListener(onXamoomContentFragmentInteractionListener);
     adapter.getDelegatesManager().setAdapterDelegates(adapterDelegatesManager.getAdapterDelegates());
@@ -134,7 +136,7 @@ public class ContentBlock11ViewHolder extends RecyclerView.ViewHolder implements
       } else {
         mLoadMoreButton.setVisibility(View.VISIBLE);
       }
-      
+
       displayContents(contents);
     } else {
       showLoading();
@@ -144,24 +146,24 @@ public class ContentBlock11ViewHolder extends RecyclerView.ViewHolder implements
 
   private void downloadContent(ContentBlock contentBlock, boolean sortAsc) {
     mListManager.downloadContent(getAdapterPosition(), contentBlock.getContentListTags(),
-        contentBlock.getContentListPageSize(), new APIListCallback<List<Content>, List<Error>>() {
-          @Override
-          public void finished(List<Content> result, String cursor, boolean hasMore) {
-            hideLoading();
+            contentBlock.getContentListPageSize(), new APIListCallback<List<Content>, List<Error>>() {
+              @Override
+              public void finished(List<Content> result, String cursor, boolean hasMore) {
+                hideLoading();
 
-            if (!hasMore) {
-              mLoadMoreButton.setVisibility(View.GONE);
-            }
+                if (!hasMore) {
+                  mLoadMoreButton.setVisibility(View.GONE);
+                }
 
-            displayContents((ArrayList<Content>) result);
-          }
+                displayContents((ArrayList<Content>) result);
+              }
 
-          @Override
-          public void error(List<Error> error) {
-            hideLoading();
-            mErrorTextView.setVisibility(View.VISIBLE);
-          }
-        }, sortAsc);
+              @Override
+              public void error(List<Error> error) {
+                hideLoading();
+                mErrorTextView.setVisibility(View.VISIBLE);
+              }
+            }, sortAsc);
   }
 
   private void showLoading() {

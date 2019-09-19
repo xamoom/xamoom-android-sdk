@@ -19,6 +19,7 @@ import com.xamoom.android.xamoomcontentblocks.ListManager;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.EnduserApi;
+import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.Style;
 
 import java.util.ArrayList;
@@ -50,6 +51,7 @@ public interface AdapterDelegate<T> {
    * @param navigationButtonTintColorString The ContentBlock9ViewHolder FAB tinti color as String.
    * @param contentButtonTextColorString The ContentBlock9ViewHolder content button text color.
    * @param navigationMode String for the google maps navigation mode ("w", "b", "d")
+   * @param content The current content.
    * @return Custom contentBlock viewholder.
    */
   @NonNull RecyclerView.ViewHolder onCreateViewHolder(
@@ -59,7 +61,7 @@ public interface AdapterDelegate<T> {
           onContentBlock3ViewHolderInteractionListener,
           XamoomContentFragment.OnXamoomContentFragmentInteractionListener
           onXamoomContentFragmentInteractionListener, ArrayList<String> urls, String mapboxStyleString,
-          @Nullable String navigationButtonTintColorString, @Nullable String contentButtonTextColorString, @Nullable String navigationMode);
+          @Nullable String navigationButtonTintColorString, @Nullable String contentButtonTextColorString, @Nullable String navigationMode, Content content);
 
   /**
    * Called before recyclerview shows viewholder.

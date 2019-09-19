@@ -147,7 +147,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
 
   public XamoomContentFragment() {
     mContentBlockAdapter = new ContentBlockAdapter(this, mContentBlocks,
-            showSpotMapContentLinks, mYoutubeApiKey, this, contentBlockUrlScheme, mapboxStyleString, navigationButtonTintColorString, contentButtonTextColorString, navigationMode, this);
+            showSpotMapContentLinks, mYoutubeApiKey, this, contentBlockUrlScheme, mapboxStyleString, navigationButtonTintColorString, contentButtonTextColorString, navigationMode, this, mContent);
   }
 
   @Override
@@ -511,6 +511,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
     }
 
     this.mContent = content;
+    mContentBlockAdapter.setContent(content);
     this.mContentID = content.getId();
     if (mContent.getContentBlocks() != null) {
       mContentBlocks.addAll(mContent.getContentBlocks());

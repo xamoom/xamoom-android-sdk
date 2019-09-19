@@ -53,7 +53,11 @@ class ContentBlock12Adapter(val inter: ContentBlock12ViewHolderInterface): Adapt
         })
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, fragment: Fragment?, enduserApi: EnduserApi?, youtubeApiKey: String?, bitmapCache: LruCache<*, *>?, contentCache: LruCache<*, *>?, showContentLinks: Boolean, listManager: ListManager?, adapterDelegatesManager: AdapterDelegatesManager<*>?, onContentBlock3ViewHolderInteractionListener: ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener?, onXamoomContentFragmentInteractionListener: XamoomContentFragment.OnXamoomContentFragmentInteractionListener?, urls: ArrayList<String>?, mapboxStyleString: String?, navigationButtonTintColorString: String?, contentButtonTextColorString: String?, navigationMode: String?): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup?, fragment: Fragment?, enduserApi: EnduserApi?, youtubeApiKey: String?, bitmapCache: LruCache<*, *>?, contentCache: LruCache<*, *>?,
+                                    showContentLinks: Boolean, listManager: ListManager?, adapterDelegatesManager: AdapterDelegatesManager<*>?,
+                                    onContentBlock3ViewHolderInteractionListener: ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener?,
+                                    onXamoomContentFragmentInteractionListener: XamoomContentFragment.OnXamoomContentFragmentInteractionListener?, urls: ArrayList<String>?, mapboxStyleString: String?,
+                                    navigationButtonTintColorString: String?, contentButtonTextColorString: String?, navigationMode: String?, content: Content?): RecyclerView.ViewHolder {
         val context = parent!!.context
         val view = LayoutInflater.from(context)
                 .inflate(R.layout.content_block_12_layout, parent, false)

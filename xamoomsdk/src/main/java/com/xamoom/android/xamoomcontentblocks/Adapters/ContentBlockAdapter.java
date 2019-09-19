@@ -53,6 +53,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   private String navigationButtonTintColorString;
   private String contentButtonTextColorString;
   private String navigationMode;
+  private Content mContent;
 
   private String mLinkColor = "00F";
   private String mBackgroundColor = "000";
@@ -76,7 +77,8 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   public ContentBlockAdapter(Fragment fragment, List<ContentBlock> contentBlocks,
                              boolean showSpotMapContentLinks, String youtubeApiKey,
                              ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener contentBlock3ViewHolderInteractionListener,
-                             ArrayList<String> contentBlockUrlScheme, String mapboxStyle, String navigationButtonTintColorString, String contentButtonTextColorString, String navigationMode, ContentBlock12ViewHolderInterface inter) {
+                             ArrayList<String> contentBlockUrlScheme, String mapboxStyle, String navigationButtonTintColorString, String contentButtonTextColorString,
+                             String navigationMode, ContentBlock12ViewHolderInterface inter, Content content) {
     mOnContentBlock3ViewHolderInteractionListener = contentBlock3ViewHolderInteractionListener;
     mFragment = fragment;
     mContentBlocks = contentBlocks;
@@ -84,6 +86,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     mYoutubeApiKey = youtubeApiKey;
     urlScheme = contentBlockUrlScheme;
     mapboxStyleString = mapboxStyle;
+    mContent = content;
     this.inter = inter;
     this.navigationButtonTintColorString = navigationButtonTintColorString;
     this.contentButtonTextColorString = contentButtonTextColorString;
@@ -123,7 +126,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     return mDelegatesManager.onCreateViewHolder(parent, viewType, mFragment, mEnduserApi, mYoutubeApiKey,
             mBitmapCache, mContentCache, showContentLinks, mListManager,
-            mOnContentBlock3ViewHolderInteractionListener, mOnXamoomContentFragmentInteractionListener, urlScheme, mapboxStyleString, navigationButtonTintColorString, contentButtonTextColorString, navigationMode);
+            mOnContentBlock3ViewHolderInteractionListener, mOnXamoomContentFragmentInteractionListener, urlScheme, mapboxStyleString, navigationButtonTintColorString, contentButtonTextColorString, navigationMode, mContent);
   }
 
   @Override
@@ -283,5 +286,9 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
   public void setNavigationMode(String mode) {
     this.navigationMode = mode;
+  }
+
+  public void setContent(Content content) {
+    mContent = content;
   }
 }

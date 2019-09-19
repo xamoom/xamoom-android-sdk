@@ -25,6 +25,7 @@ import com.xamoom.android.xamoomcontentblocks.Views.CustomMapView;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.R;
+import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Resource.Style;
 
@@ -48,7 +49,7 @@ public class ContentBlock9Adapter implements AdapterDelegate<List<ContentBlock>>
           ViewGroup parent, Fragment fragment, EnduserApi enduserApi, String youtubeApiKey,
           LruCache bitmapCache, LruCache contentCache, boolean showContentLinks, ListManager listManager, AdapterDelegatesManager adapterDelegatesManager,
           ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener onContentBlock3ViewHolderInteractionListener, XamoomContentFragment.OnXamoomContentFragmentInteractionListener onXamoomContentFragmentInteractionListener,
-          @Nullable ArrayList<String> urls, @Nullable String mapboxStyleString, @Nullable String navigationButtonTintColorString, @Nullable String contentButtonTextColorString, @Nullable String navigationMode) {
+          @Nullable ArrayList<String> urls, @Nullable String mapboxStyleString, @Nullable String navigationButtonTintColorString, @Nullable String contentButtonTextColorString, @Nullable String navigationMode, Content content) {
     View v = LayoutInflater.from(fragment.getContext()).inflate(R.layout.content_block_9_layout, parent, false);
     mapholder = new ContentBlock9ViewHolder(((CustomMapView) v), bundle, enduserApi, fragment, onXamoomContentFragmentInteractionListener, mapboxStyleString, navigationButtonTintColorString, contentButtonTextColorString, navigationMode);
     return mapholder;

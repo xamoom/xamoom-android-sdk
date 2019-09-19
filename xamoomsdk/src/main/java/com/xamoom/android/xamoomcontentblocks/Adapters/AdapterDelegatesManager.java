@@ -1,10 +1,10 @@
 /*
-* Copyright (c) 2017 xamoom GmbH <apps@xamoom.com>
-*
-* Licensed under the MIT License (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at the root of this project.
-*/
+ * Copyright (c) 2017 xamoom GmbH <apps@xamoom.com>
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at the root of this project.
+ */
 
 package com.xamoom.android.xamoomcontentblocks.Adapters;
 
@@ -20,6 +20,7 @@ import com.xamoom.android.xamoomcontentblocks.ListManager;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.EnduserApi;
+import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.Style;
 
 import java.util.ArrayList;
@@ -49,12 +50,12 @@ public class AdapterDelegatesManager<T> {
   }
 
   public RecyclerView.ViewHolder onCreateViewHolder(
-      ViewGroup parent, int viewType, Fragment fragment, EnduserApi enduserApi,String youtubeApiKey,
-      LruCache bitmapCache, LruCache contentCache, boolean showContentLinks, ListManager listManager,
-      ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener
-          onContentBlock3ViewHolderInteractionListener,
-      XamoomContentFragment.OnXamoomContentFragmentInteractionListener
-          onXamoomContentFragmentInteractionListener, @Nullable ArrayList<String> url, @Nullable String mapboxStyleString, @Nullable String navigationButtonTintColorString, @Nullable String contentButtonTextColorString, @Nullable String navigationMode) {
+          ViewGroup parent, int viewType, Fragment fragment, EnduserApi enduserApi,String youtubeApiKey,
+          LruCache bitmapCache, LruCache contentCache, boolean showContentLinks, ListManager listManager,
+          ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener
+                  onContentBlock3ViewHolderInteractionListener,
+          XamoomContentFragment.OnXamoomContentFragmentInteractionListener
+                  onXamoomContentFragmentInteractionListener, @Nullable ArrayList<String> url, @Nullable String mapboxStyleString, @Nullable String navigationButtonTintColorString, @Nullable String contentButtonTextColorString, @Nullable String navigationMode, Content content) {
 
     AdapterDelegate<T> delegate = adapterDelegates.get(viewType);
 
@@ -67,8 +68,8 @@ public class AdapterDelegatesManager<T> {
     }
 
     RecyclerView.ViewHolder vh = delegate.onCreateViewHolder(parent, fragment, enduserApi,
-        youtubeApiKey, bitmapCache, contentCache, showContentLinks, listManager, this,
-        onContentBlock3ViewHolderInteractionListener, onXamoomContentFragmentInteractionListener, url, mapboxStyleString, navigationButtonTintColorString, contentButtonTextColorString, navigationMode);
+            youtubeApiKey, bitmapCache, contentCache, showContentLinks, listManager, this,
+            onContentBlock3ViewHolderInteractionListener, onXamoomContentFragmentInteractionListener, url, mapboxStyleString, navigationButtonTintColorString, contentButtonTextColorString, navigationMode, content);
 
     return vh;
   }
