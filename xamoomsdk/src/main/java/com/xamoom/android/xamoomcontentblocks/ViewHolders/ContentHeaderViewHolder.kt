@@ -74,7 +74,7 @@ class ContentHeaderViewHolder(itemView: View, val navigationMode: String?, val f
             mEventLocationTextView.text = spot.name
             mEventLayout.visibility = View.VISIBLE
 
-            val colorString = style?.chromeHeaderColor ?: "#999999"
+            val colorString = "#444444"
             val tintColor = Color.parseColor(colorString)
 
             mEventTimeImageView.setColorFilter(tintColor)

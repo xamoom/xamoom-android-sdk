@@ -89,4 +89,11 @@
         <item name="default_background_color">@color/downloadblock_default_background_color</item>
         <item name="default_tint_color">@color/downloadblock_default_tint_color</item>
     </style>
+
+    <style name="ContentBlocksTheme.Event" parent="ContentBlocksTheme">
+        <item name="event_calendar_background_color">@color/event_calendar_background_color</item>
+        <item name="event_calendar_tint_color">@color/event_calendar_tint_color</item>
+        <item name="event_navigation_background_color">@color/event_navigation_background_color</item>
+        <item name="event_navigation_tint_color">@color/event_navigation_tint_color</item>
+    </style>
 </resources>

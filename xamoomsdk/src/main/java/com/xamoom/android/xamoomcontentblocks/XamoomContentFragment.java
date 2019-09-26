@@ -103,7 +103,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   private String contentButtonTextColorString;
   private String navigationMode;
 
-  private Integer[] validBlockTypes = {-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12};
+  private Integer[] validBlockTypes = {-2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12};
 
   public static XamoomContentFragment newInstance(@NonNull String youtubeApiKey) {
     return newInstance(youtubeApiKey, null, null, null, null, null, null);
@@ -342,6 +342,14 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
     public void onAnimationRepeat(Animation animation) {}
   };
 
+  private void addEventBlock() { if (mContent.getRelatedSpot() != null && mContent.getRelatedSpot().getId() != null && mContent.getFromDate() != null && mContent.getToDate() != null) {
+      ContentBlock contentBlockEvent = new ContentBlock();
+      contentBlockEvent.setBlockType(-2);
+      contentBlockEvent.setPublicStatus(true);
+      mContentBlocks.add(contentBlockEvent);
+    }
+  }
+
   /**
    * There should always be the contents text, description and image
    * on top of the other contentBlocks.
@@ -523,6 +531,8 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
     } else if (mContent.getContentBlocks().get(0) != null) {
       mContent.getContentBlocks().get(0).setCoverImageCopyRight(mContent.getCoverImageCopyRight());
     }
+
+    addEventBlock();
 
     // set offline modus inside adapter & remove blocks that cannot be displayed offline (like maps)
     if (offline && !showAllBlocksWhenOffline) {

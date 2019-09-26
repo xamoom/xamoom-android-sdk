@@ -64,4 +64,11 @@
         <attr name="download_default_background_color" format="reference|color" />
         <attr name="download_default_tint_color" format="reference|color" />
     </declare-styleable>
+
+    <declare-styleable name="Event">
+        <attr name="event_calendar_background_color" format="reference|color" />
+        <attr name="event_calendar_tint_color" format="reference|color" />
+        <attr name="event_navigation_background_color" format="reference|color" />
+        <attr name="event_navigation_tint_color" format="reference|color" />
+    </declare-styleable>
 </resources>

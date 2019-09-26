@@ -61,4 +61,9 @@
     <color name="audio_player_progress_bar_color">#5AC425</color>
     <color name="audio_player_progress_bar_background_color">#AAAAAA</color>
     <color name="audio_player_notification_background_color">#d1d1d1</color>
+
+    <color name="event_calendar_background_color">#3b5998</color>
+    <color name="event_calendar_tint_color">@android:color/white</color>
+    <color name="event_navigation_background_color">#0f9d58</color>
+    <color name="event_navigation_tint_color">@android:color/white</color>
 </resources>

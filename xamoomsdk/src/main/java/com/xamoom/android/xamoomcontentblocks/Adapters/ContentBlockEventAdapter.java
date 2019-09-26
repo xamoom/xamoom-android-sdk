@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 
 import com.xamoom.android.xamoomcontentblocks.ListManager;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
+import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentEventViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentHeaderViewHolder;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.APICallback;
@@ -34,7 +35,7 @@ import java.util.List;
 
 import at.rags.morpheus.Error;
 
-public class ContentBlockHeaderAdapter implements AdapterDelegate<List<ContentBlock>> {
+public class ContentBlockEventAdapter implements AdapterDelegate<List<ContentBlock>> {
   private static final int BLOCK_TYPE = -1;
   private Content mContent;
 
@@ -54,8 +55,8 @@ public class ContentBlockHeaderAdapter implements AdapterDelegate<List<ContentBl
           @Nullable String navigationButtonTintColorString, @Nullable String contentButtonTextColorString, @Nullable String navigationMode, Content content) {
     mContent = content;
     View view = LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.content_header_layout, parent, false);
-    return new ContentHeaderViewHolder(view, navigationMode, fragment);
+            .inflate(R.layout.content_event_layout, parent, false);
+    return new ContentEventViewHolder(view, navigationMode, fragment);
   }
 
   @Override
@@ -63,13 +64,26 @@ public class ContentBlockHeaderAdapter implements AdapterDelegate<List<ContentBl
                                @NonNull RecyclerView.ViewHolder holder, final Style style, final boolean offline) {
 
     final ContentBlock cb = items.get(position);
-    final ContentHeaderViewHolder newHolder = (ContentHeaderViewHolder) holder;
-    newHolder.setStyle(style);
-    newHolder.setTextSize(26.0f);
-    setupContentBlockWithSpot(newHolder, cb, offline, style);
+    final ContentEventViewHolder newHolder = (ContentEventViewHolder) holder;
+
+    if (mContent.getRelatedSpot() != null) {
+      EnduserApi.getSharedInstance().getStyle(mContent.getSystem().getId(), new APICallback<Style, List<Error>>() {
+        @Override
+        public void finished(Style result) {
+          setupContentBlockWithSpot(newHolder, cb, offline, result);
+        }
+
+        @Override
+        public void error(List<Error> error) {
+          setupContentBlockWithSpot(newHolder, cb, offline, style);
+        }
+      });
+    } else {
+      newHolder.setupContentBlock(cb, null, offline, style);
+    }
   }
 
-  private void setupContentBlockWithSpot(final ContentHeaderViewHolder vh, final ContentBlock cb, final Boolean offline, final Style style) {
+  private void setupContentBlockWithSpot(final ContentEventViewHolder vh, final ContentBlock cb, final Boolean offline, final Style style) {
     EnduserApi.getSharedInstance().getSpot(mContent.getRelatedSpot().getId(), new APICallback<Spot, List<Error>>() {
       @Override
       public void finished(Spot result) {
