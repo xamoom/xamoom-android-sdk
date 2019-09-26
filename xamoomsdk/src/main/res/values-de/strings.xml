@@ -17,4 +17,7 @@
     <string name="no_location_alert_message">Die Ortungsdienste sind deaktiviert. Bitte gehen Sie in die Einstellungen, um diese einzuschalten.</string>
     <string name="no_location_alert_cancel">Abbrechen</string>
     <string name="no_location_alert_settings">Einstellungen</string>
+
+    <string name="event_calendar_title">Im Kalender eintragen</string>
+    <string name="event_navigation_title">Zum Ort navigieren</string>
 </resources>

@@ -24,7 +24,7 @@
             android:layout_width="70dp"
             android:layout_height="40dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_web"
+            android:src="@drawable/ic_calendar"
             android:contentDescription="@string/contentdescription_download_link_icon"/>
 
         <LinearLayout
@@ -69,7 +69,7 @@
             android:layout_width="70dp"
             android:layout_height="40dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_web"
+            android:src="@drawable/ic_navigation"
             android:contentDescription="@string/contentdescription_download_link_icon"/>
 
         <LinearLayout

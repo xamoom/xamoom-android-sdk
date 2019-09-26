@@ -31,4 +31,7 @@
     <string name="no_location_alert_message">The location services are disabled. Please go to the settings to turn them on.</string>
     <string name="no_location_alert_cancel">Cancel</string>
     <string name="no_location_alert_settings">Settings</string>
+
+    <string name="event_calendar_title">Add to calendar</string>
+    <string name="event_navigation_title">Navigate to the location</string>
 </resources>

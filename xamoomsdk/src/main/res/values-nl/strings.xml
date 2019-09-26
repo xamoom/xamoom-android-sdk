@@ -17,4 +17,7 @@
     <string name="no_location_alert_message">De locatieservices zijn uitgeschakeld. Ga naar de instellingen om ze in te schakelen.</string>
     <string name="no_location_alert_cancel">Afbreken</string>
     <string name="no_location_alert_settings">Instellingen</string>
+
+    <string name="event_calendar_title">Voer de kalender in</string>
+    <string name="event_navigation_title">Navigeer naar deze locatie</string>
 </resources>

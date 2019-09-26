@@ -61,6 +61,9 @@ class ContentEventViewHolder(itemView: View, val navigationMode: String?, val fr
             val fromDate = dateFormatter.format(content.fromDate)
             val toDate = dateFormatter.format(content.toDate)
 
+            mCalendarTitleTextView.text = mContext!!.resources.getString(R.string.event_calendar_title)
+            mNavigationTitleTextView.text = mContext!!.resources.getString(R.string.event_navigation_title)
+
             mCalendarDescriptionTextView.text = "$fromDate"
             mNavigationDescriptionTextView.text = spot.name
 

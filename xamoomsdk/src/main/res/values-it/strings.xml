@@ -17,4 +17,7 @@
     <string name="no_location_alert_message">I servizi di localizzazione sono disabilitati. Vai alle impostazioni per attivarle.</string>
     <string name="no_location_alert_cancel">Abortire</string>
     <string name="no_location_alert_settings">Impostazioni</string>
+
+    <string name="event_calendar_title">Entra nel calendario</string>
+    <string name="event_navigation_title">Accedi a questa posizione</string>
 </resources>
