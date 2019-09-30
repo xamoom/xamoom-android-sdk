@@ -79,8 +79,8 @@ class ContentHeaderViewHolder(itemView: View, val navigationMode: String?, val f
 
             mEventTimeImageView.setColorFilter(tintColor)
             mEventTimeTextView.setTextColor(tintColor)
-            mEventLocationImageView.setColorFilter(mContext!!.resources.getColor(android.R.color.darker_gray))
-            mEventLocationTextView.setTextColor(mContext!!.resources.getColor(android.R.color.darker_gray))
+            mEventLocationImageView.setColorFilter(tintColor)
+            mEventLocationTextView.setTextColor(tintColor)
 
             mEventLocationLayout.setOnClickListener {
                 navigateToSpot(spot)
