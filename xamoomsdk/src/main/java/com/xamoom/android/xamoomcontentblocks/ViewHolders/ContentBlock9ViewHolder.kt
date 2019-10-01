@@ -217,6 +217,12 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
         showContentLinks = showContentInSpotMap
         titleView.text = contentBlock.title
 
+        if (contentBlock.title.isNullOrEmpty()) {
+            titleView.visibility = View.GONE
+        } else {
+            titleView.visibility = View.VISIBLE
+        }
+
         if (mSpotList.isEmpty()) {
             downloadAllSpots(mContentBlock!!.spotMapTags, null, object : APIListCallback<List<Spot>, List<Error>> {
                 override fun finished(result: List<Spot>, cursor: String, hasMore: Boolean) {

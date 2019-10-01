@@ -89,7 +89,8 @@ class ContentHeaderViewHolder(itemView: View, val navigationMode: String?, val f
             mEventTimeLayout.setOnClickListener {
                 val intent = Intent(Intent.ACTION_INSERT)
                         .setData(CalendarContract.Events.CONTENT_URI)
-                        .putExtra(CalendarContract.Events.TITLE, spot.name)
+                        .putExtra(CalendarContract.Events.TITLE, content.title)
+                        .putExtra(CalendarContract.Events.EVENT_LOCATION, spot.name)
                         .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, content.fromDate.time)
                         .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, content.toDate.time)
                 fragment.activity!!.startActivity(Intent.createChooser(intent, ""))

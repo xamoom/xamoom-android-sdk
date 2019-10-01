@@ -1,5 +1,7 @@
 package com.xamoom.android
 
+import android.graphics.Color
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
@@ -7,6 +9,7 @@ import android.util.Log
 import android.view.MenuItem
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import com.xamoom.android.xamoomsdk.Helpers.ColorHelper
 import com.xamoom.android.xamoomsdk.R
 
 class XamoomContentWebViewActivity: AppCompatActivity() {
@@ -17,7 +20,7 @@ class XamoomContentWebViewActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_web_view)
-        
+
         toolbar = findViewById(R.id.webview_toolbar)
         webView = findViewById(R.id.webView)
 
@@ -27,7 +30,17 @@ class XamoomContentWebViewActivity: AppCompatActivity() {
         actionBar?.setDisplayShowTitleEnabled(false)
 
         val urlString = intent.getStringExtra("url") ?: "https://xamoom.net"
-        openWebViewWithUrl(urlString)
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true)
+            actionBar.title = ""
+
+            val upArrow = resources.getDrawable(R.drawable.ic_arrow_back)
+            upArrow.setColorFilter(ColorHelper.getInstance().barFontColor, PorterDuff.Mode.SRC_ATOP)
+            actionBar.setHomeAsUpIndicator(upArrow)
+        }
+
+        val secureString = urlString.replace("http://", "https://", true)
+        openWebViewWithUrl(secureString)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {

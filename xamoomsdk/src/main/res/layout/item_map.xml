@@ -10,31 +10,33 @@
     android:layout_marginBottom="@dimen/contentblock_to_contentblock_margin"
     android:theme="@style/ContentBlocksTheme">
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/user_location_fab"
+    <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|end"
-        android:layout_margin="8dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_user_location"
-        android:tint="@android:color/black"
-        app:backgroundTint="@android:color/white" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/center_spot_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|end"
-        android:layout_marginTop="72dp"
-        android:layout_marginEnd="8dp"
-        android:src="@drawable/ic_spot_bounds"
-        android:tint="@android:color/black"
-        app:backgroundTint="@android:color/white" />
-
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/user_location_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:layout_alignTop="@+id/mapImageView"
+            android:layout_alignEnd="@id/mapImageView"
+            android:layout_margin="8dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_user_location"
+            android:tint="@android:color/black"
+            app:backgroundTint="@android:color/white" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/center_spot_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/user_location_fab"
+            android:layout_alignEnd="@+id/mapImageView"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/ic_spot_bounds"
+            android:tint="@android:color/black"
+            app:backgroundTint="@android:color/white" />
 
         <TextView
             android:id="@+id/titleTextView"
@@ -42,8 +44,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/contentblock_title_size"
             android:textColor="@color/black"
-            android:layout_marginStart="@dimen/contentblock_standard_padding"
-            android:layout_marginEnd="@dimen/contentblock_standard_padding"
+            android:layout_gravity="top"
             android:layout_marginBottom="@dimen/contentblock_children_margin"
             />
 
@@ -51,15 +52,14 @@
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/mapImageView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            android:layout_below="@+id/titleTextView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintDimensionRatio="1:1"
             app:mapbox_renderTextureMode="true"
-            android:layout_below="@+id/titleTextView"
             app:mapbox_cameraZoom="7"/>
-    </android.support.constraint.ConstraintLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/bottom_sheet"

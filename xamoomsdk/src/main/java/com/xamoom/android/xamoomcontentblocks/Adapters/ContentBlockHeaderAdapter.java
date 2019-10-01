@@ -66,7 +66,12 @@ public class ContentBlockHeaderAdapter implements AdapterDelegate<List<ContentBl
     final ContentHeaderViewHolder newHolder = (ContentHeaderViewHolder) holder;
     newHolder.setStyle(style);
     newHolder.setTextSize(26.0f);
-    setupContentBlockWithSpot(newHolder, cb, offline, style);
+
+    if (mContent.getRelatedSpot() != null && mContent.getRelatedSpot().getId() != null) {
+      setupContentBlockWithSpot(newHolder, cb, offline, style);
+    } else {
+      newHolder.setupContentBlock(cb, null, offline, style);
+    }
   }
 
   private void setupContentBlockWithSpot(final ContentHeaderViewHolder vh, final ContentBlock cb, final Boolean offline, final Style style) {
