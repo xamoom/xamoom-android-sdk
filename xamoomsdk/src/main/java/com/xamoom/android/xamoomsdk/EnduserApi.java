@@ -475,7 +475,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
             conditions = new HashMap<>();
         }
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         conditions.put("x-datetime", sdf.format(new Date()));
 
