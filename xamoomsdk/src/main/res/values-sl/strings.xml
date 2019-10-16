@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name" translatable="false">XamoomSDK</string>
+
+    <string name="image_saved_text">Image saved</string>
+    <string name="cannot_save_image">Cannot save SVGs and GIFs</string>
+    <string name="distanceLabel">Distance</string>
+    <string name="meterLabel">meter</string>
+    <string name="noLocation">Searching for location</string>
+    <string name="header_picture_alt_text">Headerimage</string>
+    <string name="open">Open</string>
+    <string name="close_map">Close map</string>
+    <string name="file_not_found">File not found</string>
+
+    <string name="audioplayer_seek_time_text" translatable="false">30</string>
+    <string name="audioplayer_notification_channel_name">Media playback</string>
+    <string name="audioplayer_notification_channel_description">Media playback controls as notification</string>
+
+    <string name="contentdescription_video_play_button" translatable="false">Play button for video</string>
+    <string name="contentdescription_image_without_description" translatable="false">A image without description</string>
+    <string name="contentdescription_link_icon" translatable="false">Icon for the link</string>
+    <string name="contentdescription_thumbnailimage_linked_content" translatable="false">Thumbnail of the linked content</string>
+    <string name="contentdescription_ebook_link_icon" translatable="false">Icon for the ebook link</string>
+    <string name="contentdescription_download_link_icon" translatable="false">Icon for the download link</string>
+    <string name="contentdescription_thumbnailimage_linked_spot" translatable="false">Thumbnail for the linked spot</string>
+    <string name="contentdescription_chevron_right" translatable="false">Chevron pointing to the right</string>
+
+    <string name="content_list_load_more_button_text">Load more</string>
+    <string name="content_list_error_loading_text">Error loading</string>
+
+    <string name="no_location_alert_title">We need your location</string>
+    <string name="no_location_alert_message">The location services are disabled. Please go to the settings to turn them on.</string>
+    <string name="no_location_alert_cancel">Cancel</string>
+    <string name="no_location_alert_settings">Settings</string>
+
+    <string name="event_calendar_title">Add to calendar</string>
+    <string name="event_navigation_title">Navigate to the location</string>
+</resources>
