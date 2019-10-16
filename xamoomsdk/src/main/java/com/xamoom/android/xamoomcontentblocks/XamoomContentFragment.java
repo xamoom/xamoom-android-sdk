@@ -342,7 +342,8 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
     public void onAnimationRepeat(Animation animation) {}
   };
 
-  private void addEventBlock() { if (mContent.getRelatedSpot() != null && mContent.getRelatedSpot().getId() != null && mContent.getFromDate() != null && mContent.getToDate() != null) {
+  private void addEventBlock() {
+    if ((mContent.getRelatedSpot() != null && mContent.getRelatedSpot().getId() != null) || (mContent.getFromDate() != null && mContent.getToDate() != null)) {
       ContentBlock contentBlockEvent = new ContentBlock();
       contentBlockEvent.setBlockType(-2);
       contentBlockEvent.setPublicStatus(true);
