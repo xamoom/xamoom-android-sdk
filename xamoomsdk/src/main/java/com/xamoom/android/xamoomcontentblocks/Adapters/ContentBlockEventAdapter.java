@@ -79,7 +79,7 @@ public class ContentBlockEventAdapter implements AdapterDelegate<List<ContentBlo
         }
       });
     } else {
-      newHolder.setupContentBlock(cb, null, offline, style);
+      newHolder.setupContentBlock(cb, mContent, offline, style);
     }
   }
 
@@ -93,7 +93,7 @@ public class ContentBlockEventAdapter implements AdapterDelegate<List<ContentBlo
 
       @Override
       public void error(List<Error> error) {
-        vh.setupContentBlock(cb, null, offline, style);
+        vh.setupContentBlock(cb, mContent, offline, style);
       }
     });
   }

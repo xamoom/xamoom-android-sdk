@@ -55,50 +55,79 @@ class ContentEventViewHolder(itemView: View, val navigationMode: String?, val fr
 
     @SuppressLint("SetTextI18n")
     fun setupContentBlock(contentBlock: ContentBlock, content: Content?, offline: Boolean, style: Style?) {
-        if (content != null && content.relatedSpot != null && content.fromDate != null && content.toDate != null) {
-            var spot = content.relatedSpot
-            val dateFormatter = SimpleDateFormat("E d MMM HH:mm", Locale.getDefault())
-            val fromDate = dateFormatter.format(content.fromDate)
-            val toDate = dateFormatter.format(content.toDate)
 
-            mCalendarTitleTextView.text = mContext!!.resources.getString(R.string.event_calendar_title)
+        if (content != null && content.relatedSpot != null) {
+            val spot = content.relatedSpot
+
             mNavigationTitleTextView.text = mContext!!.resources.getString(R.string.event_navigation_title)
-
-            mCalendarDescriptionTextView.text = "$fromDate"
             mNavigationDescriptionTextView.text = spot.name
-
             mNavigationLayout.setOnClickListener {
                 navigateToSpot(spot)
             }
+
+            mNavigationLayout.visibility = View.VISIBLE
+
+            if (content.fromDate != null && content.toDate != null) {
+
+                val dateFormatter = SimpleDateFormat("E d MMM HH:mm", Locale.getDefault())
+                val fromDate = dateFormatter.format(content.fromDate)
+
+                mCalendarTitleTextView.text = mContext!!.resources.getString(R.string.event_calendar_title)
+                mCalendarDescriptionTextView.text = "$fromDate"
+
+                mCalendarLayout.setOnClickListener {
+                    val intent = Intent(Intent.ACTION_INSERT)
+                            .setData(CalendarContract.Events.CONTENT_URI)
+                            .putExtra(CalendarContract.Events.TITLE, content.title)
+                            .putExtra(CalendarContract.Events.EVENT_LOCATION, spot.name)
+                            .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, content.fromDate.time)
+                            .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, content.toDate.time)
+                    fragment.activity!!.startActivity(Intent.createChooser(intent, ""))
+                }
+
+                mCalendarLayout.visibility = View.VISIBLE
+            } else {
+                mCalendarLayout.visibility = View.GONE
+            }
+        } else if (content != null && content.fromDate != null && content.toDate != null) {
+            val dateFormatter = SimpleDateFormat("E d MMM HH:mm", Locale.getDefault())
+            val fromDate = dateFormatter.format(content.fromDate)
+
+            mNavigationLayout.visibility = View.GONE
+
+            mCalendarTitleTextView.text = mContext!!.resources.getString(R.string.event_calendar_title)
+            mCalendarDescriptionTextView.text = "$fromDate"
 
             mCalendarLayout.setOnClickListener {
                 val intent = Intent(Intent.ACTION_INSERT)
                         .setData(CalendarContract.Events.CONTENT_URI)
                         .putExtra(CalendarContract.Events.TITLE, content.title)
-                        .putExtra(CalendarContract.Events.EVENT_LOCATION, spot.name)
+                        .putExtra(CalendarContract.Events.EVENT_LOCATION, content.title)
                         .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, content.fromDate.time)
                         .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, content.toDate.time)
                 fragment.activity!!.startActivity(Intent.createChooser(intent, ""))
             }
 
-            val ta = mContext!!.obtainStyledAttributes(R.style.ContentBlocksTheme_Event, R.styleable.Event)
-            val calendarBackgroundColor = ta.getResourceId(R.styleable.Event_event_calendar_background_color, 0)
-            val calendarTintColor = ta.getColor(R.styleable.Event_event_calendar_tint_color, Color.BLACK)
-            val navigationBackgroundColor = ta.getResourceId(R.styleable.Event_event_navigation_background_color, 0)
-            val navigationTintColor = ta.getColor(R.styleable.Event_event_navigation_tint_color, Color.BLACK)
-
-            mCalendarLayout.setBackgroundResource(calendarBackgroundColor)
-            mNavigationLayout.setBackgroundResource(navigationBackgroundColor)
-            mNavigationTitleTextView.setTextColor(navigationTintColor)
-            mNavigationDescriptionTextView.setTextColor(navigationTintColor)
-            mCalendarTitleTextView.setTextColor(calendarTintColor)
-            mCalendarDescriptionTextView.setTextColor(calendarTintColor)
-            mCalendarImageView.setColorFilter(calendarTintColor)
-            mNavigationImageView.setColorFilter(navigationTintColor)
-
-            mNavigationLayout.visibility = View.VISIBLE
             mCalendarLayout.visibility = View.VISIBLE
+        } else {
+            mNavigationLayout.visibility = View.GONE
+            mCalendarLayout.visibility = View.GONE
         }
+
+        val ta = mContext!!.obtainStyledAttributes(R.style.ContentBlocksTheme_Event, R.styleable.Event)
+        val calendarBackgroundColor = ta.getResourceId(R.styleable.Event_event_calendar_background_color, 0)
+        val calendarTintColor = ta.getColor(R.styleable.Event_event_calendar_tint_color, Color.BLACK)
+        val navigationBackgroundColor = ta.getResourceId(R.styleable.Event_event_navigation_background_color, 0)
+        val navigationTintColor = ta.getColor(R.styleable.Event_event_navigation_tint_color, Color.BLACK)
+
+        mCalendarLayout.setBackgroundResource(calendarBackgroundColor)
+        mNavigationLayout.setBackgroundResource(navigationBackgroundColor)
+        mNavigationTitleTextView.setTextColor(navigationTintColor)
+        mNavigationDescriptionTextView.setTextColor(navigationTintColor)
+        mCalendarTitleTextView.setTextColor(calendarTintColor)
+        mCalendarDescriptionTextView.setTextColor(calendarTintColor)
+        mCalendarImageView.setColorFilter(calendarTintColor)
+        mNavigationImageView.setColorFilter(navigationTintColor)
     }
 
     private fun navigateToSpot(spot: Spot) {
