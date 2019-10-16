@@ -70,7 +70,7 @@ public class ContentBlockHeaderAdapter implements AdapterDelegate<List<ContentBl
     if (mContent.getRelatedSpot() != null && mContent.getRelatedSpot().getId() != null) {
       setupContentBlockWithSpot(newHolder, cb, offline, style);
     } else {
-      newHolder.setupContentBlock(cb, null, offline, style);
+      newHolder.setupContentBlock(cb, mContent, offline, style);
     }
   }
 
@@ -84,7 +84,7 @@ public class ContentBlockHeaderAdapter implements AdapterDelegate<List<ContentBl
 
       @Override
       public void error(List<Error> error) {
-        vh.setupContentBlock(cb, null, offline, style);
+        vh.setupContentBlock(cb, mContent, offline, style);
       }
     });
   }

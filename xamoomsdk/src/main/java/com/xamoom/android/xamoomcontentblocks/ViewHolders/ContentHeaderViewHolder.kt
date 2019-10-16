@@ -64,37 +64,64 @@ class ContentHeaderViewHolder(itemView: View, val navigationMode: String?, val f
         mTextView.visibility = View.VISIBLE
         mCoverImageCopyRight.visibility = View.VISIBLE
 
-        if (content != null && content.relatedSpot != null && content.fromDate != null && content.toDate != null) {
-            var spot = content.relatedSpot
-            val dateFormatter = SimpleDateFormat("E d MMM HH:mm", Locale.getDefault())
-            val fromDate = dateFormatter.format(content.fromDate)
-            val toDate = dateFormatter.format(content.toDate)
+        val colorString = "#444444"
+        val tintColor = Color.parseColor(colorString)
 
-            mEventTimeTextView.text = "$fromDate - \n$toDate"
-            mEventLocationTextView.text = spot.name
+        mEventTimeImageView.setColorFilter(tintColor)
+        mEventTimeTextView.setTextColor(tintColor)
+        mEventLocationImageView.setColorFilter(tintColor)
+        mEventLocationTextView.setTextColor(tintColor)
+
+        if (content != null && content.relatedSpot != null) {
+            val spot = content.relatedSpot
             mEventLayout.visibility = View.VISIBLE
-
-            val colorString = "#444444"
-            val tintColor = Color.parseColor(colorString)
-
-            mEventTimeImageView.setColorFilter(tintColor)
-            mEventTimeTextView.setTextColor(tintColor)
-            mEventLocationImageView.setColorFilter(tintColor)
-            mEventLocationTextView.setTextColor(tintColor)
-
+            mEventLocationLayout.visibility = View.VISIBLE
+            mEventLocationTextView.text = spot.name
             mEventLocationLayout.setOnClickListener {
                 navigateToSpot(spot)
             }
 
+            if (content.fromDate != null && content.toDate != null) {
+                mEventTimeLayout.visibility = View.VISIBLE
+
+                val dateFormatter = SimpleDateFormat("E d MMM HH:mm", Locale.getDefault())
+                val fromDate = dateFormatter.format(content.fromDate)
+                val toDate = dateFormatter.format(content.toDate)
+                mEventTimeTextView.text = "$fromDate - \n$toDate"
+                mEventTimeLayout.setOnClickListener {
+                    val intent = Intent(Intent.ACTION_INSERT)
+                            .setData(CalendarContract.Events.CONTENT_URI)
+                            .putExtra(CalendarContract.Events.TITLE, content.title)
+                            .putExtra(CalendarContract.Events.EVENT_LOCATION, spot.name)
+                            .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, content.fromDate.time)
+                            .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, content.toDate.time)
+                    fragment.activity!!.startActivity(Intent.createChooser(intent, ""))
+                }
+            } else {
+                mEventTimeLayout.visibility = View.GONE
+            }
+        } else if (content != null && content.fromDate != null && content.toDate != null) {
+            mEventLayout.visibility = View.VISIBLE
+            mEventTimeLayout.visibility = View.VISIBLE
+            mEventLocationLayout.visibility = View.GONE
+
+            val dateFormatter = SimpleDateFormat("E d MMM HH:mm", Locale.getDefault())
+            val fromDate = dateFormatter.format(content.fromDate)
+            val toDate = dateFormatter.format(content.toDate)
+            mEventTimeTextView.text = "$fromDate - \n$toDate"
             mEventTimeLayout.setOnClickListener {
                 val intent = Intent(Intent.ACTION_INSERT)
                         .setData(CalendarContract.Events.CONTENT_URI)
                         .putExtra(CalendarContract.Events.TITLE, content.title)
-                        .putExtra(CalendarContract.Events.EVENT_LOCATION, spot.name)
+                        .putExtra(CalendarContract.Events.EVENT_LOCATION, content.title)
                         .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, content.fromDate.time)
                         .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, content.toDate.time)
                 fragment.activity!!.startActivity(Intent.createChooser(intent, ""))
             }
+        } else {
+            mEventLayout.visibility = View.GONE
+            mEventTimeLayout.visibility = View.GONE
+            mEventLocationLayout.visibility = View.GONE
         }
 
         if (contentBlock.title != null) {
