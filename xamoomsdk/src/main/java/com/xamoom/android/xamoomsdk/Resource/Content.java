@@ -1,10 +1,10 @@
 /*
-* Copyright (c) 2017 xamoom GmbH <apps@xamoom.com>
-*
-* Licensed under the MIT License (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at the root of this project.
-*/
+ * Copyright (c) 2017 xamoom GmbH <apps@xamoom.com>
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at the root of this project.
+ */
 
 package com.xamoom.android.xamoomsdk.Resource;
 
@@ -184,7 +184,7 @@ public class Content extends Resource implements Parcelable {
     for (Object o : customMeta.entrySet()) {
       Map.Entry pair = (Map.Entry) o;
       customMetaList.add(new KeyValueObject(pair.getKey().toString(),
-          pair.getValue().toString()));
+              pair.getValue().toString()));
     }
 
     this.customMeta = customMetaList;
@@ -222,7 +222,7 @@ public class Content extends Resource implements Parcelable {
   }
 
   public Date getToDate() {
-    if (fromDate == null) {
+    if (fromDate == null || toDate == null) {
       return null;
     }
     return DateUtil.parse(toDate);

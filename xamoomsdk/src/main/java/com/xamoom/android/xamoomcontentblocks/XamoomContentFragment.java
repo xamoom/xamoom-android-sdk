@@ -529,13 +529,6 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
     // add header if needed choosen
     if (addHeader) {
       addContentTitleAndImage();
-    } else if (mContent.getContentBlocks() == null || mContent.getContentBlocks().size() == 0) {
-      ContentBlock contentBlock0 = new ContentBlock();
-      contentBlock0.setTitle(mContent.getTitle());
-      contentBlock0.setBlockType(-1);
-      contentBlock0.setPublicStatus(true);
-      contentBlock0.setText(mContent.getDescription());
-      mContentBlocks.add(0, contentBlock0);
     } else if (mContent.getContentBlocks().get(0) != null) {
       mContent.getContentBlocks().get(0).setCoverImageCopyRight(mContent.getCoverImageCopyRight());
     }
