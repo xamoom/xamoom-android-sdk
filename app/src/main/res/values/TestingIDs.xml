@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="APIKEY">d270b614-1208-437f-aefc-cc2effe136f</string>
+    <string name="XDEVKEY">!chB1nS031nT0ll3rS3cur1tyK3yG44444nZT0ll</string>
+    <string name="contentID">e9c917086aca465eb454e38c0146428b</string>
+    <string name="qrMarker">b5v2p</string>
+    <string name="beaconMajor">54222</string>
+    <string name="beaconMinor">39361</string>
+    <string name="youtube_key">AIzaSyBNZUh3-dj4YYY9-csOtQeHG_MpoE8x69Q</string>
+</resources>

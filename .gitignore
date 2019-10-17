@@ -6,7 +6,5 @@
 /build
 /captures
 
-*TestingIDs.*
-
 .idea/*
 *.iml
