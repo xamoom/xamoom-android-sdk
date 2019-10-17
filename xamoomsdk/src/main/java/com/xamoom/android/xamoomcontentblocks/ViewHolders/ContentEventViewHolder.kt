@@ -67,7 +67,7 @@ class ContentEventViewHolder(itemView: View, val navigationMode: String?, val fr
 
             mNavigationLayout.visibility = View.VISIBLE
 
-            if (content.fromDate != null && content.toDate != null) {
+            if (content.fromDate != null) {
 
                 val dateFormatter = SimpleDateFormat("E d MMM HH:mm", Locale.getDefault())
                 val fromDate = dateFormatter.format(content.fromDate)
@@ -81,7 +81,13 @@ class ContentEventViewHolder(itemView: View, val navigationMode: String?, val fr
                             .putExtra(CalendarContract.Events.TITLE, content.title)
                             .putExtra(CalendarContract.Events.EVENT_LOCATION, spot.name)
                             .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, content.fromDate.time)
-                            .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, content.toDate.time)
+
+                    if (content.toDate != null) {
+                        intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, content.toDate.time)
+                    } else {
+                        intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, content.fromDate.time)
+                    }
+
                     fragment.activity!!.startActivity(Intent.createChooser(intent, ""))
                 }
 
@@ -89,7 +95,7 @@ class ContentEventViewHolder(itemView: View, val navigationMode: String?, val fr
             } else {
                 mCalendarLayout.visibility = View.GONE
             }
-        } else if (content != null && content.fromDate != null && content.toDate != null) {
+        } else if (content != null && content.fromDate != null) {
             val dateFormatter = SimpleDateFormat("E d MMM HH:mm", Locale.getDefault())
             val fromDate = dateFormatter.format(content.fromDate)
 
@@ -102,9 +108,14 @@ class ContentEventViewHolder(itemView: View, val navigationMode: String?, val fr
                 val intent = Intent(Intent.ACTION_INSERT)
                         .setData(CalendarContract.Events.CONTENT_URI)
                         .putExtra(CalendarContract.Events.TITLE, content.title)
-                        .putExtra(CalendarContract.Events.EVENT_LOCATION, content.title)
                         .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, content.fromDate.time)
-                        .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, content.toDate.time)
+
+                if (content.toDate != null) {
+                    intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, content.toDate.time)
+                } else {
+                    intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, content.fromDate.time)
+                }
+
                 fragment.activity!!.startActivity(Intent.createChooser(intent, ""))
             }
 
