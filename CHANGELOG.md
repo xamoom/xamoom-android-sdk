@@ -1,4 +1,7 @@
 # Changelog
+## [3.11.14](https://github.com/xamoom/xamoom-ios-sdk/compare/3.11.13...3.11.14) - 17.10.2019
+- New design for event pages
+
 ## [3.11.13](https://github.com/xamoom/xamoom-ios-sdk/compare/3.11.12...3.11.13) - 01.10.2019
 - Add Event Package to ContentHeaderViewHolder
 - Improve XamoomContentWebViewActivity toolbar tint coloring
