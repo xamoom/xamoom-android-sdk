@@ -1,4 +1,8 @@
 # Changelog
+
+## [3.11.15](https://github.com/xamoom/xamoom-ios-sdk/compare/3.11.14...3.11.15) - 21.10.2019
+- XamoomContentWebViewActivity fix with ColorHelper
+
 ## [3.11.14](https://github.com/xamoom/xamoom-ios-sdk/compare/3.11.13...3.11.14) - 17.10.2019
 - New design for event pages
 
