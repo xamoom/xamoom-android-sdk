@@ -35,7 +35,9 @@ class XamoomContentWebViewActivity: AppCompatActivity() {
             actionBar.title = ""
 
             val upArrow = resources.getDrawable(R.drawable.ic_arrow_back)
-            upArrow.setColorFilter(ColorHelper.getInstance().barFontColor, PorterDuff.Mode.SRC_ATOP)
+            if (ColorHelper.getInstance() != null) {
+                upArrow.setColorFilter(ColorHelper.getInstance().barFontColor, PorterDuff.Mode.SRC_ATOP)
+            }
             actionBar.setHomeAsUpIndicator(upArrow)
         }
 
