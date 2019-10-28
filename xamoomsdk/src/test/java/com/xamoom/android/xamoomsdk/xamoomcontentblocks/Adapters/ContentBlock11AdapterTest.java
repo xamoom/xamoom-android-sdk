@@ -1,10 +1,10 @@
 package com.xamoom.android.xamoomsdk.xamoomcontentblocks.Adapters;
 
 import android.app.Activity;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.RecyclerView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -12,7 +12,6 @@ import com.xamoom.android.xamoomcontentblocks.Adapters.AdapterDelegatesManager;
 import com.xamoom.android.xamoomcontentblocks.Adapters.ContentBlock11Adapter;
 import com.xamoom.android.xamoomcontentblocks.Adapters.ContentBlock6Adapter;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock11ViewHolder;
-import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock6ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.BuildConfig;
 import com.xamoom.android.xamoomsdk.Helper.ContentFragmentActivity;

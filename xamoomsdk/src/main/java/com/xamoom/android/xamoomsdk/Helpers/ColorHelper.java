@@ -2,7 +2,7 @@ package com.xamoom.android.xamoomsdk.Helpers;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.v4.graphics.ColorUtils;
+import androidx.core.graphics.ColorUtils;
 
 public class ColorHelper {
     private static ColorHelper instance;

@@ -8,14 +8,9 @@
 
 package com.xamoom.android.xamoomsdk.xamoomcontentblocks.Viewholders;
 
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.support.v4.util.LruCache;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.VideoView;
 
-import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock2ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock5ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.BuildConfig;
@@ -33,7 +28,6 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.io.File;
 import java.io.IOException;
 
 import static org.junit.Assert.assertNotNull;

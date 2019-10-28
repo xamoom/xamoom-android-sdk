@@ -2,8 +2,8 @@ package com.xamoom.android.xamoomcontentblocks.Adapters
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.support.v4.app.Fragment
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import android.util.LruCache
 import android.view.LayoutInflater
 import android.view.View
@@ -17,9 +17,9 @@ import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolde
 import com.xamoom.android.xamoomsdk.R
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock
 
-class HorizontalRecyclerViewAdapter(val items : ArrayList<ContentBlock>, val context: Context, val fragment: Fragment?, val youtubeApiKey: String?, val bitmapCache: android.support.v4.util.LruCache<String, Bitmap>?): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class HorizontalRecyclerViewAdapter(val items : ArrayList<ContentBlock>, val context: Context, val fragment: Fragment?, val youtubeApiKey: String?, val bitmapCache: androidx.collection.LruCache<String, Bitmap>?): androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): androidx.recyclerview.widget.RecyclerView.ViewHolder {
         when (viewType) {
             0 -> {
                 val contentView = LayoutInflater.from(parent.context)
@@ -58,9 +58,9 @@ class HorizontalRecyclerViewAdapter(val items : ArrayList<ContentBlock>, val con
         return items[position].blockType
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
 
-        var nHolder: RecyclerView.ViewHolder
+        var nHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder
 
         when (holder.itemViewType) {
             0 -> {

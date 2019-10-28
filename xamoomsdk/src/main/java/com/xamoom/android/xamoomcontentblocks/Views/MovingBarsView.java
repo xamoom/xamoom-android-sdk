@@ -10,8 +10,8 @@ package com.xamoom.android.xamoomcontentblocks.Views;
 
 import android.content.Context;
 import android.content.res.Configuration;
-import android.support.annotation.Nullable;
-import android.support.v13.view.ViewCompat;
+import androidx.annotation.Nullable;
+
 import android.util.AttributeSet;
 import android.view.View;
 

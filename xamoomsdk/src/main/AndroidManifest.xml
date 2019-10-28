@@ -27,7 +27,7 @@
             android:value="${xamoomSDKVersion}"/>
 
         <provider
-            android:name="android.support.v4.content.FileProvider"
+            android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.xamoomsdk.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
@@ -38,7 +38,7 @@
 
         <activity android:name="com.xamoom.android.XamoomContentWebViewActivity"/>
 
-        <receiver android:name="android.support.v4.media.session.MediaButtonReceiver">
+        <receiver android:name="androidx.media.session.MediaButtonReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
                 <action android:name="android.media.AUDIO_BECOMING_NOISY" />

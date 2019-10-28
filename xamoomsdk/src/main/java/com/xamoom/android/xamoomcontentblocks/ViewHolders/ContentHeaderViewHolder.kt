@@ -15,8 +15,8 @@ import android.graphics.Color
 import android.location.Location
 import android.net.Uri
 import android.provider.CalendarContract
-import android.support.v4.app.Fragment
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -34,7 +34,7 @@ import java.util.*
 /**
  * Displays the content heading.
  */
-class ContentHeaderViewHolder(itemView: View, val navigationMode: String?, val fragment: Fragment) : RecyclerView.ViewHolder(itemView) {
+class ContentHeaderViewHolder(itemView: View, val navigationMode: String?, val fragment: Fragment) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
     private val mTitleTextView: TextView = itemView.findViewById<View>(R.id.titleTextView) as TextView
     private val mTextView: TextView = itemView.findViewById<View>(R.id.textView) as TextView
     private val mCoverImageCopyRight: TextView = itemView.findViewById(R.id.coverImageCopyRight)

@@ -2,7 +2,6 @@ package com.xamoom.android.xamoomcontentblocks;
 
 import android.content.Context;
 import android.net.Uri;
-import android.support.v4.util.SparseArrayCompat;
 
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;

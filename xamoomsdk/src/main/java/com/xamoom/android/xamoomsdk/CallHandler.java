@@ -8,7 +8,7 @@
 
 package com.xamoom.android.xamoomsdk;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 
 import org.json.JSONException;

@@ -28,7 +28,7 @@ class PushDeviceUtil(val preferences: SharedPreferences) {
     fun getSavedToken(): String? {
         val token = preferences.getString("xamoom_push_device_token", "")
 
-        if (token.isEmpty()) {
+        if (token!!.isEmpty()) {
             return null
         }
 

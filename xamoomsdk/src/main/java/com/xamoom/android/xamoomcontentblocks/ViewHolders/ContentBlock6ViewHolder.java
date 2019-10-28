@@ -10,8 +10,8 @@ package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.v4.util.LruCache;
-import android.support.v7.widget.RecyclerView;
+import androidx.collection.LruCache;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -22,7 +22,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
-import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.APIPasswordCallback;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.Enums.ContentFlags;

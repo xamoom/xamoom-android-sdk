@@ -8,11 +8,9 @@
 
 package com.xamoom.android.xamoomsdk.xamoomcontentblocks.Viewholders;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.Uri;
-import android.support.v4.util.LruCache;
+import androidx.collection.LruCache;
 import android.view.View;
 import android.widget.VideoView;
 

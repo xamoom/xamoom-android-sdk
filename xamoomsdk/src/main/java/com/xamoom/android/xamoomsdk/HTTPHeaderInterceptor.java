@@ -8,7 +8,7 @@
 
 package com.xamoom.android.xamoomsdk;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.io.IOException;
 

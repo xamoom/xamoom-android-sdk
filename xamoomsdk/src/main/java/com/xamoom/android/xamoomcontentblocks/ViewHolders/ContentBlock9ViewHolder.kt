@@ -17,14 +17,14 @@ import android.graphics.drawable.StateListDrawable
 import android.location.Location
 import android.net.Uri
 import android.os.Bundle
-import android.support.design.widget.BottomSheetBehavior
-import android.support.design.widget.CoordinatorLayout
-import android.support.v4.app.ActivityCompat
-import android.support.v4.app.ActivityCompat.requestPermissions
-import android.support.v4.app.ActivityCompat.startActivityForResult
-import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityCompat.requestPermissions
+import androidx.core.app.ActivityCompat.startActivityForResult
+import androidx.fragment.app.Fragment
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
@@ -59,7 +59,7 @@ import kotlin.collections.ArrayList
 
 @SuppressLint("ClickableViewAccessibility")
 class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val enduserApi: EnduserApi, fragment: Fragment, val listener: XamoomContentFragment.OnXamoomContentFragmentInteractionListener,
-                              private val mapBoxStyleString: String? = com.mapbox.mapboxsdk.maps.Style.MAPBOX_STREETS, private val navigationTintColorString: String?, private val contentButtonTextColorString: String?, private val navigationMode: String? = "d") : RecyclerView.ViewHolder(view), OnMapReadyCallback {
+                              private val mapBoxStyleString: String? = com.mapbox.mapboxsdk.maps.Style.MAPBOX_STREETS, private val navigationTintColorString: String?, private val contentButtonTextColorString: String?, private val navigationMode: String? = "d") : androidx.recyclerview.widget.RecyclerView.ViewHolder(view), OnMapReadyCallback {
 
     private var mapBoxStyle: com.mapbox.mapboxsdk.maps.Style? = null
     private var mapBoxMap: MapboxMap? = null
@@ -134,8 +134,8 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
             updateLocation()
         } else {
             val icon = mContext!!.resources.getDrawable(R.drawable.ic_user_location)
-            val newIcon = icon.constantState.newDrawable()
-            newIcon.mutate().setColorFilter(Color.parseColor("#D3D3D3"), PorterDuff.Mode.SRC_ATOP)
+            val newIcon = icon.constantState?.newDrawable()
+            newIcon?.mutate()?.setColorFilter(Color.parseColor("#D3D3D3"), PorterDuff.Mode.SRC_ATOP)
             centerUserButton.setImageDrawable(newIcon)
         }
 
@@ -194,8 +194,8 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
                     }
 
                     val icon = mContext!!.resources.getDrawable(R.drawable.ic_user_location)
-                    val newIcon = icon.constantState.newDrawable()
-                    newIcon.mutate().setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
+                    val newIcon = icon.constantState?.newDrawable()
+                    newIcon?.mutate()?.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
                     centerUserButton.setImageDrawable(newIcon)
                 }
     }

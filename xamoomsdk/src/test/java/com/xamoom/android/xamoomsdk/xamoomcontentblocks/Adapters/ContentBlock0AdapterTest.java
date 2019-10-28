@@ -9,7 +9,7 @@
 package com.xamoom.android.xamoomsdk.xamoomcontentblocks.Adapters;
 
 import android.app.Activity;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 

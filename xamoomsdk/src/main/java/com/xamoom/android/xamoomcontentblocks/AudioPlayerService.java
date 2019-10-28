@@ -22,11 +22,11 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
-import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 import android.support.v4.media.MediaMetadataCompat;
-import android.support.v4.media.app.NotificationCompat.MediaStyle;
-import android.support.v4.media.session.MediaButtonReceiver;
+import androidx.media.app.NotificationCompat.MediaStyle;
+import androidx.media.session.MediaButtonReceiver;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
@@ -457,23 +457,23 @@ public class AudioPlayerService extends Service {
     int playPauseButtonIndex = 0;
     if (playing) {
       playPauseButtonIndex = 1;
-      builder.addAction(new android.support.v4.app.NotificationCompat.Action(
+      builder.addAction(new androidx.core.app.NotificationCompat.Action(
           R.drawable.ic_notification_rewind, "Backward",
           MediaButtonReceiver.buildMediaButtonPendingIntent(getApplicationContext(),
               PlaybackStateCompat.ACTION_REWIND))
       );
-      builder.addAction(new android.support.v4.app.NotificationCompat.Action(
+      builder.addAction(new androidx.core.app.NotificationCompat.Action(
           R.drawable.ic_notification_pause, "Pause",
           MediaButtonReceiver.buildMediaButtonPendingIntent(getApplicationContext(),
               PlaybackStateCompat.ACTION_PAUSE))
       );
-      builder.addAction(new android.support.v4.app.NotificationCompat.Action(
+      builder.addAction(new androidx.core.app.NotificationCompat.Action(
           R.drawable.ic_notification_forward, "Forward",
           MediaButtonReceiver.buildMediaButtonPendingIntent(getApplicationContext(),
               PlaybackStateCompat.ACTION_FAST_FORWARD))
       );
     } else {
-      builder.addAction(new android.support.v4.app.NotificationCompat.Action(
+      builder.addAction(new androidx.core.app.NotificationCompat.Action(
           R.drawable.ic_notification_play_arrow, "Play",
           MediaButtonReceiver.buildMediaButtonPendingIntent(getApplicationContext(),
               PlaybackStateCompat.ACTION_PLAY))

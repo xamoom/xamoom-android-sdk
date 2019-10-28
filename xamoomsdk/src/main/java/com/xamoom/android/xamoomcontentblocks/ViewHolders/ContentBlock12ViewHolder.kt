@@ -3,33 +3,33 @@ package com.xamoom.android.xamoomcontentblocks.ViewHolders
 import android.content.Context
 import android.graphics.Bitmap
 import android.os.Handler
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import com.xamoom.android.xamoomcontentblocks.Adapters.HorizontalRecyclerViewAdapter
 import com.xamoom.android.xamoomsdk.R
-import android.support.v7.widget.PagerSnapHelper
+import androidx.recyclerview.widget.PagerSnapHelper
 import android.widget.TextView
+import androidx.collection.LruCache
 import com.xamoom.android.xamoomcontentblocks.Helper.LinePagerIndicatorDecoration
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock
 
 
-class ContentBlock12ViewHolder(val view: View, val context: Context, val fragment: Fragment?, val youtubeApiKey: String?, val bitmapCache: android.support.v4.util.LruCache<String, Bitmap>?, parentRecyclerView: RecyclerView?, val interf: ContentBlock12ViewHolderInterface): RecyclerView.ViewHolder(view) {
-    private var recyclerView: RecyclerView = view.findViewById(R.id.horizontal_recycler_view)
+class ContentBlock12ViewHolder(val view: View, val context: Context, val fragment: Fragment?, val youtubeApiKey: String?, val bitmapCache: LruCache<String, Bitmap>?, parentRecyclerView: androidx.recyclerview.widget.RecyclerView?, val interf: ContentBlock12ViewHolderInterface): androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
+    private var recyclerView: androidx.recyclerview.widget.RecyclerView = view.findViewById(R.id.horizontal_recycler_view)
 
     init {
-        val layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        val layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
         layoutManager.isSmoothScrollbarEnabled = false
         recyclerView.layoutManager = layoutManager
         recyclerView.setHasFixedSize(false)
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+        recyclerView.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
-                //parentRecyclerView!!.adapter.notifyItemChanged(parentRecyclerView.getChildAdapterPosition(view))
+
                 if (newState == 0) {
-                    recyclerView!!.adapter.notifyDataSetChanged()
-                    //interf.didScroll(parentRecyclerView!!.getChildAdapterPosition(view) + 1)
+                    recyclerView.adapter?.notifyDataSetChanged()
                 }
             }
         })
@@ -48,7 +48,7 @@ class ContentBlock12ViewHolder(val view: View, val context: Context, val fragmen
 
         if (recyclerView.adapter == null && recyclerView.itemDecorationCount == 0) {
             recyclerView.adapter = HorizontalRecyclerViewAdapter(cbList, context, fragment, youtubeApiKey, bitmapCache)
-            val snapHelper = PagerSnapHelper()
+            val snapHelper = androidx.recyclerview.widget.PagerSnapHelper()
             snapHelper.attachToRecyclerView(recyclerView)
             recyclerView.addItemDecoration(LinePagerIndicatorDecoration())
         }

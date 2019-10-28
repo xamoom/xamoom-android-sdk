@@ -8,20 +8,15 @@
 
 package com.xamoom.android.xamoomsdk.xamoomcontentblocks.Viewholders;
 
-import android.graphics.Bitmap;
 import android.media.MediaPlayer;
-import android.provider.MediaStore;
-import android.support.v4.util.LruCache;
 import android.view.View;
 
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock1ViewHolder;
-import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock2ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.BuildConfig;
 import com.xamoom.android.xamoomsdk.Helper.ContentFragmentActivity;
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
-import com.xamoom.android.xamoomsdk.Resource.Style;
 import com.xamoom.android.xamoomsdk.Storage.FileManager;
 
 import org.junit.Before;

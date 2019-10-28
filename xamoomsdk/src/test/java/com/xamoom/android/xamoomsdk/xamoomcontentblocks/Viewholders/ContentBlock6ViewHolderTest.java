@@ -8,15 +8,12 @@
 
 package com.xamoom.android.xamoomsdk.xamoomcontentblocks.Viewholders;
 
-import android.support.v4.util.LruCache;
+import androidx.collection.LruCache;
 import android.view.View;
-import android.widget.LinearLayout;
 
-import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock5ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock6ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.APICallback;
-import com.xamoom.android.xamoomsdk.APIListCallback;
 import com.xamoom.android.xamoomsdk.BuildConfig;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.Enums.ContentReason;
@@ -42,7 +39,6 @@ import java.util.EnumSet;
 import java.util.List;
 
 import at.rags.morpheus.Error;
-import okhttp3.Response;
 
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;

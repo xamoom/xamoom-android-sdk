@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import javax.inject.Inject
-import android.support.v4.content.LocalBroadcastManager
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import android.content.Intent
 import android.util.Log
 import com.xamoom.android.xamoomsdk.EnduserApi

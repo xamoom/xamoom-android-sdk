@@ -1,10 +1,10 @@
 package com.xamoom.android.xamoomcontentblocks.Adapters
 
 import android.graphics.Bitmap
-import android.support.v4.app.Fragment
-import android.support.v4.util.LruCache
-import android.support.v7.app.AlertDialog
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.collection.LruCache
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,7 +31,7 @@ class ContentBlock12Adapter(val inter: ContentBlock12ViewHolderInterface): Adapt
         return cb.blockType == 12
     }
 
-    override fun onBindViewHolder(items: ArrayList<ContentBlock>, position: Int, holder: RecyclerView.ViewHolder, style: Style?, offline: Boolean) {
+    override fun onBindViewHolder(items: ArrayList<ContentBlock>, position: Int, holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, style: Style?, offline: Boolean) {
         val holder = holder as ContentBlock12ViewHolder
         val item = items[position]
 
@@ -57,12 +57,12 @@ class ContentBlock12Adapter(val inter: ContentBlock12ViewHolderInterface): Adapt
                                     showContentLinks: Boolean, listManager: ListManager?, adapterDelegatesManager: AdapterDelegatesManager<*>?,
                                     onContentBlock3ViewHolderInteractionListener: ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener?,
                                     onXamoomContentFragmentInteractionListener: XamoomContentFragment.OnXamoomContentFragmentInteractionListener?, urls: ArrayList<String>?, mapboxStyleString: String?,
-                                    navigationButtonTintColorString: String?, contentButtonTextColorString: String?, navigationMode: String?, content: Content?): RecyclerView.ViewHolder {
+                                    navigationButtonTintColorString: String?, contentButtonTextColorString: String?, navigationMode: String?, content: Content?): androidx.recyclerview.widget.RecyclerView.ViewHolder {
         val context = parent!!.context
         val view = LayoutInflater.from(context)
                 .inflate(R.layout.content_block_12_layout, parent, false)
         val cache = bitmapCache as LruCache<String, Bitmap>
-        if (parent is RecyclerView) {
+        if (parent is androidx.recyclerview.widget.RecyclerView) {
             return ContentBlock12ViewHolder(view, context, fragment, youtubeApiKey, cache, parent, inter)
         }
         return ContentBlock12ViewHolder(view, context, fragment, youtubeApiKey, cache, null, inter)

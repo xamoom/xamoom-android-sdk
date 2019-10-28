@@ -12,7 +12,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.support.v4.util.LruCache;
+import androidx.collection.LruCache;
 import android.view.View;
 
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock4ViewHolder;

@@ -3,8 +3,8 @@ package com.xamoom.android.xamoomcontentblocks.ViewHolders
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
-import android.support.v4.app.Fragment
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.widget.TextView
 import at.rags.morpheus.Error
@@ -34,7 +34,7 @@ import com.xamoom.android.xamoomsdk.APICallback
 import kotlin.collections.ArrayList
 
 
-class ContentBlock91ViewHolder(val view: View, val fragment: Fragment, val enduserApi: EnduserApi): RecyclerView.ViewHolder(view), OnMapReadyCallback {
+class ContentBlock91ViewHolder(val view: View, val fragment: Fragment, val enduserApi: EnduserApi): androidx.recyclerview.widget.RecyclerView.ViewHolder(view), OnMapReadyCallback {
 
     private var mapBoxStyle: com.mapbox.mapboxsdk.maps.Style? = null
     private var mapBoxMap: MapboxMap? = null

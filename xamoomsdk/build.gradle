@@ -8,15 +8,15 @@ version = versionString
 group = "com.xamoom.android"
 
 android {
-	compileSdkVersion 27
-	buildToolsVersion '27.0.3'
+	compileSdkVersion 29
+	buildToolsVersion '29.0.2'
 
 	defaultConfig {
 		minSdkVersion 18
-		targetSdkVersion 26
+		targetSdkVersion 29
 		versionCode 40
 		versionName versionString
-		testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+		testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 		multiDexEnabled true
 	}
 
@@ -42,40 +42,38 @@ android {
 	}
 }
 
-def supportLibaryVersion = "27.1.1"
-
 dependencies {
 	implementation fileTree(include: ['*.jar'], dir: 'libs')
 	testImplementation 'junit:junit:4.12'
-	implementation 'com.android.support:multidex:1.0.1'
+	implementation 'androidx.multidex:multidex:2.0.1'
 	testImplementation 'org.mockito:mockito-core:1.10.10'
 	testImplementation 'com.squareup.okhttp3:mockwebserver:3.8.0'
 	testImplementation 'org.robolectric:robolectric:3.1.4'
 	testImplementation 'org.robolectric:shadows-support-v4:3.1.4'
 	testImplementation 'org.robolectric:shadows-maps:3.0'
 	testImplementation 'org.robolectric:shadows-play-services:3.0'
-	androidTestImplementation 'com.android.support.test:runner:0.5'
+	androidTestImplementation 'androidx.test.ext:junit:1.1.1'
 	androidTestImplementation 'com.squareup.okhttp3:mockwebserver:3.8.0'
 	implementation files('libs/androidsvg-1.2.1.jar')
 	implementation files('libs/YouTubeAndroidPlayerApi.jar')
-	implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-	implementation "com.android.support:support-compat:$supportLibaryVersion"
-	implementation "com.android.support:support-v13:$supportLibaryVersion"
-	implementation "com.android.support:recyclerview-v7:$supportLibaryVersion"
-	implementation "com.android.support:appcompat-v7:$supportLibaryVersion"
-	implementation "com.android.support:design:$supportLibaryVersion"
-	implementation 'com.google.android.gms:play-services-maps:11.8.0'
+	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+	implementation 'androidx.core:core:1.1.0'
+	implementation 'androidx.legacy:legacy-support-v13:1.0.0'
+	implementation 'androidx.recyclerview:recyclerview:1.0.0'
+	implementation 'androidx.appcompat:appcompat:1.1.0'
+	implementation 'com.google.android.material:material:1.0.0'
+	implementation 'com.google.android.gms:play-services-maps:17.0.0'
 	implementation 'com.google.android.exoplayer:exoplayer-core:2.6.1'
-	implementation 'com.squareup.retrofit2:retrofit:2.3.0'
-	implementation 'com.squareup.okhttp3:logging-interceptor:3.0.1'
+	implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+	implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
 	implementation 'com.xamoom.android:morpheus:0.5.2'
 	implementation 'com.github.bumptech.glide:glide:3.7.0'
-	implementation 'com.google.android.gms:play-services-gcm:11.8.0'
-	implementation 'com.google.android.gms:play-services-location:11.8.0'
+	implementation 'com.google.android.gms:play-services-gcm:17.0.0'
+	implementation 'com.google.android.gms:play-services-location:17.0.0'
 	implementation 'com.xamoom.android:htmltextview:1.0.9'
 	implementation 'com.squareup.retrofit2:converter-scalars:2.1.0'
-	implementation 'com.google.firebase:firebase-core:11.8.0'
-	implementation 'com.google.firebase:firebase-messaging:11.8.0'
+	implementation 'com.google.firebase:firebase-core:17.2.1'
+	implementation 'com.google.firebase:firebase-messaging:20.0.0'
     implementation 'com.google.dagger:dagger:2.15'
     implementation 'com.google.dagger:dagger-android:2.15'
     implementation 'com.google.dagger:dagger-android-support:2.15'
