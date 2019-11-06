@@ -20,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import android.util.Log;
 
+import com.google.gson.JsonObject;
 import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
 import com.xamoom.android.xamoomsdk.Enums.ContentReason;
 import com.xamoom.android.xamoomsdk.Enums.ContentSortFlags;
@@ -38,6 +39,9 @@ import com.xamoom.android.xamoomsdk.Resource.System;
 import com.xamoom.android.xamoomsdk.Resource.SystemSetting;
 import com.xamoom.android.xamoomsdk.Utils.JsonListUtil;
 import com.xamoom.android.xamoomsdk.Utils.UrlUtil;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.Normalizer;
 import java.text.SimpleDateFormat;
@@ -1157,6 +1161,24 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
 
         Call<ResponseBody> call = enduserApiInterface.pushDevice(getHeaders(), device.getUid(), json);
         callHandler.enqueCall(call, callback);
+    }
+
+    public void chat(String input, String context, String bot_id, ChatAPICallback callback) {
+        JSONObject payload = new JSONObject();
+
+        try {
+            payload.put("input", input);
+            payload.put("context", context);
+        } catch (JSONException e) {
+            Log.e("xamoom Chatbot", e.getMessage());
+
+            callback.error("1000", e.getMessage());
+            return;
+        }
+
+
+        Call<ResponseBody> call = enduserApiInterface.chat(getHeaders(), bot_id, language, payload.toString());
+        callHandler.enqueChatbotCall(call, callback);
     }
 
   /*

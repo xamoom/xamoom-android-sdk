@@ -36,12 +36,16 @@ import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.mapbox.mapboxsdk.Mapbox;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.APIListCallback;
 import com.xamoom.android.xamoomsdk.APIPasswordCallback;
+import com.xamoom.android.xamoomsdk.ChatAPICallback;
+import com.xamoom.android.xamoomsdk.Chatbot.ChatbotFragment;
+import com.xamoom.android.xamoomsdk.ChatbotAction;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
 import com.xamoom.android.xamoomsdk.Enums.SpotFlags;
@@ -143,6 +147,11 @@ public class MainActivity extends AppCompatActivity
     } else if (id == R.id.action_open) {
       mOffline = true;
       getContentOption();
+    } else if (id == R.id.action_open_chatbot) {
+      ChatbotFragment chatbotFragment = ChatbotFragment.newInstance("83d0d36714984f698919d5383390a4a7", mEnduserApi, getApplicationContext());
+      getSupportFragmentManager().beginTransaction()
+              .replace(R.id.main_frame, chatbotFragment, "XamoomFragment")
+              .commit(); //replace with xamoomFragment
     }
 
     return super.onOptionsItemSelected(item);
@@ -199,6 +208,7 @@ public class MainActivity extends AppCompatActivity
     List tags = new ArrayList();
     tags.add("x-start");
     mEnduserApi = new EnduserApi("3226a5a4-451e-4f40-943e-be55d43266f1", getApplicationContext(), false, null, 0);
+
     mEnduserApi.getContentsByTags(tags, 10, null, null, new APIListCallback<List<Content>, List<Error>>() {
       @Override
       public void finished(List<Content> result, String cursor, boolean hasMore) {

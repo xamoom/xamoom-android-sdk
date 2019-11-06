@@ -11,7 +11,9 @@ package com.xamoom.android.xamoomsdk;
 import androidx.annotation.NonNull;
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -76,6 +78,67 @@ public class CallHandler <T extends Resource> {
       @Override
       public void onFailure(Call<ResponseBody> call, Throwable t) {
         callback.error(createError(t));
+      }
+    });
+  }
+
+  public void enqueChatbotCall(@NonNull Call<ResponseBody> call, final ChatAPICallback callback) {
+    checkForNull(call);
+    call.enqueue(new Callback<ResponseBody>() {
+      @Override
+      public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+        // checks if there is a ephemeral id and calls listeners gotEphemeralId method
+        notifyEphemeralId(response.headers());
+        notifyAuthorizationId(response.headers());
+
+        String responseString = null;
+
+        try {
+          responseString = response.body().string();
+        } catch (IOException e) {
+          Log.e("xamoom Chatbot", e.getMessage());
+
+          callback.error("1001", e.getMessage());
+          return;
+        }
+
+        try {
+          JSONObject jsonResponse = new JSONObject(responseString);
+
+          if(response.code() == 200) {
+            ArrayList<ChatbotAction> actions = new ArrayList<>();
+            JSONArray jsonActions = jsonResponse.getJSONArray("actions");
+
+            for(int i = 0; i < jsonActions.length(); i++){
+              JSONObject jsonAction = jsonActions.getJSONObject(i);
+              actions.add(
+                      new ChatbotAction(
+                              jsonAction.getInt("action_type"),
+                              jsonAction.getString("value")
+                      )
+              );
+            }
+
+            callback.finished(jsonResponse.getString("text"),
+                    jsonResponse.getString("context"),
+                    actions,
+                    jsonResponse.getDouble("confidence"),
+                    jsonResponse.getBoolean("success"));
+          } else {
+            callback.error(String.valueOf(response.code()), responseString);
+          }
+        } catch (JSONException e) {
+          Log.e("xamoom Chatbot", e.getMessage());
+
+          callback.error("1002", e.getMessage());
+          return;
+        }
+      }
+
+      @Override
+      public void onFailure(Call<ResponseBody> call, Throwable t) {
+        Log.e("xamoom Chatbot", t.getMessage());
+        callback.error("1003", t.getMessage());
       }
     });
   }

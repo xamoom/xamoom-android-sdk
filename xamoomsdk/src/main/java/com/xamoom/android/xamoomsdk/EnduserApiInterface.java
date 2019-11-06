@@ -69,6 +69,12 @@ public interface EnduserApiInterface {
 
   @POST("customer/push-register/{token}")
   Call<ResponseBody> pushDevice(@HeaderMap Map<String, String> headers,
-                                    @Path("token") String token,
-                                    @Body String body);
+                                @Path("token") String token,
+                                @Body String body);
+
+  @POST("chat/{bot_id}/{language}")
+  Call<ResponseBody> chat(@HeaderMap Map<String, String> headers,
+                                @Path("bot_id") String bot_id,
+                                @Path("language") String language,
+                                @Body String body);
 }

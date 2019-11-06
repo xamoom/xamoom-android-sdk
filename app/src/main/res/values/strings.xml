@@ -3,4 +3,5 @@
     <string name="action_settings" translatable="false">Settings</string>
     <string name="close_fragment">Close Fragment</string>
     <string name="open_fragment">Open Fragment</string>
+    <string name="open_chatbot_fragment">Open Chatbot Fragment</string>
 </resources>
