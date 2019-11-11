@@ -35,6 +35,8 @@
     <string name="event_calendar_title">Add to calendar</string>
     <string name="event_navigation_title">Navigate to the location</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="chatbot_hint">Press and hold Microphone button and ask your question</string>
+    <string name="chatbot_examples_title">Here are a few example question</string>
+
+
 </resources>

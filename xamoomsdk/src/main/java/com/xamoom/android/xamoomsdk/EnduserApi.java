@@ -1181,6 +1181,11 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
         callHandler.enqueChatbotCall(call, callback);
     }
 
+    public void getChatbotSamples(String bot_id, ChatSamplesAPICallback callback) {
+        Call<ResponseBody> call = enduserApiInterface.getChatbotSamples(getHeaders(), bot_id, language);
+        callHandler.enqueChatbotSamplesCall(call, callback);
+    }
+
   /*
   //parcelable
   public static final Creator<EnduserApi> CREATOR = new Creator<EnduserApi>() {

@@ -143,6 +143,55 @@ public class CallHandler <T extends Resource> {
     });
   }
 
+  public void enqueChatbotSamplesCall(@NonNull Call<ResponseBody> call, final ChatSamplesAPICallback callback) {
+    checkForNull(call);
+    call.enqueue(new Callback<ResponseBody>() {
+      @Override
+      public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+        // checks if there is a ephemeral id and calls listeners gotEphemeralId method
+        notifyEphemeralId(response.headers());
+        notifyAuthorizationId(response.headers());
+
+        String responseString = null;
+
+        try {
+          responseString = response.body().string();
+        } catch (IOException e) {
+          Log.e("xamoom Chatbot Samples", e.getMessage());
+
+          callback.error("1006", e.getMessage());
+          return;
+        }
+
+        try {
+          if(response.code() == 200) {
+            JSONArray jsonResponse = new JSONArray(responseString);
+            ArrayList<String> samples = new ArrayList<>();
+
+            for(int i = 0; i < jsonResponse.length(); i++){
+              samples.add(jsonResponse.getString(i));
+            }
+
+            callback.finished(samples);
+          } else {
+            callback.error(String.valueOf(response.code()), responseString);
+          }
+        } catch (JSONException e) {
+          Log.e("xamoom Chatbot Samples", e.getMessage());
+
+          callback.error("1002", e.getMessage());
+          return;
+        }
+      }
+
+      @Override
+      public void onFailure(Call<ResponseBody> call, Throwable t) {
+        Log.e("xamoom Chatbot Samples", t.getMessage());
+        callback.error("1003", t.getMessage());
+      }
+    });
+  }
+
   public void enquePasswordCall(@NonNull Call<ResponseBody> call, final APIPasswordCallback<T, List<Error>> callback) {
     checkForNull(call);
     call.enqueue(new Callback<ResponseBody>() {

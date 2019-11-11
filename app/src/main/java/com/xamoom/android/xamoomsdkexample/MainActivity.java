@@ -148,7 +148,10 @@ public class MainActivity extends AppCompatActivity
       mOffline = true;
       getContentOption();
     } else if (id == R.id.action_open_chatbot) {
-      ChatbotFragment chatbotFragment = ChatbotFragment.newInstance("83d0d36714984f698919d5383390a4a7", mEnduserApi, getApplicationContext());
+      ChatbotFragment chatbotFragment = ChatbotFragment.newInstance(
+              "83d0d36714984f698919d5383390a4a7", R.color.colorAccent,
+              R.color.colorPrimaryDark, R.drawable.microphone_on,
+              R.drawable.microphone_off, mEnduserApi, getApplicationContext());
       getSupportFragmentManager().beginTransaction()
               .replace(R.id.main_frame, chatbotFragment, "XamoomFragment")
               .commit(); //replace with xamoomFragment

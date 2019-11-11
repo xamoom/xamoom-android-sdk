@@ -20,4 +20,7 @@
 
     <string name="event_calendar_title">Im Kalender eintragen</string>
     <string name="event_navigation_title">Zum Ort navigieren</string>
+
+    <string name="chatbot_hint">Mikrofon drücken und Frage stellen</string>
+    <string name="chatbot_examples_title">Hier sind einige Beispiele</string>
 </resources>

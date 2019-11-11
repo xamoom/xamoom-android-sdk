@@ -74,7 +74,12 @@ public interface EnduserApiInterface {
 
   @POST("chat/{bot_id}/{language}")
   Call<ResponseBody> chat(@HeaderMap Map<String, String> headers,
-                                @Path("bot_id") String bot_id,
-                                @Path("language") String language,
-                                @Body String body);
+                          @Path("bot_id") String bot_id,
+                          @Path("language") String language,
+                          @Body String body);
+
+  @GET("chat/samples/{bot_id}/{language}")
+  Call<ResponseBody> getChatbotSamples(@HeaderMap Map<String, String> headers,
+                          @Path("bot_id") String bot_id,
+                          @Path("language") String language);
 }

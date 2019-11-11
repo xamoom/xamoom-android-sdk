@@ -37,6 +37,8 @@ class VoiceChat(val context: Context, val enduserApi: EnduserApi, val botId: Str
 
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, language.toString())
+        recognizerIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
+        recognizerIntent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1)
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, "com.xamoom.android.xamoomsdk.Chatbot")
     }
 
@@ -68,7 +70,7 @@ class VoiceChatRecognizerListener(val listener: VoiceChatListener, val textChat:
     }
 
     override fun onRmsChanged(rmsdB: Float) {
-        Log.d(TAG, "onRmsChanged: $rmsdB")
+        listener.onRmsChanged(rmsdB)
     }
 
     override fun onBufferReceived(buffer: ByteArray?) {
@@ -76,7 +78,15 @@ class VoiceChatRecognizerListener(val listener: VoiceChatListener, val textChat:
     }
 
     override fun onPartialResults(partialResults: Bundle?) {
-        Log.d(TAG, "onPartialResults")
+        val voiceResults = partialResults?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+
+        if(voiceResults != null) {
+            if (voiceResults.size > 0) {
+                if(voiceResults[0].length > 0) {
+                    listener.onPartialResult(voiceResults[0])
+                }
+            }
+        }
     }
 
     override fun onEvent(eventType: Int, params: Bundle?) {
@@ -115,7 +125,7 @@ class VoiceChatRecognizerListener(val listener: VoiceChatListener, val textChat:
 
         if(voiceResults != null) {
             if (voiceResults.size > 0) {
-                var input = voiceResults.get(0)
+                var input = voiceResults[0]
 
                 textChat.chat(input, object: TextChatListener() {
                     override fun onFinished(answer: Answer) {
@@ -146,4 +156,6 @@ abstract class VoiceChatListener {
     abstract fun onReady()
     abstract fun onError(error: String)
     abstract fun onFinished(answer: Answer)
+    abstract fun onRmsChanged(rmsdB: Float)
+    abstract fun onPartialResult(partialResult: String)
 }
