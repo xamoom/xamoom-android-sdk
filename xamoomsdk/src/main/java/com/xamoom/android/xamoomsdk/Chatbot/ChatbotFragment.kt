@@ -17,21 +17,21 @@ import android.view.animation.AlphaAnimation
 import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.xamoom.android.xamoomsdk.ChatSamplesAPICallback
-import com.xamoom.android.xamoomsdk.EnduserApi
 
-import com.xamoom.android.xamoomsdk.R
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.concurrent.schedule
 import android.view.animation.Animation
 import android.view.animation.ScaleAnimation
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.xamoom.android.xamoomsdk.*
 import kotlinx.android.synthetic.main.content_block_4_layout.view.*
 
 
 class ChatbotFragment(val botId: String, val backgroundColor: Int, val foregroundColor: Int,
                       val microphoneActiveIcon: Int, val microphoneInactiveIcon: Int,
-                      val enduserApi: EnduserApi, val applicationContext: Context) : Fragment() {
+                      val enduserApi: EnduserApi,  val actionClickedListener: ActionClickedListener,
+                      val applicationContext: Context) : Fragment() {
     private val RECORD_REQUEST_CODE = 101
     private val voiceChat = VoiceChat(applicationContext, enduserApi, botId)
 
@@ -42,14 +42,17 @@ class ChatbotFragment(val botId: String, val backgroundColor: Int, val foregroun
 
     private lateinit var progressbar: ProgressBar
     private lateinit var outputTextView: TextView
+    private lateinit var inputTextView: TextView
     private lateinit var outputRecyclerView: RecyclerView
     private lateinit var infoTextView: TextView
     private lateinit var examplesTextView: TextView
     private lateinit var backgroundView: FrameLayout
+    private lateinit var hintsView: LinearLayout
 
     private var permissionsGranted: Boolean = false
 
     private val sampleQuestions: ArrayList<String> = ArrayList()
+    private val actions: ArrayList<ChatbotAction> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,10 +76,15 @@ class ChatbotFragment(val botId: String, val backgroundColor: Int, val foregroun
         speakAnimationImage = view.findViewById(R.id.speakAnimationImage)
         progressbar = view.findViewById(R.id.progressBar)
         outputTextView = view.findViewById(R.id.outputTextView)
-        outputRecyclerView = view.findViewById(R.id.outputRecyclerView)
+        inputTextView = view.findViewById(R.id.inputTextView)
         infoTextView = view.findViewById(R.id.infoTextView)
         examplesTextView = view.findViewById(R.id.examplesTextView)
         backgroundView = view.findViewById(R.id.backgroundView)
+        hintsView = view.findViewById(R.id.hints)
+
+        outputRecyclerView = view.findViewById(R.id.outputRecyclerView)
+        outputRecyclerView.layoutManager = LinearLayoutManager(applicationContext)
+        outputRecyclerView.adapter = ChatbotActionsAdapter(actions, actionClickedListener, enduserApi)
     }
 
     private fun styleViews(){
@@ -86,6 +94,7 @@ class ChatbotFragment(val botId: String, val backgroundColor: Int, val foregroun
         progressbar.indeterminateDrawable.setColorFilter(
                 resources.getColor(foregroundColor), android.graphics.PorterDuff.Mode.SRC_IN)
         outputTextView.setTextColor(resources.getColor(foregroundColor))
+        inputTextView.setTextColor(resources.getColor(foregroundColor))
         infoTextView.setTextColor(resources.getColor(foregroundColor))
         examplesTextView.setTextColor(resources.getColor(foregroundColor))
         backgroundView.setBackgroundColor(resources.getColor(backgroundColor))
@@ -104,7 +113,14 @@ class ChatbotFragment(val botId: String, val backgroundColor: Int, val foregroun
         speakButton.visibility = View.VISIBLE
         progressbar.visibility = View.INVISIBLE
         outputTextView.visibility = View.VISIBLE
-        outputRecyclerView.visibility = View.INVISIBLE
+        inputTextView.visibility = View.VISIBLE
+
+        if(actions.size == 0) {
+            outputRecyclerView.visibility = View.INVISIBLE
+        } else {
+            outputRecyclerView.visibility = View.VISIBLE
+        }
+
         infoTextView.visibility = View.VISIBLE
         examplesTextView.visibility = View.VISIBLE
 
@@ -117,6 +133,7 @@ class ChatbotFragment(val botId: String, val backgroundColor: Int, val foregroun
         speakButton.alpha = 0.5F
         progressbar.visibility = View.VISIBLE
         outputTextView.visibility = View.INVISIBLE
+        inputTextView.visibility = View.VISIBLE
         outputRecyclerView.visibility = View.INVISIBLE
         infoTextView.visibility = View.VISIBLE
         examplesTextView.visibility = View.VISIBLE
@@ -195,6 +212,8 @@ class ChatbotFragment(val botId: String, val backgroundColor: Int, val foregroun
 
                 showExampleQuestions()
                 resetViewToInitialState()
+
+                sayWelcome(0)
             }
 
             override fun error(status_code: String?, message: String?) {
@@ -205,6 +224,28 @@ class ChatbotFragment(val botId: String, val backgroundColor: Int, val foregroun
                     }
                 } else {
                     Toast.makeText(context, "Failed to load sample questions. $status_code - $message", Toast.LENGTH_LONG).show()
+                }
+            }
+        })
+    }
+
+    private fun sayWelcome(warmupRetries: Int) {
+        showLoading()
+
+        enduserApi.chat("", "", botId, object : ChatAPICallback {
+            override fun finished(text: String, context: String, actions: java.util.ArrayList<ChatbotAction>, confidence: Double, success: Boolean) {
+                voiceChat.speak(text)
+                resetViewToInitialState()
+            }
+
+            override fun error(status_code: String, message: String) {
+                if(message == "timeout" && warmupRetries < 4){
+                    Timer().schedule(4000){
+                        val retries = warmupRetries + 1
+                        sayWelcome(retries)
+                    }
+                } else {
+                    Toast.makeText(context, "Failed to load welcome. $status_code - $message", Toast.LENGTH_LONG).show()
                 }
             }
         })
@@ -222,6 +263,12 @@ class ChatbotFragment(val botId: String, val backgroundColor: Int, val foregroun
             speakButton.setOnTouchListener { v, event ->
                 if (event?.action == MotionEvent.ACTION_DOWN) {
                     voiceChat.startListening(object : VoiceChatListener() {
+                        override fun onStartRequest(input: String) {
+                            animateSpeakButton(1f)
+                            inputTextView.text = "„$input“"
+                            showLoading()
+                        }
+
                         override fun onRmsChanged(rmsdB: Float) {
                             var to = 1f
 
@@ -247,14 +294,15 @@ class ChatbotFragment(val botId: String, val backgroundColor: Int, val foregroun
                         }
 
                         override fun onPartialResult(partialResult: String) {
-                            outputTextView.text = "„$partialResult ...“"
+                            inputTextView.text = "„$partialResult ...“"
                         }
 
                         override fun onReady() {
-                            Toast.makeText(applicationContext, "Ready", Toast.LENGTH_LONG).show()
-
-                            outputTextView.text = "„...“"
-                            outputTextView.alpha = 0.5f
+                            actions.clear()
+                            outputRecyclerView.visibility = View.INVISIBLE
+                            inputTextView.text = "„...“"
+                            inputTextView.alpha = 0.5f
+                            outputTextView.text = ""
                         }
 
                         override fun onFinished(answer: Answer) {
@@ -263,11 +311,72 @@ class ChatbotFragment(val botId: String, val backgroundColor: Int, val foregroun
                             val text = answer.text
                             outputTextView.text = "„$text“"
                             outputTextView.alpha = 1f
+
+                            resetViewToInitialState()
+
+                            if(answer.success!!){
+                                hintsView.visibility = View.INVISIBLE
+
+                                //show actions
+                                actions.clear()
+
+                                if(answer.actions!!.size > 0) {
+                                    actions.addAll(answer.actions!!)
+
+                                    // TODO REMOVE DEMO ACTIONS
+                                    val demoActions = ArrayList<ChatbotAction>()
+
+                                    val action_0 = ChatbotAction(0, "https://xamoom.com")
+                                    val action_1 = ChatbotAction(1, "https://www.oeticket.com/artist/iron-maiden/?affiliate=B38")
+                                    val action_2 = ChatbotAction(2, "https://www.google.com/maps/place/Pyramidenkogel+Tower/@46.6090217,14.1428867,17z/data=!4m5!3m4!1s0x477077758dcaab47:0x119d60a4d0b3dd67!8m2!3d46.6090217!4d14.1450754")
+                                    val action_3 = ChatbotAction(3, "+436802339221")
+                                    val action_4 = ChatbotAction(4, "georg@xamoom.com")
+                                    val action_5 = ChatbotAction(5, "TEST")
+                                    val action_6 = ChatbotAction(6, "2764")
+                                    val action_7 = ChatbotAction(7, "X-MERCEDES-TEAM")
+                                    val action_8 = ChatbotAction(8, "1364")
+
+                                    actions.clear()
+                                    actions.add(action_0)
+                                    actions.add(action_1)
+                                    actions.add(action_2)
+                                    actions.add(action_3)
+                                    actions.add(action_4)
+                                    actions.add(action_5)
+                                    actions.add(action_6)
+                                    actions.add(action_7)
+                                    actions.add(action_8)
+                                    // END DEMO ACTIONS
+
+
+                                    outputRecyclerView.visibility = View.VISIBLE
+                                } else {
+                                    outputRecyclerView.visibility = View.INVISIBLE
+                                }
+
+                                outputRecyclerView.adapter!!.notifyDataSetChanged()
+                            } else {
+                                hintsView.visibility = View.VISIBLE
+                                outputRecyclerView.visibility = View.INVISIBLE
+                            }
                         }
 
                         override fun onError(error: String) {
                             animateSpeakButton(1f)
+                            resetViewToInitialState()
                             Log.e("ChatbotFragment", "Voice Recognizer Error: $error")
+
+                            if(error.toInt() > 9){
+                                val errorText = "Das habe ich nicht verstanden. Versuche es bitte erneut." //TODO
+                                outputTextView.text = errorText
+                                voiceChat.speak(errorText)
+                                //Toast.makeText(applicationContext, "Please try again.", Toast.LENGTH_LONG).show()
+                            }
+
+                            hintsView.visibility = View.VISIBLE
+                            outputRecyclerView.visibility = View.INVISIBLE
+
+                            inputTextView.text = ""
                         }
                     })
                 } else if (event?.action == MotionEvent.ACTION_UP) {
@@ -323,9 +432,10 @@ class ChatbotFragment(val botId: String, val backgroundColor: Int, val foregroun
         @JvmStatic
         fun newInstance(botId: String, backgroundColor: Int, foregroundColor: Int,
                         microphoneActiveIcon: Int, microphoneInactiveIcon: Int,
-                        enduserApi: EnduserApi, applicationContext: Context) =
+                        enduserApi: EnduserApi, actionClickedListener: ActionClickedListener,
+                        applicationContext: Context) =
                 ChatbotFragment(botId, backgroundColor, foregroundColor,
                         microphoneActiveIcon, microphoneInactiveIcon,
-                        enduserApi, applicationContext)
+                        enduserApi, actionClickedListener, applicationContext)
     }
 }

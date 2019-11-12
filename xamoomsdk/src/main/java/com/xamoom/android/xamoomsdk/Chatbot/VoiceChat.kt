@@ -9,7 +9,6 @@ import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
 import android.speech.tts.TextToSpeech
 import android.util.Log
-import android.widget.Toast
 import com.xamoom.android.xamoomsdk.EnduserApi
 import java.util.*
 
@@ -58,6 +57,15 @@ class VoiceChat(val context: Context, val enduserApi: EnduserApi, val botId: Str
 
     fun clearConversationContext() {
         textChat.clearConversationContext()
+    }
+
+    fun speak(text: String){
+        // Speak
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            tts.speak(text,TextToSpeech.QUEUE_FLUSH,null,null)
+        } else {
+            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null)
+        }
     }
 
 }
@@ -128,6 +136,10 @@ class VoiceChatRecognizerListener(val listener: VoiceChatListener, val textChat:
                 var input = voiceResults[0]
 
                 textChat.chat(input, object: TextChatListener() {
+                    override fun onStartRequest() {
+                        listener.onStartRequest(input)
+                    }
+
                     override fun onFinished(answer: Answer) {
                         listener.onFinished(answer)
 
@@ -153,6 +165,7 @@ class VoiceChatRecognizerListener(val listener: VoiceChatListener, val textChat:
 }
 
 abstract class VoiceChatListener {
+    abstract fun onStartRequest(input: String)
     abstract fun onReady()
     abstract fun onError(error: String)
     abstract fun onFinished(answer: Answer)

@@ -37,6 +37,15 @@
 
     <string name="chatbot_hint">Press and hold Microphone button and ask your question</string>
     <string name="chatbot_examples_title">Here are a few example question</string>
+    <string name="chatbot_action_title_0">Open Website</string>
+    <string name="chatbot_action_title_1">Open Webshop</string>
+    <string name="chatbot_action_title_2">Navigate</string>
+    <string name="chatbot_action_title_3">Call</string>
+    <string name="chatbot_action_title_4">Send an email</string>
+    <string name="chatbot_action_title_5">Show locations</string>
+    <string name="chatbot_action_title_6">Show location</string>
+    <string name="chatbot_action_title_7">Show pages</string>
+    <string name="chatbot_action_title_8">Show page</string>
 
 
 </resources>

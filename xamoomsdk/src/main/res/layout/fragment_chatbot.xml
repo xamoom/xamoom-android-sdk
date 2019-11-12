@@ -13,29 +13,28 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:indeterminateTint="@android:color/white"
-            android:indeterminate="true"
-            android:layout_marginTop="32dp"
-            android:layout_marginBottom="32dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
         <TextView
-            android:id="@+id/outputTextView"
+            android:id="@+id/inputTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:layout_marginBottom="32dp"
             android:gravity="center_horizontal"
-            android:textColor="#AAFFFFFF"
             android:text="" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_below="@+id/inputTextView"
+            android:indeterminateTint="@android:color/holo_green_dark"
+            android:indeterminate="true"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <ImageView
             android:id="@+id/speakAnimationImage"
-            android:layout_below="@+id/outputTextView"
+            android:layout_below="@+id/progressBar"
             android:layout_centerHorizontal="true"
             android:layout_width="120dp"
             android:layout_height="120dp"
@@ -43,39 +42,55 @@
 
         <ImageButton
             android:id="@+id/speakButton"
-            android:layout_below="@+id/outputTextView"
+            android:layout_below="@+id/progressBar"
             android:layout_centerHorizontal="true"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:scaleType="fitCenter"
             android:background="@android:color/transparent" />
 
+        <TextView
+            android:id="@+id/outputTextView"
+            android:layout_below="@+id/speakButton"
+            android:textStyle="bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            android:layout_marginBottom="16dp"
+            android:gravity="center_horizontal" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/outputRecyclerView"
             android:layout_marginTop="16dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/speakButton" />
+            android:layout_below="@+id/outputTextView" />
 
-        <TextView
-            android:id="@+id/infoTextView"
+        <LinearLayout
+            android:id="@+id/hints"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/outputRecyclerView"
-            android:layout_marginTop="64dp"
-            android:gravity="center_horizontal"
-            android:textColor="@android:color/white"
-            android:text="@string/chatbot_hint" />
-
-        <TextView
-            android:id="@+id/examplesTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/infoTextView"
+            android:layout_below="@+id/outputTextView"
             android:layout_marginTop="16dp"
-            android:gravity="center_horizontal"
-            android:textColor="@android:color/white"
-            android:text="" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/infoTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="@string/chatbot_hint" />
+
+            <TextView
+                android:id="@+id/examplesTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center_horizontal"
+                android:textColor="@android:color/white"
+                android:text="" />
+
+        </LinearLayout>
 
     </RelativeLayout>
 </FrameLayout>

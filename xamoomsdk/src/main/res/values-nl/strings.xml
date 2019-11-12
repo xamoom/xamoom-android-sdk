@@ -20,4 +20,16 @@
 
     <string name="event_calendar_title">Voer de kalender in</string>
     <string name="event_navigation_title">Navigeer naar deze locatie</string>
+
+    <string name="chatbot_hint">Press and hold Microphone button and ask your question</string>
+    <string name="chatbot_examples_title">Here are a few example question</string>
+    <string name="chatbot_action_title_0">Open website</string>
+    <string name="chatbot_action_title_1">Open webshop</string>
+    <string name="chatbot_action_title_2">Navigeren</string>
+    <string name="chatbot_action_title_3">Telefoongesprek</string>
+    <string name="chatbot_action_title_4">Stuur een email</string>
+    <string name="chatbot_action_title_5">Toon locaties</string>
+    <string name="chatbot_action_title_6">Toon locaties</string>
+    <string name="chatbot_action_title_7">Pagina\'s weergeven</string>
+    <string name="chatbot_action_title_8">Pagina\'s weergeven</string>
 </resources>

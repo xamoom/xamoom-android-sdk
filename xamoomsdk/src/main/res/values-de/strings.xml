@@ -23,4 +23,13 @@
 
     <string name="chatbot_hint">Mikrofon drücken und Frage stellen</string>
     <string name="chatbot_examples_title">Hier sind einige Beispiele</string>
+    <string name="chatbot_action_title_0">Website öffnen</string>
+    <string name="chatbot_action_title_1">Webshop öffnen</string>
+    <string name="chatbot_action_title_2">Navigieren</string>
+    <string name="chatbot_action_title_3">Anrufen</string>
+    <string name="chatbot_action_title_4">E-Mail senden</string>
+    <string name="chatbot_action_title_5">Orte anzeigen</string>
+    <string name="chatbot_action_title_6">Ort anzeigen</string>
+    <string name="chatbot_action_title_7">Seiten anzeigen</string>
+    <string name="chatbot_action_title_8">Seite anzeigen</string>
 </resources>

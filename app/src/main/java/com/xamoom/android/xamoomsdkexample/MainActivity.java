@@ -44,6 +44,7 @@ import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.APIListCallback;
 import com.xamoom.android.xamoomsdk.APIPasswordCallback;
 import com.xamoom.android.xamoomsdk.ChatAPICallback;
+import com.xamoom.android.xamoomsdk.Chatbot.ActionClickedListener;
 import com.xamoom.android.xamoomsdk.Chatbot.ChatbotFragment;
 import com.xamoom.android.xamoomsdk.ChatbotAction;
 import com.xamoom.android.xamoomsdk.EnduserApi;
@@ -59,6 +60,8 @@ import com.xamoom.android.xamoomsdk.Storage.Database.ContentDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.MenuDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Storage.Database.SpotDatabaseAdapter;
 import com.xamoom.android.xamoomsdk.Utils.DateUtil;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -148,10 +151,33 @@ public class MainActivity extends AppCompatActivity
       mOffline = true;
       getContentOption();
     } else if (id == R.id.action_open_chatbot) {
+      ActionClickedListener actionClickedListener = new ActionClickedListener(){
+
+        @Override
+        public void onContentByIdClicked(@NotNull String contentId) {
+          Toast.makeText(getApplicationContext(), "onContentByIdClicked: " + contentId, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onSpotByIdClicked(@NotNull String spotId) {
+          Toast.makeText(getApplicationContext(), "onSpotByIdClicked: " + spotId, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onContentByTagsClicked(@NotNull String tags) {
+          Toast.makeText(getApplicationContext(), "onContentByTagsClicked: " + tags, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onSpotsByTagsClicked(@NotNull String tags) {
+          Toast.makeText(getApplicationContext(), "onSpotsByTagsClicked: " + tags, Toast.LENGTH_SHORT).show();
+        }
+      };
+
       ChatbotFragment chatbotFragment = ChatbotFragment.newInstance(
-              "83d0d36714984f698919d5383390a4a7", R.color.colorAccent,
-              R.color.colorPrimaryDark, R.drawable.microphone_on,
-              R.drawable.microphone_off, mEnduserApi, getApplicationContext());
+              "25121f5fc32743578988b94cc55bd870", R.color.chatbot_background,
+              R.color.chatbot_foreground, R.drawable.microphone_on,
+              R.drawable.microphone_off, mEnduserApi, actionClickedListener, getApplicationContext());
       getSupportFragmentManager().beginTransaction()
               .replace(R.id.main_frame, chatbotFragment, "XamoomFragment")
               .commit(); //replace with xamoomFragment

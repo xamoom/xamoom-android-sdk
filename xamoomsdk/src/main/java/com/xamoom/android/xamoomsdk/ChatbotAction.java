@@ -5,7 +5,7 @@ public class ChatbotAction {
     private int type;
     private String value;
 
-    protected ChatbotAction(int type, String value){
+    public ChatbotAction(int type, String value){
         this.type = type;
         this.value = value;
     }
