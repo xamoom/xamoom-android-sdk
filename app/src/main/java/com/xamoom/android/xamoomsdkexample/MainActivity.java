@@ -164,12 +164,12 @@ public class MainActivity extends AppCompatActivity
         }
 
         @Override
-        public void onContentByTagsClicked(@NotNull String tags) {
+        public void onContentByTagsClicked(@NotNull List<String> tags) {
           Toast.makeText(getApplicationContext(), "onContentByTagsClicked: " + tags, Toast.LENGTH_SHORT).show();
         }
 
         @Override
-        public void onSpotsByTagsClicked(@NotNull String tags) {
+        public void onSpotsByTagsClicked(@NotNull List<String> tags) {
           Toast.makeText(getApplicationContext(), "onSpotsByTagsClicked: " + tags, Toast.LENGTH_SHORT).show();
         }
       };

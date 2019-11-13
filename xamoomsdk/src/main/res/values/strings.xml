@@ -40,12 +40,17 @@
     <string name="chatbot_action_title_0">Open Website</string>
     <string name="chatbot_action_title_1">Open Webshop</string>
     <string name="chatbot_action_title_2">Navigate</string>
+    <string name="chatbot_action_text_2">with the smartphone</string>
     <string name="chatbot_action_title_3">Call</string>
     <string name="chatbot_action_title_4">Send an email</string>
     <string name="chatbot_action_title_5">Show locations</string>
     <string name="chatbot_action_title_6">Show location</string>
     <string name="chatbot_action_title_7">Show pages</string>
     <string name="chatbot_action_title_8">Show page</string>
-
+    <string name="chatbot_action_text_suffix_5">placese</string>
+    <string name="chatbot_action_text_suffix_7">pages</string>
+    <string name="chatbot_local_error_response">I did not understand you right. Please, try again.</string>
+    <string name="chatbot_microphone_permission_text">Permission to access the microphone is required for this app to record audio.</string>
+    <string name="chatbot_microphone_permission_title">Permission required</string>
 
 </resources>

@@ -21,15 +21,22 @@
     <string name="event_calendar_title">Voer de kalender in</string>
     <string name="event_navigation_title">Navigeer naar deze locatie</string>
 
-    <string name="chatbot_hint">Press and hold Microphone button and ask your question</string>
-    <string name="chatbot_examples_title">Here are a few example question</string>
+    <string name="chatbot_hint">Houd de microfoonknop ingedrukt en stel uw vraag.</string>
+    <string name="chatbot_examples_title">Hier zijn een paar voorbeeldvragen:</string>
     <string name="chatbot_action_title_0">Open website</string>
     <string name="chatbot_action_title_1">Open webshop</string>
     <string name="chatbot_action_title_2">Navigeren</string>
+    <string name="chatbot_action_text_2">met de smartphone</string>
     <string name="chatbot_action_title_3">Telefoongesprek</string>
     <string name="chatbot_action_title_4">Stuur een email</string>
     <string name="chatbot_action_title_5">Toon locaties</string>
-    <string name="chatbot_action_title_6">Toon locaties</string>
+    <string name="chatbot_action_title_6">Toon locatie</string>
     <string name="chatbot_action_title_7">Pagina\'s weergeven</string>
-    <string name="chatbot_action_title_8">Pagina\'s weergeven</string>
+    <string name="chatbot_action_title_8">Pagina weergeven</string>
+    <string name="chatbot_action_text_suffix_5">locaties</string>
+    <string name="chatbot_action_text_suffix_7">pagina\'s</string>
+    <string name="chatbot_local_error_response"> Ik begreep dat niet. Probeer het opnieuw.</string>
+    <string name="chatbot_microphone_permission_text">Toestemming voor toegang tot de microfoon is vereist voor deze app om audio op te nemen.</string>
+    <string name="chatbot_microphone_permission_title">Toestemming vereist</string>
+
 </resources>

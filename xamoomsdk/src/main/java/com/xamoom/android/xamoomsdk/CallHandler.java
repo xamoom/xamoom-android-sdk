@@ -94,7 +94,13 @@ public class CallHandler <T extends Resource> {
         String responseString = null;
 
         try {
-          responseString = response.body().string();
+          if(response.body() != null) {
+            responseString = response.body().string();
+          } else {
+            Log.e("xamoom Chatbot", "Response Body is null.");
+
+            callback.error("1006", "Response Body is null.");
+          }
         } catch (IOException e) {
           Log.e("xamoom Chatbot", e.getMessage());
 

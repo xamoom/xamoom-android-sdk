@@ -21,15 +21,22 @@
     <string name="event_calendar_title">Entra nel calendario</string>
     <string name="event_navigation_title">Accedi a questa posizione</string>
 
-    <string name="chatbot_hint">Press and hold Microphone button and ask your question</string>
-    <string name="chatbot_examples_title">Here are a few example question</string>
+    <string name="chatbot_hint">Tieni premuto il pulsante microfono e fai la tua domanda</string>
+    <string name="chatbot_examples_title">Ecco alcune domande di esempio:</string>
     <string name="chatbot_action_title_0">Apri il sito web</string>
     <string name="chatbot_action_title_1">Apri webshop</string>
     <string name="chatbot_action_title_2">Navigare</string>
+    <string name="chatbot_action_text_2">con lo smartphone</string>
     <string name="chatbot_action_title_3">Chiamare</string>
     <string name="chatbot_action_title_4">Invia una email</string>
     <string name="chatbot_action_title_5">Mostra sedi</string>
-    <string name="chatbot_action_title_6">Mostra sedi</string>
-    <string name="chatbot_action_title_7">Mostra paginen</string>
-    <string name="chatbot_action_title_8">Mostra pagine</string>
+    <string name="chatbot_action_title_6">Mostra sede</string>
+    <string name="chatbot_action_title_7">Mostra pagine</string>
+    <string name="chatbot_action_title_8">Mostra pagina</string>
+    <string name="chatbot_action_text_suffix_5">posizioni</string>
+    <string name="chatbot_action_text_suffix_7">pagine</string>
+    <string name="chatbot_local_error_response">Non l\'ho capito. Per favore riprova.</string>
+    <string name="chatbot_microphone_permission_text">È necessaria l\'autorizzazione per accedere al microfono affinché questa app registri l\'audio.</string>
+    <string name="chatbot_microphone_permission_title">L\'autorizzazione richiesta</string>
+
 </resources>

@@ -39,9 +39,9 @@ class ChatbotActionsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVie
 
     private fun setupText(){
         when (action_type) {
-            0 -> itemView.contentTextView.text = action_value
-            1 -> itemView.contentTextView.text = action_value
-            2 -> itemView.contentTextView.text = "" // TODO What to show on navigate?
+            0 -> itemView.contentTextView.text = action_value.replace("https://", "").replace("http://", "")
+            1 -> itemView.contentTextView.text = action_value.replace("https://", "").replace("http://", "")
+            2 -> itemView.contentTextView.text = itemView.context.getString(R.string.chatbot_action_text_2)
             3 -> itemView.contentTextView.text = action_value
             4 -> itemView.contentTextView.text = action_value
             5 -> getSpotListByTag(action_value)
@@ -74,15 +74,16 @@ class ChatbotActionsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVie
     private fun getContentListByTag(tags: String){
         val tagList = ArrayList<String>()
         tagList.add(tags)
-        enduserAPI.getContentsByTags(tagList, 1, null, null, object: APIListCallback<List<Content>, List<Error>> {
-            override fun finished(result: List<Content>?, cursor: String?, hasMore: Boolean) {
-                itemView.contentTextView.text = result?.size.toString() + " Seiten" // TODO translate
-            }
+        enduserAPI.getContentsByTags(tagList, 1, null, null,
+            object: APIListCallback<List<Content>, List<Error>> {
+                override fun finished(result: List<Content>?, cursor: String?, hasMore: Boolean) {
+                    itemView.contentTextView.text = result?.size.toString() + " " + itemView.context.getString(R.string.chatbot_action_text_suffix_7)
+                }
 
-            override fun error(error: List<Error>?) {
-                itemView.contentTextView.text = error?.get(0)?.title
-            }
-        })
+                override fun error(error: List<Error>?) {
+                    itemView.contentTextView.text = error?.get(0)?.title
+                }
+            })
     }
 
     private fun getSpotTitle(spotId: String){
@@ -98,17 +99,16 @@ class ChatbotActionsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVie
     }
 
     private fun getSpotListByTag(tags: String){
-        val tagList = ArrayList<String>()
-        tagList.add(tags)
-        enduserAPI.getSpotsByTags(tagList, null, null, object: APIListCallback<List<Spot>, List<Error>> {
-            override fun finished(result: List<Spot>?, cursor: String?, hasMore: Boolean) {
-                itemView.contentTextView.text = result?.size.toString() + " Orte" // TODO translate
-            }
+        enduserAPI.getSpotsByTags(action_value.split(","), null, null,
+            object: APIListCallback<List<Spot>, List<Error>> {
+                override fun finished(result: List<Spot>?, cursor: String?, hasMore: Boolean) {
+                    itemView.contentTextView.text = result?.size.toString() + " " + itemView.context.getString(R.string.chatbot_action_text_suffix_5)
+                }
 
-            override fun error(error: List<Error>?) {
-                itemView.contentTextView.text = error?.get(0)?.title
-            }
-        })
+                override fun error(error: List<Error>?) {
+                    itemView.contentTextView.text = error?.get(0)?.title
+                }
+            })
     }
 
     private fun setupIcon(){
@@ -146,24 +146,22 @@ class ChatbotActionsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVie
     }
 
     private fun setupOnClickAction(){
-        itemView.setOnClickListener(object: View.OnClickListener {
-            override fun onClick(v: View?) {
-                when (action_type) {
-                    0 -> openUri(action_value)
-                    1 -> openUri(action_value)
-                    2 -> openUri(action_value)
-                    3 -> openUri("tel:$action_value")
-                    4 -> openUri("mailto:$action_value")
-                    5 -> action_listener.onSpotsByTagsClicked(action_value)
-                    6 -> action_listener.onSpotByIdClicked(action_value)
-                    7 -> action_listener.onContentByTagsClicked(action_value)
-                    8 -> action_listener.onContentByIdClicked(action_value)
-                    else -> { // unknown type
-                        print("Unknown Action")
-                    }
+        itemView.setOnClickListener {
+            when (action_type) {
+                0 -> openUri(action_value)
+                1 -> openUri(action_value)
+                2 -> openUri(action_value)
+                3 -> openUri("tel:$action_value")
+                4 -> openUri("mailto:$action_value")
+                5 -> action_listener.onSpotsByTagsClicked(action_value.split(","))
+                6 -> action_listener.onSpotByIdClicked(action_value)
+                7 -> action_listener.onContentByTagsClicked(action_value.split(","))
+                8 -> action_listener.onContentByIdClicked(action_value)
+                else -> { // unknown type
+                    print("Unknown Action")
                 }
             }
-        })
+        }
     }
 
     private fun openUri(uri: String){

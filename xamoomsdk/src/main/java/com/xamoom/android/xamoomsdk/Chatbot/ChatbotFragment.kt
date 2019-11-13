@@ -51,6 +51,8 @@ class ChatbotFragment(val botId: String, val backgroundColor: Int, val foregroun
 
     private var permissionsGranted: Boolean = false
 
+    private var isLoading: Boolean = false
+
     private val sampleQuestions: ArrayList<String> = ArrayList()
     private val actions: ArrayList<ChatbotAction> = ArrayList()
 
@@ -128,6 +130,8 @@ class ChatbotFragment(val botId: String, val backgroundColor: Int, val foregroun
     }
 
     private fun showLoading(){
+        isLoading = true
+
         speakButton.isEnabled = false
         speakButton.isClickable = false
         speakButton.alpha = 0.5F
@@ -167,8 +171,8 @@ class ChatbotFragment(val botId: String, val backgroundColor: Int, val foregroun
             Log.i("ChatbotFragment", "Permission to record audio denied")
             if (shouldShowRequestPermissionRationale(Manifest.permission.RECORD_AUDIO)) {
                 val builder = AlertDialog.Builder(activity)
-                builder.setMessage("Permission to access the microphone is required for this app to record audio.")
-                                .setTitle("Permission required")
+                builder.setMessage(applicationContext.getString(R.string.chatbot_microphone_permission_text))
+                                .setTitle(applicationContext.getString(R.string.chatbot_microphone_permission_title))
 
                                 builder.setPositiveButton("OK"
                                 ) { dialog, id ->
@@ -199,7 +203,9 @@ class ChatbotFragment(val botId: String, val backgroundColor: Int, val foregroun
 
         permissionsGranted = permission == PackageManager.PERMISSION_GRANTED
 
-        resetViewToInitialState()
+        if(!isLoading) {
+            resetViewToInitialState()
+        }
     }
 
     private fun loadChatbotSamples(warmupRetries: Int) {
@@ -211,12 +217,16 @@ class ChatbotFragment(val botId: String, val backgroundColor: Int, val foregroun
                 samples?.let { sampleQuestions.addAll(it) }
 
                 showExampleQuestions()
+
+                isLoading = false
                 resetViewToInitialState()
 
                 sayWelcome(0)
             }
 
             override fun error(status_code: String?, message: String?) {
+                isLoading = false
+
                 if(message == "timeout" && warmupRetries < 4){
                     Timer().schedule(4000){
                         val retries = warmupRetries + 1
@@ -235,12 +245,15 @@ class ChatbotFragment(val botId: String, val backgroundColor: Int, val foregroun
         enduserApi.chat("", "", botId, object : ChatAPICallback {
             override fun finished(text: String, context: String, actions: java.util.ArrayList<ChatbotAction>, confidence: Double, success: Boolean) {
                 voiceChat.speak(text)
+
+                isLoading = false
                 resetViewToInitialState()
             }
 
             override fun error(status_code: String, message: String) {
                 if(message == "timeout" && warmupRetries < 4){
                     Timer().schedule(4000){
+                        isLoading = false
                         val retries = warmupRetries + 1
                         sayWelcome(retries)
                     }
@@ -306,9 +319,14 @@ class ChatbotFragment(val botId: String, val backgroundColor: Int, val foregroun
                         }
 
                         override fun onFinished(answer: Answer) {
+                            isLoading = false
+
                             animateSpeakButton(1f)
 
                             val text = answer.text
+                            val confidence = answer.confidence
+                            Log.d("ChatbotFragment", "Confidence: $confidence")
+
                             outputTextView.text = "„$text“"
                             outputTextView.alpha = 1f
 
@@ -324,8 +342,6 @@ class ChatbotFragment(val botId: String, val backgroundColor: Int, val foregroun
                                     actions.addAll(answer.actions!!)
 
                                     // TODO REMOVE DEMO ACTIONS
-                                    val demoActions = ArrayList<ChatbotAction>()
-
                                     val action_0 = ChatbotAction(0, "https://xamoom.com")
                                     val action_1 = ChatbotAction(1, "https://www.oeticket.com/artist/iron-maiden/?affiliate=B38")
                                     val action_2 = ChatbotAction(2, "https://www.google.com/maps/place/Pyramidenkogel+Tower/@46.6090217,14.1428867,17z/data=!4m5!3m4!1s0x477077758dcaab47:0x119d60a4d0b3dd67!8m2!3d46.6090217!4d14.1450754")
@@ -356,6 +372,7 @@ class ChatbotFragment(val botId: String, val backgroundColor: Int, val foregroun
 
                                 outputRecyclerView.adapter!!.notifyDataSetChanged()
                             } else {
+                                loadChatbotSamples(0)
                                 hintsView.visibility = View.VISIBLE
                                 outputRecyclerView.visibility = View.INVISIBLE
                             }
@@ -363,14 +380,20 @@ class ChatbotFragment(val botId: String, val backgroundColor: Int, val foregroun
 
                         override fun onError(error: String) {
                             animateSpeakButton(1f)
+
+                            isLoading = false
                             resetViewToInitialState()
                             Log.e("ChatbotFragment", "Voice Recognizer Error: $error")
 
                             if(error.toInt() > 9){
-                                val errorText = "Das habe ich nicht verstanden. Versuche es bitte erneut." //TODO
+                                loadChatbotSamples(0)
+
+                                hintsView.visibility = View.VISIBLE
+                                outputRecyclerView.visibility = View.INVISIBLE
+
+                                val errorText = applicationContext.getString(R.string.chatbot_local_error_response)
                                 outputTextView.text = errorText
                                 voiceChat.speak(errorText)
-                                //Toast.makeText(applicationContext, "Please try again.", Toast.LENGTH_LONG).show()
                             }
 
                             hintsView.visibility = View.VISIBLE
