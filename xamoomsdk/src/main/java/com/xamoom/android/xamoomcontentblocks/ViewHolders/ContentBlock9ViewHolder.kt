@@ -57,9 +57,11 @@ import com.xamoom.android.xamoomsdk.Resource.Style
 import java.util.*
 import kotlin.collections.ArrayList
 
+var defaultMapBoxStyleString = "mapbox://styles/xamoom-georg/ck4zb0mei1l371coyi41snaww"
+
 @SuppressLint("ClickableViewAccessibility")
 class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val enduserApi: EnduserApi, fragment: Fragment, val listener: XamoomContentFragment.OnXamoomContentFragmentInteractionListener,
-                              private val mapBoxStyleString: String? = "mapbox://styles/xamoom-georg/ck4zb0mei1l371coyi41snaww", private val navigationTintColorString: String?, private val contentButtonTextColorString: String?, private val navigationMode: String? = "d") : androidx.recyclerview.widget.RecyclerView.ViewHolder(view), OnMapReadyCallback {
+                              private val mapBoxStyleString: String? = defaultMapBoxStyleString, private val navigationTintColorString: String?, private val contentButtonTextColorString: String?, private val navigationMode: String? = "d") : androidx.recyclerview.widget.RecyclerView.ViewHolder(view), OnMapReadyCallback {
 
     private var mapBoxStyle: com.mapbox.mapboxsdk.maps.Style? = null
     private var mapBoxMap: MapboxMap? = null
@@ -317,7 +319,7 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
         }
 
         this.mapBoxMap = mapboxMap
-        var style = "mapbox://styles/xamoom-georg/ck4zb0mei1l371coyi41snaww"
+        var style = defaultMapBoxStyleString
         if (!mapBoxStyleString.isNullOrEmpty()) {
             style = mapBoxStyleString!!
         }
