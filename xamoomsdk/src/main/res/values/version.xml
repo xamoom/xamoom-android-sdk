@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="sdk_version" translatable="false">3.11.16</string>
+    <string name="sdk_version" translatable="false">3.11.17</string>
 </resources>
