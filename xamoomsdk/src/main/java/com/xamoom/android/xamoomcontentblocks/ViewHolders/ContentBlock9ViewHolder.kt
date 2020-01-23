@@ -59,7 +59,7 @@ import kotlin.collections.ArrayList
 
 @SuppressLint("ClickableViewAccessibility")
 class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val enduserApi: EnduserApi, fragment: Fragment, val listener: XamoomContentFragment.OnXamoomContentFragmentInteractionListener,
-                              private val mapBoxStyleString: String? = com.mapbox.mapboxsdk.maps.Style.MAPBOX_STREETS, private val navigationTintColorString: String?, private val contentButtonTextColorString: String?, private val navigationMode: String? = "d") : androidx.recyclerview.widget.RecyclerView.ViewHolder(view), OnMapReadyCallback {
+                              private val mapBoxStyleString: String? = DEFAULT_MAPBOX_STYLE_STRING, private val navigationTintColorString: String?, private val contentButtonTextColorString: String?, private val navigationMode: String? = "d") : androidx.recyclerview.widget.RecyclerView.ViewHolder(view), OnMapReadyCallback {
 
     private var mapBoxStyle: com.mapbox.mapboxsdk.maps.Style? = null
     private var mapBoxMap: MapboxMap? = null
@@ -317,7 +317,7 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
         }
 
         this.mapBoxMap = mapboxMap
-        var style = com.mapbox.mapboxsdk.maps.Style.MAPBOX_STREETS
+        var style = DEFAULT_MAPBOX_STYLE_STRING
         if (!mapBoxStyleString.isNullOrEmpty()) {
             style = mapBoxStyleString!!
         }
@@ -413,5 +413,6 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
 
     companion object {
         val PAGE_SIZE = 100
+        const val DEFAULT_MAPBOX_STYLE_STRING = "mapbox://styles/xamoom-georg/ck4zb0mei1l371coyi41snaww"
     }
 }
