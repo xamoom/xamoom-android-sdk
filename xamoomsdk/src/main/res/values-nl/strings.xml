@@ -20,4 +20,6 @@
 
     <string name="event_calendar_title">Voer de kalender in</string>
     <string name="event_navigation_title">Navigeer naar deze locatie</string>
+
+    <string name="route">Route</string>
 </resources>
