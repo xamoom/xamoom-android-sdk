@@ -146,9 +146,9 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
             .load(fileId)
             .diskCacheStrategy(DiskCacheStrategy.NONE)
             .dontAnimate()
-            .into(new GlideDrawableImageViewTarget(mImageView) {
+            .into(new SimpleTarget<GlideDrawable>() {
               public void onResourceReady(GlideDrawable drawable, GlideAnimation anim) {
-                super.onResourceReady(drawable, anim);
+                mImageView.setImageDrawable(drawable);
                 mImageProgressBar.setVisibility(View.GONE);
               }
             });
