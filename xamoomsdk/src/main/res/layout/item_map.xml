@@ -131,7 +131,7 @@
                             android:layout_marginEnd="4dp"
                             android:textStyle="bold"
                             android:layout_weight="0.5"
-                            android:text="Öffnen"/>
+                            android:text="@string/open"/>
 
                         <Button
                             android:id="@+id/spot_navigation_button"
@@ -142,7 +142,7 @@
                             android:textColor="@color/black"
                             android:textStyle="bold"
                             android:layout_weight="0.5"
-                            android:text="Route"/>
+                            android:text="@string/route"/>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>

@@ -20,4 +20,6 @@
 
     <string name="event_calendar_title">Im Kalender eintragen</string>
     <string name="event_navigation_title">Zum Ort navigieren</string>
+
+    <string name="route">Route</string>
 </resources>
