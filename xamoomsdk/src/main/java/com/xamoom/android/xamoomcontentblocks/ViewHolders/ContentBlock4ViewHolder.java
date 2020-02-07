@@ -183,7 +183,7 @@ public class ContentBlock4ViewHolder extends RecyclerView.ViewHolder {
       case 16:
         backgroundColor = ta.getResourceId(R.styleable.Links_android_background_color, 0);
         tintColor = ta.getColor(R.styleable.Links_android_tint_color, Color.BLACK);
-        mIcon.setImageResource(R.drawable.ic_android);
+        mIcon.setImageResource(R.drawable.ic_google_play_brands);
         break;
       case 17:
         backgroundColor = ta.getResourceId(R.styleable.Links_windows_background_color, 0);
