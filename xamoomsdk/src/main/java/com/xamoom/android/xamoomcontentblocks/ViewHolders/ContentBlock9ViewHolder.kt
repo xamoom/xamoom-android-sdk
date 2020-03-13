@@ -248,7 +248,6 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
                 for (latLng in latLngArray) {
                     builder.include(latLng)
                 }
-
                 val bounds = builder.build()
                 mapBoxMap!!.animateCamera(com.mapbox.mapboxsdk.camera.CameraUpdateFactory.newLatLngBounds(bounds, 50))
             }
