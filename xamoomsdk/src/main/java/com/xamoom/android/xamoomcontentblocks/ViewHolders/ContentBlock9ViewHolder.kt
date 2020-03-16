@@ -243,14 +243,16 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
                 latLngArray.add(com.mapbox.mapboxsdk.geometry.LatLng(spot.getLocation().getLatitude(), spot.getLocation().getLongitude()))
             }
 
-            if (!latLngArray.isEmpty()) {
+            if (latLngArray.size > 1) {
                 val builder = LatLngBounds.Builder()
                 for (latLng in latLngArray) {
                     builder.include(latLng)
                 }
-
                 val bounds = builder.build()
                 mapBoxMap!!.animateCamera(com.mapbox.mapboxsdk.camera.CameraUpdateFactory.newLatLngBounds(bounds, 50))
+            } else if (latLngArray.size == 1) {
+                mapBoxMap!!.animateCamera(com.mapbox.mapboxsdk.camera.CameraUpdateFactory.newCameraPosition(
+                        CameraPosition.Builder().target(latLngArray[0]).zoom(16.0).tilt(0.0).build()))
             }
         }
     }
