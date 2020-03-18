@@ -1086,6 +1086,49 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
         return call;
     }
 
+    /**
+     * Get a voucher status.
+     *
+     * @param contentId Content id
+     * @param clientId Client id
+     * @param callback {@link APIListCallback}
+     * @return Used call object
+     */
+    public Call getVoucherStatus(String contentId, String clientId, final APICallback<Style, List<Error>> callback) {
+        if (offline) {
+            return null;
+        }
+
+        Map<String, String> params = UrlUtil.getUrlParameter(language);
+
+        Call<ResponseBody> call = enduserApiInterface.getVoucherStatus(getHeaders(), contentId, clientId, params);
+        callHandler.enqueCall(call, callback);
+        return call;
+    }
+
+    /**
+     * Redeem a voucher.
+     *
+     * @param contentId Content id
+     * @param clientId Client id
+     * @param redeemCode Redemption code
+     * @param callback {@link APIListCallback}
+     * @return Used call object
+     */
+    public Call redeemVoucher(String contentId, String clientId, String redeemCode, final APICallback<Style, List<Error>> callback) {
+        if (offline) {
+            return null;
+        }
+
+        Map<String, String> params = UrlUtil.getUrlParameter(language);
+
+        Call<ResponseBody> call = enduserApiInterface.redeemVoucher(getHeaders(), contentId, clientId, redeemCode, params);
+        callHandler.enqueCall(call, callback);
+        return call;
+    }
+
+
+
     public void pushDevice(PushDeviceUtil util, boolean instantPush) {
 
         Long lastPush = sharedPref.getLong("xamoom-last-push-register", -1);
