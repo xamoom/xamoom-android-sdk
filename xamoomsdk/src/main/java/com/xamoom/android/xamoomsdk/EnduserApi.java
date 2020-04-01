@@ -1097,12 +1097,14 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
      * @param callback {@link APIListCallback}
      * @return Used call object
      */
-    public Call getVoucherStatus(String contentId, String clientId, final APICallback<Boolean, List<Error>> callback) {
+    public Call getVoucherStatus(String contentId, @Nullable String clientId, final APICallback<Boolean, List<Error>> callback) {
         if (offline) {
             return null;
         }
 
-        Map<String, String> params = UrlUtil.getUrlParameter(language);
+        if (clientId == null) {
+            clientId = getEphemeralId();
+        }
 
         Call<ResponseBody> call = enduserApiInterface.getVoucherStatus(getHeaders(), contentId, clientId);
         callHandler.enqueCall(call, new APICallback<NewVoucherStatusMessage, List<Error>> () {
@@ -1129,9 +1131,13 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
      * @param callback {@link APIListCallback}
      * @return Used call object
      */
-    public Call redeemVoucher(String contentId, String clientId, String redeemCode, final APICallback<Boolean, List<Error>> callback) {
+    public Call redeemVoucher(String contentId, @Nullable String clientId, String redeemCode, final APICallback<Boolean, List<Error>> callback) {
         if (offline) {
             return null;
+        }
+
+        if (clientId == null) {
+            clientId = getEphemeralId();
         }
 
         Call<ResponseBody> call = enduserApiInterface.redeemVoucher(getHeaders(), contentId, clientId, redeemCode);
