@@ -30,8 +30,10 @@ import com.xamoom.android.xamoomsdk.PushDevice.PushDevice;
 import com.xamoom.android.xamoomsdk.PushDevice.PushDeviceUtil;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
+import com.xamoom.android.xamoomsdk.Resource.KeyValueObject;
 import com.xamoom.android.xamoomsdk.Resource.Marker;
 import com.xamoom.android.xamoomsdk.Resource.Menu;
+import com.xamoom.android.xamoomsdk.Resource.NewVoucherStatusMessage;
 import com.xamoom.android.xamoomsdk.Resource.Spot;
 import com.xamoom.android.xamoomsdk.Resource.Style;
 import com.xamoom.android.xamoomsdk.Resource.System;
@@ -235,6 +237,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
         Deserializer.registerResourceClass("settings", SystemSetting.class);
         Deserializer.registerResourceClass("styles", Style.class);
         Deserializer.registerResourceClass("push-device", PushDevice.class);
+        Deserializer.registerResourceClass("voucher-status", NewVoucherStatusMessage.class);
     }
 
     private void initVars() {
@@ -1085,6 +1088,74 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
         callHandler.enqueCall(call, callback);
         return call;
     }
+
+    /**
+     * Get a voucher status. Returns true in a callback if voucher is redeemable.
+     *
+     * @param contentId Content id
+     * @param clientId Client id
+     * @param callback {@link APIListCallback}
+     * @return Used call object
+     */
+    public Call getVoucherStatus(String contentId, @Nullable String clientId, final APICallback<Boolean, List<Error>> callback) {
+        if (offline) {
+            return null;
+        }
+
+        if (clientId == null) {
+            clientId = getEphemeralId();
+        }
+
+        Call<ResponseBody> call = enduserApiInterface.getVoucherStatus(getHeaders(), contentId, clientId);
+        callHandler.enqueCall(call, new APICallback<NewVoucherStatusMessage, List<Error>> () {
+
+            @Override
+            public void finished(NewVoucherStatusMessage result) {
+                callback.finished(result.getRedeemable());
+            }
+
+            @Override
+            public void error(List<Error> error) {
+                callback.error(error);
+            }
+        });
+        return call;
+    }
+
+    /**
+     * Redeems a voucher and returns true in a callback if the voucher can be redeemed next time.
+     *
+     * @param contentId Content id
+     * @param clientId Client id
+     * @param redeemCode Redemption code
+     * @param callback {@link APIListCallback}
+     * @return Used call object
+     */
+    public Call redeemVoucher(String contentId, @Nullable String clientId, String redeemCode, final APICallback<Boolean, List<Error>> callback) {
+        if (offline) {
+            return null;
+        }
+
+        if (clientId == null) {
+            clientId = getEphemeralId();
+        }
+
+        Call<ResponseBody> call = enduserApiInterface.redeemVoucher(getHeaders(), contentId, clientId, redeemCode);
+        callHandler.enqueCall(call, new APICallback<NewVoucherStatusMessage, List<Error>> () {
+
+            @Override
+            public void finished(NewVoucherStatusMessage result) {
+                callback.finished(result.getRedeemable());
+            }
+
+            @Override
+            public void error(List<Error> error) {
+                callback.error(error);
+            }
+        });
+        return call;
+    }
+
 
     public void pushDevice(PushDeviceUtil util, boolean instantPush) {
 

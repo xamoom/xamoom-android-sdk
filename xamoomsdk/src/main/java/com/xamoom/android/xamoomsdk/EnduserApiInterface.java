@@ -67,6 +67,17 @@ public interface EnduserApiInterface {
                               @Path("id") String systemId,
                               @QueryMap Map<String, String> param);
 
+  @GET("/consumer/voucher/status/{content-id}/{client-id}")
+  Call<ResponseBody> getVoucherStatus(@HeaderMap Map<String, String> headers,
+                                      @Path("content-id") String contentId,
+                                      @Path("client-id") String clientId);
+
+  @GET("/consumer/voucher/redeem/{content-id}/{client-id}/{redeem-code}")
+  Call<ResponseBody> redeemVoucher (@HeaderMap Map<String, String> headers,
+                                      @Path("content-id") String contentId,
+                                      @Path("client-id") String clientId,
+                                      @Path("redeem-code") String redeemCode);
+
   @POST("customer/push-register/{token}")
   Call<ResponseBody> pushDevice(@HeaderMap Map<String, String> headers,
                                     @Path("token") String token,
