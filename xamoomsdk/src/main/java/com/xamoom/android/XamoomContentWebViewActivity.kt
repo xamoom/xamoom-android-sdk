@@ -62,7 +62,6 @@ class XamoomContentWebViewActivity: AppCompatActivity() {
         webView.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
                 if( URLUtil.isNetworkUrl(url) ) {
-                    println("URL is Network URL $url")
                     view!!.loadUrl(url)
                     return true
                 }
@@ -75,6 +74,8 @@ class XamoomContentWebViewActivity: AppCompatActivity() {
                     println("Package error $e")
                 }
 
+                //return true anyway to prevent wrong url scheme error when opening links other than http(s):, tel:, mailto:
+                //clicking on links that are not supported does nothing
                 return true
             }
 
