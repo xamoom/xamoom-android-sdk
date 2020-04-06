@@ -1,5 +1,6 @@
 package com.xamoom.android
 
+import android.content.ActivityNotFoundException
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
@@ -11,6 +12,10 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.xamoom.android.xamoomsdk.Helpers.ColorHelper
 import com.xamoom.android.xamoomsdk.R
+import android.content.pm.PackageManager
+import android.content.Intent
+import android.net.Uri
+import android.webkit.URLUtil
 
 class XamoomContentWebViewActivity: AppCompatActivity() {
 
@@ -53,9 +58,24 @@ class XamoomContentWebViewActivity: AppCompatActivity() {
     }
 
     private fun openWebViewWithUrl(url: String) {
+
         webView.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
-                view!!.loadUrl(url)
+                if( URLUtil.isNetworkUrl(url) ) {
+                    view!!.loadUrl(url)
+                    return true
+                }
+
+                try {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                    startActivity(intent)
+                    return true
+                } catch (e: ActivityNotFoundException) {
+                    println("Package error $e")
+                }
+
+                //return true anyway to prevent wrong url scheme error when opening links other than http(s):, tel:, mailto:
+                //clicking on links that are not supported does nothing
                 return true
             }
 
