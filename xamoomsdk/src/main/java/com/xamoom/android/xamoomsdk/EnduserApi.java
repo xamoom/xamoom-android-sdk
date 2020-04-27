@@ -1282,7 +1282,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
         }
     }
 
-    private String getEphemeralId() {
+    public String getEphemeralId() {
         if (ephemeralId != null) {
             return ephemeralId;
         }
