@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -1105,8 +1106,10 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
         if (clientId == null) {
             clientId = getEphemeralId();
         }
+        Map<String, String> params = new LinkedHashMap<>();
+        params.put("timestamp",  Long.valueOf(new Date().getTime()).toString());
 
-        Call<ResponseBody> call = enduserApiInterface.getVoucherStatus(getHeaders(), contentId, clientId);
+        Call<ResponseBody> call = enduserApiInterface.getVoucherStatus(getHeaders(), contentId, clientId, params);
         callHandler.enqueCall(call, new APICallback<NewVoucherStatusMessage, List<Error>> () {
 
             @Override
@@ -1140,7 +1143,10 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
             clientId = getEphemeralId();
         }
 
-        Call<ResponseBody> call = enduserApiInterface.redeemVoucher(getHeaders(), contentId, clientId, redeemCode);
+        Map<String, String> params = new LinkedHashMap<>();
+        params.put("timestamp",  Long.valueOf(new Date().getTime()).toString());
+
+        Call<ResponseBody> call = enduserApiInterface.redeemVoucher(getHeaders(), contentId, clientId, redeemCode, params);
         callHandler.enqueCall(call, new APICallback<NewVoucherStatusMessage, List<Error>> () {
 
             @Override
