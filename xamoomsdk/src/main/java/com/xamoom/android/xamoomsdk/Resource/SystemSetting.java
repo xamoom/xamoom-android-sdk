@@ -13,6 +13,8 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+
 import at.rags.morpheus.Resource;
 
 /**
@@ -31,6 +33,10 @@ public class SystemSetting extends Resource implements Parcelable {
   private Boolean recommandationEnabled;
   @SerializedName("is-event-package-active")
   private Boolean eventPackageEnabled;
+  @SerializedName("is-language-switcher-enabled")
+  private Boolean isLanguageSwitcherEnabled;
+  @SerializedName("languages")
+  private ArrayList<String> languages;
 
   public SystemSetting() {
   }
@@ -120,4 +126,22 @@ public class SystemSetting extends Resource implements Parcelable {
   public void setEventPackageEnabled(Boolean eventPackageEnabled) {
     this.eventPackageEnabled = eventPackageEnabled;
   }
+
+  public Boolean isLanguageSwitcherEnabled() {
+    return isLanguageSwitcherEnabled;
+  }
+
+  public void setIsLanguageSwitcherEnabled(Boolean isLanguageSwitcherEnabled) {
+    this.isLanguageSwitcherEnabled = isLanguageSwitcherEnabled;
+  }
+
+  public ArrayList<String> getLanguages() {
+    return languages;
+  }
+
+  public void setLanguages(ArrayList<String> languages) {
+    this.languages = languages;
+  }
+
+
 }
