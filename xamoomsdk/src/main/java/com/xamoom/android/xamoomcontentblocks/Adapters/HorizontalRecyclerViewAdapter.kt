@@ -40,7 +40,7 @@ class HorizontalRecyclerViewAdapter(val items : ArrayList<ContentBlock>, val con
             3 -> {
                 val contentView = LayoutInflater.from(parent.context)
                         .inflate(R.layout.content_block_3_layout, parent, false)
-                val view = ContentBlock3ViewHolder(contentView, context, null, null, fragment)
+                val view = ContentBlock3ViewHolder(contentView, context, null, null, fragment, null)
                 return view
             }
         }

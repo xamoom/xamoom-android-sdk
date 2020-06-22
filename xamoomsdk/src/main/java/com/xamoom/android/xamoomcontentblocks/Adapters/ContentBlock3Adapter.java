@@ -48,7 +48,7 @@ public class ContentBlock3Adapter implements AdapterDelegate<List<ContentBlock>>
           @Nullable String navigationButtonTintColorString, @Nullable String contentButtonTextColorString, @Nullable String navigationMode, Content content) {
     View view = LayoutInflater.from(parent.getContext())
         .inflate(R.layout.content_block_3_layout, parent, false);
-    return new ContentBlock3ViewHolder(view, fragment.getContext(), onContentBlock3ViewHolderInteractionListener, urls, fragment);
+    return new ContentBlock3ViewHolder(view, fragment.getContext(), onContentBlock3ViewHolderInteractionListener, urls, fragment, onXamoomContentFragmentInteractionListener);
   }
 
   @Override
