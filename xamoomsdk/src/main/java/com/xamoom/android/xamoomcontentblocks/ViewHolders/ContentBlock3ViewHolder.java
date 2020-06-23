@@ -163,38 +163,40 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
         @Override
         public void onClick(View v) {
 
-          if (contentBlock.getContentId() != null) {
+          if (contentBlock.getContentId() != null && !contentBlock.getContentId().equals("None")) {
             Content content = new Content();
-            content.setId(contentBlock.getId());
+            content.setId(contentBlock.getContentId());
             onImageClickListener.clickedContentBlock(content);
           } else {
+            String contentUrl = contentBlock.getLinkUrl();
 
-          String contentUrl = contentBlock.getLinkUrl();
+            if(contentUrl != null) {
+            if (urls == null) {
+              Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(contentBlock.getLinkUrl()));
+              mContext.startActivity(intent);
+              return;
+            }
 
-          if (urls == null) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(contentBlock.getLinkUrl()));
-            mContext.startActivity(intent);
-            return;
-          }
+            boolean openInternal = false;
 
-          boolean openInternal = false;
-
-          for (int i = 0; i < urls.size(); i++) {
-            String url = urls.get(i);
-            if (contentUrl.contains(url)) {
-              openInternal = true;
-              break;
+            for (int i = 0; i < urls.size(); i++) {
+              String url = urls.get(i);
+              if (contentUrl.contains(url)) {
+                openInternal = true;
+                break;
+              }
+            }
+            if (openInternal) {
+              Intent intent = new Intent(fragment.getActivity(), XamoomContentWebViewActivity.class);
+              intent.putExtra("url", contentUrl);
+              fragment.getActivity().startActivity(intent);
+            } else {
+              Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(contentBlock.getLinkUrl()));
+              mContext.startActivity(intent);
             }
           }
-          if (openInternal) {
-            Intent intent = new Intent(fragment.getActivity(), XamoomContentWebViewActivity.class);
-            intent.putExtra("url", contentUrl);
-            fragment.getActivity().startActivity(intent);
-          } else {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(contentBlock.getLinkUrl()));
-            mContext.startActivity(intent);
+
           }
-        }
         }
       });
 
