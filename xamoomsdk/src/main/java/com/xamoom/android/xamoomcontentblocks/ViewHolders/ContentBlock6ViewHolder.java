@@ -1,17 +1,20 @@
 /*
-* Copyright (c) 2017 xamoom GmbH <apps@xamoom.com>
-*
-* Licensed under the MIT License (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at the root of this project.
-*/
+ * Copyright (c) 2017 xamoom GmbH <apps@xamoom.com>
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at the root of this project.
+ */
 
 package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import androidx.collection.LruCache;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -55,6 +58,7 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
   private LruCache<String, Content> mContentCache;
   private Call mCall;
   private RequestManager mGlide;
+  private SharedPreferences sharedPreferences;
 
   public ContentBlock6ViewHolder(View itemView, Context context, EnduserApi enduserApi,
                                  LruCache<String, Content> contentCache,
@@ -70,6 +74,7 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
     mContentCache = contentCache;
     mFileManager = FileManager.getInstance(context);
     mGlide = Glide.with(context);
+    sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
     itemView.setOnClickListener(this);
   }
@@ -99,6 +104,8 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
       throw new NullPointerException("EnduserApi is null.");
     }
 
+
+    mEnduserApi.setLanguage(sharedPreferences.getString("current_language_code", null));
     mCall = mEnduserApi.getContent(contentId, EnumSet.of(ContentFlags.PREVIEW),
         ContentReason.LINKED_CONTENT, null, new APIPasswordCallback<Content, List<Error>>() {
       @Override
@@ -158,10 +165,10 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
     }
 
     mGlide.load(filePath)
-        .diskCacheStrategy(DiskCacheStrategy.ALL)
-        .crossFade()
-        .centerCrop()
-        .into(mContentThumbnailImageView);
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .crossFade()
+            .centerCrop()
+            .into(mContentThumbnailImageView);
   }
 
   @Override

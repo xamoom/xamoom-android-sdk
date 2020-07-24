@@ -124,8 +124,8 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
 
         initRetrofit(apiKey);
         initMorpheus();
-        initVars();
         initSharedPreferences();
+        initVars();
 
         sharedInstance = this;
         preserveEnduserApi(apiKey, true, majorId);
@@ -153,8 +153,8 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
 
         initRetrofit(apiKey);
         initMorpheus();
-        initVars();
         initSharedPreferences();
+        initVars();
 
         sharedInstance = this;
         preserveEnduserApi(apiKey, isProduction, majorId);
@@ -173,8 +173,8 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
         }
 
         initMorpheus();
-        initVars();
         initSharedPreferences();
+        initVars();
         sharedInstance = this;
     }
 
