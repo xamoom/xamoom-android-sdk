@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
-def versionString = "3.11.19"
+def versionString = "3.11.18"
 
 version = versionString
 group = "com.xamoom.android"
@@ -14,7 +14,7 @@ android {
 	defaultConfig {
 		minSdkVersion 18
 		targetSdkVersion 29
-		versionCode 44
+		versionCode 43
 		versionName versionString
 		testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 		multiDexEnabled true
@@ -78,14 +78,15 @@ dependencies {
 	implementation 'com.squareup.retrofit2:converter-scalars:2.1.0'
 	implementation 'com.google.firebase:firebase-core:17.2.1'
 	implementation 'com.google.firebase:firebase-messaging:20.0.0'
-    implementation 'com.google.dagger:dagger:2.15'
-    implementation 'com.google.dagger:dagger-android:2.15'
-    implementation 'com.google.dagger:dagger-android-support:2.15'
+	implementation 'com.google.dagger:dagger:2.15'
+	implementation 'com.google.dagger:dagger-android:2.15'
+	implementation 'com.google.dagger:dagger-android-support:2.15'
 	kapt 'com.google.dagger:dagger-compiler:2.15'
 	kapt 'com.google.dagger:dagger-android-processor:2.15'
 	implementation 'org.altbeacon:android-beacon-library:2.15'
 	implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:7.2.0'
 	implementation 'com.jakewharton.timber:timber:4.7.1'
+	implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 }
 
 ext {
@@ -111,6 +112,7 @@ ext {
 }
 repositories {
 	mavenCentral()
+	maven { url 'https://jitpack.io' }
 }
 
 //apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'

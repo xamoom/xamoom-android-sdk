@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 
 import com.xamoom.android.xamoomcontentblocks.ListManager;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock12ViewHolderInterface;
+import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock14ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock2ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock9ViewHolder;
@@ -49,6 +50,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   private boolean offline;
   private ArrayList<String> urlScheme;
   private ContentBlock9Adapter contentBlock9Adapter;
+  private ContentBlock14Adapter contentBlock14Adapter;
   private String mapboxStyleString;
   private String navigationButtonTintColorString;
   private String contentButtonTextColorString;
@@ -97,6 +99,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   private void setupAdapters() {
 
     contentBlock9Adapter = new ContentBlock9Adapter();
+    contentBlock14Adapter = new ContentBlock14Adapter();
     mDelegatesManager.addDelegate(-2, new ContentBlockEventAdapter());
     mDelegatesManager.addDelegate(-1, new ContentBlockHeaderAdapter());
     mDelegatesManager.addDelegate(0, new ContentBlock0Adapter());
@@ -111,6 +114,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     mDelegatesManager.addDelegate(9, contentBlock9Adapter);
     mDelegatesManager.addDelegate(11, new ContentBlock11Adapter());
     mDelegatesManager.addDelegate(12, new ContentBlock12Adapter(inter));
+    mDelegatesManager.addDelegate(14, contentBlock14Adapter);
   }
 
   @Override
@@ -157,6 +161,13 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         contentBlock9Adapter.onViewAttachedToWindow(((ContentBlock9ViewHolder) holder));
       }
     }
+    if(holder instanceof ContentBlock14ViewHolder){
+      if (contentBlock14Adapter != null) {
+        contentBlock14Adapter.onViewAttachedToWindow(((ContentBlock14ViewHolder) holder));
+      }
+    }
+
+
   }
 
   @Override
@@ -168,6 +179,13 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         contentBlock9Adapter.onViewDettachToWindow(((ContentBlock9ViewHolder) holder));
       }
     }
+    if(holder instanceof ContentBlock14ViewHolder) {
+      if (contentBlock14Adapter != null) {
+        contentBlock14Adapter.onViewDettachToWindow(((ContentBlock14ViewHolder) holder));
+      }
+    }
+
+
   }
 
   private void cleanViewHolders(RecyclerView recyclerView) {
@@ -186,11 +204,17 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     if (contentBlock9Adapter != null && contentBlock9Adapter.mapholder != null) {
       contentBlock9Adapter.onStart();
     }
+    if (contentBlock14Adapter != null && contentBlock14Adapter.mapholder14 != null) {
+      contentBlock14Adapter.onStart();
+    }
   }
 
   public void onStop() {
     if (contentBlock9Adapter != null && contentBlock9Adapter.mapholder != null) {
       contentBlock9Adapter.onStop();
+    }
+    if (contentBlock14Adapter != null && contentBlock14Adapter.mapholder14 != null) {
+      contentBlock14Adapter.onStop();
     }
   }
 
@@ -198,11 +222,17 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     if (contentBlock9Adapter != null && contentBlock9Adapter.mapholder != null) {
       contentBlock9Adapter.onResume();
     }
+    if (contentBlock14Adapter != null && contentBlock14Adapter.mapholder14 != null) {
+      contentBlock14Adapter.onResume();
+    }
   }
 
   public void onPause() {
     if (contentBlock9Adapter != null && contentBlock9Adapter.mapholder != null) {
       contentBlock9Adapter.onPause();
+    }
+    if (contentBlock14Adapter != null && contentBlock14Adapter.mapholder14 != null) {
+      contentBlock14Adapter.onPause();
     }
   }
 
@@ -210,17 +240,26 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     if (contentBlock9Adapter != null && contentBlock9Adapter.mapholder != null) {
       contentBlock9Adapter.onSavedInstanceState(bundle);
     }
+    if (contentBlock14Adapter != null && contentBlock14Adapter.mapholder14 != null) {
+      contentBlock14Adapter.onSavedInstanceState(bundle);
+    }
   }
 
   public void onDestroy() {
     if (contentBlock9Adapter != null && contentBlock9Adapter.mapholder != null) {
       contentBlock9Adapter.onDestroy();
     }
+    if (contentBlock14Adapter != null && contentBlock14Adapter.mapholder14 != null) {
+      contentBlock14Adapter.onDestroy();
+    }
   }
 
   public void onLowMemory() {
     if (contentBlock9Adapter != null && contentBlock9Adapter.mapholder != null) {
       contentBlock9Adapter.onLowMemory();
+    }
+    if (contentBlock14Adapter != null && contentBlock14Adapter.mapholder14 != null) {
+      contentBlock14Adapter.onLowMemory();
     }
   }
 

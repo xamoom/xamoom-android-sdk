@@ -59,6 +59,8 @@ public class ContentBlock extends Resource implements Parcelable {
   @SerializedName("content-list-page-size")
   private int contentListPageSize;
   private String coverImageCopyRight;
+  @SerializedName("show-elevation")
+  private boolean showElevation;
 
   public ContentBlock() {
     contentListSortAsc = true;
@@ -85,6 +87,7 @@ public class ContentBlock extends Resource implements Parcelable {
     copyright = in.readString();
     contentListTags = in.createStringArrayList();
     contentListSortAsc = in.readByte() != 0;
+    showElevation = in.readByte() != 0;
     contentListPageSize = in.readInt();
   }
 
@@ -252,6 +255,14 @@ public class ContentBlock extends Resource implements Parcelable {
     this.contentListSortAsc = contentListSortAsc;
   }
 
+  public Boolean getShowElevation() {
+    return showElevation;
+  }
+
+  public void setShowElevation(Boolean showElevation) {
+    this.showElevation = showElevation;
+  }
+
   public Integer getContentListPageSize() {
     return contentListPageSize;
   }
@@ -295,6 +306,7 @@ public class ContentBlock extends Resource implements Parcelable {
     dest.writeString(copyright);
     dest.writeStringList(contentListTags);
     dest.writeByte((byte) (contentListSortAsc ? 1 : 0));
+    dest.writeByte((byte) (showElevation ? 1 : 0));
     dest.writeInt(contentListPageSize);
   }
 }
