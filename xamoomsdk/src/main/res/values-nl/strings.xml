@@ -22,4 +22,7 @@
     <string name="event_navigation_title">Navigeer naar deze locatie</string>
 
     <string name="route">Route</string>
+
+    <string name="elevation_radio_feet_title">IMPERIAL</string>
+    <string name="elevation_radio_metres_title">METRIC</string>
 </resources>

@@ -1,16 +1,13 @@
 package com.xamoom.android.xamoomcontentblocks.Views
 
 import android.content.Context
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.RelativeLayout
-import android.widget.TextView
+import android.widget.*
 import com.github.mikephil.charting.charts.LineChart
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mapbox.mapboxsdk.maps.MapView
 import com.xamoom.android.xamoomsdk.R
 
@@ -34,6 +31,9 @@ class CustomMapViewWithChart : RelativeLayout {
     var spotContentButton: Button
     var spotImageView: ImageView
     var chart: LineChart
+    var imperialRadioButton: RadioButton
+    var metricRadioButton: RadioButton
+    var elevationRadioGroup: RadioGroup
 
     init {
         val v = LayoutInflater.from(context)
@@ -54,5 +54,8 @@ class CustomMapViewWithChart : RelativeLayout {
         spotContentButton = v.findViewById(R.id.spot_content_button)
         spotNavigationButton = v.findViewById(R.id.spot_navigation_button)
         chart = v.findViewById(R.id.elevationChart)
+        imperialRadioButton = v.findViewById(R.id.elevation_radio_imperial)
+        metricRadioButton = v.findViewById(R.id.elevation_radio_metric)
+        elevationRadioGroup = v.findViewById(R.id.elevation_radio_group)
     }
 }

@@ -28,7 +28,6 @@ import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -37,6 +36,7 @@ import com.mapbox.mapboxsdk.annotations.IconFactory
 import com.mapbox.mapboxsdk.annotations.Marker
 import com.mapbox.mapboxsdk.annotations.MarkerOptions
 import com.mapbox.mapboxsdk.camera.CameraPosition
+import com.mapbox.mapboxsdk.camera.CameraUpdate
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.geometry.LatLngBounds
@@ -92,10 +92,15 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
     var spotNavigationButton = view.spotNavigationButton
     var spotImageView = view.spotImageView
     var elevationChart = view.chart
+    var elevationImperialRadioButton = view.imperialRadioButton
+    var elevationMetricRadioButton = view.metricRadioButton
+    var elevationRadioGroup = view.elevationRadioGroup
     var mLastLocation: Location? = null
     var fragment: Fragment
     private var mFusedLocationClient: FusedLocationProviderClient? = null
-    private var routeCameraPosition: CameraPosition? = null
+    private var shownCoordinates = arrayListOf<LatLng>()
+    private var elevationMetricValues = arrayListOf<Entry>()
+    private var elevationImperialValues = arrayListOf<Entry>()
 
     init {
         mContext = fragment.context
@@ -193,6 +198,16 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
 
         centerspotButton.requestLayout()
         centerUserButton.requestLayout()
+
+        elevationImperialRadioButton.setOnClickListener {
+            setElevationGraphData(elevationImperialValues)
+        }
+
+        elevationMetricRadioButton.setOnClickListener {
+            setElevationGraphData(elevationMetricValues)
+        }
+
+
     }
 
     @SuppressLint("MissingPermission")
@@ -249,8 +264,8 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
     }
 
     private fun centerSpotBounds() {
-        if (mapBoxMap != null && routeCameraPosition != null) {
-            mapBoxMap!!.animateCamera(CameraUpdateFactory.newCameraPosition(routeCameraPosition!!))
+        if (mapBoxMap != null) {
+            mapBoxMap!!.animateCamera(zoomToDisplayRouteAndAllSpots(shownCoordinates, 100)!!)
         }
     }
 
@@ -266,6 +281,9 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
             override fun finished(result: List<Spot>, cursor: String, hasMore: Boolean) {
                 if (!result.isEmpty()) {
                     mSpotList.addAll(result)
+                    for (spot in mSpotList) {
+                        shownCoordinates.add(LatLng(spot.location.latitude, spot.location.longitude))
+                    }
                     if (hasMore) {
                         downloadAllSpots(tags, cursor, callback)
                     } else {
@@ -322,6 +340,7 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
         }
 
 
+
         mapboxMap.setMaxZoomPreference(17.4)
         mapBoxMap!!.setStyle(style) { style ->
             showRoute()
@@ -349,18 +368,10 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
 
             mapBoxStyle = style
 
-//            if (mSpotList.size > 1) {
-//                mapBoxMap!!.animateCamera(ContentBlock9ViewHolderUtils.zoomToDisplayAllSpots(mSpotList, 50))
-//            } else if (mSpotList.size == 1) {
-//                val position = CameraPosition.Builder().target(LatLng(mSpotList[0].location.latitude, mSpotList[0].location.longitude)).zoom(10.0).tilt(0.0).build()
-//                    mapBoxMap!!.animateCamera(CameraUpdateFactory.newCameraPosition(position))
-//            }
-
             enableLocationComponent(mapBoxStyle!!)
         }
 
-        //TODO: needed to rewrite this method
-        showElevationGraphAndCalculateCameraPosition()
+        calculateCoordinates()
 
     }
 
@@ -379,11 +390,11 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
     }
 
 
-    //TODO: needed to rewrite this method
     //Drawing elevation graph and calculating camera position
-    private fun showElevationGraphAndCalculateCameraPosition() {
+    private fun calculateCoordinates() {
         val url = mContentBlock?.fileId
         val client = OkHttpClient()
+        var showGraph = true
         if (url != null) {
             val request = Request.Builder()
                     .get()
@@ -405,17 +416,8 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
                     val geometry = firstFeature.getJSONObject("geometry")
                     val coordinates = geometry.getJSONArray("coordinates")
 
-                    //TODO: rewrite calculating routecameraposition
-                    val middleCoordinate = coordinates.getJSONArray(coordinates.length() / 2)
-                    fragment.activity?.runOnUiThread{
-                        routeCameraPosition = CameraPosition.Builder().target(LatLng(middleCoordinate.getDouble(1), middleCoordinate.getDouble(0))).zoom(13.0).tilt(0.0).build()
-                        mapBoxMap!!.animateCamera(CameraUpdateFactory.newCameraPosition(routeCameraPosition!!))
-                    }
-
-                    if(!mContentBlock!!.showElevation) return
-
-                    val values = arrayListOf<Entry>()
-                    var distance = BigDecimal(0.0, MathContext.DECIMAL64)
+                    var distanceMetric = BigDecimal(0.0, MathContext.DECIMAL64)
+                    var distanceImperial = BigDecimal(0.0, MathContext.DECIMAL64)
                     var previousLtd = 0.0
                     var previousLong = 0.0
 
@@ -428,47 +430,76 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
                         try {
                             longitude = coordinate.getDouble(0)
                             latitude = coordinate.getDouble(1)
+                            shownCoordinates.add(LatLng(latitude, longitude))
 
                             print("longitude latitude $longitude")
                             println(" $latitude")
                             if (coordinate.length() > 2) altitude = coordinate.getDouble(2)
-                            else return
-
+                            else {
+                                showGraph = false
+                                continue
+                            }
 
                             if (i != 0) {
-                                distance += getDistanceBetweenPoints(previousLtd, previousLong, latitude, longitude)
+                                val kiloMetres = getDistanceBetweenPoints(previousLtd, previousLong, latitude, longitude)
+                                distanceMetric += kiloMetres
+                                distanceImperial += kiloMetres.div(BigDecimal(1.609344, MathContext.DECIMAL64))
                             }
-                            println("x(dist) is $distance")
-                            println("y(alt) is $altitude")
+                            val feet = altitude * 3.281
+
+                            println("x(dist) in kiloMetres is $distanceMetric")
+                            println("y(alt) in metres is $altitude")
+                            println("x(dist) in miles is $distanceImperial")
+                            println("y(dist) in feet is $feet")
                             previousLong = longitude
                             previousLtd = latitude
-                            values.add(Entry(distance.toFloat(), altitude.toFloat()))
+                            elevationMetricValues.add(Entry(distanceMetric.toFloat(), altitude.toFloat()))
+                            elevationImperialValues.add(Entry(distanceImperial.toFloat(), feet.toFloat()))
                         } catch (e: NumberFormatException) {
                             println("Number format exception while trying to parse CB 14 route coordinates $e")
                         }
                     }
 
                     fragment.activity?.runOnUiThread {
-                        elevationChart.visibility = View.VISIBLE
-                        val lineDataSet = LineDataSet(values, "Elevation chart")
-                        lineDataSet.lineWidth = 3f
-                        lineDataSet.fillAlpha = 100
-                        lineDataSet.setDrawCircles(false)
-                        lineDataSet.setDrawValues(false)
-                        lineDataSet.color = Color.parseColor("#D0A9F5")
-                        elevationChart.description.isEnabled = false
-                        elevationChart.setTouchEnabled(false)
-                        elevationChart.axisRight.isEnabled = false
-                        elevationChart.axisLeft.setLabelCount(3, true)
-                        elevationChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
-                        elevationChart.data = LineData(arrayListOf<ILineDataSet>(lineDataSet))
-
+                        mapBoxMap?.animateCamera(zoomToDisplayRouteAndAllSpots(shownCoordinates, 100)!!)
+                        if (mContentBlock!!.showElevation && showGraph) {
+                            elevationRadioGroup.visibility = View.VISIBLE
+                            elevationMetricRadioButton.isChecked = true
+                            setElevationGraphParams()
+                            setElevationGraphData(elevationMetricValues)
+                        }
                     }
+
                 }
             })
         }
 
 
+    }
+
+    private fun setElevationGraphData(values: ArrayList<Entry>) {
+        val lineDataSet = LineDataSet(values, "")
+        lineDataSet.lineWidth = 3f
+        lineDataSet.fillAlpha = 100
+        lineDataSet.setDrawCircles(false)
+        lineDataSet.setDrawValues(false)
+        lineDataSet.color = Color.parseColor("#D0A9F5")
+        if (elevationChart.data != null) elevationChart.data.removeDataSet(0)
+        else elevationChart.data = LineData()
+        elevationChart.data.addDataSet(lineDataSet)
+        elevationChart.notifyDataSetChanged()
+        elevationChart.invalidate()
+    }
+
+
+    private fun setElevationGraphParams() {
+        elevationChart.visibility = View.VISIBLE
+        elevationChart.description.isEnabled = false
+        elevationChart.setTouchEnabled(false)
+        elevationChart.legend.isEnabled = false
+        elevationChart.axisRight.isEnabled = false
+        elevationChart.axisLeft.setLabelCount(3, true)
+        elevationChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
     }
 
 
@@ -505,6 +536,20 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
             locationComponent.isLocationComponentEnabled = true
 
         }
+    }
+
+    private fun zoomToDisplayRouteAndAllSpots(coordinates: ArrayList<LatLng>, padding: Int): CameraUpdate? {
+        if (coordinates.size == 0) {
+            return null
+        }
+
+        val builder = LatLngBounds.Builder()
+        for (coordinate in coordinates) {
+            builder.include(coordinate)
+        }
+
+        val bounds = builder.build()
+        return CameraUpdateFactory.newLatLngBounds(bounds, padding)
     }
 
     private fun showSpotDetails(spot: Spot) {

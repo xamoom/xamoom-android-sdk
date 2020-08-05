@@ -42,6 +42,7 @@
                 android:tint="@android:color/black"
                 app:backgroundTint="@android:color/white" />
 
+
             <TextView
                 android:id="@+id/titleTextView"
                 android:layout_width="match_parent"
@@ -61,6 +62,53 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:mapbox_cameraZoom="7"
                 app:mapbox_renderTextureMode="true" />
+
+            <RadioGroup
+                android:id="@+id/elevation_radio_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/mapImageView"
+                android:layout_alignBottom="@+id/mapImageView"
+                android:visibility="gone"
+                android:layout_marginBottom="20dp"
+                android:layout_marginEnd="20dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/elevation_radio_imperial"
+                    android:layout_width="85dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:background="@drawable/radio_btn_flat_selector"
+                    android:button="@android:color/transparent"
+                    android:paddingStart="4dp"
+                    android:paddingBottom="4dp"
+                    android:paddingEnd="4dp"
+                    android:paddingTop="4dp"
+                    android:text="@string/elevation_radio_feet_title"
+                    android:textColor="@drawable/radio_btn_flat_text_selector"
+                    />
+
+
+                <RadioButton
+                    android:id="@+id/elevation_radio_metric"
+                    android:layout_width="85dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:background="@drawable/radio_btn_flat_selector"
+                    android:button="@android:color/transparent"
+                    android:paddingStart="4dp"
+                    android:paddingBottom="4dp"
+                    android:paddingEnd="4dp"
+                    android:paddingTop="4dp"
+                    android:text="@string/elevation_radio_metres_title"
+                    android:textColor="@drawable/radio_btn_flat_text_selector"
+                    />
+            </RadioGroup>
+
+
+
 
         </RelativeLayout>
 
