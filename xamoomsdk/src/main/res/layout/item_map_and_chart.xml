@@ -42,6 +42,20 @@
                 android:tint="@android:color/black"
                 app:backgroundTint="@android:color/white" />
 
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/info_button"
+                app:fabSize="mini"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/mapImageView"
+                android:layout_alignBottom="@id/mapImageView"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone"
+                android:src="@drawable/outline_info_black_18dp"
+                android:tint="@android:color/black"
+                app:backgroundTint="@android:color/white" />
+
 
             <TextView
                 android:id="@+id/titleTextView"
@@ -71,7 +85,7 @@
                 android:layout_alignBottom="@+id/mapImageView"
                 android:visibility="gone"
                 android:layout_marginBottom="20dp"
-                android:layout_marginEnd="20dp"
+                android:layout_marginEnd="70dp"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal">
 
@@ -106,10 +120,6 @@
                     android:textColor="@drawable/radio_btn_flat_text_selector"
                     />
             </RadioGroup>
-
-
-
-
         </RelativeLayout>
 
         <LinearLayout

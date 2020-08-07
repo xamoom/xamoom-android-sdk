@@ -2,6 +2,7 @@ package com.xamoom.android.xamoomcontentblocks.ViewHolders
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.ActionBar
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
@@ -15,8 +16,11 @@ import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
+import android.widget.PopupWindow
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.app.ActivityCompat.startActivityForResult
@@ -95,12 +99,22 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
     var elevationImperialRadioButton = view.imperialRadioButton
     var elevationMetricRadioButton = view.metricRadioButton
     var elevationRadioGroup = view.elevationRadioGroup
+    var infoButton = view.infoButton
     var mLastLocation: Location? = null
     var fragment: Fragment
+    private lateinit var graphColor: String
     private var mFusedLocationClient: FusedLocationProviderClient? = null
     private var shownCoordinates = arrayListOf<LatLng>()
     private var elevationMetricValues = arrayListOf<Entry>()
     private var elevationImperialValues = arrayListOf<Entry>()
+    private var imperialTotalDistance = BigDecimal(0.0, MathContext.DECIMAL64)
+    private var metricTotalDistance = BigDecimal(0.0, MathContext.DECIMAL64)
+    private var ascentMetres = 0.0
+    private var descentMetres = 0.0
+    private var ascentFeet = 0.0
+    private var descentFeet = 0.0
+    private var routeSpentTime = ""
+    private var isInfoPopUpShown = false
 
     init {
         mContext = fragment.context
@@ -265,7 +279,7 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
 
     private fun centerSpotBounds() {
         if (mapBoxMap != null) {
-            mapBoxMap!!.animateCamera(zoomToDisplayRouteAndAllSpots(shownCoordinates, 100)!!)
+            mapBoxMap!!.animateCamera(zoomToDisplayRouteAndAllSpots(shownCoordinates)!!)
         }
     }
 
@@ -305,6 +319,7 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
         enduserApi.getStyle(systemId, object : APICallback<Style, List<Error>> {
             override fun finished(result: Style) {
                 mBase64Icon = result.customMarker
+                graphColor = result.highlightFontColor
                 if (mapView.isDestroyed) {
                     return
                 }
@@ -384,7 +399,7 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
                         .withProperties(PropertyFactory.lineCap(Property.LINE_CAP_SQUARE),
                                 PropertyFactory.lineJoin(Property.LINE_JOIN_MITER),
                                 PropertyFactory.lineWidth(4f),
-                                PropertyFactory.lineColor(Color.parseColor("#D0A9F5"))))
+                                PropertyFactory.lineColor(Color.parseColor(graphColor))))
             }
         }
     }
@@ -421,12 +436,15 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
                     var previousLtd = 0.0
                     var previousLong = 0.0
 
+                    var previousAltitudeMetres = 0.0
+                    var previousAltitudeFeet = 0.0
 
                     for (i in 0 until coordinates.length()) {
                         val coordinate = coordinates.getJSONArray(i)
                         var longitude: Double?
                         var latitude: Double?
                         var altitude: Double?
+                        var feet: Double?
                         try {
                             longitude = coordinate.getDouble(0)
                             latitude = coordinate.getDouble(1)
@@ -434,8 +452,10 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
 
                             print("longitude latitude $longitude")
                             println(" $latitude")
-                            if (coordinate.length() > 2) altitude = coordinate.getDouble(2)
-                            else {
+                            if (coordinate.length() > 2) {
+                                altitude = coordinate.getDouble(2)
+                                feet = altitude * 3.281
+                            } else {
                                 showGraph = false
                                 continue
                             }
@@ -444,25 +464,42 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
                                 val kiloMetres = getDistanceBetweenPoints(previousLtd, previousLong, latitude, longitude)
                                 distanceMetric += kiloMetres
                                 distanceImperial += kiloMetres.div(BigDecimal(1.609344, MathContext.DECIMAL64))
+                                if (altitude - previousAltitudeMetres > 0) {
+                                    ascentMetres += altitude - previousAltitudeMetres
+                                    ascentFeet += feet - previousAltitudeFeet
+                                } else {
+                                    descentMetres += previousAltitudeMetres - altitude
+                                    descentFeet += previousAltitudeFeet - feet
+                                }
                             }
-                            val feet = altitude * 3.281
 
                             println("x(dist) in kiloMetres is $distanceMetric")
                             println("y(alt) in metres is $altitude")
                             println("x(dist) in miles is $distanceImperial")
-                            println("y(dist) in feet is $feet")
+                            println("y(alt) in feet is ${feet}")
                             previousLong = longitude
                             previousLtd = latitude
+                            previousAltitudeMetres = altitude
+                            previousAltitudeFeet = feet
                             elevationMetricValues.add(Entry(distanceMetric.toFloat(), altitude.toFloat()))
                             elevationImperialValues.add(Entry(distanceImperial.toFloat(), feet.toFloat()))
                         } catch (e: NumberFormatException) {
                             println("Number format exception while trying to parse CB 14 route coordinates $e")
                         }
                     }
+                    metricTotalDistance = distanceMetric
+                    imperialTotalDistance = distanceImperial
+//                    routeSpentTime = getTimeInHours(distanceImperial.div(BigDecimal(3.1, MathContext.DECIMAL64)))
+
+                    print("ascent metres feet $ascentMetres $ascentFeet\n")
+                    print("total distance metres feet $metricTotalDistance $imperialTotalDistance\n")
+//                    print("spent time is $routeSpentTime")
+
 
                     fragment.activity?.runOnUiThread {
-                        mapBoxMap?.animateCamera(zoomToDisplayRouteAndAllSpots(shownCoordinates, 100)!!)
+                        mapBoxMap?.animateCamera(zoomToDisplayRouteAndAllSpots(shownCoordinates)!!)
                         if (mContentBlock!!.showElevation && showGraph) {
+                            showInfoButton()
                             elevationRadioGroup.visibility = View.VISIBLE
                             elevationMetricRadioButton.isChecked = true
                             setElevationGraphParams()
@@ -477,13 +514,43 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
 
     }
 
+
+    private fun getTimeInHours(timeInDec: BigDecimal): String {
+        val doubleAsString: String = java.lang.String.valueOf(timeInDec)
+        val indexOfDecimal = doubleAsString.indexOf(",")
+        val wholePart = doubleAsString.substring(0, indexOfDecimal).toInt()
+        val floatPart = ("0" + doubleAsString.substring(indexOfDecimal)).toDouble()
+        return "$wholePart:${floatPart * 60}"
+    }
+
+
+    @SuppressLint("RestrictedApi")
+    private fun showInfoButton() {
+        infoButton.visibility = View.VISIBLE
+        infoButton.setOnLongClickListener {
+            if (!isInfoPopUpShown) {
+                val layoutInflater: LayoutInflater = fragment.activity?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+                val customView: View = layoutInflater.inflate(R.layout.info_popup, null)
+                val popupWindow = PopupWindow(customView, ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT)
+                popupWindow.showAtLocation(mapView, Gravity.CENTER, 0, 0)
+                popupWindow.contentView = mapView
+                view.setOnClickListener {
+                    popupWindow.dismiss()
+                    isInfoPopUpShown = false
+                }
+                isInfoPopUpShown = true
+            }
+            true
+        }
+    }
+
     private fun setElevationGraphData(values: ArrayList<Entry>) {
         val lineDataSet = LineDataSet(values, "")
         lineDataSet.lineWidth = 3f
         lineDataSet.fillAlpha = 100
         lineDataSet.setDrawCircles(false)
         lineDataSet.setDrawValues(false)
-        lineDataSet.color = Color.parseColor("#D0A9F5")
+        lineDataSet.color = Color.parseColor(graphColor)
         if (elevationChart.data != null) elevationChart.data.removeDataSet(0)
         else elevationChart.data = LineData()
         elevationChart.data.addDataSet(lineDataSet)
@@ -538,7 +605,7 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
         }
     }
 
-    private fun zoomToDisplayRouteAndAllSpots(coordinates: ArrayList<LatLng>, padding: Int): CameraUpdate? {
+    private fun zoomToDisplayRouteAndAllSpots(coordinates: ArrayList<LatLng>): CameraUpdate? {
         if (coordinates.size == 0) {
             return null
         }
@@ -549,7 +616,7 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
         }
 
         val bounds = builder.build()
-        return CameraUpdateFactory.newLatLngBounds(bounds, padding)
+        return CameraUpdateFactory.newLatLngBounds(bounds, 100)
     }
 
     private fun showSpotDetails(spot: Spot) {
@@ -602,4 +669,6 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
         val PAGE_SIZE = 100
         const val DEFAULT_MAPBOX_STYLE_STRING = "mapbox://styles/xamoom-georg/ck4zb0mei1l371coyi41snaww"
     }
+
+
 }

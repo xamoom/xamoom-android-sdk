@@ -67,5 +67,5 @@
     <color name="event_navigation_background_color">#0f9d58</color>
     <color name="event_navigation_tint_color">@android:color/white</color>
     
-    <color name="elevation_radio_button_color">#D0A9F5</color>
+    <color name="elevation_radio_button_color">#CC2371D1</color>
 </resources>
