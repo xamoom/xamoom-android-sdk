@@ -52,7 +52,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 android:visibility="gone"
-                android:src="@drawable/outline_info_black_18dp"
+                android:src="@drawable/info_icon"
                 android:tint="@android:color/black"
                 app:backgroundTint="@android:color/white" />
 
@@ -76,6 +76,34 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:mapbox_cameraZoom="7"
                 app:mapbox_renderTextureMode="true" />
+
+
+            <ImageButton
+                android:id="@+id/zoom_in_button"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignStart="@+id/mapImageView"
+                android:layout_alignTop="@+id/mapImageView"
+                android:src="@drawable/zoom_in_icon"
+                android:background="@drawable/zoom_buttons_background"
+                android:layout_marginTop="52dp"
+                android:layout_marginStart="8dp"
+                />
+
+
+            <ImageButton
+                android:id="@+id/zoom_out_button"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignStart="@+id/mapImageView"
+                android:layout_below="@+id/zoom_in_button"
+                android:src="@drawable/zoom_out_icon"
+                android:background="@drawable/zoom_buttons_background"
+                android:layout_marginStart="8dp"
+                />
+
+
+
 
             <RadioGroup
                 android:id="@+id/elevation_radio_group"

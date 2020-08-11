@@ -2,9 +2,9 @@ package com.xamoom.android.xamoomcontentblocks.ViewHolders
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.ActionBar
 import android.app.Activity
 import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -14,13 +14,14 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.location.Location
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
-import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
-import android.widget.PopupWindow
+import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.app.ActivityCompat.startActivityForResult
@@ -66,8 +67,10 @@ import java.io.IOException
 import java.math.BigDecimal
 import java.math.MathContext
 import java.net.URL
+import java.text.DecimalFormat
 import java.util.*
 import kotlin.math.acos
+import kotlin.math.ceil
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -99,6 +102,8 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
     var elevationImperialRadioButton = view.imperialRadioButton
     var elevationMetricRadioButton = view.metricRadioButton
     var elevationRadioGroup = view.elevationRadioGroup
+    var zoomIn = view.zoomInButton
+    var zoomOut = view.zoomOutButton
     var infoButton = view.infoButton
     var mLastLocation: Location? = null
     var fragment: Fragment
@@ -114,7 +119,8 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
     private var ascentFeet = 0.0
     private var descentFeet = 0.0
     private var routeSpentTime = ""
-    private var isInfoPopUpShown = false
+    private var infoTitle = ""
+    private var isCurrentMetric = true
 
     init {
         mContext = fragment.context
@@ -215,13 +221,13 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
 
         elevationImperialRadioButton.setOnClickListener {
             setElevationGraphData(elevationImperialValues)
+            isCurrentMetric = false
         }
 
         elevationMetricRadioButton.setOnClickListener {
             setElevationGraphData(elevationMetricValues)
+            isCurrentMetric = true
         }
-
-
     }
 
     @SuppressLint("MissingPermission")
@@ -386,8 +392,28 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
             enableLocationComponent(mapBoxStyle!!)
         }
 
+        setExtraButtons()
         calculateCoordinates()
 
+    }
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    private fun setExtraButtons(){
+        zoomIn.setOnClickListener{
+            val previousCameraPosition = mapBoxMap?.cameraPosition
+            mapBoxMap!!.animateCamera(CameraUpdateFactory.newCameraPosition(
+                    CameraPosition.Builder().target(previousCameraPosition!!.target).zoom(previousCameraPosition.zoom + 1).tilt(previousCameraPosition.tilt).build()))
+        }
+
+        zoomOut.setOnClickListener{
+            val previousCameraPosition = mapBoxMap?.cameraPosition
+            mapBoxMap!!.animateCamera(CameraUpdateFactory.newCameraPosition(
+                    CameraPosition.Builder().target(previousCameraPosition!!.target).zoom(previousCameraPosition.zoom - 1).tilt(previousCameraPosition.tilt).build()))
+        }
+
+        mapBoxMap!!.uiSettings.isCompassEnabled = true
+        mapBoxMap!!.uiSettings.compassGravity = Gravity.START
+        mapBoxMap!!.uiSettings.setCompassFadeFacingNorth(false)
     }
 
 
@@ -428,8 +454,10 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
 
                     val firstFeature = JSONObject(responseBody).getJSONArray("features").getJSONObject(0)
 
+                    infoTitle = firstFeature.getJSONObject("properties").getString("name")
                     val geometry = firstFeature.getJSONObject("geometry")
                     val coordinates = geometry.getJSONArray("coordinates")
+
 
                     var distanceMetric = BigDecimal(0.0, MathContext.DECIMAL64)
                     var distanceImperial = BigDecimal(0.0, MathContext.DECIMAL64)
@@ -457,56 +485,64 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
                                 feet = altitude * 3.281
                             } else {
                                 showGraph = false
-                                continue
+                                altitude = null
+                                feet = null
                             }
 
                             if (i != 0) {
                                 val kiloMetres = getDistanceBetweenPoints(previousLtd, previousLong, latitude, longitude)
                                 distanceMetric += kiloMetres
                                 distanceImperial += kiloMetres.div(BigDecimal(1.609344, MathContext.DECIMAL64))
-                                if (altitude - previousAltitudeMetres > 0) {
-                                    ascentMetres += altitude - previousAltitudeMetres
-                                    ascentFeet += feet - previousAltitudeFeet
-                                } else {
-                                    descentMetres += previousAltitudeMetres - altitude
-                                    descentFeet += previousAltitudeFeet - feet
+                                if(altitude != null && feet != null) {
+                                    if (altitude - previousAltitudeMetres > 0) {
+                                        ascentMetres += altitude - previousAltitudeMetres
+                                        ascentFeet += feet - previousAltitudeFeet
+                                    } else if(previousAltitudeMetres - altitude > 0) {
+                                        descentMetres += previousAltitudeMetres - altitude
+                                        descentFeet += previousAltitudeFeet - feet
+                                    }
                                 }
+
                             }
 
                             println("x(dist) in kiloMetres is $distanceMetric")
                             println("y(alt) in metres is $altitude")
                             println("x(dist) in miles is $distanceImperial")
-                            println("y(alt) in feet is ${feet}")
+                            println("y(alt) in feet is $feet")
                             previousLong = longitude
                             previousLtd = latitude
-                            previousAltitudeMetres = altitude
-                            previousAltitudeFeet = feet
-                            elevationMetricValues.add(Entry(distanceMetric.toFloat(), altitude.toFloat()))
-                            elevationImperialValues.add(Entry(distanceImperial.toFloat(), feet.toFloat()))
+                            if(altitude != null && feet != null) {
+                                previousAltitudeMetres = altitude
+                                previousAltitudeFeet = feet
+                                elevationMetricValues.add(Entry(distanceMetric.toFloat(), altitude.toFloat()))
+                                elevationImperialValues.add(Entry(distanceImperial.toFloat(), feet.toFloat()))
+                            }
                         } catch (e: NumberFormatException) {
                             println("Number format exception while trying to parse CB 14 route coordinates $e")
                         }
                     }
                     metricTotalDistance = distanceMetric
                     imperialTotalDistance = distanceImperial
-//                    routeSpentTime = getTimeInHours(distanceImperial.div(BigDecimal(3.1, MathContext.DECIMAL64)))
+                    if(distanceImperial.toInt() != 0)
+                        routeSpentTime = getTimeInHours(distanceImperial.toDouble() / 3.1) + " h"
 
                     print("ascent metres feet $ascentMetres $ascentFeet\n")
                     print("total distance metres feet $metricTotalDistance $imperialTotalDistance\n")
-//                    print("spent time is $routeSpentTime")
+                    print("spent time is $routeSpentTime")
+
 
 
                     fragment.activity?.runOnUiThread {
                         mapBoxMap?.animateCamera(zoomToDisplayRouteAndAllSpots(shownCoordinates)!!)
+                        showInfoButton()
+                        elevationRadioGroup.visibility = View.VISIBLE
+                        elevationMetricRadioButton.isChecked = true
                         if (mContentBlock!!.showElevation && showGraph) {
-                            showInfoButton()
-                            elevationRadioGroup.visibility = View.VISIBLE
-                            elevationMetricRadioButton.isChecked = true
                             setElevationGraphParams()
                             setElevationGraphData(elevationMetricValues)
+                            isCurrentMetric = true
                         }
                     }
-
                 }
             })
         }
@@ -515,34 +551,45 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
     }
 
 
-    private fun getTimeInHours(timeInDec: BigDecimal): String {
+    private fun getTimeInHours(timeInDec: Double): String {
         val doubleAsString: String = java.lang.String.valueOf(timeInDec)
-        val indexOfDecimal = doubleAsString.indexOf(",")
-        val wholePart = doubleAsString.substring(0, indexOfDecimal).toInt()
-        val floatPart = ("0" + doubleAsString.substring(indexOfDecimal)).toDouble()
-        return "$wholePart:${floatPart * 60}"
+        val dotIndex = doubleAsString.indexOf(".")
+        val wholePart = doubleAsString.substring(0, dotIndex).toInt()
+        val fractionalPart = ("0" + doubleAsString.substring(dotIndex)).substring(0, 4).toDouble()
+        return "$wholePart:${ceil(fractionalPart * 60).toInt()}"
     }
 
 
-    @SuppressLint("RestrictedApi")
+
+    @SuppressLint("SetTextI18n")
     private fun showInfoButton() {
         infoButton.visibility = View.VISIBLE
-        infoButton.setOnLongClickListener {
-            if (!isInfoPopUpShown) {
-                val layoutInflater: LayoutInflater = fragment.activity?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-                val customView: View = layoutInflater.inflate(R.layout.info_popup, null)
-                val popupWindow = PopupWindow(customView, ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT)
-                popupWindow.showAtLocation(mapView, Gravity.CENTER, 0, 0)
-                popupWindow.contentView = mapView
-                view.setOnClickListener {
-                    popupWindow.dismiss()
-                    isInfoPopUpShown = false
-                }
-                isInfoPopUpShown = true
+        infoButton.setOnClickListener {
+            val dialog = Dialog(fragment.activity!!)
+            dialog.setContentView(R.layout.info_popup)
+            val df = DecimalFormat()
+            df.maximumFractionDigits = 2
+            val distance = dialog.findViewById<TextView>(R.id.info_distance)
+            val ascent = dialog.findViewById<TextView>(R.id.info_ascent)
+            val descent = dialog.findViewById<TextView>(R.id.info_descent)
+            val timeDescription = dialog.findViewById<TextView>(R.id.info_time_description)
+            dialog.findViewById<TextView>(R.id.info_time).text = routeSpentTime
+            dialog.findViewById<TextView>(R.id.info_title).text = infoTitle
+            if(isCurrentMetric) {
+                distance.text = "${df.format(metricTotalDistance)} km"
+                ascent.text = "${ascentMetres.toInt()} m"
+                descent.text = "${descentMetres.toInt()} m"
+                timeDescription.text = String.format(fragment.activity?.getString(R.string.info_time_label)!!, "5 kph")
+            } else {
+                distance.text = "${df.format(imperialTotalDistance)} mi"
+                ascent.text = "${ascentFeet.toInt()} ft"
+                descent.text = "${descentFeet.toInt()} ft"
+                timeDescription.text = String.format(fragment.activity?.getString(R.string.info_time_label)!!, "3.1 mph")
             }
-            true
+            dialog.show()
         }
     }
+
 
     private fun setElevationGraphData(values: ArrayList<Entry>) {
         val lineDataSet = LineDataSet(values, "")

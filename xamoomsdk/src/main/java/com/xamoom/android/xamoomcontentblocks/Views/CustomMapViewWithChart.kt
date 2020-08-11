@@ -35,6 +35,8 @@ class CustomMapViewWithChart : RelativeLayout {
     var metricRadioButton: RadioButton
     var elevationRadioGroup: RadioGroup
     var infoButton: FloatingActionButton
+    var zoomInButton: ImageButton
+    var zoomOutButton: ImageButton
 
     init {
         val v = LayoutInflater.from(context)
@@ -59,5 +61,7 @@ class CustomMapViewWithChart : RelativeLayout {
         metricRadioButton = v.findViewById(R.id.elevation_radio_metric)
         elevationRadioGroup = v.findViewById(R.id.elevation_radio_group)
         infoButton = v.findViewById(R.id.info_button)
+        zoomInButton = v.findViewById(R.id.zoom_in_button)
+        zoomOutButton = v.findViewById(R.id.zoom_out_button)
     }
 }

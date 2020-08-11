@@ -1,27 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="cannot_save_image">SVGs und GIFs können nicht gespeichert werden</string>
-    <string name="distanceLabel">Entfernung</string>
-    <string name="header_picture_alt_text">Kopfbild</string>
-    <string name="image_saved_text">Bild gespeichert</string>
-    <string name="meterLabel">Meter</string>
-    <string name="noLocation">Location wird gesucht</string>
-    <string name="open">Öffnen</string>
-    <string name="close_map">Karte schließen</string>
-    <string name="file_not_found">Datei nicht gefunden</string>
-    <string name="content_list_error_loading_text">Fehler beim Laden</string>
-    <string name="content_list_load_more_button_text">Mehr laden</string>
-    <string name="audioplayer_notification_channel_description">Kontrolle der Medienwiedergabe als Notification</string>
-    <string name="audioplayer_notification_channel_name">Medienwiedergabe</string>
-    <string name="no_location_alert_title">Wir benötigen deinen Standort</string>
-    <string name="no_location_alert_message">Die Ortungsdienste sind deaktiviert. Bitte gehen Sie in die Einstellungen, um diese einzuschalten.</string>
-    <string name="no_location_alert_cancel">Abbrechen</string>
-    <string name="no_location_alert_settings">Einstellungen</string>
+    <string name="cannot_save_image">SVG\'s en GIF\'s kunnen niet worden opgeslagen</string>
+    <string name="close_map">Sluit kaart</string>
+    <string name="distanceLabel">Afstand</string>
+    <string name="header_picture_alt_text">Omslagfoto</string>
+    <string name="image_saved_text">Afbeelding opgeslagen</string>
+    <string name="meterLabel">meter</string>
+    <string name="noLocation">Zoekt naar locatie</string>
+    <string name="open">Openen</string>
+    <string name="file_not_found">Bestand niet gevonden</string>
+    <string name="content_list_load_more_button_text">Meer laden</string>
+    <string name="content_list_error_loading_text">Fout bij het laden</string>
+    <string name="audioplayer_notification_channel_name">Afspelen van media</string>
+    <string name="audioplayer_notification_channel_description">Controle van het afspelen van media als een melding</string>
+    <string name="no_location_alert_title">We hebben uw locatie nodig</string>
+    <string name="no_location_alert_message">De locatieservices zijn uitgeschakeld. Ga naar de instellingen om ze in te schakelen.</string>
+    <string name="no_location_alert_cancel">Afbreken</string>
+    <string name="no_location_alert_settings">Instellingen</string>
 
-    <string name="event_calendar_title">Im Kalender eintragen</string>
-    <string name="event_navigation_title">Zum Ort navigieren</string>
+    <string name="event_calendar_title">Voer de kalender in</string>
+    <string name="event_navigation_title">Navigeer naar deze locatie</string>
 
     <string name="route">Route</string>
+
     <string name="elevation_radio_feet_title">IMPERIAL</string>
     <string name="elevation_radio_metres_title">METRIC</string>
+    <string name="info_distance_label">Distance</string>
+    <string name="info_ascent_descent_label">Ascent | Descent</string>
+    <string name="info_time_label">Duration at %1$s</string>
+
 </resources>
