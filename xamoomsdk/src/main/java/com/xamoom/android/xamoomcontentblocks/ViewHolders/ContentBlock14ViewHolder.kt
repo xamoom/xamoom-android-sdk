@@ -12,6 +12,7 @@ import android.content.res.ColorStateList
 import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.PorterDuff
+import android.graphics.drawable.Drawable
 import android.location.Location
 import android.net.Uri
 import android.os.Build
@@ -26,6 +27,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.Fragment
 import at.rags.morpheus.Error
 import com.bumptech.glide.Glide
@@ -37,6 +39,9 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mapbox.android.core.permissions.PermissionsManager
+import com.mapbox.geojson.Feature
+import com.mapbox.geojson.FeatureCollection
+import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.annotations.IconFactory
 import com.mapbox.mapboxsdk.annotations.Marker
 import com.mapbox.mapboxsdk.annotations.MarkerOptions
@@ -50,6 +55,8 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.style.layers.LineLayer
 import com.mapbox.mapboxsdk.style.layers.Property
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory.*
+import com.mapbox.mapboxsdk.style.layers.SymbolLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.xamoom.android.xamoomcontentblocks.Views.CustomMapViewWithChart
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment
@@ -398,14 +405,14 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    private fun setExtraButtons(){
-        zoomIn.setOnClickListener{
+    private fun setExtraButtons() {
+        zoomIn.setOnClickListener {
             val previousCameraPosition = mapBoxMap?.cameraPosition
             mapBoxMap!!.animateCamera(CameraUpdateFactory.newCameraPosition(
                     CameraPosition.Builder().target(previousCameraPosition!!.target).zoom(previousCameraPosition.zoom + 1).tilt(previousCameraPosition.tilt).build()))
         }
 
-        zoomOut.setOnClickListener{
+        zoomOut.setOnClickListener {
             val previousCameraPosition = mapBoxMap?.cameraPosition
             mapBoxMap!!.animateCamera(CameraUpdateFactory.newCameraPosition(
                     CameraPosition.Builder().target(previousCameraPosition!!.target).zoom(previousCameraPosition.zoom - 1).tilt(previousCameraPosition.tilt).build()))
@@ -447,7 +454,8 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
                     println("Content block 14 Tours request failure")
                 }
 
-                @SuppressLint("SimpleDateFormat")
+                @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+                @SuppressLint("SimpleDateFormat", "ResourceType")
                 override fun onResponse(call: Call, response: Response) {
                     val responseBody = response.body()?.string()
 
@@ -489,15 +497,38 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
                                 feet = null
                             }
 
+                            if (i == 0) {
+                                fragment.activity?.runOnUiThread {
+                                    mapBoxMap?.getStyle {
+                                        val tourBeginning = fragment.activity?.getDrawable(R.drawable.tour_start_icon)
+                                        if(tourBeginning != null) {
+
+                                            val symbolLayerIconFeatureList = mutableListOf<Feature>()
+                                            symbolLayerIconFeatureList.add(Feature.fromGeometry(Point.fromLngLat(longitude, latitude)))
+
+                                            it.addImage("tour-start-icon", setTint(tourBeginning, Color.parseColor(graphColor)))
+                                            it.addSource(GeoJsonSource("tour-start-source", FeatureCollection.fromFeatures(symbolLayerIconFeatureList)))
+                                            it.addLayer(SymbolLayer("tour-start-layer", "tour-start-source")
+                                                    .withProperties(
+                                                            iconImage("tour-start-icon"),
+                                                            iconSize(1.2f),
+                                                            iconAllowOverlap(true),
+                                                            iconIgnorePlacement(true)
+                                                    ))
+                                        }
+                                    }
+                                }
+                            }
+
                             if (i != 0) {
                                 val kiloMetres = getDistanceBetweenPoints(previousLtd, previousLong, latitude, longitude)
                                 distanceMetric += kiloMetres
                                 distanceImperial += kiloMetres.div(BigDecimal(1.609344, MathContext.DECIMAL64))
-                                if(altitude != null && feet != null) {
+                                if (altitude != null && feet != null) {
                                     if (altitude - previousAltitudeMetres > 0) {
                                         ascentMetres += altitude - previousAltitudeMetres
                                         ascentFeet += feet - previousAltitudeFeet
-                                    } else if(previousAltitudeMetres - altitude > 0) {
+                                    } else if (previousAltitudeMetres - altitude > 0) {
                                         descentMetres += previousAltitudeMetres - altitude
                                         descentFeet += previousAltitudeFeet - feet
                                     }
@@ -511,7 +542,7 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
                             println("y(alt) in feet is $feet")
                             previousLong = longitude
                             previousLtd = latitude
-                            if(altitude != null && feet != null) {
+                            if (altitude != null && feet != null) {
                                 previousAltitudeMetres = altitude
                                 previousAltitudeFeet = feet
                                 elevationMetricValues.add(Entry(distanceMetric.toFloat(), altitude.toFloat()))
@@ -523,7 +554,7 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
                     }
                     metricTotalDistance = distanceMetric
                     imperialTotalDistance = distanceImperial
-                    if(distanceImperial.toInt() != 0)
+                    if (distanceImperial.toInt() != 0)
                         routeSpentTime = getTimeInHours(distanceImperial.toDouble() / 3.1) + " h"
 
                     print("ascent metres feet $ascentMetres $ascentFeet\n")
@@ -550,6 +581,13 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
 
     }
 
+    private fun setTint(d: Drawable, color: Int): Drawable {
+        val wrappedDrawable: Drawable = DrawableCompat.wrap(d)
+        DrawableCompat.setTint(wrappedDrawable, color)
+        return wrappedDrawable
+    }
+
+
 
     private fun getTimeInHours(timeInDec: Double): String {
         val doubleAsString: String = java.lang.String.valueOf(timeInDec)
@@ -558,7 +596,6 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
         val fractionalPart = ("0" + doubleAsString.substring(dotIndex)).substring(0, 4).toDouble()
         return "$wholePart:${ceil(fractionalPart * 60).toInt()}"
     }
-
 
 
     @SuppressLint("SetTextI18n")
@@ -575,7 +612,7 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
             val timeDescription = dialog.findViewById<TextView>(R.id.info_time_description)
             dialog.findViewById<TextView>(R.id.info_time).text = routeSpentTime
             dialog.findViewById<TextView>(R.id.info_title).text = infoTitle
-            if(isCurrentMetric) {
+            if (isCurrentMetric) {
                 distance.text = "${df.format(metricTotalDistance)} km"
                 ascent.text = "${ascentMetres.toInt()} m"
                 descent.text = "${descentMetres.toInt()} m"

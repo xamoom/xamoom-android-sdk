@@ -5,35 +5,28 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.content.res.Resources
 import android.graphics.Color
-import android.graphics.ColorFilter
 import android.graphics.PorterDuff
-import android.graphics.drawable.StateListDrawable
 import android.location.Location
 import android.net.Uri
 import android.os.Bundle
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.app.ActivityCompat
-import androidx.core.app.ActivityCompat.requestPermissions
-import androidx.core.app.ActivityCompat.startActivityForResult
-import androidx.fragment.app.Fragment
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
-import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityCompat.requestPermissions
+import androidx.core.app.ActivityCompat.startActivityForResult
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import at.rags.morpheus.Error
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestListener
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.mapboxsdk.annotations.IconFactory
 import com.mapbox.mapboxsdk.annotations.Marker
@@ -55,7 +48,6 @@ import com.xamoom.android.xamoomsdk.Resource.ContentBlock
 import com.xamoom.android.xamoomsdk.Resource.Spot
 import com.xamoom.android.xamoomsdk.Resource.Style
 import java.util.*
-import kotlin.collections.ArrayList
 
 @SuppressLint("ClickableViewAccessibility")
 class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val enduserApi: EnduserApi, fragment: Fragment, val listener: XamoomContentFragment.OnXamoomContentFragmentInteractionListener,

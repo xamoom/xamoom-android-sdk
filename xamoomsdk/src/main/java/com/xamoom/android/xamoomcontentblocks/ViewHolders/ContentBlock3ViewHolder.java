@@ -42,6 +42,7 @@ import com.xamoom.android.xamoomcontentblocks.Helper.SvgDecoder;
 import com.xamoom.android.xamoomcontentblocks.Helper.SvgDrawableTranscoder;
 import com.xamoom.android.xamoomcontentblocks.Helper.SvgSoftwareLayerSetter;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
+import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
@@ -158,24 +159,24 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
       resizeImageViewWithScaling(mImageView, scaleX);
     }
 
-    if(contentBlock.getLinkUrl() != null && !contentBlock.getLinkUrl().equals("")) {
+    if((contentBlock.getLinkUrl() != null && !contentBlock.getLinkUrl().equals("")) || contentBlock.getContentId() != null) {
       mImageView.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
 
-          if (contentBlock.getContentId() != null && !contentBlock.getContentId().equals("None")) {
+          if(contentBlock.getContentId() != null && !contentBlock.getContentId().equals("None")) {
             Content content = new Content();
             content.setId(contentBlock.getContentId());
             onImageClickListener.clickedContentBlock(content);
           } else {
             String contentUrl = contentBlock.getLinkUrl();
 
-            if(contentUrl != null) {
-            if (urls == null) {
-              Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(contentBlock.getLinkUrl()));
-              mContext.startActivity(intent);
-              return;
-            }
+            if (contentUrl != null){
+              if (urls == null) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(contentBlock.getLinkUrl()));
+                mContext.startActivity(intent);
+                return;
+              }
 
             boolean openInternal = false;
 
@@ -196,7 +197,8 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
             }
           }
 
-          }
+        }
+
         }
       });
 
