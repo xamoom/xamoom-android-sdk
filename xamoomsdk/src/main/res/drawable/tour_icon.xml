@@ -1,0 +1,16 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <corners android:radius="60dp"/>
+            <solid android:color="@color/tourism_color_primary"/>
+        </shape>
+    </item>
+
+    <item android:drawable="@drawable/ic_play_arrow"
+        android:bottom="5dp"
+        android:left="5dp"
+        android:right="5dp"
+        android:top="5dp"
+        >
+    </item>
+</layer-list>

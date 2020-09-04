@@ -500,18 +500,18 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
                             if (i == 0) {
                                 fragment.activity?.runOnUiThread {
                                     mapBoxMap?.getStyle {
-                                        val tourBeginning = fragment.activity?.getDrawable(R.drawable.tour_start_icon)
+                                        val tourBeginning = fragment.activity?.getDrawable(R.drawable.tour_icon)
                                         if(tourBeginning != null) {
 
                                             val symbolLayerIconFeatureList = mutableListOf<Feature>()
                                             symbolLayerIconFeatureList.add(Feature.fromGeometry(Point.fromLngLat(longitude, latitude)))
 
-                                            it.addImage("tour-start-icon", setTint(tourBeginning, Color.parseColor(graphColor)))
+                                            it.addImage("tour-start-icon", tourBeginning)
                                             it.addSource(GeoJsonSource("tour-start-source", FeatureCollection.fromFeatures(symbolLayerIconFeatureList)))
                                             it.addLayer(SymbolLayer("tour-start-layer", "tour-start-source")
                                                     .withProperties(
                                                             iconImage("tour-start-icon"),
-                                                            iconSize(1.2f),
+                                                            iconSize(0.6f),
                                                             iconAllowOverlap(true),
                                                             iconIgnorePlacement(true)
                                                     ))
