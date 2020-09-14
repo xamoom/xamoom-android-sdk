@@ -3,7 +3,7 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
 
-    <color name="tourism_color_primary">#7401df</color>
+    <color name="app_template_primary_color">#000000</color>
 
     <color name="linkblock_default_background_color">#d1d1d1</color>
     <color name="linkblock_default_tint_color">#333333</color>

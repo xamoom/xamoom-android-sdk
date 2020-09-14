@@ -13,10 +13,13 @@ import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.LayerDrawable
+import android.graphics.drawable.ShapeDrawable
 import android.location.Location
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.util.Log
 import android.view.Gravity
 import android.view.MotionEvent
@@ -330,9 +333,10 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
 
     private fun getStyle(systemId: String) {
         enduserApi.getStyle(systemId, object : APICallback<Style, List<Error>> {
+            @RequiresApi(Build.VERSION_CODES.M)
             override fun finished(result: Style) {
                 mBase64Icon = result.customMarker
-                graphColor = result.highlightFontColor
+                graphColor = "#" + Integer.toHexString(fragment.activity?.getColor(R.color.app_template_primary_color)!!)
                 if (mapView.isDestroyed) {
                     return
                 }
