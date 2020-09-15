@@ -336,7 +336,9 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
             @RequiresApi(Build.VERSION_CODES.M)
             override fun finished(result: Style) {
                 mBase64Icon = result.customMarker
-                graphColor = "#" + Integer.toHexString(fragment.activity?.getColor(R.color.app_template_primary_color)!!)
+                if(fragment.activity?.getColor(R.color.app_template_primary_color) != null) {
+                    graphColor = "#" + Integer.toHexString(fragment.activity?.getColor(R.color.app_template_primary_color)!!)
+                }
                 if (mapView.isDestroyed) {
                     return
                 }

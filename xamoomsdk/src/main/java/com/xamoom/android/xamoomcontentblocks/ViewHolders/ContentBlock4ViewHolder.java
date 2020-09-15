@@ -1,10 +1,10 @@
 /*
-* Copyright (c) 2017 xamoom GmbH <apps@xamoom.com>
-*
-* Licensed under the MIT License (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at the root of this project.
-*/
+ * Copyright (c) 2017 xamoom GmbH <apps@xamoom.com>
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at the root of this project.
+ */
 
 package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
@@ -194,6 +194,16 @@ public class ContentBlock4ViewHolder extends RecyclerView.ViewHolder {
         backgroundColor = ta.getResourceId(R.styleable.Links_instagram_background_color, 0);
         tintColor = ta.getColor(R.styleable.Links_instagram_tint_color, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_instagram);
+        break;
+      case 19:
+        backgroundColor = ta.getResourceId(R.styleable.Links_sms_background_color, 0);
+        tintColor = ta.getColor(R.styleable.Links_sms_tint_color, Color.WHITE);
+        mIcon.setImageResource(R.drawable.ic_sms);
+        break;
+      case 20:
+        backgroundColor = ta.getResourceId(R.styleable.Links_whatsapp_background_color, 0);
+        tintColor = ta.getColor(R.styleable.Links_whatsapp_tint_color, Color.WHITE);
+        mIcon.setImageResource(R.drawable.ic_whatsapp);
         break;
       default:
         backgroundColor = ta.getResourceId(R.styleable.Links_default_background_color, 0);
