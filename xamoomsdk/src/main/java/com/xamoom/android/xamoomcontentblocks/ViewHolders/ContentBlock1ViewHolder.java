@@ -151,16 +151,18 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
           AudioPlayerService.MSG_SET_URL);
       msg.replyTo = messenger;
       Bundle bundle = new Bundle();
-      bundle.putString("URL", contentBlock.getFileId());
-      bundle.putString("POS", contentBlock.getId());
-      bundle.putString("TITLE", contentBlock.getTitle());
-      bundle.putString("ARTIST", contentBlock.getArtists());
+      if(contentBlock != null) {
+        bundle.putString("URL", contentBlock.getFileId());
+        bundle.putString("POS", contentBlock.getId());
+        bundle.putString("TITLE", contentBlock.getTitle());
+        bundle.putString("ARTIST", contentBlock.getArtists());
+      }
       msg.setData(bundle);
 
       try {
         mService.send(msg);
       } catch (RemoteException e) {
-        e.printStackTrace();
+        System.out.println("ContentBlock1ViewHolder:163 " + e.getMessage());
       }
     }
 
