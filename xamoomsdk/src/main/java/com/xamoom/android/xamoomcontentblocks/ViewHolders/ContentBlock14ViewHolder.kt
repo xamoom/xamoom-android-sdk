@@ -72,6 +72,7 @@ import com.xamoom.android.xamoomsdk.Resource.ContentBlock
 import com.xamoom.android.xamoomsdk.Resource.Spot
 import com.xamoom.android.xamoomsdk.Resource.Style
 import okhttp3.*
+import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 import java.math.BigDecimal
@@ -468,7 +469,10 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
 
                     val firstFeature = JSONObject(responseBody).getJSONArray("features").getJSONObject(0)
 
-                    infoTitle = firstFeature.getJSONObject("properties").getString("name")
+                    infoTitle = try {
+                        firstFeature.getJSONObject("properties").getString("name")
+                    } catch (e: JSONException) { "-" }
+
                     val geometry = firstFeature.getJSONObject("geometry")
                     val coordinates = geometry.getJSONArray("coordinates")
 
