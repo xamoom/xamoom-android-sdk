@@ -106,7 +106,9 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
 
 
 
-    mEnduserApi.setLanguage(sharedPreferences.getString("current_language_code", null));
+    String langPickerLanguage = sharedPreferences.getString("current_language_code", null);
+    if(langPickerLanguage != null) mEnduserApi.setLanguage(langPickerLanguage);
+    else mEnduserApi.setLanguage(mEnduserApi.getSystemLanguage());
     mCall = mEnduserApi.getContent(contentId, EnumSet.of(ContentFlags.PREVIEW),
         ContentReason.LINKED_CONTENT, null, new APIPasswordCallback<Content, List<Error>>() {
       @Override
