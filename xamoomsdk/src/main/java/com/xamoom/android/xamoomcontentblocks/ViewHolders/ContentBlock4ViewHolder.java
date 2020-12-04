@@ -81,7 +81,7 @@ public class ContentBlock4ViewHolder extends RecyclerView.ViewHolder {
             break;
           }
         }
-        if (openInternal) {
+        if (openInternal && contentBlock.getLinkType() != 12) {
           Intent intent = new Intent(mFragment.getActivity(), XamoomContentWebViewActivity.class);
           intent.putExtra("url", contentUrl);
           mFragment.getActivity().startActivity(intent);
