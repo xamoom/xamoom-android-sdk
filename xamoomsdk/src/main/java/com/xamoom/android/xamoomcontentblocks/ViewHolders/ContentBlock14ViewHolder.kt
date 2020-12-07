@@ -135,6 +135,7 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
 
     init {
         mContext = fragment.context
+        print("text is here")
         mapView.onCreate(bundle)
         this.fragment = fragment
 
@@ -309,6 +310,7 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
         }
 
         enduserApi.getSpotsByTags(tags, PAGE_SIZE, cursor, spotOptions, null, object : APIListCallback<List<Spot>, List<Error>> {
+            @RequiresApi(Build.VERSION_CODES.M)
             override fun finished(result: List<Spot>, cursor: String, hasMore: Boolean) {
                 if (!result.isEmpty()) {
                     mSpotList.addAll(result)
@@ -322,7 +324,8 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
                         callback.finished(mSpotList, "", false)
                     }
                 } else {
-                    centerspotButton.visibility = View.GONE
+//                    centerspotButton.visibility = View.GONE
+                    getStyle(null)
                 }
             }
 
@@ -332,24 +335,29 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
         })
     }
 
-    private fun getStyle(systemId: String) {
-        enduserApi.getStyle(systemId, object : APICallback<Style, List<Error>> {
-            @RequiresApi(Build.VERSION_CODES.M)
-            override fun finished(result: Style) {
-                mBase64Icon = result.customMarker
-                if(fragment.activity?.getColor(R.color.app_template_primary_color) != null) {
-                    graphColor = "#" + Integer.toHexString(fragment.activity?.getColor(R.color.app_template_primary_color)!!)
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun getStyle(systemId: String?) {
+        if (fragment.activity?.getColor(R.color.app_template_primary_color) != null) {
+            graphColor = "#" + Integer.toHexString(fragment.activity?.getColor(R.color.app_template_primary_color)!!)
+        }
+        if(systemId == null) {
+            mapView.getMapAsync(this@ContentBlock14ViewHolder)
+        } else {
+            enduserApi.getStyle(systemId, object : APICallback<Style, List<Error>> {
+                @RequiresApi(Build.VERSION_CODES.M)
+                override fun finished(result: Style) {
+                    mBase64Icon = result.customMarker
+                    if (mapView.isDestroyed) {
+                        return
+                    }
+                    mapView.getMapAsync(this@ContentBlock14ViewHolder)
                 }
-                if (mapView.isDestroyed) {
-                    return
-                }
-                mapView.getMapAsync(this@ContentBlock14ViewHolder)
-            }
 
-            override fun error(error: List<Error>) {
-                Log.e("", "getStyle error: $error")
-            }
-        })
+                override fun error(error: List<Error>) {
+                    Log.e("", "getStyle error: $error")
+                }
+            })
+        }
     }
 
     fun setStyle(style: Style?) {
