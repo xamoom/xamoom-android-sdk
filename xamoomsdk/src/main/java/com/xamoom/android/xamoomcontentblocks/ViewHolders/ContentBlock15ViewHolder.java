@@ -14,15 +14,13 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
-import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 
 import androidx.annotation.RequiresApi;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -33,7 +31,7 @@ import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 
 /**
- * Displays the Forms ContentBlock.
+ * Displays the forms ContentBlock.
  */
 public class ContentBlock15ViewHolder extends RecyclerView.ViewHolder {
     WebView formWebView;
@@ -57,7 +55,6 @@ public class ContentBlock15ViewHolder extends RecyclerView.ViewHolder {
 
     @SuppressLint("SetJavaScriptEnabled")
     public void setupContentBlock(ContentBlock contentBlock) {
-//        setupScrollView();
         boolean isFormActive = sharedPreferences.getBoolean("is_form_active", false);
         if (isFormActive) {
             setWebViewSettings();
@@ -77,6 +74,8 @@ public class ContentBlock15ViewHolder extends RecyclerView.ViewHolder {
     @SuppressLint("SetJavaScriptEnabled")
     private void setWebViewSettings() {
         formWebView.getSettings().setJavaScriptEnabled(true);
+        formWebView.getSettings().setStandardFontFamily("Roboto-Light");
+        formWebView.getSettings().setTextSize(WebSettings.TextSize.NORMAL);
         formWebView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
