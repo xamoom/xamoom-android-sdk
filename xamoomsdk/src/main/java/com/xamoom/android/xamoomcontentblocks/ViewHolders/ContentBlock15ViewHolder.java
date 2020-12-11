@@ -58,7 +58,8 @@ public class ContentBlock15ViewHolder extends RecyclerView.ViewHolder {
         boolean isFormActive = sharedPreferences.getBoolean("is_form_active", false);
         if (isFormActive) {
             setWebViewSettings();
-            String formBaseUrl = getModifiedFormUrl(sharedPreferences.getString("form_base_url", null));
+            String formBaseUrl = getModifiedFormUrl(sharedPreferences.getString("form_base_url", null)) != null ?
+                    getModifiedFormUrl(sharedPreferences.getString("form_base_url", null)) : "https://forms.xamoom.com";
             String formId = contentBlock.getText();
             String html = formBaseUrl + "/gfembed/?f=" + formId;
             formWebView.loadUrl(html);
