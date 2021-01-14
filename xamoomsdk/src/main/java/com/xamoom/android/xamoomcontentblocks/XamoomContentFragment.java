@@ -13,6 +13,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,15 +23,20 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
 
 import com.xamoom.android.xamoomcontentblocks.Adapters.ContentBlockAdapter;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock12ViewHolderInterface;
+import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock15ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock1ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock2ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
@@ -42,6 +49,7 @@ import com.xamoom.android.xamoomsdk.Resource.Style;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.prefs.PreferenceChangeEvent;
 
 /**
  * XamoomContentBlock is a helper for everyone to display the different contentBlocks delivered
@@ -61,7 +69,7 @@ import java.util.List;
  * @author Raphael Seher
  *
  */
-public class XamoomContentFragment extends Fragment implements ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener, ContentBlock12ViewHolderInterface {
+public class XamoomContentFragment extends Fragment implements ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener, ContentBlock12ViewHolderInterface, ContentBlock15ViewHolder.OnContentBlock15ViewHolderInteractionListener {
   private static final String YOUTUBE_API_KEY = "YoutubeAPIKey";
   private static final String LIST_STATE = "LayoutManagerState";
   private static final String CONTENT_ID = "ContentID";
@@ -102,6 +110,12 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   private String navigationButtonTintColorString;
   private String contentButtonTextColorString;
   private String navigationMode;
+
+  public static final int REQUEST_SELECT_FILE = 100;
+  private final static int FILECHOOSER_RESULTCODE = 777;
+
+  private ValueCallback<Uri> mUploadMessage;
+  public ValueCallback<Uri[]> uploadMessage;
 
 
   private Integer[] validBlockTypes = {-2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 14, 15};
@@ -148,7 +162,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
 
   public XamoomContentFragment() {
     mContentBlockAdapter = new ContentBlockAdapter(this, mContentBlocks,
-            showSpotMapContentLinks, mYoutubeApiKey, this, contentBlockUrlScheme, mapboxStyleString, navigationButtonTintColorString, contentButtonTextColorString, navigationMode, this, mContent);
+            showSpotMapContentLinks, mYoutubeApiKey, this, this, contentBlockUrlScheme, mapboxStyleString, navigationButtonTintColorString, contentButtonTextColorString, navigationMode, this, mContent);
   }
 
   @Override
@@ -197,9 +211,10 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
+
+
     mRootView = inflater.inflate(R.layout.fragment_xamoom_content, container, false);
     mRootView.setBackgroundColor(mBackgroundColor);
-
     mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.contentblock_recycler_view);
     DefaultItemAnimator animator = new DefaultItemAnimator();
     animator.setMoveDuration(1050);
@@ -212,21 +227,19 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   @Override
   public void onStart() {
     super.onStart();
-
-    if(!isAnimated) {
-      if (mContentBlockAdapter != null) {
-        Log.v("test", "onStart");
-        mContentBlockAdapter.notifyDataSetChanged();
-      }
-    }
+//    if(!isAnimated) {
+//      if (mContentBlockAdapter != null) {
+//        Log.v("test", "onStart");
+//        mContentBlockAdapter.notifyDataSetChanged();
+//      }
+//    }
   }
 
   @Override
   public void onResume() {
     super.onResume();
-
-    mRecyclerView.scrollToPosition(0);
-    mContentBlockAdapter.notifyDataSetChanged();
+//    mRecyclerView.scrollToPosition(0);
+//    mContentBlockAdapter.notifyDataSetChanged();
   }
 
   @Override
@@ -461,6 +474,13 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
   }
 
+  @Override
+  public void startCameraForResult(Intent intent, Integer resultCode, ValueCallback<Uri> mUploadMessage, ValueCallback<Uri[]> uploadMessage) {
+    this.mUploadMessage = mUploadMessage;
+    this.uploadMessage = uploadMessage;
+    startActivityForResult(intent, resultCode);
+  }
+
   /**
    * Implement OnXamoomContentFragmentInteractionListener and override
    * <code>clickedContentBlock(String)</code>.
@@ -473,6 +493,33 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
     void clickedContentBlock(Content content);
     void clickedSpotMapContentLink(String contentId);
   }
+
+  @Override
+  public void onActivityResult(int requestCode, int resultCode, @Nullable Intent intent) {
+    super.onActivityResult(requestCode, resultCode, intent);
+    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+    {
+      if (requestCode == REQUEST_SELECT_FILE)
+      {
+        if (uploadMessage == null)
+          return;
+        PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("reload_content_from_sdk", false).apply();
+        uploadMessage.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(resultCode, intent));
+        uploadMessage = null;
+      }
+    }
+    else if (requestCode == FILECHOOSER_RESULTCODE)
+    {
+      if (null == mUploadMessage)
+        return;
+      Uri result = intent == null || resultCode != -1 ? null : intent.getData();
+      PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("reload_content_from_sdk", false).apply();
+      mUploadMessage.onReceiveValue(result);
+      mUploadMessage = null;
+    }
+
+  }
+
 
   // getters
 

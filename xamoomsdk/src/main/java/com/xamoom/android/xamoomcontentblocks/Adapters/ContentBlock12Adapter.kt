@@ -14,6 +14,7 @@ import at.rags.morpheus.Error
 import com.xamoom.android.xamoomcontentblocks.ListManager
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock12ViewHolder
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock12ViewHolderInterface
+import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock15ViewHolder
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment
 import com.xamoom.android.xamoomsdk.APIPasswordCallback
@@ -56,6 +57,7 @@ class ContentBlock12Adapter(val inter: ContentBlock12ViewHolderInterface): Adapt
     override fun onCreateViewHolder(parent: ViewGroup?, fragment: Fragment?, enduserApi: EnduserApi?, youtubeApiKey: String?, bitmapCache: LruCache<*, *>?, contentCache: LruCache<*, *>?,
                                     showContentLinks: Boolean, listManager: ListManager?, adapterDelegatesManager: AdapterDelegatesManager<*>?,
                                     onContentBlock3ViewHolderInteractionListener: ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener?,
+                                    onContentBlock15ViewHolderInteractionListener: ContentBlock15ViewHolder.OnContentBlock15ViewHolderInteractionListener?,
                                     onXamoomContentFragmentInteractionListener: XamoomContentFragment.OnXamoomContentFragmentInteractionListener?, urls: ArrayList<String>?, mapboxStyleString: String?,
                                     navigationButtonTintColorString: String?, contentButtonTextColorString: String?, navigationMode: String?, content: Content?): androidx.recyclerview.widget.RecyclerView.ViewHolder {
         val context = parent!!.context
@@ -67,4 +69,5 @@ class ContentBlock12Adapter(val inter: ContentBlock12ViewHolderInterface): Adapt
         }
         return ContentBlock12ViewHolder(view, context, fragment, youtubeApiKey, cache, null, inter)
     }
+
 }

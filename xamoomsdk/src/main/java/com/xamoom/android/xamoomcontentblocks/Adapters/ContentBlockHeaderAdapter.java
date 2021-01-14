@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.xamoom.android.xamoomcontentblocks.ListManager;
+import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock15ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentHeaderViewHolder;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
@@ -50,6 +51,8 @@ public class ContentBlockHeaderAdapter implements AdapterDelegate<List<ContentBl
           ViewGroup parent, Fragment fragment, EnduserApi enduserApi, String youtubeApiKey,
           LruCache bitmapCache, LruCache contentCache, boolean showContentLinks, ListManager listManager, AdapterDelegatesManager adapterDelegatesManager,
           ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener onContentBlock3ViewHolderInteractionListener,
+          ContentBlock15ViewHolder.OnContentBlock15ViewHolderInteractionListener
+                  onContentBlock15ViewHolderInteractionListener,
           XamoomContentFragment.OnXamoomContentFragmentInteractionListener onXamoomContentFragmentInteractionListener, @Nullable ArrayList<String> urls, @Nullable String mapboxStyleString,
           @Nullable String navigationButtonTintColorString, @Nullable String contentButtonTextColorString, @Nullable String navigationMode, Content content) {
     mContent = content;

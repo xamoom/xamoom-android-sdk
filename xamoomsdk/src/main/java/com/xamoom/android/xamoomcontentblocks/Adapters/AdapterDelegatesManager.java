@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import com.xamoom.android.xamoomcontentblocks.ListManager;
+import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock15ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.EnduserApi;
@@ -54,6 +55,8 @@ public class AdapterDelegatesManager<T> {
           LruCache bitmapCache, LruCache contentCache, boolean showContentLinks, ListManager listManager,
           ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener
                   onContentBlock3ViewHolderInteractionListener,
+          ContentBlock15ViewHolder.OnContentBlock15ViewHolderInteractionListener
+                  onContentBlock15ViewHolderInteractionListener,
           XamoomContentFragment.OnXamoomContentFragmentInteractionListener
                   onXamoomContentFragmentInteractionListener, @Nullable ArrayList<String> url, @Nullable String mapboxStyleString, @Nullable String navigationButtonTintColorString, @Nullable String contentButtonTextColorString, @Nullable String navigationMode, Content content) {
 
@@ -69,7 +72,7 @@ public class AdapterDelegatesManager<T> {
 
     RecyclerView.ViewHolder vh = delegate.onCreateViewHolder(parent, fragment, enduserApi,
             youtubeApiKey, bitmapCache, contentCache, showContentLinks, listManager, this,
-            onContentBlock3ViewHolderInteractionListener, onXamoomContentFragmentInteractionListener, url, mapboxStyleString, navigationButtonTintColorString, contentButtonTextColorString, navigationMode, content);
+            onContentBlock3ViewHolderInteractionListener, onContentBlock15ViewHolderInteractionListener, onXamoomContentFragmentInteractionListener, url, mapboxStyleString, navigationButtonTintColorString, contentButtonTextColorString, navigationMode, content);
 
     return vh;
   }

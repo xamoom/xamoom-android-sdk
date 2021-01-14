@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import com.xamoom.android.xamoomcontentblocks.ListManager;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock12ViewHolderInterface;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock14ViewHolder;
+import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock15ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock2ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock9ViewHolder;
@@ -39,6 +40,7 @@ import java.util.List;
 public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
   private XamoomContentFragment.OnXamoomContentFragmentInteractionListener mOnXamoomContentFragmentInteractionListener;
   private ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener mOnContentBlock3ViewHolderInteractionListener;
+  private ContentBlock15ViewHolder.OnContentBlock15ViewHolderInteractionListener mOnContentBlock15ViewHolderInteractionListener;
   private Fragment mFragment;
   private AdapterDelegatesManager mDelegatesManager = new AdapterDelegatesManager();
   private List<ContentBlock> mContentBlocks;
@@ -79,9 +81,11 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   public ContentBlockAdapter(Fragment fragment, List<ContentBlock> contentBlocks,
                              boolean showSpotMapContentLinks, String youtubeApiKey,
                              ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener contentBlock3ViewHolderInteractionListener,
+                             ContentBlock15ViewHolder.OnContentBlock15ViewHolderInteractionListener contentBlock15ViewHolderInteractionListener,
                              ArrayList<String> contentBlockUrlScheme, String mapboxStyle, String navigationButtonTintColorString, String contentButtonTextColorString,
                              String navigationMode, ContentBlock12ViewHolderInterface inter, Content content) {
     mOnContentBlock3ViewHolderInteractionListener = contentBlock3ViewHolderInteractionListener;
+    mOnContentBlock15ViewHolderInteractionListener = contentBlock15ViewHolderInteractionListener;
     mFragment = fragment;
     mContentBlocks = contentBlocks;
     showContentLinks = showSpotMapContentLinks;
@@ -132,7 +136,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     return mDelegatesManager.onCreateViewHolder(parent, viewType, mFragment, mEnduserApi, mYoutubeApiKey,
             mBitmapCache, mContentCache, showContentLinks, mListManager,
-            mOnContentBlock3ViewHolderInteractionListener, mOnXamoomContentFragmentInteractionListener, urlScheme, mapboxStyleString, navigationButtonTintColorString, contentButtonTextColorString, navigationMode, mContent);
+            mOnContentBlock3ViewHolderInteractionListener, mOnContentBlock15ViewHolderInteractionListener, mOnXamoomContentFragmentInteractionListener, urlScheme, mapboxStyleString, navigationButtonTintColorString, contentButtonTextColorString, navigationMode, mContent);
   }
 
   @Override

@@ -49,11 +49,13 @@ public class ContentBlock15Adapter implements AdapterDelegate<List<ContentBlock>
             ViewGroup parent, Fragment fragment, EnduserApi enduserApi, String youtubeApiKey,
             LruCache bitmapCache, LruCache contentCache, boolean showContentLinks, ListManager listManager, AdapterDelegatesManager adapterDelegatesManager,
             ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener onContentBlock3ViewHolderInteractionListener,
+            ContentBlock15ViewHolder.OnContentBlock15ViewHolderInteractionListener
+                    onContentBlock15ViewHolderInteractionListener,
             XamoomContentFragment.OnXamoomContentFragmentInteractionListener onXamoomContentFragmentInteractionListener, @Nullable ArrayList<String> urls,
             @Nullable String mapboxStyleString, @Nullable String navigationButtonTintColorString, @Nullable String contentButtonTextColorString, @Nullable String navigationMode, Content content) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.content_block_15_layout, parent, false);
-        return new ContentBlock15ViewHolder(view, enduserApi, fragment.getContext());
+        return new ContentBlock15ViewHolder(view, enduserApi, fragment.getContext(), onContentBlock15ViewHolderInteractionListener);
     }
 
     @Override
@@ -62,7 +64,6 @@ public class ContentBlock15Adapter implements AdapterDelegate<List<ContentBlock>
                                  boolean offline) {
         ContentBlock cb = items.get(position);
         ContentBlock15ViewHolder newHolder = (ContentBlock15ViewHolder) holder;
-//        newHolder.setStyle(style);
         newHolder.setupContentBlock(cb);
     }
 
