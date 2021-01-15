@@ -7,6 +7,7 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.content.res.Resources
@@ -99,6 +100,7 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
     var mActiveSpot: Spot? = null
     var showContentLinks: Boolean = false
     private var mTextColor: Int? = null
+    var sharedPreferences: SharedPreferences? = null
     var mapView = view.mapView
     var titleView = view.textView
     var bottomSheet = view.bottomSheetBehavior
@@ -135,7 +137,7 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
 
     init {
         mContext = fragment.context
-        print("text is here")
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext)
         mapView.onCreate(bundle)
         this.fragment = fragment
 
@@ -309,6 +311,9 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
             spotOptions = EnumSet.of(SpotFlags.INCLUDE_CONTENT, SpotFlags.HAS_LOCATION)
         }
 
+
+        val langPickerLanguage: String? = sharedPreferences?.getString("current_language_code", null)
+        if (langPickerLanguage != null) enduserApi.language = langPickerLanguage else enduserApi.language = enduserApi.systemLanguage
         enduserApi.getSpotsByTags(tags, PAGE_SIZE, cursor, spotOptions, null, object : APIListCallback<List<Spot>, List<Error>> {
             @RequiresApi(Build.VERSION_CODES.M)
             override fun finished(result: List<Spot>, cursor: String, hasMore: Boolean) {

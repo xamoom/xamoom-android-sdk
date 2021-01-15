@@ -6,6 +6,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.content.res.Resources
@@ -14,6 +15,7 @@ import android.graphics.PorterDuff
 import android.location.Location
 import android.net.Uri
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
@@ -76,9 +78,11 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
     var mLastLocation: Location? = null
     var fragment: Fragment
     private var mFusedLocationClient: FusedLocationProviderClient? = null
+    var sharedPreferences: SharedPreferences? = null
 
     init {
         mContext = fragment.context
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext)
         mapView.onCreate(bundle)
         this.fragment = fragment
 
@@ -257,6 +261,8 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
             spotOptions = EnumSet.of(SpotFlags.INCLUDE_CONTENT, SpotFlags.HAS_LOCATION)
         }
 
+        val langPickerLanguage: String? = sharedPreferences?.getString("current_language_code", null)
+        if (langPickerLanguage != null) enduserApi.language = langPickerLanguage else enduserApi.language = enduserApi.systemLanguage
         enduserApi.getSpotsByTags(tags, PAGE_SIZE, cursor, spotOptions, null, object : APIListCallback<List<Spot>, List<Error>> {
             override fun finished(result: List<Spot>, cursor: String, hasMore: Boolean) {
                 if (!result.isEmpty()) {
