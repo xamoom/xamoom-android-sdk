@@ -9,14 +9,17 @@
 package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
 import android.annotation.SuppressLint;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.webkit.GeolocationPermissions;
 import android.webkit.JavascriptInterface;
@@ -41,6 +44,11 @@ import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Displays the forms ContentBlock.
  */
@@ -53,15 +61,15 @@ public class ContentBlock15ViewHolder extends RecyclerView.ViewHolder {
     private SharedPreferences sharedPreferences;
     private Context context;
 
-    private String loadedUrl;
-    private ValueCallback<Uri> mUploadMessage;
-    public ValueCallback<Uri[]> uploadMessage;
-
-
-    public static final int REQUEST_SELECT_FILE = 100;
-    private final static int FILECHOOSER_RESULTCODE = 777;
-
     private OnContentBlock15ViewHolderInteractionListener mListener;
+
+    private ValueCallback<Uri> mUploadMessage;
+    private Uri mCapturedImageURI = null;
+    private ValueCallback<Uri[]> mFilePathCallback;
+    private String mCameraPhotoPath;
+    private static final int INPUT_FILE_REQUEST_CODE = 1;
+    private static final int FILECHOOSER_RESULTCODE = 1;
+    private static final String TAG = ContentBlock15ViewHolder.class.getSimpleName();
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -86,7 +94,6 @@ public class ContentBlock15ViewHolder extends RecyclerView.ViewHolder {
             String formBaseUrl = getModifiedFormUrl(sharedPreferences.getString("form_base_url", null));
             String formId = contentBlock.getText();
             String html = formBaseUrl + "/gfembed/?f=" + formId;
-            loadedUrl = html;
             formWebView.loadUrl(html);
         } else {
             rootLayout.setVisibility(View.GONE);
@@ -95,6 +102,8 @@ public class ContentBlock15ViewHolder extends RecyclerView.ViewHolder {
 
     @SuppressLint("SetJavaScriptEnabled")
     private void setWebViewSettings() {
+
+        mListener.requestCameraAndWritePermissions();
 
         formWebView.getSettings().setJavaScriptEnabled(true);
         formWebView.getSettings().setStandardFontFamily("Roboto-Light");
@@ -138,81 +147,102 @@ public class ContentBlock15ViewHolder extends RecyclerView.ViewHolder {
                 callback.invoke(origin, true, false);
             }
 
-            //The undocumented magic method override
-            //Eclipse will swear at you if you try to put @Override here
-            // For Android 3.0+
-            public boolean onShowFileChooser(WebView mWebView, ValueCallback<Uri[]> uploadMsg, WebChromeClient.FileChooserParams fileChooserParams) {
-                if (uploadMessage != null) {
-                    uploadMessage = null;
-                }
-                uploadMessage = uploadMsg;
-                Intent intent = null;
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                    intent = fileChooserParams.createIntent();
-                }
-                try {
-                    mListener.startCameraForResult(intent, REQUEST_SELECT_FILE, null, uploadMessage);
-                    return true;
-                } catch (ActivityNotFoundException e) {
-                    uploadMessage = null;
-                    return false;
-                }
+            private File createImageFile() throws IOException {
+
+                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                String imageFileName = "JPEG_" + timeStamp + "_";
+                File storageDir = Environment.getExternalStoragePublicDirectory(
+                        Environment.DIRECTORY_PICTURES);
+                File imageFile = File.createTempFile(
+                        imageFileName,  /* prefix */
+                        ".jpg",         /* suffix */
+                        storageDir      /* directory */
+                );
+                return imageFile;
+
             }
 
-            public void openFileChooser(ValueCallback<Uri> uploadMsg) {
+            public boolean onShowFileChooser(WebView view, ValueCallback<Uri[]> filePath, WebChromeClient.FileChooserParams fileChooserParams) {
+                mFilePathCallback = filePath;
+
+                mListener.requestCameraAndWritePermissions();
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (takePictureIntent.resolveActivity(context.getPackageManager()) != null) {
+                    // Create the File where the photo should go
+                    File photoFile = null;
+                    try {
+                        photoFile = createImageFile();
+                        takePictureIntent.putExtra("PhotoPath", mCameraPhotoPath);
+                    } catch (IOException ex) {
+                        // Error occurred while creating the File
+                        Log.e(TAG, "Unable to create Image File", ex);
+                    }
+                    // Continue only if the File was successfully created
+                    if (photoFile != null) {
+                        mCameraPhotoPath = "file:" + photoFile.getAbsolutePath();
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+                                Uri.fromFile(photoFile));
+                    } else {
+                        takePictureIntent = null;
+                    }
+                }
+                Intent contentSelectionIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                contentSelectionIntent.addCategory(Intent.CATEGORY_OPENABLE);
+                contentSelectionIntent.setType("image/*");
+                Intent[] intentArray;
+                if (takePictureIntent != null) {
+                    intentArray = new Intent[]{takePictureIntent};
+                } else {
+                    intentArray = new Intent[0];
+                }
+                Intent chooserIntent = new Intent(Intent.ACTION_CHOOSER);
+                chooserIntent.putExtra(Intent.EXTRA_INTENT, contentSelectionIntent);
+                chooserIntent.putExtra(Intent.EXTRA_TITLE, "Image Chooser");
+                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
+                mListener.startCameraForResult(chooserIntent, FILECHOOSER_RESULTCODE, null, mFilePathCallback, mCameraPhotoPath, mCapturedImageURI);
+                return true;
+            }
+
+            public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType) {
                 mUploadMessage = uploadMsg;
+                File imageStorageDir = new File(
+                        Environment.getExternalStoragePublicDirectory(
+                                Environment.DIRECTORY_PICTURES)
+                        , "AndroidExampleFolder");
+                if (!imageStorageDir.exists()) {
+                    // Create AndroidExampleFolder at sdcard
+                    imageStorageDir.mkdirs();
+                }
+                // Create camera captured image file path and name
+                File file = new File(
+                        imageStorageDir + File.separator + "IMG_"
+                                + String.valueOf(System.currentTimeMillis())
+                                + ".jpg");
+                mCapturedImageURI = Uri.fromFile(file);
+                // Camera capture image intent
+                final Intent captureIntent = new Intent(
+                        android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mCapturedImageURI);
                 Intent i = new Intent(Intent.ACTION_GET_CONTENT);
                 i.addCategory(Intent.CATEGORY_OPENABLE);
                 i.setType("image/*");
-                mListener.startCameraForResult(Intent.createChooser(i, "File Chooser"), FILECHOOSER_RESULTCODE, uploadMsg, null);
+                // Create file chooser intent
+                Intent chooserIntent = Intent.createChooser(i, "Image Chooser");
+                // Set camera intent to file chooser
+                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS
+                        , new Parcelable[]{captureIntent});
+                // On select image call onActivityResult method of activity
+                mListener.startCameraForResult(chooserIntent, FILECHOOSER_RESULTCODE, mUploadMessage, null, mCameraPhotoPath, mCapturedImageURI);
             }
 
-            // For Android 3.0+
-            public void openFileChooser(ValueCallback uploadMsg, String acceptType) {
-                mUploadMessage = uploadMsg;
-                Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-                i.addCategory(Intent.CATEGORY_OPENABLE);
-                i.setType("*/*");
-                mListener.startCameraForResult(Intent.createChooser(i, "File Chooser"), FILECHOOSER_RESULTCODE, uploadMsg, null);
-            }
-
-            //For Android 4.1
-            public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture) {
-                mUploadMessage = uploadMsg;
-                Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-                i.addCategory(Intent.CATEGORY_OPENABLE);
-                i.setType("image/*");
-                mListener.startCameraForResult(Intent.createChooser(i, "File Chooser"), FILECHOOSER_RESULTCODE, uploadMsg, null);
-
+            public void openFileChooser(ValueCallback<Uri> uploadMsg,
+                                        String acceptType,
+                                        String capture) {
+                openFileChooser(uploadMsg, acceptType);
             }
         });
 
-        formWebView.addJavascriptInterface(new FormsJavaScriptInterface(context), "AndroidFunction");
     }
-
-    public class FormsJavaScriptInterface {
-        Context mContext;
-
-        FormsJavaScriptInterface(Context c) {
-            mContext = c;
-        }
-
-        @JavascriptInterface
-        public void showToast(String toast) {
-            Toast.makeText(mContext, toast, Toast.LENGTH_SHORT).show();
-        }
-
-        @JavascriptInterface
-        public void openAndroidDialog() {
-            AlertDialog.Builder myDialog
-                    = new AlertDialog.Builder(mContext);
-            myDialog.setTitle("DANGER!");
-            myDialog.setMessage("You can do what you want!");
-            myDialog.setPositiveButton("ON", null);
-            myDialog.show();
-        }
-    }
-
 
     private String getModifiedFormUrl(String url) {
         if (!TextUtils.isEmpty(url))
@@ -230,6 +260,9 @@ public class ContentBlock15ViewHolder extends RecyclerView.ViewHolder {
 
 
     public interface OnContentBlock15ViewHolderInteractionListener {
-        void startCameraForResult(Intent intent, Integer resultCode, ValueCallback<Uri> mUploadMessage, ValueCallback<Uri[]> uploadMessage);
+        void startCameraForResult(Intent intent, Integer resultCode, ValueCallback<Uri> mUploadMessage, ValueCallback<Uri[]> mFilePathCallback, String mCameraPhotoPath, Uri mCapturedImageURI);
+
+        void requestCameraAndWritePermissions();
+
     }
 }

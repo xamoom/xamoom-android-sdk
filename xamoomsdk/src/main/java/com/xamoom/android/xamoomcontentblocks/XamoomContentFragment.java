@@ -12,12 +12,15 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -33,6 +36,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
+import android.widget.Toast;
 
 import com.xamoom.android.xamoomcontentblocks.Adapters.ContentBlockAdapter;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock12ViewHolderInterface;
@@ -50,6 +54,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.prefs.PreferenceChangeEvent;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * XamoomContentBlock is a helper for everyone to display the different contentBlocks delivered
@@ -111,11 +117,12 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   private String contentButtonTextColorString;
   private String navigationMode;
 
-  public static final int REQUEST_SELECT_FILE = 100;
-  private final static int FILECHOOSER_RESULTCODE = 777;
-
   private ValueCallback<Uri> mUploadMessage;
-  public ValueCallback<Uri[]> uploadMessage;
+  private Uri mCapturedImageURI = null;
+  private ValueCallback<Uri[]> mFilePathCallback;
+  private String mCameraPhotoPath;
+  private static final int INPUT_FILE_REQUEST_CODE = 1;
+  private static final int FILECHOOSER_RESULTCODE = 1;
 
 
   private Integer[] validBlockTypes = {-2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 14, 15};
@@ -475,10 +482,19 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   }
 
   @Override
-  public void startCameraForResult(Intent intent, Integer resultCode, ValueCallback<Uri> mUploadMessage, ValueCallback<Uri[]> uploadMessage) {
+  public void startCameraForResult(Intent intent, Integer resultCode, ValueCallback<Uri> mUploadMessage, ValueCallback<Uri[]> mFilePathCallback, String mCameraPhotoPath, Uri mCapturedImageURI) {
     this.mUploadMessage = mUploadMessage;
-    this.uploadMessage = uploadMessage;
+    this.mFilePathCallback = mFilePathCallback;
+    this.mCameraPhotoPath = mCameraPhotoPath;
+    this.mCapturedImageURI = mCapturedImageURI;
     startActivityForResult(intent, resultCode);
+  }
+
+  @Override
+  public void requestCameraAndWritePermissions() {
+    if (Build.VERSION.SDK_INT >= 23 && (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)) {
+      ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
+    }
   }
 
   /**
@@ -495,29 +511,58 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   }
 
   @Override
-  public void onActivityResult(int requestCode, int resultCode, @Nullable Intent intent) {
-    super.onActivityResult(requestCode, resultCode, intent);
-    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-    {
-      if (requestCode == REQUEST_SELECT_FILE)
-      {
-        if (uploadMessage == null)
+  public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      if (requestCode != INPUT_FILE_REQUEST_CODE || mFilePathCallback == null) {
+        super.onActivityResult(requestCode, resultCode, data);
+        return;
+      }
+      Uri[] results = null;
+      // Check that the response is a good one
+      PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("reload_content_from_sdk", false).apply();
+      if (resultCode == RESULT_OK) {
+
+        if (data == null || data.getDataString() == null) {
+          // If there is not data, then we may have taken a photo
+          if (mCameraPhotoPath != null) {
+            results = new Uri[]{Uri.parse(mCameraPhotoPath)};
+          }
+        } else {
+          String dataString = data.getDataString();
+          if (dataString != null) {
+            results = new Uri[]{Uri.parse(dataString)};
+          }
+        }
+      }
+      mFilePathCallback.onReceiveValue(results);
+      mFilePathCallback = null;
+    } else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+      if (requestCode != FILECHOOSER_RESULTCODE || mUploadMessage == null) {
+        super.onActivityResult(requestCode, resultCode, data);
+        return;
+      }
+      if (requestCode == FILECHOOSER_RESULTCODE) {
+        if (this.mUploadMessage == null) {
           return;
+        }
         PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("reload_content_from_sdk", false).apply();
-        uploadMessage.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(resultCode, intent));
-        uploadMessage = null;
+        Uri result = null;
+        try {
+          if (resultCode != RESULT_OK) {
+            result = null;
+          } else {
+
+            result = data == null ? mCapturedImageURI : data.getData();
+          }
+        } catch (Exception e) {
+          Toast.makeText(getContext(), "activity :" + e,
+                  Toast.LENGTH_LONG).show();
+        }
+        mUploadMessage.onReceiveValue(result);
+        mUploadMessage = null;
       }
     }
-    else if (requestCode == FILECHOOSER_RESULTCODE)
-    {
-      if (null == mUploadMessage)
-        return;
-      Uri result = intent == null || resultCode != -1 ? null : intent.getData();
-      PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("reload_content_from_sdk", false).apply();
-      mUploadMessage.onReceiveValue(result);
-      mUploadMessage = null;
-    }
-
   }
 
 
