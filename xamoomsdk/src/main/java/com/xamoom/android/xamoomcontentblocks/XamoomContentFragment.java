@@ -490,12 +490,6 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
     startActivityForResult(intent, resultCode);
   }
 
-  @Override
-  public void requestCameraAndWritePermissions() {
-    if (Build.VERSION.SDK_INT >= 23 && (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)) {
-      ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
-    }
-  }
 
   /**
    * Implement OnXamoomContentFragmentInteractionListener and override

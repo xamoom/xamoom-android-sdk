@@ -31,17 +31,13 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AlertDialog;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.R;
-import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 
 import java.io.File;
@@ -103,7 +99,6 @@ public class ContentBlock15ViewHolder extends RecyclerView.ViewHolder {
     @SuppressLint("SetJavaScriptEnabled")
     private void setWebViewSettings() {
 
-        mListener.requestCameraAndWritePermissions();
 
         formWebView.getSettings().setJavaScriptEnabled(true);
         formWebView.getSettings().setStandardFontFamily("Roboto-Light");
@@ -165,7 +160,6 @@ public class ContentBlock15ViewHolder extends RecyclerView.ViewHolder {
             public boolean onShowFileChooser(WebView view, ValueCallback<Uri[]> filePath, WebChromeClient.FileChooserParams fileChooserParams) {
                 mFilePathCallback = filePath;
 
-                mListener.requestCameraAndWritePermissions();
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 if (takePictureIntent.resolveActivity(context.getPackageManager()) != null) {
                     // Create the File where the photo should go
@@ -261,8 +255,5 @@ public class ContentBlock15ViewHolder extends RecyclerView.ViewHolder {
 
     public interface OnContentBlock15ViewHolderInteractionListener {
         void startCameraForResult(Intent intent, Integer resultCode, ValueCallback<Uri> mUploadMessage, ValueCallback<Uri[]> mFilePathCallback, String mCameraPhotoPath, Uri mCapturedImageURI);
-
-        void requestCameraAndWritePermissions();
-
     }
 }
