@@ -31,13 +31,17 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.R;
+import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 
 import java.io.File;
@@ -106,6 +110,7 @@ public class ContentBlock15ViewHolder extends RecyclerView.ViewHolder {
         formWebView.getSettings().setAllowFileAccess(true);
         formWebView.getSettings().setGeolocationEnabled(true);
         formWebView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+        formWebView.getSettings().setGeolocationDatabasePath(context.getFilesDir().getPath());
         if (Build.VERSION.SDK_INT >= 21) {
             formWebView.getSettings().setMixedContentMode(0);
             formWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
@@ -255,5 +260,7 @@ public class ContentBlock15ViewHolder extends RecyclerView.ViewHolder {
 
     public interface OnContentBlock15ViewHolderInteractionListener {
         void startCameraForResult(Intent intent, Integer resultCode, ValueCallback<Uri> mUploadMessage, ValueCallback<Uri[]> mFilePathCallback, String mCameraPhotoPath, Uri mCapturedImageURI);
+
+
     }
 }
