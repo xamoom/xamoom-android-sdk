@@ -50,7 +50,6 @@
             android:layout_marginStart="@dimen/contentblock_standard_padding"
             android:layout_marginEnd="@dimen/contentblock_standard_padding"
             android:backgroundTint="@color/app_template_primary_color"
-            a
             android:text="@string/content_list_load_more_button_text"
             />
 
