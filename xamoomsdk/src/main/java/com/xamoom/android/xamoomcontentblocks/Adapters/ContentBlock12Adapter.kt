@@ -1,6 +1,7 @@
 package com.xamoom.android.xamoomcontentblocks.Adapters
 
 import android.graphics.Bitmap
+import android.preference.PreferenceManager
 import androidx.fragment.app.Fragment
 import androidx.collection.LruCache
 import androidx.appcompat.app.AlertDialog
@@ -38,7 +39,13 @@ class ContentBlock12Adapter(val inter: ContentBlock12ViewHolderInterface): Adapt
 
         holder.setIsRecyclable(true)
 
-        EnduserApi.getSharedInstance().getContent(item.contentId, null, object : APIPasswordCallback<Content, List<Error>> {
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(holder.context)
+        val endUserApi = EnduserApi.getSharedInstance()
+
+        val langPickerLanguage: String? = sharedPreferences?.getString("current_language_code", null)
+        if (langPickerLanguage != null) endUserApi.language = langPickerLanguage else endUserApi.language = endUserApi.systemLanguage
+
+        endUserApi.getContent(item.contentId, null, object : APIPasswordCallback<Content, List<Error>> {
             override fun finished(result: Content) {
                 val contentBlocks = arrayListOf<ContentBlock>()
                 contentBlocks.addAll(result.contentBlocks)
