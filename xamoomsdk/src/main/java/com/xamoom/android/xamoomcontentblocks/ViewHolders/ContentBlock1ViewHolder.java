@@ -1,10 +1,10 @@
 /*
-* Copyright (c) 2017 xamoom GmbH <apps@xamoom.com>
-*
-* Licensed under the MIT License (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at the root of this project.
-*/
+ * Copyright (c) 2017 xamoom GmbH <apps@xamoom.com>
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at the root of this project.
+ */
 
 package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
@@ -20,17 +20,21 @@ import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.LightingColorFilter;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
+
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -52,9 +56,16 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
 
   private Fragment mFragment;
   private Context mContext;
+  private LinearLayout mAudioBlockRootLayout;
+  private View spaceBetweenMovingBar;
+  private LinearLayout mAudioControlsPanel;
   private TextView mTitleTextView;
   private TextView mArtistTextView;
   private TextView mRemainingSongTimeTextView;
+  private LinearLayout mFirstLineTextLinearLayout;
+  private LinearLayout mLastLineLinearLayout;
+  private TextView mSeekTimeLeftTextView;
+  private TextView mSeekTimeRightTextView;
   private Button mPlayPauseButton;
   private Button mForwardButton;
   private Button mBackwardButton;
@@ -137,7 +148,7 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
       // connected to it.
       try {
         Message msg = Message.obtain(null,
-            AudioPlayerService.MSG_REGISTER_CLIENT);
+                AudioPlayerService.MSG_REGISTER_CLIENT);
         msg.replyTo = messenger;
         mService.send(msg);
       } catch (RemoteException e) {
@@ -148,21 +159,19 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
       }
 
       Message msg = Message.obtain(null,
-          AudioPlayerService.MSG_SET_URL);
+              AudioPlayerService.MSG_SET_URL);
       msg.replyTo = messenger;
       Bundle bundle = new Bundle();
-      if(contentBlock != null) {
-        bundle.putString("URL", contentBlock.getFileId());
-        bundle.putString("POS", contentBlock.getId());
-        bundle.putString("TITLE", contentBlock.getTitle());
-        bundle.putString("ARTIST", contentBlock.getArtists());
-      }
+      bundle.putString("URL", contentBlock.getFileId());
+      bundle.putString("POS", contentBlock.getId());
+      bundle.putString("TITLE", contentBlock.getTitle());
+      bundle.putString("ARTIST", contentBlock.getArtists());
       msg.setData(bundle);
 
       try {
         mService.send(msg);
       } catch (RemoteException e) {
-        System.out.println("ContentBlock1ViewHolder:163 " + e.getMessage());
+        e.printStackTrace();
       }
     }
 
@@ -179,8 +188,8 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
     // applications replace our component.
 
     mContext.bindService(
-        new Intent(mContext, AudioPlayerService.class),
-        mConnection, Context.BIND_AUTO_CREATE);
+            new Intent(mContext, AudioPlayerService.class),
+            mConnection, Context.BIND_AUTO_CREATE);
     mIsBound = true;
   }
 
@@ -191,7 +200,7 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
       if (mService != null) {
         try {
           Message msg = Message.obtain(null,
-              AudioPlayerService.MSG_UNREGISTER_CLIENT);
+                  AudioPlayerService.MSG_UNREGISTER_CLIENT);
           msg.replyTo = messenger;
           mService.send(msg);
         } catch (RemoteException e) {
@@ -214,8 +223,14 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
     super(itemView);
     mFragment = fragment;
     mContext = fragment.getContext();
+    mAudioBlockRootLayout = (LinearLayout) itemView.findViewById(R.id.audio_block_root_layout);
+    spaceBetweenMovingBar = (View) itemView.findViewById(R.id.space_between_movings_bar);
+    mAudioControlsPanel = (LinearLayout) itemView.findViewById(R.id.controls_audio_layout);
     mTitleTextView = (TextView) itemView.findViewById(R.id.title_text_view);
     mArtistTextView = (TextView) itemView.findViewById(R.id.artist_text_view);
+    mFirstLineTextLinearLayout = (LinearLayout) itemView.findViewById(R.id.first_line_text_view);
+    mSeekTimeLeftTextView = (TextView) itemView.findViewById(R.id.seek_time_text_left);
+    mSeekTimeRightTextView = (TextView) itemView.findViewById(R.id.seek_time_text_right);
     mPlayPauseButton = (Button) itemView.findViewById(R.id.play_pause_button);
     mForwardButton = (Button) itemView.findViewById(R.id.forward_button);
     mBackwardButton = (Button) itemView.findViewById(R.id.backward_button);
@@ -223,6 +238,7 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
     mSongProgressBar = (ProgressBar) itemView.findViewById(R.id.song_progress_bar);
     mFileManager = FileManager.getInstance(fragment.getContext());
     mMovingBarsView = (MovingBarsView) itemView.findViewById(R.id.moving_bars_view);
+    mLastLineLinearLayout = (LinearLayout) itemView.findViewById(R.id.last_line_layout);
 
     int[] attrs = {R.attr.audio_player_button_tint};
     TypedArray ta = fragment.getContext().obtainStyledAttributes(R.style.ContentBlocksTheme_AudioPlayer, attrs);
@@ -265,6 +281,7 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
     }
   };
 
+  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   public void setupContentBlock(final ContentBlock contentBlock, boolean offline) {
     this.contentBlock = contentBlock;
     playing = false;
@@ -273,6 +290,19 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
     mBackwardButton.setEnabled(true);
     mSongProgressBar.setProgress(0);
     mRemainingSongTimeTextView.setText("");
+
+    if(mContext.getString(R.string.is_background_image).equals("true")) {
+      mAudioBlockRootLayout.setBackgroundDrawable(mContext.getDrawable(R.drawable.background_image));
+      mTitleTextView.setBackgroundDrawable(mContext.getDrawable(R.drawable.background_image));
+      mRemainingSongTimeTextView.setBackgroundDrawable(mContext.getDrawable(R.drawable.background_image));
+      mArtistTextView.setBackgroundDrawable(mContext.getDrawable(R.drawable.background_image));
+      mFirstLineTextLinearLayout.setBackgroundDrawable(mContext.getDrawable(R.drawable.background_image));
+      mAudioControlsPanel.setBackgroundDrawable(mContext.getDrawable(R.drawable.background_image));
+      mSeekTimeLeftTextView.setBackgroundDrawable(mContext.getDrawable(R.drawable.background_image));
+      mSeekTimeRightTextView.setBackgroundDrawable(mContext.getDrawable(R.drawable.background_image));
+      spaceBetweenMovingBar.setBackgroundDrawable(mContext.getDrawable(R.drawable.background_image));
+      mLastLineLinearLayout.setBackgroundDrawable(mContext.getDrawable(R.drawable.background_image));
+    }
 
     if (contentBlock.getTitle() != null)
       mTitleTextView.setText(contentBlock.getTitle());
@@ -293,7 +323,7 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
 
     if (mService != null) {
       Message msg = Message.obtain(null,
-          AudioPlayerService.MSG_SET_URL);
+              AudioPlayerService.MSG_SET_URL);
       msg.replyTo = messenger;
       Bundle bundle = new Bundle();
       bundle.putString("URL", urlString);
@@ -316,14 +346,14 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
         Message msg;
         if (playing) {
           msg = Message.obtain(null,
-              AudioPlayerService.MSG_ACTION_PAUSE);
+                  AudioPlayerService.MSG_ACTION_PAUSE);
           msg.replyTo = messenger;
           Bundle bundle = new Bundle();
           bundle.putString("POS", contentBlock.getId());
           msg.setData(bundle);
         } else {
           msg = Message.obtain(null,
-              AudioPlayerService.MSG_ACTION_PLAY);
+                  AudioPlayerService.MSG_ACTION_PLAY);
           msg.replyTo = messenger;
           Bundle bundle = new Bundle();
           bundle.putString("POS", contentBlock.getId());
@@ -345,11 +375,11 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
 
     if (TimeUnit.MILLISECONDS.toHours(milliseconds) > 0) {
       output = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(milliseconds),
-          TimeUnit.MILLISECONDS.toMinutes(milliseconds) % TimeUnit.HOURS.toMinutes(1),
-          TimeUnit.MILLISECONDS.toSeconds(milliseconds) % TimeUnit.MINUTES.toSeconds(1));
+              TimeUnit.MILLISECONDS.toMinutes(milliseconds) % TimeUnit.HOURS.toMinutes(1),
+              TimeUnit.MILLISECONDS.toSeconds(milliseconds) % TimeUnit.MINUTES.toSeconds(1));
     } else {
       output = String.format("%02d:%02d",TimeUnit.MILLISECONDS.toMinutes(milliseconds) % TimeUnit.HOURS.toMinutes(1),
-          TimeUnit.MILLISECONDS.toSeconds(milliseconds) % TimeUnit.MINUTES.toSeconds(1));
+              TimeUnit.MILLISECONDS.toSeconds(milliseconds) % TimeUnit.MINUTES.toSeconds(1));
     }
 
     return output;
@@ -364,7 +394,7 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
       }
 
       Message msg = Message.obtain(null,
-          AudioPlayerService.MSG_ACTION_SEEK_FORWARD);
+              AudioPlayerService.MSG_ACTION_SEEK_FORWARD);
       msg.replyTo = messenger;
 
       try {
@@ -383,7 +413,7 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
       }
 
       Message msg = Message.obtain(null,
-          AudioPlayerService.MSG_ACTION_SEEK_BACKWARD);
+              AudioPlayerService.MSG_ACTION_SEEK_BACKWARD);
       msg.replyTo = messenger;
 
       try {

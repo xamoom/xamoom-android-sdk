@@ -13,8 +13,11 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.net.Uri;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.os.Build;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -48,6 +51,7 @@ public class ContentBlock4ViewHolder extends RecyclerView.ViewHolder {
     this.urls = urls;
   }
 
+  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   public void setupContentBlock(final ContentBlock contentBlock, boolean offline) {
     if(contentBlock.getTitle() != null && !contentBlock.getTitle().equalsIgnoreCase("")) {
       mTitleTextView.setText(contentBlock.getTitle());
@@ -81,7 +85,7 @@ public class ContentBlock4ViewHolder extends RecyclerView.ViewHolder {
             break;
           }
         }
-        if (openInternal && contentBlock.getLinkType() != 12) {
+        if (openInternal) {
           Intent intent = new Intent(mFragment.getActivity(), XamoomContentWebViewActivity.class);
           intent.putExtra("url", contentUrl);
           mFragment.getActivity().startActivity(intent);
@@ -214,7 +218,11 @@ public class ContentBlock4ViewHolder extends RecyclerView.ViewHolder {
 
     ta.recycle();
 
-    mRootLayout.setBackgroundResource(backgroundColor);
+    if(mFragment.getContext().getString(R.string.is_background_image).equals("true")) {
+      mRootLayout.setBackground(mFragment.getContext().getDrawable(R.drawable.background_image));
+    } else {
+      mRootLayout.setBackgroundResource(backgroundColor);
+    }
     mIcon.setColorFilter(tintColor);
     mTitleTextView.setTextColor(tintColor);
     mContentTextView.setTextColor(tintColor);

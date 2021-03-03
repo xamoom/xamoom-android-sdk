@@ -1,19 +1,23 @@
 /*
-* Copyright (c) 2017 xamoom GmbH <apps@xamoom.com>
-*
-* Licensed under the MIT License (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at the root of this project.
-*/
+ * Copyright (c) 2017 xamoom GmbH <apps@xamoom.com>
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at the root of this project.
+ */
 
 package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
 import android.content.Intent;
 import android.net.Uri;
+
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.core.app.ShareCompat;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.os.Build;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -47,11 +51,16 @@ public class ContentBlock5ViewHolder extends RecyclerView.ViewHolder {
     mFileManager = FileManager.getInstance(mFragment.getContext());
   }
 
+  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   public void setupContentBlock(final ContentBlock contentBlock, final boolean offline) {
     if(contentBlock.getTitle() != null && !contentBlock.getTitle().equalsIgnoreCase("")) {
       mTitleTextView.setText(contentBlock.getTitle());
     } else {
       mTitleTextView.setText(null);
+    }
+
+    if(mFragment.getContext().getString(R.string.is_background_image).equals("true")) {
+      mRootLayout.setBackgroundDrawable(mFragment.getContext().getDrawable(R.drawable.background_image));
     }
 
     if(contentBlock.getArtists() != null && !contentBlock.getArtists().equalsIgnoreCase("")) {

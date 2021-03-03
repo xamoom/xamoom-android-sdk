@@ -131,8 +131,15 @@ class ContentEventViewHolder(itemView: View, val navigationMode: String?, val fr
         val navigationBackgroundColor = ta.getResourceId(R.styleable.Event_event_navigation_background_color, 0)
         val navigationTintColor = ta.getColor(R.styleable.Event_event_navigation_tint_color, Color.BLACK)
 
-        mCalendarLayout.setBackgroundResource(calendarBackgroundColor)
-        mNavigationLayout.setBackgroundResource(navigationBackgroundColor)
+        if(mContext!!.getString(R.string.is_background_image) == "true") {
+            mCalendarLayout.setBackgroundResource(R.drawable.background_image)
+            mNavigationLayout.setBackgroundResource(R.drawable.background_image)
+        } else {
+            mCalendarLayout.setBackgroundResource(calendarBackgroundColor)
+            mNavigationLayout.setBackgroundResource(navigationBackgroundColor)
+        }
+
+
         mNavigationTitleTextView.setTextColor(navigationTintColor)
         mNavigationDescriptionTextView.setTextColor(navigationTintColor)
         mCalendarTitleTextView.setTextColor(calendarTintColor)
