@@ -32,6 +32,8 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -291,7 +293,8 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
     mSongProgressBar.setProgress(0);
     mRemainingSongTimeTextView.setText("");
 
-    if(mContext.getString(R.string.is_background_image).equals("true")) {
+    String isBackgroundImage = PreferenceManager.getDefaultSharedPreferences(mContext).getString("is_background_image", null);
+    if(isBackgroundImage.equals("true")){
       mAudioBlockRootLayout.setBackgroundDrawable(mContext.getDrawable(R.drawable.background_image));
       mTitleTextView.setBackgroundDrawable(mContext.getDrawable(R.drawable.background_image));
       mRemainingSongTimeTextView.setBackgroundDrawable(mContext.getDrawable(R.drawable.background_image));

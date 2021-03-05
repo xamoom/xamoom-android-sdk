@@ -12,17 +12,14 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.location.Location
 import android.net.Uri
+import android.preference.PreferenceManager
 import android.provider.CalendarContract
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.RelativeLayout
 import android.widget.TextView
-
+import androidx.fragment.app.Fragment
 import com.xamoom.android.xamoomsdk.R
 import com.xamoom.android.xamoomsdk.Resource.Content
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock
@@ -131,7 +128,8 @@ class ContentEventViewHolder(itemView: View, val navigationMode: String?, val fr
         val navigationBackgroundColor = ta.getResourceId(R.styleable.Event_event_navigation_background_color, 0)
         val navigationTintColor = ta.getColor(R.styleable.Event_event_navigation_tint_color, Color.BLACK)
 
-        if(mContext!!.getString(R.string.is_background_image) == "true") {
+        val isBackgroundImage = PreferenceManager.getDefaultSharedPreferences(mContext).getString("is_background_image", null)
+        if (isBackgroundImage == "true") {
             mCalendarLayout.setBackgroundResource(R.drawable.background_image)
             mNavigationLayout.setBackgroundResource(R.drawable.background_image)
         } else {

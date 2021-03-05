@@ -19,6 +19,7 @@ import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -117,8 +118,8 @@ public class ContentBlock8ViewHolder extends RecyclerView.ViewHolder {
         mIconImageView.setImageResource(R.drawable.ic_web);
         break;
     }
-
-    if(mFragment.getContext().getString(R.string.is_background_image).equals("true")) {
+    String isBackgroundImage = PreferenceManager.getDefaultSharedPreferences(mFragment.getContext()).getString("is_background_image", null);
+    if(isBackgroundImage.equals("true")){
       mRootLayout.setBackground(mFragment.getContext().getDrawable(R.drawable.background_image));
     } else {
       mRootLayout.setBackgroundResource(backgroundColor);

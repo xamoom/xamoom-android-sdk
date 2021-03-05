@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -98,7 +99,7 @@ public class ContentBlock4ViewHolder extends RecyclerView.ViewHolder {
     mIcon.setColorFilter(Color.BLACK);
 
     TypedArray ta = mFragment.getContext()
-        .obtainStyledAttributes(R.style.ContentBlocksTheme_Links, R.styleable.Links);
+            .obtainStyledAttributes(R.style.ContentBlocksTheme_Links, R.styleable.Links);
 
     int backgroundColor = 0;
     int tintColor = 0;
@@ -218,7 +219,8 @@ public class ContentBlock4ViewHolder extends RecyclerView.ViewHolder {
 
     ta.recycle();
 
-    if(mFragment.getContext().getString(R.string.is_background_image).equals("true")) {
+    String isBackgroundImage = PreferenceManager.getDefaultSharedPreferences(mFragment.getContext()).getString("is_background_image", null);
+    if(isBackgroundImage.equals("true")){
       mRootLayout.setBackground(mFragment.getContext().getDrawable(R.drawable.background_image));
     } else {
       mRootLayout.setBackgroundResource(backgroundColor);

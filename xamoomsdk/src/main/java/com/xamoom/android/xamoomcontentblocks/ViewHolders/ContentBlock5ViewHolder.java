@@ -18,6 +18,7 @@ import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -59,7 +60,8 @@ public class ContentBlock5ViewHolder extends RecyclerView.ViewHolder {
       mTitleTextView.setText(null);
     }
 
-    if(mFragment.getContext().getString(R.string.is_background_image).equals("true")) {
+    String isBackgroundImage = PreferenceManager.getDefaultSharedPreferences(mFragment.getContext()).getString("is_background_image", null);
+    if(isBackgroundImage.equals("true")){
       mRootLayout.setBackgroundDrawable(mFragment.getContext().getDrawable(R.drawable.background_image));
     }
 
@@ -99,11 +101,11 @@ public class ContentBlock5ViewHolder extends RecyclerView.ViewHolder {
     }
 
     Uri fileUri = FileProvider.getUriForFile(mFragment.getContext(),
-        Config.AUTHORITY, file);
+            Config.AUTHORITY, file);
     Intent shareIntent = ShareCompat.IntentBuilder.from(mFragment.getActivity())
-        .setType(mFragment.getContext().getContentResolver().getType(fileUri))
-        .setStream(fileUri)
-        .getIntent();
+            .setType(mFragment.getContext().getContentResolver().getType(fileUri))
+            .setStream(fileUri)
+            .getIntent();
     shareIntent.setData(fileUri);
     shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 

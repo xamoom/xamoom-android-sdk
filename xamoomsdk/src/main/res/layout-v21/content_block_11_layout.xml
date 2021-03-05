@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="@dimen/contentblock_to_contentblock_margin"
+              android:theme="@style/ContentBlocksTheme">
+
+    <TextView
+        android:id="@+id/content_list_title_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/contentblock_title_size"
+        android:textColor="@color/black"
+        android:layout_marginStart="@dimen/contentblock_standard_padding"
+        android:layout_marginEnd="@dimen/contentblock_standard_padding"
+        android:layout_marginBottom="@dimen/contentblock_children_margin"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/content_list_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <TextView
+        android:id="@+id/content_list_error_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:visibility="gone"
+        android:text="@string/content_list_error_loading_text"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ProgressBar
+            android:id="@+id/content_list_progress_bar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_centerInParent="true"/>
+
+        <Button
+            android:id="@+id/content_list_load_more_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/contentblock_standard_padding"
+            android:layout_marginEnd="@dimen/contentblock_standard_padding"
+            android:backgroundTint="@color/app_template_primary_color"
+            android:text="@string/content_list_load_more_button_text"
+            />
+
+    </RelativeLayout>
+
+</LinearLayout>
