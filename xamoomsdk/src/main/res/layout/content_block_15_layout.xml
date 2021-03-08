@@ -5,19 +5,19 @@
     android:layout_height="wrap_content">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/rootLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="@dimen/contentblock_standard_padding"
-        android:layout_marginEnd="@dimen/contentblock_standard_padding"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:id="@+id/rootLayout">
+        android:layout_marginEnd="@dimen/contentblock_standard_padding"
+        android:layout_marginBottom="8dp">
 
         <ProgressBar
             android:id="@+id/form_progressBar"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center" />
 
         <WebView
             android:id="@+id/webView_form"
@@ -25,5 +25,13 @@
             android:layout_height="wrap_content" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+    <FrameLayout
+        android:id="@+id/form_cover_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:background="#B3FFFFFF"/>
 
 </FrameLayout>

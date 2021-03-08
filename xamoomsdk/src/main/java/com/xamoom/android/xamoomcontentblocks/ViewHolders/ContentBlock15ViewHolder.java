@@ -20,6 +20,7 @@ import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.GeolocationPermissions;
 import android.webkit.JavascriptInterface;
@@ -30,6 +31,7 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -38,6 +40,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.R;
@@ -47,6 +50,7 @@ import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -56,12 +60,14 @@ public class ContentBlock15ViewHolder extends RecyclerView.ViewHolder {
     private WebView formWebView;
     private CoordinatorLayout rootLayout;
     private ProgressBar progressBar;
+    private FrameLayout coverLayout;
 
     private EnduserApi mEnduserApi;
     private SharedPreferences sharedPreferences;
     private Context context;
 
     private OnContentBlock15ViewHolderInteractionListener mListener;
+    private XamoomContentFragment.OnXamoomContentFragmentInteractionListener onQuizResponseListener;
 
     private ValueCallback<Uri> mUploadMessage;
     private Uri mCapturedImageURI = null;
@@ -74,16 +80,17 @@ public class ContentBlock15ViewHolder extends RecyclerView.ViewHolder {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public ContentBlock15ViewHolder(View itemView, EnduserApi enduserApi, Context context,
-                                    OnContentBlock15ViewHolderInteractionListener onContentBlock15ViewHolderInteractionListener) {
+                                    OnContentBlock15ViewHolderInteractionListener onContentBlock15ViewHolderInteractionListener, XamoomContentFragment.OnXamoomContentFragmentInteractionListener onXamoomContentFragmentInteractionListener) {
         super(itemView);
         this.mListener = onContentBlock15ViewHolderInteractionListener;
+        this.onQuizResponseListener = onXamoomContentFragmentInteractionListener;
         this.context = context;
         this.mEnduserApi = enduserApi;
         this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         this.rootLayout = itemView.findViewById(R.id.rootLayout);
         this.formWebView = itemView.findViewById(R.id.webView_form);
         this.progressBar = itemView.findViewById(R.id.form_progressBar);
-
+        this.coverLayout = itemView.findViewById(R.id.form_cover_layout);
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -100,7 +107,7 @@ public class ContentBlock15ViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
+    @SuppressLint({"SetJavaScriptEnabled", "JavascriptInterface", "ClickableViewAccessibility"})
     private void setWebViewSettings() {
 
 
@@ -120,10 +127,24 @@ public class ContentBlock15ViewHolder extends RecyclerView.ViewHolder {
             formWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
 
+
+        if (mListener.isQuizSubmitted()) {
+            coverLayout.setVisibility(View.VISIBLE);
+            formWebView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    return true;
+                }
+            });
+        }
+
+        formWebView.addJavascriptInterface(new ShowHtmlJavaScriptInterface(onQuizResponseListener), "HTMLOUT");
+
         formWebView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
                 hideLoading();
+                view.loadUrl("javascript:window.HTMLOUT.showHTML('<head>'+document.getElementsByTagName('html')[0].innerHTML+'</head>');");
                 super.onPageFinished(view, url);
             }
 
@@ -257,10 +278,31 @@ public class ContentBlock15ViewHolder extends RecyclerView.ViewHolder {
         progressBar.setVisibility(View.GONE);
     }
 
+    private boolean isQuizSubmitted(String pageId) {
+        return false;
+    }
+
 
     public interface OnContentBlock15ViewHolderInteractionListener {
         void startCameraForResult(Intent intent, Integer resultCode, ValueCallback<Uri> mUploadMessage, ValueCallback<Uri[]> mFilePathCallback, String mCameraPhotoPath, Uri mCapturedImageURI);
 
+        boolean isQuizSubmitted();
 
     }
+}
+
+class ShowHtmlJavaScriptInterface {
+
+    private XamoomContentFragment.OnXamoomContentFragmentInteractionListener onQuizResponseListener;
+
+    public ShowHtmlJavaScriptInterface(XamoomContentFragment.OnXamoomContentFragmentInteractionListener onQuizResponseListener) {
+        this.onQuizResponseListener = onQuizResponseListener;
+    }
+
+    @JavascriptInterface
+    public void showHTML(String result) {
+        onQuizResponseListener.onQuizHtmlResponse(result);
+
+    }
+
 }

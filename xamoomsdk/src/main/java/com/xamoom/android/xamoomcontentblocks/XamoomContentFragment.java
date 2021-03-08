@@ -124,6 +124,8 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   private static final int INPUT_FILE_REQUEST_CODE = 1;
   private static final int FILECHOOSER_RESULTCODE = 1;
 
+  private boolean isQuizSubmitted = false;
+
 
   private Integer[] validBlockTypes = {-2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 14, 15};
 
@@ -490,6 +492,11 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
     startActivityForResult(intent, resultCode);
   }
 
+  @Override
+  public boolean isQuizSubmitted() {
+    return isQuizSubmitted;
+  }
+
 
   /**
    * Implement OnXamoomContentFragmentInteractionListener and override
@@ -502,6 +509,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   public interface OnXamoomContentFragmentInteractionListener {
     void clickedContentBlock(Content content);
     void clickedSpotMapContentLink(String contentId);
+    void onQuizHtmlResponse(String html);
   }
 
   @Override
@@ -582,6 +590,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
     return mContentBlocks;
   }
 
+
   // setters
 
 
@@ -592,6 +601,8 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   public void setContent(Content content) {
     setContent(content, true, false);
   }
+
+  public void setQuizSubmitted(boolean isQuizSubmitted) { this.isQuizSubmitted = isQuizSubmitted; }
 
   /**
    * Sets the content to display when fragment gets loaded.

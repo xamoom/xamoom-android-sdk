@@ -55,7 +55,7 @@ public class ContentBlock15Adapter implements AdapterDelegate<List<ContentBlock>
             @Nullable String mapboxStyleString, @Nullable String navigationButtonTintColorString, @Nullable String contentButtonTextColorString, @Nullable String navigationMode, Content content) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.content_block_15_layout, parent, false);
-        return new ContentBlock15ViewHolder(view, enduserApi, fragment.getContext(), onContentBlock15ViewHolderInteractionListener);
+        return new ContentBlock15ViewHolder(view, enduserApi, fragment.getContext(), onContentBlock15ViewHolderInteractionListener, onXamoomContentFragmentInteractionListener);
     }
 
     @Override
