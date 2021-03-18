@@ -1,10 +1,10 @@
 /*
-* Copyright (c) 2017 xamoom GmbH <apps@xamoom.com>
-*
-* Licensed under the MIT License (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at the root of this project.
-*/
+ * Copyright (c) 2017 xamoom GmbH <apps@xamoom.com>
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at the root of this project.
+ */
 
 package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
@@ -143,18 +143,26 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
             .into(mImageView);
         mImageProgressBar.setVisibility(View.GONE);
 
+      }
+      else if(fileId.endsWith(".gif")) {
+        Glide.with(mContext)
+                .load(fileId)
+                .asGif()
+                .dontAnimate()
+                .into(mImageView);
+        mImageProgressBar.setVisibility(View.GONE);
       } else {
         //making the scaleX to a factor scaleX
         Glide.with(mContext)
-            .load(fileId)
-            .diskCacheStrategy(DiskCacheStrategy.NONE)
-            .dontAnimate()
-            .into(new SimpleTarget<GlideDrawable>() {
-              public void onResourceReady(GlideDrawable drawable, GlideAnimation anim) {
-                mImageView.setImageDrawable(drawable);
-                mImageProgressBar.setVisibility(View.GONE);
-              }
-            });
+                .load(fileId)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .dontAnimate()
+                .into(new SimpleTarget<GlideDrawable>() {
+                  public void onResourceReady(GlideDrawable drawable, GlideAnimation anim) {
+                    mImageView.setImageDrawable(drawable);
+                    mImageProgressBar.setVisibility(View.GONE);
+                  }
+                });
       }
       resizeImageViewWithScaling(mImageView, scaleX);
     }
@@ -178,26 +186,26 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
                 return;
               }
 
-            boolean openInternal = false;
+              boolean openInternal = false;
 
-            for (int i = 0; i < urls.size(); i++) {
-              String url = urls.get(i);
-              if (contentUrl.contains(url)) {
-                openInternal = true;
-                break;
+              for (int i = 0; i < urls.size(); i++) {
+                String url = urls.get(i);
+                if (contentUrl.contains(url)) {
+                  openInternal = true;
+                  break;
+                }
+              }
+              if (openInternal) {
+                Intent intent = new Intent(fragment.getActivity(), XamoomContentWebViewActivity.class);
+                intent.putExtra("url", contentUrl);
+                fragment.getActivity().startActivity(intent);
+              } else {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(contentBlock.getLinkUrl()));
+                mContext.startActivity(intent);
               }
             }
-            if (openInternal) {
-              Intent intent = new Intent(fragment.getActivity(), XamoomContentWebViewActivity.class);
-              intent.putExtra("url", contentUrl);
-              fragment.getActivity().startActivity(intent);
-            } else {
-              Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(contentBlock.getLinkUrl()));
-              mContext.startActivity(intent);
-            }
-          }
 
-        }
+          }
 
         }
       });

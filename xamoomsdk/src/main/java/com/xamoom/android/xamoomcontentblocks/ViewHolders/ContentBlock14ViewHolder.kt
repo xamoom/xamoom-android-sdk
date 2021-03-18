@@ -778,12 +778,24 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
         spotImageView.layoutParams = imageParams
         spotImageView.requestLayout()
 
-        Glide.with(mContext!!)
-                .load(spot.publicImageUrl)
-                .dontAnimate()
-                .dontTransform()
-                .override(spotImageView.layoutParams.height, spotImageView.layoutParams.width)
-                .into(spotImageView)
+        val imageUrl = spot.publicImageUrl
+        if(imageUrl.endsWith(".gif")) {
+            Glide.with(mContext!!)
+                    .load(spot.publicImageUrl)
+                    .asGif()
+                    .dontAnimate()
+                    .dontTransform()
+                    .override(spotImageView.layoutParams.height, spotImageView.layoutParams.width)
+                    .into(spotImageView)
+
+        } else {
+            Glide.with(mContext!!)
+                    .load(spot.publicImageUrl)
+                    .dontAnimate()
+                    .dontTransform()
+                    .override(spotImageView.layoutParams.height, spotImageView.layoutParams.width)
+                    .into(spotImageView)
+        }
 
         if (spot.content != null && spot.content.id != null) {
             spotContentButton.visibility = View.VISIBLE
