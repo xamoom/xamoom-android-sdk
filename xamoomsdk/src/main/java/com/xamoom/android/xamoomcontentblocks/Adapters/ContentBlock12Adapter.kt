@@ -28,6 +28,8 @@ import java.util.ArrayList
 
 class ContentBlock12Adapter(val inter: ContentBlock12ViewHolderInterface): AdapterDelegate<ArrayList<ContentBlock>> {
 
+    private var positionToGallery = mutableMapOf<Int, ArrayList<ContentBlock>>()
+
     override fun isForViewType(items: ArrayList<ContentBlock>, position: Int): Boolean {
         val cb = items[position]
         return cb.blockType == 12
@@ -35,6 +37,7 @@ class ContentBlock12Adapter(val inter: ContentBlock12ViewHolderInterface): Adapt
 
     override fun onBindViewHolder(items: ArrayList<ContentBlock>, position: Int, holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, style: Style?, offline: Boolean) {
         val holder = holder as ContentBlock12ViewHolder
+        holder.setContentToNull()
         val item = items[position]
 
         holder.setIsRecyclable(true)
@@ -42,23 +45,28 @@ class ContentBlock12Adapter(val inter: ContentBlock12ViewHolderInterface): Adapt
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(holder.context)
         val endUserApi = EnduserApi.getSharedInstance()
 
-        val langPickerLanguage: String? = sharedPreferences?.getString("current_language_code", null)
-        if (langPickerLanguage != null) endUserApi.language = langPickerLanguage else endUserApi.language = endUserApi.systemLanguage
+        if(positionToGallery[position] != null) {
+            holder.setupContentBlock(positionToGallery[position]!!)
+        } else {
+            val langPickerLanguage: String? = sharedPreferences?.getString("current_language_code", null)
+            if (langPickerLanguage != null) endUserApi.language = langPickerLanguage else endUserApi.language = endUserApi.systemLanguage
 
-        endUserApi.getContent(item.contentId, null, object : APIPasswordCallback<Content, List<Error>> {
-            override fun finished(result: Content) {
-                val contentBlocks = arrayListOf<ContentBlock>()
-                contentBlocks.addAll(result.contentBlocks)
-                holder.setupContentBlock(contentBlocks)
-            }
+            endUserApi.getContent(item.contentId, null, object : APIPasswordCallback<Content, List<Error>> {
+                override fun finished(result: Content) {
+                    val contentBlocks = arrayListOf<ContentBlock>()
+                    contentBlocks.addAll(result.contentBlocks)
+                    holder.setupContentBlock(contentBlocks)
+                    positionToGallery[position] = contentBlocks
+                }
 
-            override fun error(error: List<Error>) {
-            }
+                override fun error(error: List<Error>) {
+                }
 
-            override fun passwordRequested() {
+                override fun passwordRequested() {
 
-            }
-        })
+                }
+            })
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, fragment: Fragment?, enduserApi: EnduserApi?, youtubeApiKey: String?, bitmapCache: LruCache<*, *>?, contentCache: LruCache<*, *>?,

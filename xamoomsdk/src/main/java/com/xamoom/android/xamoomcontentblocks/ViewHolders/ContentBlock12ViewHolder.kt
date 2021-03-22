@@ -23,6 +23,8 @@ class ContentBlock12ViewHolder(val view: View, val context: Context, val fragmen
         val layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
         layoutManager.isSmoothScrollbarEnabled = false
         recyclerView.layoutManager = layoutManager
+        val snapHelper = PagerSnapHelper()
+        snapHelper.attachToRecyclerView(recyclerView)
         recyclerView.setHasFixedSize(false)
         recyclerView.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -35,21 +37,29 @@ class ContentBlock12ViewHolder(val view: View, val context: Context, val fragmen
         })
     }
 
+    fun setContentToNull() {
+        recyclerView.adapter = null
+        if(recyclerView.itemDecorationCount != 0) {
+            for(i in 0 until recyclerView.itemDecorationCount) {
+                recyclerView.removeItemDecorationAt(i)
+            }
+        }
+    }
+
+
     fun setupContentBlock(cb: ArrayList<ContentBlock>) {
-        var cbList: ArrayList<ContentBlock> = arrayListOf()
+        var currentCbList: ArrayList<ContentBlock> = arrayListOf()
         for(block in cb) {
             if (block.blockType == 0 ||
                     block.blockType == 1 ||
                     block.blockType == 2 ||
                     block.blockType == 3) {
-                cbList.add(block)
+                currentCbList.add(block)
             }
         }
 
         if (recyclerView.adapter == null && recyclerView.itemDecorationCount == 0) {
-            recyclerView.adapter = HorizontalRecyclerViewAdapter(cbList, context, fragment, youtubeApiKey, bitmapCache)
-            val snapHelper = androidx.recyclerview.widget.PagerSnapHelper()
-            snapHelper.attachToRecyclerView(recyclerView)
+            recyclerView.adapter = HorizontalRecyclerViewAdapter(currentCbList, context, fragment, youtubeApiKey, bitmapCache)
             recyclerView.addItemDecoration(LinePagerIndicatorDecoration())
         }
     }
