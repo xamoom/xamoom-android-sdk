@@ -81,6 +81,9 @@ public class ContentBlock4ViewHolder extends RecyclerView.ViewHolder {
 
         for (int i = 0; i < urls.size(); i++) {
           String url = urls.get(i);
+          if(contentUrl.contains("mailto")) {
+            break;
+          }
           if (contentUrl.contains(url)) {
             openInternal = true;
             break;
