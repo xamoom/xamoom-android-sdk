@@ -294,7 +294,7 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
     mRemainingSongTimeTextView.setText("");
 
     String isBackgroundImage = PreferenceManager.getDefaultSharedPreferences(mContext).getString("is_background_image", null);
-    if(isBackgroundImage.equals("true")){
+    if(isBackgroundImage != null && isBackgroundImage.equals("true")){
       mAudioBlockRootLayout.setBackgroundDrawable(mContext.getDrawable(R.drawable.background_image));
       mTitleTextView.setBackgroundDrawable(mContext.getDrawable(R.drawable.background_image));
       mRemainingSongTimeTextView.setBackgroundDrawable(mContext.getDrawable(R.drawable.background_image));

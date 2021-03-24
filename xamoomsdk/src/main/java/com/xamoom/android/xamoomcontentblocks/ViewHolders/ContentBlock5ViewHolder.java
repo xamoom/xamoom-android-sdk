@@ -61,7 +61,7 @@ public class ContentBlock5ViewHolder extends RecyclerView.ViewHolder {
     }
 
     String isBackgroundImage = PreferenceManager.getDefaultSharedPreferences(mFragment.getContext()).getString("is_background_image", null);
-    if(isBackgroundImage.equals("true")){
+    if(isBackgroundImage != null && isBackgroundImage.equals("true")){
       mRootLayout.setBackgroundDrawable(mFragment.getContext().getDrawable(R.drawable.background_image));
     }
 

@@ -119,7 +119,7 @@ public class ContentBlock8ViewHolder extends RecyclerView.ViewHolder {
         break;
     }
     String isBackgroundImage = PreferenceManager.getDefaultSharedPreferences(mFragment.getContext()).getString("is_background_image", null);
-    if(isBackgroundImage.equals("true")){
+    if(isBackgroundImage != null && isBackgroundImage.equals("true")){
       mRootLayout.setBackground(mFragment.getContext().getDrawable(R.drawable.background_image));
     } else {
       mRootLayout.setBackgroundResource(backgroundColor);

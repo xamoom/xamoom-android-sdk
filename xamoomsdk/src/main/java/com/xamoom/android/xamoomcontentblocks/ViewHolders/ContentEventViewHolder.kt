@@ -129,7 +129,7 @@ class ContentEventViewHolder(itemView: View, val navigationMode: String?, val fr
         val navigationTintColor = ta.getColor(R.styleable.Event_event_navigation_tint_color, Color.BLACK)
 
         val isBackgroundImage = PreferenceManager.getDefaultSharedPreferences(mContext).getString("is_background_image", null)
-        if (isBackgroundImage == "true") {
+        if (isBackgroundImage != null && isBackgroundImage == "true") {
             mCalendarLayout.setBackgroundResource(R.drawable.background_image)
             mNavigationLayout.setBackgroundResource(R.drawable.background_image)
         } else {
