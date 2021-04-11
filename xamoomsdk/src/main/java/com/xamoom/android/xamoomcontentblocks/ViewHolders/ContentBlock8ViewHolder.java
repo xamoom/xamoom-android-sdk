@@ -13,10 +13,13 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.net.Uri;
 
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Build;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -67,6 +70,7 @@ public class ContentBlock8ViewHolder extends RecyclerView.ViewHolder {
     mFileManager = FileManager.getInstance(fragment.getContext());
   }
 
+  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   public void setupContentBlock(final ContentBlock contentBlock, final boolean offline) {
     if(contentBlock.getTitle() != null && !contentBlock.getTitle().equalsIgnoreCase("")) {
       mTitleTextView.setText(contentBlock.getTitle());
@@ -114,8 +118,13 @@ public class ContentBlock8ViewHolder extends RecyclerView.ViewHolder {
         mIconImageView.setImageResource(R.drawable.ic_web);
         break;
     }
+    String isBackgroundImage = PreferenceManager.getDefaultSharedPreferences(mFragment.getContext()).getString("is_background_image", null);
+    if(isBackgroundImage != null && isBackgroundImage.equals("true")){
+      mRootLayout.setBackground(mFragment.getContext().getDrawable(R.drawable.background_image));
+    } else {
+      mRootLayout.setBackgroundResource(backgroundColor);
+    }
 
-    mRootLayout.setBackgroundResource(backgroundColor);
     mIconImageView.setColorFilter(tintColor);
     mTitleTextView.setTextColor(tintColor);
     mContentTextView.setTextColor(tintColor);

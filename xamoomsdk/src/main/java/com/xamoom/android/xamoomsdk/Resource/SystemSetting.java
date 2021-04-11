@@ -1,10 +1,10 @@
 /*
-* Copyright (c) 2017 xamoom GmbH <apps@xamoom.com>
-*
-* Licensed under the MIT License (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at the root of this project.
-*/
+ * Copyright (c) 2017 xamoom GmbH <apps@xamoom.com>
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at the root of this project.
+ */
 
 package com.xamoom.android.xamoomsdk.Resource;
 
@@ -37,6 +37,10 @@ public class SystemSetting extends Resource implements Parcelable {
   private Boolean isLanguageSwitcherEnabled;
   @SerializedName("languages")
   private ArrayList<String> languages;
+  @SerializedName("is-forms-active")
+  private Boolean isFormsActive;
+  @SerializedName("forms-base-url")
+  private String formsBaseUrl;
 
   public SystemSetting() {
   }
@@ -144,4 +148,19 @@ public class SystemSetting extends Resource implements Parcelable {
   }
 
 
+  public Boolean isFormsActive() {
+    return isFormsActive;
+  }
+
+  public void setFormsActive(Boolean formsActive) {
+    isFormsActive = formsActive;
+  }
+
+  public String getFormsBaseUrl() {
+    return formsBaseUrl;
+  }
+
+  public void setFormsBaseUrl(String formsBaseUrl) {
+    this.formsBaseUrl = formsBaseUrl;
+  }
 }

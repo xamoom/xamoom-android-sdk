@@ -52,6 +52,10 @@
         <attr name="instagram_tint_color" format="reference|color" />
         <attr name="default_background_color" format="reference|color" />
         <attr name="default_tint_color" format="reference|color" />
+        <attr name="whatsapp_background_color" format="reference|color"/>
+        <attr name="whatsapp_tint_color" format="reference|color"/>
+        <attr name="sms_background_color" format="reference|color"/>
+        <attr name="sms_tint_color" format="reference|color"/>
     </declare-styleable>
 
     <declare-styleable name="Download">

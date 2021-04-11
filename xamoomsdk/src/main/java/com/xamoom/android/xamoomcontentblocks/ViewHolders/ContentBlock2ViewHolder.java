@@ -1,10 +1,10 @@
 /*
-* Copyright (c) 2017 xamoom GmbH <apps@xamoom.com>
-*
-* Licensed under the MIT License (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at the root of this project.
-*/
+ * Copyright (c) 2017 xamoom GmbH <apps@xamoom.com>
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at the root of this project.
+ */
 
 package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
@@ -300,13 +300,40 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
 
         final YouTubePlayerSupportFragment youTubePlayerSupportFragment = YouTubePlayerSupportFragment.newInstance();
         mFragment.getChildFragmentManager()
-            .beginTransaction()
-            .add(frame.getId(), youTubePlayerSupportFragment)
-            .commit();
+                .beginTransaction()
+                .replace(frame.getId(), youTubePlayerSupportFragment)
+                .commit();
 
         youTubePlayerSupportFragment.initialize(mYoutubeApiKey, new YouTubePlayer.OnInitializedListener() {
           @Override
           public void onInitializationSuccess(YouTubePlayer.Provider provider, final YouTubePlayer youTubePlayer, boolean b) {
+
+            youTubePlayer.setPlayerStateChangeListener(new YouTubePlayer.PlayerStateChangeListener() {
+              @Override
+              public void onLoading() {
+              }
+
+              @Override
+              public void onLoaded(String s) {
+              }
+
+              @Override
+              public void onAdStarted() {
+              }
+
+              @Override
+              public void onVideoStarted() {
+              }
+
+              @Override
+              public void onVideoEnded() {
+              }
+
+              @Override
+              public void onError(YouTubePlayer.ErrorReason errorReason) {
+              }
+            });
+
             youTubePlayer.setFullscreenControlFlags(YouTubePlayer.FULLSCREEN_FLAG_CUSTOM_LAYOUT);
 
             youTubePlayer.loadVideo(youtubeVideoId, seekSeconds * 1000);

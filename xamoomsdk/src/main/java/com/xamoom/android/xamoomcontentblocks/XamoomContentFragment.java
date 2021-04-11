@@ -12,24 +12,35 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
+import android.widget.Toast;
 
 import com.xamoom.android.xamoomcontentblocks.Adapters.ContentBlockAdapter;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock12ViewHolderInterface;
+import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock15ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock1ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock2ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
@@ -42,6 +53,9 @@ import com.xamoom.android.xamoomsdk.Resource.Style;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.prefs.PreferenceChangeEvent;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * XamoomContentBlock is a helper for everyone to display the different contentBlocks delivered
@@ -61,7 +75,7 @@ import java.util.List;
  * @author Raphael Seher
  *
  */
-public class XamoomContentFragment extends Fragment implements ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener, ContentBlock12ViewHolderInterface {
+public class XamoomContentFragment extends Fragment implements ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener, ContentBlock12ViewHolderInterface, ContentBlock15ViewHolder.OnContentBlock15ViewHolderInteractionListener {
   private static final String YOUTUBE_API_KEY = "YoutubeAPIKey";
   private static final String LIST_STATE = "LayoutManagerState";
   private static final String CONTENT_ID = "ContentID";
@@ -103,8 +117,17 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   private String contentButtonTextColorString;
   private String navigationMode;
 
+  private ValueCallback<Uri> mUploadMessage;
+  private Uri mCapturedImageURI = null;
+  private ValueCallback<Uri[]> mFilePathCallback;
+  private String mCameraPhotoPath;
+  private static final int INPUT_FILE_REQUEST_CODE = 1;
+  private static final int FILECHOOSER_RESULTCODE = 1;
 
-  private Integer[] validBlockTypes = {-2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 14};
+  private boolean isQuizSubmitted = false;
+
+
+  private Integer[] validBlockTypes = {-2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 14, 15};
 
   public static XamoomContentFragment newInstance(@NonNull String youtubeApiKey) {
     return newInstance(youtubeApiKey, null, null, null, null, null, null);
@@ -148,7 +171,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
 
   public XamoomContentFragment() {
     mContentBlockAdapter = new ContentBlockAdapter(this, mContentBlocks,
-            showSpotMapContentLinks, mYoutubeApiKey, this, contentBlockUrlScheme, mapboxStyleString, navigationButtonTintColorString, contentButtonTextColorString, navigationMode, this, mContent);
+            showSpotMapContentLinks, mYoutubeApiKey, this, this, contentBlockUrlScheme, mapboxStyleString, navigationButtonTintColorString, contentButtonTextColorString, navigationMode, this, mContent);
   }
 
   @Override
@@ -197,9 +220,10 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
+
+
     mRootView = inflater.inflate(R.layout.fragment_xamoom_content, container, false);
     mRootView.setBackgroundColor(mBackgroundColor);
-
     mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.contentblock_recycler_view);
     DefaultItemAnimator animator = new DefaultItemAnimator();
     animator.setMoveDuration(1050);
@@ -212,21 +236,19 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   @Override
   public void onStart() {
     super.onStart();
-
-    if(!isAnimated) {
-      if (mContentBlockAdapter != null) {
-        Log.v("test", "onStart");
-        mContentBlockAdapter.notifyDataSetChanged();
-      }
-    }
+//    if(!isAnimated) {
+//      if (mContentBlockAdapter != null) {
+//        Log.v("test", "onStart");
+//        mContentBlockAdapter.notifyDataSetChanged();
+//      }
+//    }
   }
 
   @Override
   public void onResume() {
     super.onResume();
-
-    mRecyclerView.scrollToPosition(0);
-    mContentBlockAdapter.notifyDataSetChanged();
+//    mRecyclerView.scrollToPosition(0);
+//    mContentBlockAdapter.notifyDataSetChanged();
   }
 
   @Override
@@ -461,6 +483,21 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
   }
 
+  @Override
+  public void startCameraForResult(Intent intent, Integer resultCode, ValueCallback<Uri> mUploadMessage, ValueCallback<Uri[]> mFilePathCallback, String mCameraPhotoPath, Uri mCapturedImageURI) {
+    this.mUploadMessage = mUploadMessage;
+    this.mFilePathCallback = mFilePathCallback;
+    this.mCameraPhotoPath = mCameraPhotoPath;
+    this.mCapturedImageURI = mCapturedImageURI;
+    startActivityForResult(intent, resultCode);
+  }
+
+  @Override
+  public boolean isQuizSubmitted() {
+    return isQuizSubmitted;
+  }
+
+
   /**
    * Implement OnXamoomContentFragmentInteractionListener and override
    * <code>clickedContentBlock(String)</code>.
@@ -472,7 +509,64 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   public interface OnXamoomContentFragmentInteractionListener {
     void clickedContentBlock(Content content);
     void clickedSpotMapContentLink(String contentId);
+    void onQuizHtmlResponse(String html);
   }
+
+  @Override
+  public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      if (requestCode != INPUT_FILE_REQUEST_CODE || mFilePathCallback == null) {
+        super.onActivityResult(requestCode, resultCode, data);
+        return;
+      }
+      Uri[] results = null;
+      // Check that the response is a good one
+      PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("reload_content_from_sdk", false).apply();
+      if (resultCode == RESULT_OK) {
+
+        if (data == null || data.getDataString() == null) {
+          // If there is not data, then we may have taken a photo
+          if (mCameraPhotoPath != null) {
+            results = new Uri[]{Uri.parse(mCameraPhotoPath)};
+          }
+        } else {
+          String dataString = data.getDataString();
+          if (dataString != null) {
+            results = new Uri[]{Uri.parse(dataString)};
+          }
+        }
+      }
+      mFilePathCallback.onReceiveValue(results);
+      mFilePathCallback = null;
+    } else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+      if (requestCode != FILECHOOSER_RESULTCODE || mUploadMessage == null) {
+        super.onActivityResult(requestCode, resultCode, data);
+        return;
+      }
+      if (requestCode == FILECHOOSER_RESULTCODE) {
+        if (this.mUploadMessage == null) {
+          return;
+        }
+        PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("reload_content_from_sdk", false).apply();
+        Uri result = null;
+        try {
+          if (resultCode != RESULT_OK) {
+            result = null;
+          } else {
+
+            result = data == null ? mCapturedImageURI : data.getData();
+          }
+        } catch (Exception e) {
+          Toast.makeText(getContext(), "activity :" + e,
+                  Toast.LENGTH_LONG).show();
+        }
+        mUploadMessage.onReceiveValue(result);
+        mUploadMessage = null;
+      }
+    }
+  }
+
 
   // getters
 
@@ -496,6 +590,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
     return mContentBlocks;
   }
 
+
   // setters
 
 
@@ -506,6 +601,8 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   public void setContent(Content content) {
     setContent(content, true, false);
   }
+
+  public void setQuizSubmitted(boolean isQuizSubmitted) { this.isQuizSubmitted = isQuizSubmitted; }
 
   /**
    * Sets the content to display when fragment gets loaded.

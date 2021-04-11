@@ -3,6 +3,8 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
 
+    <color name="app_template_primary_color">#000000</color>
+
     <color name="linkblock_default_background_color">#d1d1d1</color>
     <color name="linkblock_default_tint_color">#333333</color>
     <color name="linkblock_facebook_background_color">#3b5998</color>
@@ -43,6 +45,10 @@
     <color name="linkblock_windowsstore_tint_color">@android:color/white</color>
     <color name="linkblock_instagram_background_color">#bc2a8d</color>
     <color name="linkblock_instagram_tint_color">@android:color/white</color>
+    <color name="linkblock_whatsapp_background_color">#00e676</color>
+    <color name="linkblock_whatsapp_tint_color">@android:color/white</color>
+    <color name="linkblock_sms_background_color">#d1d1d1</color>
+    <color name="linkblock_sms_tint_color">@android:color/black</color>
 
     <color name="ebookblock_background_color">#058b8c</color>
     <color name="ebookblock_tint_color">@android:color/white</color>
@@ -66,6 +72,6 @@
     <color name="event_calendar_tint_color">@android:color/white</color>
     <color name="event_navigation_background_color">#0f9d58</color>
     <color name="event_navigation_tint_color">@android:color/white</color>
-    
+
     <color name="elevation_radio_button_color">#CC2371D1</color>
 </resources>

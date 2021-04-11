@@ -1,10 +1,10 @@
 /*
-* Copyright (c) 2017 xamoom GmbH <apps@xamoom.com>
-*
-* Licensed under the MIT License (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at the root of this project.
-*/
+ * Copyright (c) 2017 xamoom GmbH <apps@xamoom.com>
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at the root of this project.
+ */
 
 package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
@@ -13,8 +13,12 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.net.Uri;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.os.Build;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -48,6 +52,7 @@ public class ContentBlock4ViewHolder extends RecyclerView.ViewHolder {
     this.urls = urls;
   }
 
+  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   public void setupContentBlock(final ContentBlock contentBlock, boolean offline) {
     if(contentBlock.getTitle() != null && !contentBlock.getTitle().equalsIgnoreCase("")) {
       mTitleTextView.setText(contentBlock.getTitle());
@@ -76,6 +81,9 @@ public class ContentBlock4ViewHolder extends RecyclerView.ViewHolder {
 
         for (int i = 0; i < urls.size(); i++) {
           String url = urls.get(i);
+          if(contentUrl.contains("mailto")) {
+            break;
+          }
           if (contentUrl.contains(url)) {
             openInternal = true;
             break;
@@ -94,7 +102,7 @@ public class ContentBlock4ViewHolder extends RecyclerView.ViewHolder {
     mIcon.setColorFilter(Color.BLACK);
 
     TypedArray ta = mFragment.getContext()
-        .obtainStyledAttributes(R.style.ContentBlocksTheme_Links, R.styleable.Links);
+            .obtainStyledAttributes(R.style.ContentBlocksTheme_Links, R.styleable.Links);
 
     int backgroundColor = 0;
     int tintColor = 0;
@@ -195,6 +203,16 @@ public class ContentBlock4ViewHolder extends RecyclerView.ViewHolder {
         tintColor = ta.getColor(R.styleable.Links_instagram_tint_color, Color.BLACK);
         mIcon.setImageResource(R.drawable.ic_instagram);
         break;
+      case 19:
+        backgroundColor = ta.getResourceId(R.styleable.Links_sms_background_color, 0);
+        tintColor = ta.getColor(R.styleable.Links_sms_tint_color, Color.WHITE);
+        mIcon.setImageResource(R.drawable.ic_sms);
+        break;
+      case 20:
+        backgroundColor = ta.getResourceId(R.styleable.Links_whatsapp_background_color, 0);
+        tintColor = ta.getColor(R.styleable.Links_whatsapp_tint_color, Color.WHITE);
+        mIcon.setImageResource(R.drawable.ic_whatsapp);
+        break;
       default:
         backgroundColor = ta.getResourceId(R.styleable.Links_default_background_color, 0);
         tintColor = ta.getColor(R.styleable.Links_default_tint_color, Color.BLACK);
@@ -204,7 +222,12 @@ public class ContentBlock4ViewHolder extends RecyclerView.ViewHolder {
 
     ta.recycle();
 
-    mRootLayout.setBackgroundResource(backgroundColor);
+    String isBackgroundImage = PreferenceManager.getDefaultSharedPreferences(mFragment.getContext()).getString("is_background_image", null);
+    if(isBackgroundImage != null && isBackgroundImage.equals("true")){
+      mRootLayout.setBackground(mFragment.getContext().getDrawable(R.drawable.background_image));
+    } else {
+      mRootLayout.setBackgroundResource(backgroundColor);
+    }
     mIcon.setColorFilter(tintColor);
     mTitleTextView.setTextColor(tintColor);
     mContentTextView.setTextColor(tintColor);

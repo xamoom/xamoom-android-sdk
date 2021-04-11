@@ -7,15 +7,19 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.content.res.Resources
 import android.graphics.Color
+import android.graphics.PointF
 import android.graphics.PorterDuff
+import android.graphics.drawable.Drawable
 import android.location.Location
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.util.Log
 import android.view.Gravity
 import android.view.MotionEvent
@@ -26,6 +30,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.Fragment
 import at.rags.morpheus.Error
 import com.bumptech.glide.Glide
@@ -37,9 +42,9 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mapbox.android.core.permissions.PermissionsManager
-import com.mapbox.mapboxsdk.annotations.IconFactory
-import com.mapbox.mapboxsdk.annotations.Marker
-import com.mapbox.mapboxsdk.annotations.MarkerOptions
+import com.mapbox.geojson.Feature
+import com.mapbox.geojson.FeatureCollection
+import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.camera.CameraPosition
 import com.mapbox.mapboxsdk.camera.CameraUpdate
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
@@ -50,6 +55,8 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.style.layers.LineLayer
 import com.mapbox.mapboxsdk.style.layers.Property
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory.*
+import com.mapbox.mapboxsdk.style.layers.SymbolLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.xamoom.android.xamoomcontentblocks.Views.CustomMapViewWithChart
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment
@@ -62,6 +69,7 @@ import com.xamoom.android.xamoomsdk.Resource.ContentBlock
 import com.xamoom.android.xamoomsdk.Resource.Spot
 import com.xamoom.android.xamoomsdk.Resource.Style
 import okhttp3.*
+import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 import java.math.BigDecimal
@@ -74,6 +82,7 @@ import kotlin.math.ceil
 import kotlin.math.cos
 import kotlin.math.sin
 
+@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 @SuppressLint("ClickableViewAccessibility")
 class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?, val enduserApi: EnduserApi, fragment: Fragment, val listener: XamoomContentFragment.OnXamoomContentFragmentInteractionListener,
                                private val mapBoxStyleString: String? = DEFAULT_MAPBOX_STYLE_STRING, private val navigationTintColorString: String?, private val contentButtonTextColorString: String?, private val navigationMode: String? = "d") : androidx.recyclerview.widget.RecyclerView.ViewHolder(view), OnMapReadyCallback {
@@ -88,6 +97,7 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
     var mActiveSpot: Spot? = null
     var showContentLinks: Boolean = false
     private var mTextColor: Int? = null
+    var sharedPreferences: SharedPreferences? = null
     var mapView = view.mapView
     var titleView = view.textView
     var bottomSheet = view.bottomSheetBehavior
@@ -122,8 +132,13 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
     private var infoTitle = ""
     private var isCurrentMetric = true
 
+    private val SINGLE_SYMBOL_ICON_ID = "single-symbol-icon-id"
+    private val SYMBOL_SOURCE_ID = "marker"
+    private val SYMBOL_LAYER_ID = "points_layer"
+
     init {
         mContext = fragment.context
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext)
         mapView.onCreate(bundle)
         this.fragment = fragment
 
@@ -297,7 +312,11 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
             spotOptions = EnumSet.of(SpotFlags.INCLUDE_CONTENT, SpotFlags.HAS_LOCATION)
         }
 
+
+        val langPickerLanguage: String? = sharedPreferences?.getString("current_language_code", null)
+        if (langPickerLanguage != null) enduserApi.language = langPickerLanguage else enduserApi.language = enduserApi.systemLanguage
         enduserApi.getSpotsByTags(tags, PAGE_SIZE, cursor, spotOptions, null, object : APIListCallback<List<Spot>, List<Error>> {
+            @RequiresApi(Build.VERSION_CODES.M)
             override fun finished(result: List<Spot>, cursor: String, hasMore: Boolean) {
                 if (!result.isEmpty()) {
                     mSpotList.addAll(result)
@@ -311,7 +330,8 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
                         callback.finished(mSpotList, "", false)
                     }
                 } else {
-                    centerspotButton.visibility = View.GONE
+//                    centerspotButton.visibility = View.GONE
+                    getStyle(null)
                 }
             }
 
@@ -321,21 +341,29 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
         })
     }
 
-    private fun getStyle(systemId: String) {
-        enduserApi.getStyle(systemId, object : APICallback<Style, List<Error>> {
-            override fun finished(result: Style) {
-                mBase64Icon = result.customMarker
-                graphColor = result.highlightFontColor
-                if (mapView.isDestroyed) {
-                    return
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun getStyle(systemId: String?) {
+        if (fragment.activity?.getColor(R.color.app_template_primary_color) != null) {
+            graphColor = "#" + Integer.toHexString(fragment.activity?.getColor(R.color.app_template_primary_color)!!)
+        }
+        if(systemId == null) {
+            mapView.getMapAsync(this@ContentBlock14ViewHolder)
+        } else {
+            enduserApi.getStyle(systemId, object : APICallback<Style, List<Error>> {
+                @RequiresApi(Build.VERSION_CODES.M)
+                override fun finished(result: Style) {
+                    mBase64Icon = result.customMarker
+                    if (mapView.isDestroyed) {
+                        return
+                    }
+                    mapView.getMapAsync(this@ContentBlock14ViewHolder)
                 }
-                mapView.getMapAsync(this@ContentBlock14ViewHolder)
-            }
 
-            override fun error(error: List<Error>) {
-                Log.e("", "getStyle error: $error")
-            }
-        })
+                override fun error(error: List<Error>) {
+                    Log.e("", "getStyle error: $error")
+                }
+            })
+        }
     }
 
     fun setStyle(style: Style?) {
@@ -349,6 +377,8 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
         }
     }
 
+    @SuppressLint("WrongConstant")
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onMapReady(mapboxMap: MapboxMap) {
         if (mapView.isDestroyed) {
             return
@@ -357,34 +387,21 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
         this.mapBoxMap = mapboxMap
         var style = DEFAULT_MAPBOX_STYLE_STRING
         if (!mapBoxStyleString.isNullOrEmpty()) {
-            style = mapBoxStyleString!!
+            style = mapBoxStyleString
         }
 
 
 
         mapboxMap.setMaxZoomPreference(17.4)
         mapBoxMap!!.setStyle(style) { style ->
+
             showRoute()
-
-            var image = ContentBlock9ViewHolderUtils.getIcon(mBase64Icon, mContext)
-            val icon = IconFactory.getInstance(mContext!!)
-
-            var markers: ArrayList<Marker> = arrayListOf()
-            for (s in mSpotList) {
-                val marker = MarkerOptions()
-                        .position(LatLng(s.location.latitude, s.location.longitude))
-                        .title(s.name)
-                        .icon(icon.fromBitmap(image))
-                markers.add(mapboxMap.addMarker(marker))
-            }
+            showPoints()
+            calculateCoordinates()
 
 
-            mapboxMap.setOnMarkerClickListener { marker ->
-                val markerindex = markers.indexOf(marker)
-                val spot = mSpotList.get(markerindex)
-
-                showSpotDetails(spot)
-                return@setOnMarkerClickListener true
+            mapboxMap.addOnMapClickListener {
+                handleClickIcon(mapboxMap.projection.toScreenLocation(it))
             }
 
             mapBoxStyle = style
@@ -393,19 +410,29 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
         }
 
         setExtraButtons()
-        calculateCoordinates()
+    }
 
+    private fun handleClickIcon(screenPoint: PointF): Boolean {
+        val markerFeatures: List<Feature> = this.mapBoxMap!!.queryRenderedFeatures(screenPoint, SYMBOL_LAYER_ID)
+        if(markerFeatures.isNotEmpty()) {
+            for(spot in mSpotList) {
+                if(spot.name == markerFeatures[0].getProperty("title").asString) {
+                    showSpotDetails(spot)
+                }
+            }
+        }
+        return true
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    private fun setExtraButtons(){
-        zoomIn.setOnClickListener{
+    private fun setExtraButtons() {
+        zoomIn.setOnClickListener {
             val previousCameraPosition = mapBoxMap?.cameraPosition
             mapBoxMap!!.animateCamera(CameraUpdateFactory.newCameraPosition(
                     CameraPosition.Builder().target(previousCameraPosition!!.target).zoom(previousCameraPosition.zoom + 1).tilt(previousCameraPosition.tilt).build()))
         }
 
-        zoomOut.setOnClickListener{
+        zoomOut.setOnClickListener {
             val previousCameraPosition = mapBoxMap?.cameraPosition
             mapBoxMap!!.animateCamera(CameraUpdateFactory.newCameraPosition(
                     CameraPosition.Builder().target(previousCameraPosition!!.target).zoom(previousCameraPosition.zoom - 1).tilt(previousCameraPosition.tilt).build()))
@@ -414,6 +441,39 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
         mapBoxMap!!.uiSettings.isCompassEnabled = true
         mapBoxMap!!.uiSettings.compassGravity = Gravity.START
         mapBoxMap!!.uiSettings.setCompassFadeFacingNorth(false)
+    }
+
+
+    private fun showPoints() {
+        val latLngArray = arrayListOf<LatLng>()
+        val points = arrayListOf<Feature>()
+
+        for (spot in mSpotList) {
+            val point = Feature.fromGeometry(Point.fromLngLat(spot.location.longitude, spot.location.latitude))
+            point.addStringProperty("title", spot.name)
+            points.add(point)
+            latLngArray.add(LatLng(spot.location.latitude, spot.location.longitude))
+        }
+
+
+        fragment.activity?.runOnUiThread {
+            mapBoxMap?.getStyle {
+                it.addImage(SINGLE_SYMBOL_ICON_ID,
+                        ContentBlock9ViewHolderUtils.getIcon(mBase64Icon, mContext)
+                )
+                it.addSource(
+                        GeoJsonSource(
+                                SYMBOL_SOURCE_ID,
+                                FeatureCollection.fromFeatures(points)
+                        )
+                )
+                val pointsSymbolLayer = SymbolLayer(SYMBOL_LAYER_ID, SYMBOL_SOURCE_ID).withProperties(
+                        iconImage(SINGLE_SYMBOL_ICON_ID),
+                        iconSize(0.9f)
+                )
+                it.addLayer(pointsSymbolLayer)
+            }
+        }
     }
 
 
@@ -447,14 +507,18 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
                     println("Content block 14 Tours request failure")
                 }
 
-                @SuppressLint("SimpleDateFormat")
+                @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+                @SuppressLint("SimpleDateFormat", "ResourceType")
                 override fun onResponse(call: Call, response: Response) {
                     val responseBody = response.body()?.string()
 
 
                     val firstFeature = JSONObject(responseBody).getJSONArray("features").getJSONObject(0)
 
-                    infoTitle = firstFeature.getJSONObject("properties").getString("name")
+                    infoTitle = try {
+                        firstFeature.getJSONObject("properties").getString("name")
+                    } catch (e: JSONException) { "-" }
+
                     val geometry = firstFeature.getJSONObject("geometry")
                     val coordinates = geometry.getJSONArray("coordinates")
 
@@ -489,15 +553,40 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
                                 feet = null
                             }
 
+
+
+                            if (i == 0) {
+                                fragment.activity?.runOnUiThread {
+                                    mapBoxMap?.getStyle {
+                                        val tourBeginning = fragment.activity?.getDrawable(R.drawable.tour_icon)
+                                        if(tourBeginning != null) {
+
+                                            val symbolLayerIconFeatureList = mutableListOf<Feature>()
+                                            symbolLayerIconFeatureList.add(Feature.fromGeometry(Point.fromLngLat(longitude, latitude)))
+
+                                            it.addImage("tour-start-icon", tourBeginning)
+                                            it.addSource(GeoJsonSource("tour-start-source", FeatureCollection.fromFeatures(symbolLayerIconFeatureList)))
+                                            it.addLayerBelow(SymbolLayer("tour-start-layer", "tour-start-source")
+                                                    .withProperties(
+                                                            iconImage("tour-start-icon"),
+                                                            iconSize(0.6f),
+                                                            iconAllowOverlap(true),
+                                                            iconIgnorePlacement(true)
+                                                    ), SYMBOL_LAYER_ID)
+                                        }
+                                    }
+                                }
+                            }
+
                             if (i != 0) {
                                 val kiloMetres = getDistanceBetweenPoints(previousLtd, previousLong, latitude, longitude)
                                 distanceMetric += kiloMetres
                                 distanceImperial += kiloMetres.div(BigDecimal(1.609344, MathContext.DECIMAL64))
-                                if(altitude != null && feet != null) {
+                                if (altitude != null && feet != null) {
                                     if (altitude - previousAltitudeMetres > 0) {
                                         ascentMetres += altitude - previousAltitudeMetres
                                         ascentFeet += feet - previousAltitudeFeet
-                                    } else if(previousAltitudeMetres - altitude > 0) {
+                                    } else if (previousAltitudeMetres - altitude > 0) {
                                         descentMetres += previousAltitudeMetres - altitude
                                         descentFeet += previousAltitudeFeet - feet
                                     }
@@ -511,7 +600,7 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
                             println("y(alt) in feet is $feet")
                             previousLong = longitude
                             previousLtd = latitude
-                            if(altitude != null && feet != null) {
+                            if (altitude != null && feet != null) {
                                 previousAltitudeMetres = altitude
                                 previousAltitudeFeet = feet
                                 elevationMetricValues.add(Entry(distanceMetric.toFloat(), altitude.toFloat()))
@@ -523,7 +612,7 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
                     }
                     metricTotalDistance = distanceMetric
                     imperialTotalDistance = distanceImperial
-                    if(distanceImperial.toInt() != 0)
+                    if (distanceImperial.toInt() != 0)
                         routeSpentTime = getTimeInHours(distanceImperial.toDouble() / 3.1) + " h"
 
                     print("ascent metres feet $ascentMetres $ascentFeet\n")
@@ -550,6 +639,13 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
 
     }
 
+    private fun setTint(d: Drawable, color: Int): Drawable {
+        val wrappedDrawable: Drawable = DrawableCompat.wrap(d)
+        DrawableCompat.setTint(wrappedDrawable, color)
+        return wrappedDrawable
+    }
+
+
 
     private fun getTimeInHours(timeInDec: Double): String {
         val doubleAsString: String = java.lang.String.valueOf(timeInDec)
@@ -560,8 +656,7 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
     }
 
 
-
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "RestrictedApi")
     private fun showInfoButton() {
         infoButton.visibility = View.VISIBLE
         infoButton.setOnClickListener {
@@ -575,7 +670,7 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
             val timeDescription = dialog.findViewById<TextView>(R.id.info_time_description)
             dialog.findViewById<TextView>(R.id.info_time).text = routeSpentTime
             dialog.findViewById<TextView>(R.id.info_title).text = infoTitle
-            if(isCurrentMetric) {
+            if (isCurrentMetric) {
                 distance.text = "${df.format(metricTotalDistance)} km"
                 ascent.text = "${ascentMetres.toInt()} m"
                 descent.text = "${descentMetres.toInt()} m"
@@ -683,12 +778,24 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
         spotImageView.layoutParams = imageParams
         spotImageView.requestLayout()
 
-        Glide.with(mContext!!)
-                .load(spot.publicImageUrl)
-                .dontAnimate()
-                .dontTransform()
-                .override(spotImageView.layoutParams.height, spotImageView.layoutParams.width)
-                .into(spotImageView)
+        val imageUrl = spot.publicImageUrl
+        if(imageUrl.endsWith(".gif")) {
+            Glide.with(mContext!!)
+                    .load(spot.publicImageUrl)
+                    .asGif()
+                    .dontAnimate()
+                    .dontTransform()
+                    .override(spotImageView.layoutParams.height, spotImageView.layoutParams.width)
+                    .into(spotImageView)
+
+        } else {
+            Glide.with(mContext!!)
+                    .load(spot.publicImageUrl)
+                    .dontAnimate()
+                    .dontTransform()
+                    .override(spotImageView.layoutParams.height, spotImageView.layoutParams.width)
+                    .into(spotImageView)
+        }
 
         if (spot.content != null && spot.content.id != null) {
             spotContentButton.visibility = View.VISIBLE

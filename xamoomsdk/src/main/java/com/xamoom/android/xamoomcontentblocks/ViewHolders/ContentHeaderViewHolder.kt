@@ -148,6 +148,7 @@ class ContentHeaderViewHolder(itemView: View, val navigationMode: String?, val f
 
         if (contentBlock.title != null) {
             mTitleTextView.text = contentBlock.title
+            print("title text ${contentBlock.text}")
         } else {
             mTitleTextView.visibility = View.GONE
             val params = mTextView.layoutParams as LinearLayout.LayoutParams
@@ -155,10 +156,13 @@ class ContentHeaderViewHolder(itemView: View, val navigationMode: String?, val f
             mTextView.layoutParams = params
         }
 
-        if (contentBlock.text != null && !contentBlock.text.equals("<p><br></p>", ignoreCase = true)) {
+        if (contentBlock.text != null && contentBlock.text != "" && !contentBlock.text.equals("<p><br></p>", ignoreCase = true)) {
             mTextView.text = contentBlock.text
         } else {
             mTextView.visibility = View.GONE
+            val params = mTextView.layoutParams as LinearLayout.LayoutParams
+            params.setMargins(0, 0, 0, 0)
+            mTextView.layoutParams = params
         }
 
         if (mStyle != null && mStyle!!.foregroundFontColor != null) {

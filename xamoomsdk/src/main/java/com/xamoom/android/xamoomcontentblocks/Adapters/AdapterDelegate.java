@@ -1,10 +1,10 @@
 /*
-* Copyright (c) 2017 xamoom GmbH <apps@xamoom.com>
-*
-* Licensed under the MIT License (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at the root of this project.
-*/
+ * Copyright (c) 2017 xamoom GmbH <apps@xamoom.com>
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at the root of this project.
+ */
 
 package com.xamoom.android.xamoomcontentblocks.Adapters;
 
@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import com.xamoom.android.xamoomcontentblocks.ListManager;
+import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock15ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.EnduserApi;
@@ -58,9 +59,11 @@ public interface AdapterDelegate<T> {
           ViewGroup parent, Fragment fragment, EnduserApi enduserApi, String youtubeApiKey,
           LruCache bitmapCache, LruCache contentCache, boolean showContentLinks, ListManager listManager, AdapterDelegatesManager adapterDelegatesManager,
           ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener
-          onContentBlock3ViewHolderInteractionListener,
+                  onContentBlock3ViewHolderInteractionListener,
+          ContentBlock15ViewHolder.OnContentBlock15ViewHolderInteractionListener
+                  onContentBlock15ViewHolderInteractionListener,
           XamoomContentFragment.OnXamoomContentFragmentInteractionListener
-          onXamoomContentFragmentInteractionListener, ArrayList<String> urls, String mapboxStyleString,
+                  onXamoomContentFragmentInteractionListener, ArrayList<String> urls, String mapboxStyleString,
           @Nullable String navigationButtonTintColorString, @Nullable String contentButtonTextColorString, @Nullable String navigationMode, Content content);
 
   /**

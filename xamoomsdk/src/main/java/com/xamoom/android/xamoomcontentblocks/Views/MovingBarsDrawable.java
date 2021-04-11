@@ -118,7 +118,9 @@ public class MovingBarsDrawable extends Drawable implements ValueAnimator.Animat
     float animHeight = startHeight;
     if (!end) {
       Random r = new Random();
-      animHeight = r.nextInt(maxHeight);
+      if(maxHeight > 0) {
+        animHeight = r.nextInt(maxHeight);
+      }
     }
 
     return animHeight;

@@ -69,6 +69,10 @@
         <item name="windows_tint_color">@color/linkblock_windowsstore_tint_color</item>
         <item name="instagram_background_color">@color/linkblock_instagram_background_color</item>
         <item name="instagram_tint_color">@color/linkblock_instagram_tint_color</item>
+        <item name="whatsapp_background_color">@color/linkblock_whatsapp_background_color</item>
+        <item name="whatsapp_tint_color">@color/linkblock_whatsapp_tint_color</item>
+        <item name="sms_background_color">@color/linkblock_sms_background_color</item>
+        <item name="sms_tint_color">@color/linkblock_sms_tint_color</item>
         <item name="default_background_color">@color/linkblock_default_background_color</item>
         <item name="default_tint_color">@color/linkblock_default_tint_color</item>
     </style>
