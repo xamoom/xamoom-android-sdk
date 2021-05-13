@@ -51,6 +51,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   private boolean showContentLinks;
   private boolean offline;
   private ArrayList<String> urlScheme;
+  private ArrayList<String> nonUrlScheme;
   private ContentBlock9Adapter contentBlock9Adapter;
   private ContentBlock14Adapter contentBlock14Adapter;
   private String mapboxStyleString;
@@ -136,7 +137,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     return mDelegatesManager.onCreateViewHolder(parent, viewType, mFragment, mEnduserApi, mYoutubeApiKey,
             mBitmapCache, mContentCache, showContentLinks, mListManager,
-            mOnContentBlock3ViewHolderInteractionListener, mOnContentBlock15ViewHolderInteractionListener, mOnXamoomContentFragmentInteractionListener, urlScheme, mapboxStyleString, navigationButtonTintColorString, contentButtonTextColorString, navigationMode, mContent);
+            mOnContentBlock3ViewHolderInteractionListener, mOnContentBlock15ViewHolderInteractionListener, mOnXamoomContentFragmentInteractionListener, urlScheme, nonUrlScheme, mapboxStyleString, navigationButtonTintColorString, contentButtonTextColorString, navigationMode, mContent);
   }
 
   @Override
@@ -311,6 +312,10 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
   public void setContentBlockUrlScheme(ArrayList<String> url) {
     urlScheme = url;
+  }
+
+  public void setContentBlockNonUrlScheme(ArrayList<String> nonUrl) {
+    nonUrlScheme = nonUrl;
   }
 
   public void setShowContentLinks(boolean showContentLinks) {

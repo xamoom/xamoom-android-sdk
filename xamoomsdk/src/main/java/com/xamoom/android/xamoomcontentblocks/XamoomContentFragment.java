@@ -85,6 +85,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   private static final String STYLE = "Style";
   private static final String BACKGROUND_COLOR = "BackgroundColor";
   private static final String URL_SCHEME = "UrlScheme";
+  private static final String NON_URL_SCHEME = "NonUrlScheme";
   private static final String BEACON_MAJOR = "beaconMajor";
   private static final String MAPBOX_STYLE = "mapbox_style";
   private static final String NAVIGATION_TINT = "navigation_tint";
@@ -111,6 +112,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   private boolean showSpotMapContentLinks = false;
   private boolean isAnimated = false;
   private ArrayList<String> contentBlockUrlScheme;
+  private ArrayList<String> contentBlockNonUrlScheme;
   private String majorId;
   private String mapboxStyleString;
   private String navigationButtonTintColorString;
@@ -130,19 +132,19 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   private Integer[] validBlockTypes = {-2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 14, 15};
 
   public static XamoomContentFragment newInstance(@NonNull String youtubeApiKey) {
-    return newInstance(youtubeApiKey, null, null, null, null, null, null);
+    return newInstance(youtubeApiKey, null, null, null, null, null, null, null);
   }
 
   public static XamoomContentFragment newInstance(@NonNull String youtubeApiKey, @Nullable ArrayList<String> url) {
-    return newInstance(youtubeApiKey, url, null, null, null, null, null);
+    return newInstance(youtubeApiKey, url, null, null, null, null, null, null);
   }
 
   public static XamoomContentFragment newInstance(@NonNull String youtubeApiKey, @Nullable ArrayList<String> url, @Nullable String beaconMajor) {
-    return newInstance(youtubeApiKey, url, beaconMajor, null, null, null, null);
+    return newInstance(youtubeApiKey, url, null,  beaconMajor, null, null, null, null);
   }
 
   public static XamoomContentFragment newInstance(@NonNull String youtubeApiKey, @Nullable String beaconMajorId, @Nullable String mapboxStyleString) {
-    return newInstance(youtubeApiKey, null, beaconMajorId, mapboxStyleString, null, null, null);
+    return newInstance(youtubeApiKey, null, null, beaconMajorId, mapboxStyleString, null, null, null);
   }
 
   /**
@@ -151,13 +153,14 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
    *
    * @return XamoomContentFragment Returns an Instance of XamoomContentFragment
    */
-  public static XamoomContentFragment newInstance(@NonNull String youtubeApiKey, ArrayList<String> url, @Nullable String beaconMajorId, @Nullable String mapboxStyleString,
+  public static XamoomContentFragment newInstance(@NonNull String youtubeApiKey, ArrayList<String> url, ArrayList<String> nonUrl, @Nullable String beaconMajorId, @Nullable String mapboxStyleString,
                                                   @Nullable String navigationButtonTintColorString, @Nullable String contentButtonTextColorString, @Nullable String navigationMode) {
     XamoomContentFragment fragment = new XamoomContentFragment();
     Bundle args = new Bundle();
 
     args.putString(YOUTUBE_API_KEY, youtubeApiKey);
     args.putStringArrayList(URL_SCHEME, url);
+    args.putStringArrayList(NON_URL_SCHEME, nonUrl);
     args.putString(BEACON_MAJOR, beaconMajorId);
     args.putString(MAPBOX_STYLE, mapboxStyleString);
     args.putString(NAVIGATION_TINT, navigationButtonTintColorString);
@@ -179,11 +182,13 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
     super.onCreate(savedInstanceState);
     if (getArguments() != null) {
       contentBlockUrlScheme = getArguments().getStringArrayList(URL_SCHEME);
+      contentBlockNonUrlScheme = getArguments().getStringArrayList(NON_URL_SCHEME);
       mapboxStyleString = getArguments().getString(MAPBOX_STYLE);
       navigationButtonTintColorString = getArguments().getString(NAVIGATION_TINT);
       contentButtonTextColorString = getArguments().getString(CONTENT_BUTTON_TEXT);
       navigationMode = getArguments().getString(NAVIGATION_MODE);
       mContentBlockAdapter.setContentBlockUrlScheme(contentBlockUrlScheme);
+      mContentBlockAdapter.setContentBlockNonUrlScheme(contentBlockNonUrlScheme);
       mContentBlockAdapter.setMapboxStyleString(mapboxStyleString);
       mContentBlockAdapter.setShowContentLinks(showSpotMapContentLinks);
       mContentBlockAdapter.setNavigationButtonTintColorString(navigationButtonTintColorString);

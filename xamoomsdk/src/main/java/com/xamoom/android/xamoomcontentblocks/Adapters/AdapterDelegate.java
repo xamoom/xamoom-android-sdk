@@ -63,7 +63,7 @@ public interface AdapterDelegate<T> {
           ContentBlock15ViewHolder.OnContentBlock15ViewHolderInteractionListener
                   onContentBlock15ViewHolderInteractionListener,
           XamoomContentFragment.OnXamoomContentFragmentInteractionListener
-                  onXamoomContentFragmentInteractionListener, ArrayList<String> urls, String mapboxStyleString,
+                  onXamoomContentFragmentInteractionListener, ArrayList<String> urls, @Nullable ArrayList<String> nonUrls, String mapboxStyleString,
           @Nullable String navigationButtonTintColorString, @Nullable String contentButtonTextColorString, @Nullable String navigationMode, Content content);
 
   /**

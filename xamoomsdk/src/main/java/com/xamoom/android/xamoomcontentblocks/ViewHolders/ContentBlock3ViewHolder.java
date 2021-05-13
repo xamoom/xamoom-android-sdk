@@ -66,12 +66,13 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
   private GenericRequestBuilder<Uri, InputStream, SVG, PictureDrawable> requestBuilder;
   private FileManager mFileManager;
   private ArrayList<String> urls;
+  private ArrayList<String> nonUrls;
   private Fragment fragment;
 
   private OnContentBlock3ViewHolderInteractionListener mListener;
 
   public ContentBlock3ViewHolder(View itemView, Context context,
-                                 OnContentBlock3ViewHolderInteractionListener listener, @Nullable ArrayList<String> urls, Fragment fragment, XamoomContentFragment.OnXamoomContentFragmentInteractionListener xamoomContentFragmentInteractionListener) {
+                                 OnContentBlock3ViewHolderInteractionListener listener, @Nullable ArrayList<String> urls, @Nullable ArrayList<String> nonUrls, Fragment fragment, XamoomContentFragment.OnXamoomContentFragmentInteractionListener xamoomContentFragmentInteractionListener) {
     super(itemView);
     mContext = context;
     mTitleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
@@ -80,6 +81,7 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
     mImageProgressBar = (ProgressBar) itemView.findViewById(R.id.imageProgressBar);
     mListener = listener;
     this.urls = urls;
+    this.nonUrls = nonUrls;
     this.fragment = fragment;
     this.onImageClickListener = xamoomContentFragmentInteractionListener;
     mFileManager = FileManager.getInstance(context);
@@ -88,14 +90,14 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
     svgDrawableTranscoder.setmDeviceWidth(mContext.getResources().getDisplayMetrics().widthPixels);
 
     requestBuilder = Glide.with(mContext)
-        .using(Glide.buildStreamModelLoader(Uri.class, mContext), InputStream.class)
-        .from(Uri.class)
-        .as(SVG.class)
-        .transcode(svgDrawableTranscoder, PictureDrawable.class)
-        .sourceEncoder(new StreamEncoder())
-        .cacheDecoder(new FileToStreamDecoder<>(new SvgDecoder()))
-        .decoder(new SvgDecoder())
-        .listener(new SvgSoftwareLayerSetter<Uri>());
+            .using(Glide.buildStreamModelLoader(Uri.class, mContext), InputStream.class)
+            .from(Uri.class)
+            .as(SVG.class)
+            .transcode(svgDrawableTranscoder, PictureDrawable.class)
+            .sourceEncoder(new StreamEncoder())
+            .cacheDecoder(new FileToStreamDecoder<>(new SvgDecoder()))
+            .decoder(new SvgDecoder())
+            .listener(new SvgSoftwareLayerSetter<Uri>());
   }
 
   public void setupContentBlock(final ContentBlock contentBlock, boolean offline) {
@@ -138,9 +140,9 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
       if (fileId.contains(".svg")) {
         Uri uri = Uri.parse(fileId);
         requestBuilder
-            .diskCacheStrategy(DiskCacheStrategy.NONE)
-            .load(uri)
-            .into(mImageView);
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .load(uri)
+                .into(mImageView);
         mImageProgressBar.setVisibility(View.GONE);
 
       }
@@ -186,6 +188,18 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
                 return;
               }
 
+              if(nonUrls != null) {
+                for(int i = 0; i < nonUrls.size(); i++) {
+                  String nonUrl = nonUrls.get(i);
+                  if(contentUrl.contains(nonUrl)) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(contentBlock.getLinkUrl()));
+                    mContext.startActivity(intent);
+                    return;
+                  }
+                }
+              }
+
+
               boolean openInternal = false;
 
               for (int i = 0; i < urls.size(); i++) {
@@ -222,15 +236,15 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
         try {
           if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             Glide.with(mContext)
-                .load(contentBlock.getFileId())
-                .asBitmap()
-                .into(new SimpleTarget<Bitmap>() {
-                  @Override
-                  public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                    MediaStore.Images.Media.insertImage(mContext.getContentResolver(), resource, contentBlock.getTitle(), "");
-                    Toast.makeText(mContext, mContext.getString(R.string.image_saved_text), Toast.LENGTH_SHORT).show();
-                  }
-                });
+                    .load(contentBlock.getFileId())
+                    .asBitmap()
+                    .into(new SimpleTarget<Bitmap>() {
+                      @Override
+                      public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                        MediaStore.Images.Media.insertImage(mContext.getContentResolver(), resource, contentBlock.getTitle(), "");
+                        Toast.makeText(mContext, mContext.getString(R.string.image_saved_text), Toast.LENGTH_SHORT).show();
+                      }
+                    });
           } else {
             mListener.needExternalStoragePermission();
           }

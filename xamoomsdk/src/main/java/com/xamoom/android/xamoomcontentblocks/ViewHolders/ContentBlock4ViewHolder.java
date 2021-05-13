@@ -41,8 +41,9 @@ public class ContentBlock4ViewHolder extends RecyclerView.ViewHolder {
   private TextView mContentTextView;
   private ImageView mIcon;
   private ArrayList<String> urls;
+  private ArrayList<String> nonUrls;
 
-  public ContentBlock4ViewHolder(View itemView, Fragment fragment, @Nullable ArrayList<String> urls) {
+  public ContentBlock4ViewHolder(View itemView, Fragment fragment, @Nullable ArrayList<String> urls, @Nullable ArrayList<String> nonUrls) {
     super(itemView);
     mFragment = fragment;
     mRootLayout = (LinearLayout) itemView.findViewById(R.id.linkBlockLinearLayout);
@@ -50,6 +51,7 @@ public class ContentBlock4ViewHolder extends RecyclerView.ViewHolder {
     mContentTextView = (TextView) itemView.findViewById(R.id.contentTextView);
     mIcon = (ImageView) itemView.findViewById(R.id.iconImageView);
     this.urls = urls;
+    this.nonUrls = nonUrls;
   }
 
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -75,6 +77,17 @@ public class ContentBlock4ViewHolder extends RecyclerView.ViewHolder {
           Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(contentBlock.getLinkUrl()));
           mFragment.getActivity().startActivity(i);
           return;
+        }
+
+        if(nonUrls != null) {
+          for(int i = 0; i < nonUrls.size(); i++) {
+            String nonUrl = nonUrls.get(i);
+            if(contentUrl.contains(nonUrl)) {
+              Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(contentBlock.getLinkUrl()));
+              mFragment.getActivity().startActivity(intent);
+              return;
+            }
+          }
         }
 
         boolean openInternal = false;
