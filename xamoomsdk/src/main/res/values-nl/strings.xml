@@ -29,4 +29,6 @@
     <string name="info_ascent_descent_label">Ascent | Descent</string>
     <string name="info_time_label">Duration at %1$s</string>
 
+    <string name="unavailable_quiz_label">Unavailable quiz</string>
+
 </resources>
