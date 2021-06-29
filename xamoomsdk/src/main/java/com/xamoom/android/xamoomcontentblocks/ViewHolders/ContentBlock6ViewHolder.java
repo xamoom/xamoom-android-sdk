@@ -8,6 +8,7 @@
 
 package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -19,12 +20,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
+import com.xamoom.android.xamoomsdk.APICallback;
 import com.xamoom.android.xamoomsdk.APIPasswordCallback;
 import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
@@ -32,9 +35,14 @@ import com.xamoom.android.xamoomsdk.Enums.ContentReason;
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
+import com.xamoom.android.xamoomsdk.Resource.Spot;
 import com.xamoom.android.xamoomsdk.Resource.Style;
 import com.xamoom.android.xamoomsdk.Storage.FileManager;
 
+import org.w3c.dom.Text;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -49,6 +57,10 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
   private Context mContext;
   private TextView mTitleTextView;
   private TextView mDescriptionTextView;
+  private RelativeLayout timeLayout;
+  private RelativeLayout locationLayout;
+  private TextView timeText;
+  private TextView locationText;
   private ImageView mContentThumbnailImageView;
   private ProgressBar mProgressBar;
   private EnduserApi mEnduserApi;
@@ -68,6 +80,10 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
     mContext = context;
     mTitleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
     mDescriptionTextView = (TextView) itemView.findViewById(R.id.descriptionTextView);
+    timeLayout = (RelativeLayout) itemView.findViewById(R.id.content_event_time_layout);
+    locationLayout = (RelativeLayout) itemView.findViewById(R.id.content_event_location_layout);
+    timeText = (TextView) itemView.findViewById(R.id.content_event_time_textview);
+    locationText = (TextView) itemView.findViewById(R.id.content_event_location_textview);
     mContentThumbnailImageView = (ImageView) itemView.findViewById(R.id.contentThumbnailImageView);
     mProgressBar = (ProgressBar) itemView.findViewById(R.id.contentProgressBar);
     mEnduserApi = enduserApi;
@@ -117,13 +133,34 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
           return;
         }
 
-        mProgressBar.setVisibility(View.GONE);
-        mContent = result;
+        Content resultContent = result;
+        Spot currentRelatedSpot = result.getRelatedSpot();
+        if(currentRelatedSpot != null && currentRelatedSpot.getId() != null && currentRelatedSpot.getName() == null) {
+          mEnduserApi.getSpot(currentRelatedSpot.getId(), new APICallback<Spot, List<Error>>() {
+            @Override
+            public void finished(Spot result) {
+              resultContent.setRelatedSpot(result);
+              finishContentLoading(resultContent, contentId, offline);
+            }
 
-        if (contentId != null) {
-          mContentCache.put(contentId, result);
+            @Override
+            public void error(List<Error> error) {
+              if (error != null && error.get(0) != null) {
+                Log.e("XamoomContentBlocks", error.get(0).getCode() +
+                        "\n Error Title: " + error.get(0).getTitle() +
+                        "\n Detail: " + error.get(0).getDetail() +
+                        "\n SpotId: " + currentRelatedSpot.getId());
+
+                if (error.get(0).getCode().equalsIgnoreCase("10000")) { // return when canceled
+                  return;
+                }
+                mProgressBar.setVisibility(View.GONE);
+              }
+            }
+          });
+        } else {
+          finishContentLoading(resultContent, contentId, offline);
         }
-        displayContent(result, offline);
       }
 
       @Override
@@ -148,9 +185,39 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
     });
   }
 
+  private void finishContentLoading(Content result, String contentId, boolean offline) {
+    mProgressBar.setVisibility(View.GONE);
+    mContent = result;
+    if (contentId != null) {
+      mContentCache.put(contentId, result);
+    }
+    displayContent(result, offline);
+  }
+
+
   private void displayContent(Content content, boolean offline) {
     mTitleTextView.setText(content.getTitle());
     mDescriptionTextView.setText(content.getDescription());
+
+
+    Date contentDateTime = content.getFromDate();
+    Spot relatedSpot = content.getRelatedSpot();
+
+    int descriptionLinesCount = 3;
+
+    if(contentDateTime != null) {
+      @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM, hh:mm");
+      timeText.setText(sdf.format(contentDateTime));
+      timeLayout.setVisibility(View.VISIBLE);
+      descriptionLinesCount -=1;
+    }
+
+    if(relatedSpot != null && relatedSpot.getName() != null) {
+      locationText.setText(relatedSpot.getName());
+      locationLayout.setVisibility(View.VISIBLE);
+      descriptionLinesCount -=1;
+    }
+    mDescriptionTextView.setMaxLines(descriptionLinesCount);
 
     if (mTextColor != null) {
       mTitleTextView.setTextColor(mTextColor);
