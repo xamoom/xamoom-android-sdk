@@ -11,6 +11,7 @@ package com.xamoom.android.xamoomcontentblocks.ViewHolders
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.net.Uri
 import android.preference.PreferenceManager
@@ -42,10 +43,13 @@ class ContentEventViewHolder(itemView: View, val navigationMode: String?, val fr
     private val mNavigationImageView: ImageView = itemView.findViewById(R.id.event_navigation_iconImageView)
 
 
+
     private var mContext: Context? = null
+    private var sharedPreferences: SharedPreferences? = null
 
     init {
         mContext = fragment.context
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext)
         mNavigationLayout.visibility = View.GONE
         mCalendarLayout.visibility = View.GONE
     }
@@ -66,7 +70,15 @@ class ContentEventViewHolder(itemView: View, val navigationMode: String?, val fr
 
             if (content.fromDate != null) {
 
-                val dateFormatter = SimpleDateFormat("E d MMM HH:mm", Locale.getDefault())
+                val langPickerLanguage = sharedPreferences!!.getString("current_language_code", null)
+                val locale: Locale?
+                locale = if (langPickerLanguage != null){
+                    Locale(langPickerLanguage)
+                } else {
+                    Locale("en")
+                }
+
+                val dateFormatter = SimpleDateFormat("E d MMM HH:mm", locale)
                 val fromDate = dateFormatter.format(content.fromDate)
 
                 mCalendarTitleTextView.text = mContext!!.resources.getString(R.string.event_calendar_title)
@@ -93,7 +105,14 @@ class ContentEventViewHolder(itemView: View, val navigationMode: String?, val fr
                 mCalendarLayout.visibility = View.GONE
             }
         } else if (content != null && content.fromDate != null) {
-            val dateFormatter = SimpleDateFormat("E d MMM HH:mm", Locale.getDefault())
+            val langPickerLanguage = sharedPreferences!!.getString("current_language_code", null)
+            val locale: Locale?
+            locale = if (langPickerLanguage != null){
+                Locale(langPickerLanguage)
+            } else {
+                Locale("en")
+            }
+            val dateFormatter = SimpleDateFormat("E d MMM HH:mm", locale)
             val fromDate = dateFormatter.format(content.fromDate)
 
             mNavigationLayout.visibility = View.GONE

@@ -1,10 +1,10 @@
 /*
-* Copyright (c) 2017 xamoom GmbH <apps@xamoom.com>
-*
-* Licensed under the MIT License (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at the root of this project.
-*/
+ * Copyright (c) 2017 xamoom GmbH <apps@xamoom.com>
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at the root of this project.
+ */
 
 package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
@@ -45,6 +45,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Locale;
 
 import at.rags.morpheus.Error;
 import retrofit2.Call;
@@ -126,63 +127,63 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
     if(langPickerLanguage != null) mEnduserApi.setLanguage(langPickerLanguage);
     else mEnduserApi.setLanguage(mEnduserApi.getSystemLanguage());
     mCall = mEnduserApi.getContent(contentId, EnumSet.of(ContentFlags.PREVIEW),
-        ContentReason.LINKED_CONTENT, null, new APIPasswordCallback<Content, List<Error>>() {
-      @Override
-      public void finished(Content result) {
-        if (result == null) {
-          return;
-        }
-
-        Content resultContent = result;
-        Spot currentRelatedSpot = result.getRelatedSpot();
-        if(currentRelatedSpot != null && currentRelatedSpot.getId() != null && currentRelatedSpot.getName() == null) {
-          mEnduserApi.getSpot(currentRelatedSpot.getId(), new APICallback<Spot, List<Error>>() {
-            @Override
-            public void finished(Spot result) {
-              resultContent.setRelatedSpot(result);
-              finishContentLoading(resultContent, contentId, offline);
-            }
-
-            @Override
-            public void error(List<Error> error) {
-              if (error != null && error.get(0) != null) {
-                Log.e("XamoomContentBlocks", error.get(0).getCode() +
-                        "\n Error Title: " + error.get(0).getTitle() +
-                        "\n Detail: " + error.get(0).getDetail() +
-                        "\n SpotId: " + currentRelatedSpot.getId());
-
-                if (error.get(0).getCode().equalsIgnoreCase("10000")) { // return when canceled
+            ContentReason.LINKED_CONTENT, null, new APIPasswordCallback<Content, List<Error>>() {
+              @Override
+              public void finished(Content result) {
+                if (result == null) {
                   return;
                 }
-                mProgressBar.setVisibility(View.GONE);
+
+                Content resultContent = result;
+                Spot currentRelatedSpot = result.getRelatedSpot();
+                if(currentRelatedSpot != null && currentRelatedSpot.getId() != null && currentRelatedSpot.getName() == null) {
+                  mEnduserApi.getSpot(currentRelatedSpot.getId(), new APICallback<Spot, List<Error>>() {
+                    @Override
+                    public void finished(Spot result) {
+                      resultContent.setRelatedSpot(result);
+                      finishContentLoading(resultContent, contentId, offline);
+                    }
+
+                    @Override
+                    public void error(List<Error> error) {
+                      if (error != null && error.get(0) != null) {
+                        Log.e("XamoomContentBlocks", error.get(0).getCode() +
+                                "\n Error Title: " + error.get(0).getTitle() +
+                                "\n Detail: " + error.get(0).getDetail() +
+                                "\n SpotId: " + currentRelatedSpot.getId());
+
+                        if (error.get(0).getCode().equalsIgnoreCase("10000")) { // return when canceled
+                          return;
+                        }
+                        mProgressBar.setVisibility(View.GONE);
+                      }
+                    }
+                  });
+                } else {
+                  finishContentLoading(resultContent, contentId, offline);
+                }
               }
-            }
-          });
-        } else {
-          finishContentLoading(resultContent, contentId, offline);
-        }
-      }
 
-      @Override
-      public void error(List<Error> error) {
-        if (error != null && error.get(0) != null) {
-          Log.e("XamoomContentBlocks", error.get(0).getCode() +
-              "\n Error Title: " + error.get(0).getTitle() +
-              "\n Detail: " + error.get(0).getDetail() +
-              "\n ContentId: " + contentId);
+              @Override
+              public void error(List<Error> error) {
+                if (error != null && error.get(0) != null) {
+                  Log.e("XamoomContentBlocks", error.get(0).getCode() +
+                          "\n Error Title: " + error.get(0).getTitle() +
+                          "\n Detail: " + error.get(0).getDetail() +
+                          "\n ContentId: " + contentId);
 
-          if (error.get(0).getCode().equalsIgnoreCase("10000")) { // return when canceled
-            return;
-          }
-          mProgressBar.setVisibility(View.GONE);
-        }
-      }
+                  if (error.get(0).getCode().equalsIgnoreCase("10000")) { // return when canceled
+                    return;
+                  }
+                  mProgressBar.setVisibility(View.GONE);
+                }
+              }
 
-      @Override
-      public void passwordRequested() {
-        //DO nothing
-      }
-    });
+              @Override
+              public void passwordRequested() {
+                //DO nothing
+              }
+            });
   }
 
   private void finishContentLoading(Content result, String contentId, boolean offline) {
@@ -206,7 +207,15 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
     int descriptionLinesCount = 3;
 
     if(contentDateTime != null) {
-      @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM, hh:mm");
+      String langPickerLanguage = sharedPreferences.getString("current_language_code", null);
+      Locale locale;
+      if(langPickerLanguage != null) {
+        locale = new Locale(langPickerLanguage);
+      } else {
+        locale = new Locale("en");
+      }
+
+      @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM, hh:mm", locale);
       timeText.setText(sdf.format(contentDateTime));
       timeLayout.setVisibility(View.VISIBLE);
       descriptionLinesCount -=1;
@@ -235,10 +244,10 @@ public class ContentBlock6ViewHolder extends RecyclerView.ViewHolder implements 
     }
 
     mGlide.load(filePath)
-        .diskCacheStrategy(DiskCacheStrategy.ALL)
-        .crossFade()
-        .centerCrop()
-        .into(mContentThumbnailImageView);
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .crossFade()
+            .centerCrop()
+            .into(mContentThumbnailImageView);
   }
 
   @Override
