@@ -779,7 +779,7 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
         spotImageView.requestLayout()
 
         val imageUrl = spot.publicImageUrl
-        if(imageUrl.endsWith(".gif")) {
+        if(imageUrl != null && imageUrl.endsWith(".gif")) {
             Glide.with(mContext!!)
                     .load(spot.publicImageUrl)
                     .asGif()
