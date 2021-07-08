@@ -241,6 +241,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   @Override
   public void onStart() {
     super.onStart();
+    mContentBlockAdapter.onStart();
 //    if(!isAnimated) {
 //      if (mContentBlockAdapter != null) {
 //        Log.v("test", "onStart");
@@ -254,6 +255,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
     super.onResume();
 //    mRecyclerView.scrollToPosition(0);
 //    mContentBlockAdapter.notifyDataSetChanged();
+//    mContentBlockAdapter.onResume();
   }
 
   @Override
