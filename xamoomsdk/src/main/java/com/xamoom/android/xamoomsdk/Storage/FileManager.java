@@ -104,6 +104,38 @@ public class FileManager {
     return newFileName;
   }
 
+  public File getFile(String urlString, String originalFileName) throws IOException {
+    File file = new File(mContext.getFilesDir(), getFileName(urlString, originalFileName));
+    return file;
+  }
+
+  public String getFileName(String urlString, String originalFileName) {
+    if (urlString == null) {
+      return null;
+    }
+
+    String urlStringWithoutCaching = FileManager.removeQuery(urlString);
+    Uri url = Uri.parse(urlStringWithoutCaching);
+    String fileName = url.getLastPathSegment();
+    String[] fileNameSegments = fileName.split("\\.");
+    String extension = "";
+    if (fileNameSegments != null && fileNameSegments.length > 1) {
+      extension = fileNameSegments[1];
+    }
+
+    String newFileName = String.format("%s.%s", originalFileName, extension);
+    return newFileName;
+  }
+
+  public void saveFile(String urlString, String originalFileName, byte[] bytes) throws IOException {
+    FileOutputStream outputStream;
+    String fileName = getFileName(urlString, originalFileName);
+
+    outputStream = mContext.openFileOutput(fileName, Context.MODE_PRIVATE);
+    outputStream.write(bytes);
+    outputStream.close();
+  }
+
   /**
    * Returns filePath of saved file on internal storage.
    *

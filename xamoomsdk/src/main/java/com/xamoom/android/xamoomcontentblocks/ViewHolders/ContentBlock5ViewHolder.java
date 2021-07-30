@@ -8,7 +8,9 @@
 
 package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 
 import androidx.annotation.RequiresApi;
@@ -27,10 +29,14 @@ import android.widget.Toast;
 import com.xamoom.android.xamoomcontentblocks.Config;
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
+import com.xamoom.android.xamoomsdk.Storage.DownloadError;
+import com.xamoom.android.xamoomsdk.Storage.DownloadManager;
 import com.xamoom.android.xamoomsdk.Storage.FileManager;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * EbookBlock
@@ -74,17 +80,64 @@ public class ContentBlock5ViewHolder extends RecyclerView.ViewHolder {
     mRootLayout.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        Uri fileUri = null;
-        if (!offline) {
-          fileUri = Uri.parse(contentBlock.getFileId());
-          Intent i = new Intent(Intent.ACTION_VIEW, fileUri);
-          mFragment.getActivity().startActivity(i);
-          return;
+        String fileTitle = contentBlock.getTitle();
+        try {
+          File file = mFileManager.getFile(contentBlock.getFileId(), fileTitle);
+          if (file.exists()) {
+            openFileInApp(file);
+          } else {
+            saveAndOpenFileFromUrl(contentBlock.getFileId(), fileTitle);
+          }
+        } catch (IOException e) {
+          e.printStackTrace();
         }
-
-        startShareIntent(contentBlock.getFileId());
       }
     });
+  }
+
+  private void saveAndOpenFileFromUrl(String fileUrl, String fileName) {
+    DownloadManager fileManager = new DownloadManager(mFileManager);
+    try {
+      fileManager.saveFileFromUrl(new URL(fileUrl), fileName, false, new DownloadManager.OnDownloadManagerCompleted() {
+        @Override
+        public void completed(String urlString) {
+          try {
+            File file = mFileManager.getFile(urlString, fileName);
+            if (file == null && !file.exists()) {
+              fileNotFoundToast();
+              return;
+            }
+            openFileInApp(file);
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
+        }
+
+        @Override
+        public void failed(String urlString, DownloadError downloadError) {
+          fileNotFoundToast();
+        }
+      });
+    } catch (MalformedURLException e) {
+      e.printStackTrace();
+    }
+  }
+
+  private void openFileInApp(File file) {
+    String providerAuthorities = mFragment.getContext().getPackageName() + ".xamoomsdk.fileprovider";
+    Uri fileUri = FileProvider.getUriForFile(mFragment.getContext(),
+            providerAuthorities, file);
+
+    Intent intent = new Intent(Intent.ACTION_VIEW);
+    intent.setDataAndType(fileUri, mFragment.getContext().getContentResolver().getType(fileUri));
+    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+    intent.putExtra(Intent.EXTRA_STREAM, fileUri);
+    try {
+      mFragment.getActivity().startActivity(intent);
+    } catch (ActivityNotFoundException e) {
+      String PLAY_BOOKS_PACKAGE_NAME = "com.google.android.apps.books";
+      mFragment.getActivity().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + PLAY_BOOKS_PACKAGE_NAME)));
+    }
   }
 
   private void startShareIntent(String fileUrl) {

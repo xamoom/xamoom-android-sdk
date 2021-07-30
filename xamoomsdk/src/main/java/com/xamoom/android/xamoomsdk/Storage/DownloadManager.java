@@ -69,6 +69,42 @@ public class DownloadManager {
     }
   }
 
+  public void saveFileFromUrl(final URL url, String fileName, boolean queryTasks,
+                              final OnDownloadManagerCompleted completedInterface) throws MalformedURLException {
+    final String urlString = url.toString();
+
+    DownloadTask downloadTask = new DownloadTask(url, new DownloadTask.OnDownloadTaskCompleted() {
+      @Override
+      public void completed(ByteArrayOutputStream byteArrayOutputStream) {
+        try {
+          mFileManager.saveFile(urlString, fileName, byteArrayOutputStream.toByteArray());
+        } catch (IOException e) {
+          if (completedInterface != null) {
+            completedInterface.failed(urlString, new DownloadError(DownloadError.IO_EXCEPTION_ERROR_CODE,
+                    DownloadError.IO_EXCEPTION_ERROR, -1, null, e));
+          }
+        }
+
+        if (completedInterface != null) {
+          completedInterface.completed(urlString);
+        }
+      }
+
+      @Override
+      public void failed(DownloadError downloadError) {
+        if (completedInterface != null) {
+          completedInterface.failed(urlString, downloadError);
+        }
+      }
+    });
+
+    if (!queryTasks) {
+      downloadTask.execute();
+    } else {
+      mDownloadTasks.add(downloadTask);
+    }
+  }
+
   /**
    * Will start to download all queried tasks.
    * After starting mDownloadTasks will get cleared.
