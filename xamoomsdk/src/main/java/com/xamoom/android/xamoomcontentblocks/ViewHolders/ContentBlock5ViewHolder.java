@@ -9,24 +9,25 @@
 package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.core.app.ShareCompat;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Build;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.xamoom.android.xamoomcontentblocks.Config;
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Storage.DownloadError;
@@ -107,7 +108,7 @@ public class ContentBlock5ViewHolder extends RecyclerView.ViewHolder {
               fileNotFoundToast();
               return;
             }
-            openFileInApp(file);
+            chooseDownloadToOrOpenFile(file);
           } catch (IOException e) {
             e.printStackTrace();
           }
@@ -140,21 +141,49 @@ public class ContentBlock5ViewHolder extends RecyclerView.ViewHolder {
     }
   }
 
-  private void startShareIntent(String fileUrl) {
-    File file = null;
-    try {
-      file = mFileManager.getFile(fileUrl);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
-    if (file == null) {
-      fileNotFoundToast();
-      return;
-    }
-
+  private void saveFileToCustomLocation(File file) {
+    String providerAuthorities = mFragment.getContext().getPackageName() + ".xamoomsdk.fileprovider";
     Uri fileUri = FileProvider.getUriForFile(mFragment.getContext(),
-            Config.AUTHORITY, file);
+            providerAuthorities, file);
+
+    Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+    intent.addCategory(Intent.CATEGORY_OPENABLE);
+    intent.setDataAndType(fileUri, mFragment.getContext().getContentResolver().getType(fileUri));
+    intent.putExtra(Intent.EXTRA_TITLE, "invoice.pdf");
+    mFragment.getActivity().startActivityForResult(intent, 1);
+  }
+
+  private void chooseDownloadToOrOpenFile(File file) {
+    Handler mainHandler = new Handler(mFragment.getContext().getMainLooper());
+
+    Runnable myRunnable = new Runnable() {
+      @Override
+      public void run() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mFragment.getActivity());
+        builder.setTitle("Downloaded");
+        builder.setMessage("File is downloaded");
+        builder.setPositiveButton("Open", new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int id) {
+            openFileInApp(file);
+          }
+        });
+        builder.setNegativeButton("Save to", new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int i) {
+//            saveFileToCustomLocation(file);
+            startShareIntent(file);
+          }
+        });
+        builder.create().show();
+      }
+    };
+    mainHandler.post(myRunnable);
+  }
+
+  private void startShareIntent(File file) {
+    String providerAuthorities = mFragment.getContext().getPackageName() + ".xamoomsdk.fileprovider";
+    Uri fileUri = FileProvider.getUriForFile(mFragment.getContext(),
+            providerAuthorities, file);
     Intent shareIntent = ShareCompat.IntentBuilder.from(mFragment.getActivity())
             .setType(mFragment.getContext().getContentResolver().getType(fileUri))
             .setStream(fileUri)
