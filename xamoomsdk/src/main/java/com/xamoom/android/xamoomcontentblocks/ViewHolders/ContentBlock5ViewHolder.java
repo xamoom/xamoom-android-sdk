@@ -129,15 +129,25 @@ public class ContentBlock5ViewHolder extends RecyclerView.ViewHolder {
     Uri fileUri = FileProvider.getUriForFile(mFragment.getContext(),
             providerAuthorities, file);
 
+    String fileExtension = mFragment.getContext().getContentResolver().getType(fileUri);
+
     Intent intent = new Intent(Intent.ACTION_VIEW);
-    intent.setDataAndType(fileUri, mFragment.getContext().getContentResolver().getType(fileUri));
+    intent.setDataAndType(fileUri, fileExtension);
     intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
     intent.putExtra(Intent.EXTRA_STREAM, fileUri);
     try {
       mFragment.getActivity().startActivity(intent);
     } catch (ActivityNotFoundException e) {
-      String PLAY_BOOKS_PACKAGE_NAME = "com.google.android.apps.books";
-      mFragment.getActivity().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + PLAY_BOOKS_PACKAGE_NAME)));
+      String play_books_package_name = "com.google.android.apps.books";
+
+      if (fileExtension.equals("application/epub+zip")) {
+        play_books_package_name = "com.google.android.apps.books";
+      } else if (fileExtension.equals("application/pdf")) {
+        play_books_package_name = "com.adobe.reader";
+      } else if (fileExtension.equals("application/x-mobipocket-ebook") || fileExtension.equals("application/octet-stream")) {
+        play_books_package_name = "com.amazon.kindle";
+      }
+      mFragment.getActivity().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + play_books_package_name)));
     }
   }
 
@@ -160,17 +170,16 @@ public class ContentBlock5ViewHolder extends RecyclerView.ViewHolder {
       @Override
       public void run() {
         AlertDialog.Builder builder = new AlertDialog.Builder(mFragment.getActivity());
-        builder.setTitle("Downloaded");
-        builder.setMessage("File is downloaded");
-        builder.setPositiveButton("Open", new DialogInterface.OnClickListener() {
+        builder.setTitle(mFragment.getContext().getResources().getString(R.string.save_ebook_alert_title));
+        builder.setMessage(mFragment.getContext().getResources().getString(R.string.save_ebook_alert_message));
+        builder.setPositiveButton(mFragment.getContext().getResources().getString(R.string.save_ebook_alert_open), new DialogInterface.OnClickListener() {
           public void onClick(DialogInterface dialog, int id) {
             openFileInApp(file);
           }
         });
-        builder.setNegativeButton("Save to", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(mFragment.getContext().getResources().getString(R.string.save_ebook_alert_share), new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int i) {
-//            saveFileToCustomLocation(file);
             startShareIntent(file);
           }
         });
