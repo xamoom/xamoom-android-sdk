@@ -39,6 +39,7 @@ import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.geometry.LatLngBounds
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
+import com.mapbox.mapboxsdk.maps.UiSettings
 import com.xamoom.android.xamoomcontentblocks.Views.CustomMapView
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment
 import com.xamoom.android.xamoomsdk.APICallback
@@ -92,10 +93,25 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
 
             if (motionEvent.action == MotionEvent.ACTION_DOWN) {
                 closeBottomSheet = true
+                if (mapBoxMap != null) {
+                    if (motionEvent.pointerCount == 2) {
+                        val uiSettings: UiSettings = mapBoxMap!!.uiSettings
+                        uiSettings.isScrollGesturesEnabled = true
+                    } else {
+                        val uiSettings: UiSettings = mapBoxMap!!.uiSettings
+                        uiSettings.isScrollGesturesEnabled = false
+                    }
+                }
             }
 
             if (motionEvent.action == MotionEvent.ACTION_MOVE) {
                 closeBottomSheet = true
+                if (mapBoxMap != null) {
+                    if (motionEvent.pointerCount == 2) {
+                        val uiSettings: UiSettings = mapBoxMap!!.uiSettings
+                        uiSettings.isScrollGesturesEnabled = true
+                    }
+                }
             }
 
             if (motionEvent.action == MotionEvent.ACTION_UP) {
@@ -315,6 +331,9 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
         if (mapView.isDestroyed) {
             return
         }
+
+        val uiSettings: UiSettings = mapboxMap.uiSettings
+        uiSettings.isTiltGesturesEnabled = false
 
         this.mapBoxMap = mapboxMap
         var style = DEFAULT_MAPBOX_STYLE_STRING
