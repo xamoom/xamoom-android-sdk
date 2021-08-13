@@ -17,8 +17,11 @@ import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.util.Log
+import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.app.ActivityCompat.startActivityForResult
@@ -80,12 +83,15 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
     var fragment: Fragment
     private var mFusedLocationClient: FusedLocationProviderClient? = null
     var sharedPreferences: SharedPreferences? = null
+    var twoFingerMoveMapOverlay: LinearLayout? = null
 
     init {
         mContext = fragment.context
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext)
         mapView.onCreate(bundle)
         this.fragment = fragment
+
+        setupTwoFingerMoveMapOverlay()
 
         mapView.setOnTouchListener { view, motionEvent ->
             view.parent.requestDisallowInterceptTouchEvent(true)
@@ -108,13 +114,17 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
                 closeBottomSheet = true
                 if (mapBoxMap != null) {
                     if (motionEvent.pointerCount == 2) {
+                        hideTwoFingerMoveMapOverlay()
                         val uiSettings: UiSettings = mapBoxMap!!.uiSettings
                         uiSettings.isScrollGesturesEnabled = true
+                    } else {
+                        showTwoFingerMoveMapOverlay()
                     }
                 }
             }
 
             if (motionEvent.action == MotionEvent.ACTION_UP) {
+                hideTwoFingerMoveMapOverlay()
                 if (closeBottomSheet) {
                     bottomSheet.state = BottomSheetBehavior.STATE_HIDDEN
                     mActiveSpot = null
@@ -446,5 +456,36 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
     companion object {
         val PAGE_SIZE = 100
         const val DEFAULT_MAPBOX_STYLE_STRING = "mapbox://styles/xamoom-georg/ck4zb0mei1l371coyi41snaww"
+    }
+
+    private fun setupTwoFingerMoveMapOverlay() {
+        val overlayLabel = TextView(mContext);
+        overlayLabel.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.MATCH_PARENT
+        )
+        overlayLabel.text = "USE TWO FINGERS TO MOVE THE MAP"
+        overlayLabel.setTextColor(Color.WHITE)
+        overlayLabel.gravity = Gravity.CENTER
+
+        this.twoFingerMoveMapOverlay = LinearLayout(mContext)
+        this.twoFingerMoveMapOverlay!!.tag = "twoFingerMoveMapOverlay"
+        this.twoFingerMoveMapOverlay!!.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.MATCH_PARENT
+        )
+        this.twoFingerMoveMapOverlay!!.setBackgroundColor(Color.parseColor("#66808080"))
+        this.twoFingerMoveMapOverlay!!.addView(overlayLabel)
+    }
+
+    private fun showTwoFingerMoveMapOverlay () {
+        if (mapView.findViewWithTag<LinearLayout>("twoFingerMoveMapOverlay") == null)
+        mapView.addView(this.twoFingerMoveMapOverlay)
+    }
+
+    private fun hideTwoFingerMoveMapOverlay () {
+        if (mapView.findViewWithTag<LinearLayout>("twoFingerMoveMapOverlay") != null) {
+            mapView.removeView(this.twoFingerMoveMapOverlay)
+        }
     }
 }
