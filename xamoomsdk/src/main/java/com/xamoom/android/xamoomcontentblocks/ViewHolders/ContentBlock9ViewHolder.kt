@@ -464,9 +464,10 @@ class ContentBlock9ViewHolder(val view: CustomMapView, bundle: Bundle?, val endu
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.MATCH_PARENT
         )
-        overlayLabel.text = "USE TWO FINGERS TO MOVE THE MAP"
+        overlayLabel.text = mContext!!.resources.getString(R.string.mapbox_two_finger_move)
         overlayLabel.setTextColor(Color.WHITE)
         overlayLabel.gravity = Gravity.CENTER
+        overlayLabel.isSingleLine = false
 
         this.twoFingerMoveMapOverlay = LinearLayout(mContext)
         this.twoFingerMoveMapOverlay!!.tag = "twoFingerMoveMapOverlay"

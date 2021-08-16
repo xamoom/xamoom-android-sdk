@@ -31,4 +31,10 @@
 
     <string name="unavailable_quiz_label">Unavailable quiz</string>
 
+    <string name="save_ebook_alert_title">Bereit</string>
+    <string name="save_ebook_alert_message">Die gewünschte Datei wurde heruntergeladen und steht zur Nutzung bereit.</string>
+    <string name="save_ebook_alert_open">ÖFFNEN</string>
+    <string name="save_ebook_alert_share">SPEICHERN UNTER</string>
+
+    <string name="mapbox_two_finger_move">NUTZEN SIE ZWEI FINGER, UM DIE KARTE ZU BEWEGEN</string>
 </resources>
