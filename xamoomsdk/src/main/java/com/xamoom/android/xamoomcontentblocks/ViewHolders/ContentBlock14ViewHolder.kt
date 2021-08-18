@@ -24,6 +24,7 @@ import android.util.Log
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
@@ -52,6 +53,7 @@ import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.geometry.LatLngBounds
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
+import com.mapbox.mapboxsdk.maps.UiSettings
 import com.mapbox.mapboxsdk.style.layers.LineLayer
 import com.mapbox.mapboxsdk.style.layers.Property
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory
@@ -135,6 +137,7 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
     private val SINGLE_SYMBOL_ICON_ID = "single-symbol-icon-id"
     private val SYMBOL_SOURCE_ID = "marker"
     private val SYMBOL_LAYER_ID = "points_layer"
+    var twoFingerMoveMapOverlay: LinearLayout? = null
 
     init {
         mContext = fragment.context
@@ -142,19 +145,40 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
         mapView.onCreate(bundle)
         this.fragment = fragment
 
+        setupTwoFingerMoveMapOverlay()
+
         mapView.setOnTouchListener { view, motionEvent ->
             view.parent.requestDisallowInterceptTouchEvent(true)
             mapView.onTouchEvent(motionEvent)
 
             if (motionEvent.action == MotionEvent.ACTION_DOWN) {
                 closeBottomSheet = true
+                if (mapBoxMap != null) {
+                    if (motionEvent.pointerCount == 2) {
+                        val uiSettings: UiSettings = mapBoxMap!!.uiSettings
+                        uiSettings.isScrollGesturesEnabled = true
+                    } else {
+                        val uiSettings: UiSettings = mapBoxMap!!.uiSettings
+                        uiSettings.isScrollGesturesEnabled = false
+                    }
+                }
             }
 
             if (motionEvent.action == MotionEvent.ACTION_MOVE) {
                 closeBottomSheet = true
+                if (mapBoxMap != null) {
+                    if (motionEvent.pointerCount == 2) {
+                        hideTwoFingerMoveMapOverlay()
+                        val uiSettings: UiSettings = mapBoxMap!!.uiSettings
+                        uiSettings.isScrollGesturesEnabled = true
+                    } else {
+                        showTwoFingerMoveMapOverlay()
+                    }
+                }
             }
 
             if (motionEvent.action == MotionEvent.ACTION_UP) {
+                hideTwoFingerMoveMapOverlay()
                 if (closeBottomSheet) {
                     bottomSheet.state = BottomSheetBehavior.STATE_HIDDEN
                     mActiveSpot = null
@@ -383,6 +407,9 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
         if (mapView.isDestroyed) {
             return
         }
+
+        val uiSettings: UiSettings = mapboxMap.uiSettings
+        uiSettings.isTiltGesturesEnabled = false
 
         this.mapBoxMap = mapboxMap
         var style = DEFAULT_MAPBOX_STYLE_STRING
@@ -613,7 +640,7 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
                     metricTotalDistance = distanceMetric
                     imperialTotalDistance = distanceImperial
                     if (distanceImperial.toInt() != 0)
-                        routeSpentTime = getTimeInHours(distanceImperial.toDouble() / 3.1) + " h"
+                        routeSpentTime = getTimeInHours(distanceImperial.toDouble() / 1.86) + " h"
 
                     print("ascent metres feet $ascentMetres $ascentFeet\n")
                     print("total distance metres feet $metricTotalDistance $imperialTotalDistance\n")
@@ -674,12 +701,12 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
                 distance.text = "${df.format(metricTotalDistance)} km"
                 ascent.text = "${ascentMetres.toInt()} m"
                 descent.text = "${descentMetres.toInt()} m"
-                timeDescription.text = String.format(fragment.activity?.getString(R.string.info_time_label)!!, "5 kph")
+                timeDescription.text = String.format(fragment.activity?.getString(R.string.info_time_label)!!, "3 kph")
             } else {
                 distance.text = "${df.format(imperialTotalDistance)} mi"
                 ascent.text = "${ascentFeet.toInt()} ft"
                 descent.text = "${descentFeet.toInt()} ft"
-                timeDescription.text = String.format(fragment.activity?.getString(R.string.info_time_label)!!, "3.1 mph")
+                timeDescription.text = String.format(fragment.activity?.getString(R.string.info_time_label)!!, "1.9 mph")
             }
             dialog.show()
         }
@@ -824,5 +851,35 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
         const val DEFAULT_MAPBOX_STYLE_STRING = "mapbox://styles/xamoom-georg/ck4zb0mei1l371coyi41snaww"
     }
 
+    private fun setupTwoFingerMoveMapOverlay() {
+        val overlayLabel = TextView(mContext);
+        overlayLabel.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.MATCH_PARENT
+        )
+        overlayLabel.text = mContext!!.resources.getString(R.string.mapbox_two_finger_move)
+        overlayLabel.setTextColor(Color.WHITE)
+        overlayLabel.gravity = Gravity.CENTER
+        overlayLabel.isSingleLine = false
 
+        this.twoFingerMoveMapOverlay = LinearLayout(mContext)
+        this.twoFingerMoveMapOverlay!!.tag = "twoFingerMoveMapOverlay"
+        this.twoFingerMoveMapOverlay!!.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.MATCH_PARENT
+        )
+        this.twoFingerMoveMapOverlay!!.setBackgroundColor(Color.parseColor("#66808080"))
+        this.twoFingerMoveMapOverlay!!.addView(overlayLabel)
+    }
+
+    private fun showTwoFingerMoveMapOverlay () {
+        if (mapView.findViewWithTag<LinearLayout>("twoFingerMoveMapOverlay") == null)
+            mapView.addView(this.twoFingerMoveMapOverlay)
+    }
+
+    private fun hideTwoFingerMoveMapOverlay () {
+        if (mapView.findViewWithTag<LinearLayout>("twoFingerMoveMapOverlay") != null) {
+            mapView.removeView(this.twoFingerMoveMapOverlay)
+        }
+    }
 }
