@@ -24,7 +24,7 @@
     <string name="contentdescription_thumbnailimage_linked_spot" translatable="false">Thumbnail for the linked spot</string>
     <string name="contentdescription_chevron_right" translatable="false">Chevron pointing to the right</string>
 
-    <string name="content_list_load_more_button_text">Load more</string>
+    <string name="content_list_load_more_button_text">Naloži več</string>
     <string name="content_list_error_loading_text">Error loading</string>
 
     <string name="no_location_alert_title">We need your location</string>

@@ -537,7 +537,7 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
                 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
                 @SuppressLint("SimpleDateFormat", "ResourceType")
                 override fun onResponse(call: Call, response: Response) {
-                    val responseBody = response.body()?.string()
+                    val responseBody = response.body?.string()
 
 
                     val firstFeature = JSONObject(responseBody).getJSONArray("features").getJSONObject(0)
