@@ -5,10 +5,13 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.RemoteException;
 
 import androidx.annotation.Nullable;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.xamoom.android.xamoomsdk.APIPasswordCallback;
@@ -74,6 +77,9 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
     private ArrayList<Beacon> lastBeacons;
     private ArrayList<Content> lastContents;
 
+    private ArrayList<Beacon> beaconsCache;
+    private ArrayList<Content> contentsCache;
+
     public boolean automaticRanging = false;
     public boolean approximateDistanceRanging = false;
     public boolean fastInsideRegionScanning = true;
@@ -98,6 +104,8 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
             mInstance.cooldownTime = api.getCooldown();
             mInstance.lastContents = new ArrayList<Content>();
             mInstance.lastBeacons = new ArrayList<Beacon>();
+            mInstance.contentsCache = new ArrayList<Content>();
+            mInstance.beaconsCache = new ArrayList<Beacon>();
         }
 
         return mInstance;
@@ -361,18 +369,28 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
         if (beacons.size() == 0) {
             callback.finish(new ArrayList<Beacon>(), new ArrayList<Content>());
         }
+        SharedPreferences defPrefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        boolean isScreenRefreshed = false;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            isScreenRefreshed = defPrefs.getBoolean("isHomeScreenNeedToRefresh", false);
+        }
+        if (isScreenRefreshed) {
+            beaconsCache.clear();
+            contentsCache.clear();
+        }
+
         for (int i = 0; i < beacons.size(); i++) {
             final Beacon beacon = (Beacon) beacons.toArray()[i];
 
             final SharedPreferences pref = mContext.getSharedPreferences(PushDeviceUtil.PREFES_NAME, Context.MODE_PRIVATE);
-            if (beaconAlreadyLoaded(beacon, pref) && isOnCooldown(beacon, pref)) {
-                if (oldBeacons.size() > 0 && oldContents.size() > 0) {
-                    for (int a = 0; a < oldBeacons.size(); a++) {
-                        int oldI3 = oldBeacons.get(a).getId3().toInt();
+            if (containsBeacon(beaconsCache, beacon.getId3())) {
+                if (beaconsCache.size() > 0 && contentsCache.size() > 0) {
+                    for (int a = 0; a < beaconsCache.size(); a++) {
+                        int oldI3 = beaconsCache.get(a).getId3().toInt();
                         int newI3 = beacon.getId3().toInt();
                         if (oldI3 == newI3) {
                             lastBeacons.add(beacon);
-                            lastContents.add(oldContents.get(a));
+                            lastContents.add(contentsCache.get(a));
                         }
                     }
                 }
@@ -396,6 +414,9 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
                             lastBeacons.add(beacon);
                             lastContents.add(result);
 
+                            beaconsCache.add(beacon);
+                            contentsCache.add(result);
+
                             if (beacon.getDistance() <= 0.5) {
                                 immediateBeacons.add(beacon);
                             } else if (beacon.getDistance() < 3.0 && beacon.getDistance() > 0.5) {
@@ -408,6 +429,7 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
                         calledBeacons.add(beacon);
 
                         if (calledBeacons.size() == beacons.size()) {
+                            defPrefs.edit().putBoolean("isHomeScreenNeedToRefresh", false).apply();
                             callback.finish(lastBeacons, lastContents);
                         }
                     }
@@ -531,6 +553,15 @@ public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, Be
 
     public ArrayList<Beacon> getBeacons() {
         return mBeacons;
+    }
+
+    public boolean containsBeacon(final List<Beacon> list, final Identifier id){
+        for (Beacon beacon : list) {
+            if (beacon.getId3().equals(id)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 

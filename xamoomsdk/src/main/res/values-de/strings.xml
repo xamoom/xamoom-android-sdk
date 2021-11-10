@@ -29,7 +29,7 @@
     <string name="info_ascent_descent_label">Ascent | Descent</string>
     <string name="info_time_label">Duration at %1$s</string>
 
-    <string name="unavailable_quiz_label">Unavailable quiz</string>
+    <string name="unavailable_quiz_label">Bereits gelöstes Quiz</string>
 
     <string name="save_ebook_alert_title">Bereit</string>
     <string name="save_ebook_alert_message">Die gewünschte Datei wurde heruntergeladen und steht zur Nutzung bereit.</string>

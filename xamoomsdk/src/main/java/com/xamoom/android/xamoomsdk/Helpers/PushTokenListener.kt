@@ -1,7 +1,6 @@
 package com.xamoom.android.xamoomsdk.Helpers
 
 import android.content.Context
-import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.xamoom.android.xamoomsdk.EnduserApi
 import com.xamoom.android.xamoomsdk.PushDevice.PushDeviceUtil

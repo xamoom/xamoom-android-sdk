@@ -50,19 +50,19 @@ class XamoomContentWebViewActivity: AppCompatActivity() {
         openWebViewWithUrl(secureString)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item!!.itemId == android.R.id.home) {
             finish()
         }
         return super.onOptionsItemSelected(item)
     }
-
     private fun openWebViewWithUrl(url: String) {
 
         webView.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
                 if( URLUtil.isNetworkUrl(url) ) {
-                    view!!.loadUrl(url)
+                    url?.let { view!!.loadUrl(it) }
                     return true
                 }
 
@@ -81,7 +81,7 @@ class XamoomContentWebViewActivity: AppCompatActivity() {
 
             override fun onLoadResource(view: WebView?, url: String?) {
                 super.onLoadResource(view, url)
-                Log.e("url", url)
+                url?.let { Log.e("url", it) }
             }
         }
 

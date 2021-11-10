@@ -67,7 +67,8 @@ public class ContentBlock14Adapter implements AdapterDelegate<List<ContentBlock>
         ContentBlock14ViewHolder newHolder = (ContentBlock14ViewHolder) holder;
         newHolder.setIsRecyclable(false);
         newHolder.setStyle(style);
-        newHolder.setupContentBlock(cb, offline, cb.isShowContentOnSpotmap());
+//        newHolder.setupContentBlock(cb, offline, cb.isShowContentOnSpotmap());
+        newHolder.setupContentBlock(cb, offline, true);
     }
 
     public void onSavedInstanceState(Bundle bundle) {
