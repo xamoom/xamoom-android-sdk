@@ -12,7 +12,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.xamoom.android.xamoomsdk.Filter;
 import com.xamoom.android.xamoomsdk.Resource.Content;
@@ -24,8 +23,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -385,8 +382,7 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
   }
 
   public ArrayList<ContentBlock> relatedBlocks(long id) {
-    ArrayList<ContentBlock> blocks = getContentBlockDatabaseAdapter().getRelatedContentBlocks(id);
-    return blocks;
+    return getContentBlockDatabaseAdapter().getRelatedContentBlocks(id);
   }
 
   // setter

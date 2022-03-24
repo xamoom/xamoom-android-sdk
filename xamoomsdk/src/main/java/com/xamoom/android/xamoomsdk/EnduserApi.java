@@ -17,7 +17,6 @@ import android.location.Location;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import android.util.Log;
 
 import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
@@ -30,7 +29,6 @@ import com.xamoom.android.xamoomsdk.PushDevice.PushDevice;
 import com.xamoom.android.xamoomsdk.PushDevice.PushDeviceUtil;
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
-import com.xamoom.android.xamoomsdk.Resource.KeyValueObject;
 import com.xamoom.android.xamoomsdk.Resource.Marker;
 import com.xamoom.android.xamoomsdk.Resource.Menu;
 import com.xamoom.android.xamoomsdk.Resource.NewVoucherStatusMessage;
@@ -45,7 +43,6 @@ import java.text.Normalizer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -54,7 +51,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import at.rags.morpheus.Deserializer;
 import at.rags.morpheus.Error;
@@ -92,7 +88,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
 
     private static EnduserApi sharedInstance;
 
-    private Context context;
+    private final Context context;
     private String apiKey;
     private EnduserApiInterface enduserApiInterface;
     private OfflineEnduserApi offlineEnduserApi;
@@ -200,17 +196,6 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
 
         return new EnduserApi(apiKey, context, isProduction, majorId, cooldown);
     }
-
-  /*
-  protected EnduserApi(Parcel in) {
-    apiKey = in.readString();
-    language = in.readString();
-    initRetrofit(apiKey);
-    initMorpheus();
-    initVars();
-    initSharedPreferences();
-  }
-  */
 
     private void initRetrofit(@NonNull final String apiKey) {
         OkHttpClient.Builder builder = new OkHttpClient().newBuilder();

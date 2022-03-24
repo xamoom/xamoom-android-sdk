@@ -247,7 +247,7 @@ public class ContentBlockDatabaseAdapter extends DatabaseAdapter {
   }
 
   private Cursor queryContentBlocks(String selection, String[] selectionArgs) {
-    Cursor cursor = mDatabase.query(
+    return mDatabase.query(
         OfflineEnduserContract.ContentBlockEntry.TABLE_NAME,
         OfflineEnduserContract.ContentBlockEntry.PROJECTION,
         selection,
@@ -256,6 +256,5 @@ public class ContentBlockDatabaseAdapter extends DatabaseAdapter {
         null,
         null
     );
-    return cursor;
   }
 }

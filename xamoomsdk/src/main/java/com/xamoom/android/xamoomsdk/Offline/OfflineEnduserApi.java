@@ -11,7 +11,6 @@ package com.xamoom.android.xamoomsdk.Offline;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.location.Location;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
