@@ -11,6 +11,8 @@ package com.xamoom.android.xamoomsdk.Offline;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.location.Location;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -47,6 +49,11 @@ public class OfflineEnduserApi {
     if (callback != null) {
       callback.finished(content);
     }
+  }
+
+  public boolean isNeedToUpdateContentCache(String contentID) {
+    Content content = mOfflineStorageManager.getContent(contentID);
+    return content == null;
   }
 
   public void getContentByLocationIdentifier(String locationIdentifier, APIPasswordCallback<Content,

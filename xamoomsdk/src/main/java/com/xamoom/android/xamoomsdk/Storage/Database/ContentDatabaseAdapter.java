@@ -30,6 +30,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import timber.log.Timber;
+
 public class ContentDatabaseAdapter extends DatabaseAdapter {
   private static ContentDatabaseAdapter mSharedInstance;
   private ContentBlockDatabaseAdapter mContentBlockDatabaseAdapter;
@@ -184,12 +186,18 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
     values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_CATEGORY, content.getCategory());
     values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_PUBLIC_IMAGE_URL, content.getPublicImageUrl());
     values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_SOCIAL_SHARING_URL, content.getSharingUrl());
+    Date currentDate = new Date();
+    values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_EXPIRATION_DATE, currentDate.getTime());
 
     if (content.getFromDate() != null) {
       values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_FROM_DATE, content.getFromDate().getTime());
+    } else {
+      values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_FROM_DATE, "");
     }
     if (content.getToDate() != null) {
       values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_TO_DATE, content.getToDate().getTime());
+    } else {
+      values.put(OfflineEnduserContract.ContentEntry.COLUMN_NAME_TO_DATE, "");
     }
 
     if (content.getTags() != null) {
@@ -302,7 +310,6 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
 
   private ArrayList<Content> cursorToContents(Cursor cursor) {
     ArrayList<Content> contents = new ArrayList<>();
-
     while (cursor.moveToNext()) {
       Content content = new Content();
       content.setId(cursor.getString(cursor.getColumnIndex(
@@ -317,11 +324,22 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
           OfflineEnduserContract.ContentEntry.COLUMN_NAME_CATEGORY)));
       content.setSharingUrl(cursor.getString(cursor.getColumnIndex(
           OfflineEnduserContract.ContentEntry.COLUMN_NAME_SOCIAL_SHARING_URL)));
-      content.setFromDate(new Date(cursor.getLong(
-          cursor.getColumnIndex(OfflineEnduserContract.ContentEntry.COLUMN_NAME_FROM_DATE))));
+      if (cursor.getLong(
+              cursor.getColumnIndex(OfflineEnduserContract.ContentEntry.COLUMN_NAME_FROM_DATE)) == 0) {
+      } else {
+        content.setFromDate(new Date(cursor.getLong(
+                cursor.getColumnIndex(OfflineEnduserContract.ContentEntry.COLUMN_NAME_FROM_DATE))));
 
-      content.setToDate(new Date(cursor.getLong(
-          cursor.getColumnIndex(OfflineEnduserContract.ContentEntry.COLUMN_NAME_TO_DATE))));
+      }
+
+      if (cursor.getLong(
+              cursor.getColumnIndex(OfflineEnduserContract.ContentEntry.COLUMN_NAME_TO_DATE)) == 0) {
+
+      } else {
+        content.setToDate(new Date(cursor.getLong(
+                cursor.getColumnIndex(OfflineEnduserContract.ContentEntry.COLUMN_NAME_TO_DATE))));
+      }
+
       String tags = cursor.getString(cursor
           .getColumnIndex(OfflineEnduserContract.ContentEntry.COLUMN_NAME_TAGS));
 
@@ -343,8 +361,7 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
           content.setCustomMeta(outMap);
         } catch (JSONException e) {
           // customMeta will be null
-          Log.e(ContentDatabaseAdapter.class.getSimpleName(),
-              "Cannot parse customMetaJson from sqlite. Error: " + e.toString());
+          Timber.e("Cannot parse customMetaJson from sqlite. Error: %s", e.toString());
         }
       }
       content.setPublicImageUrl(cursor.getString(cursor.getColumnIndex(
@@ -355,7 +372,13 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
           cursor.getColumnIndex(OfflineEnduserContract.ContentEntry.COLUMN_NAME_SYSTEM_RELATION))));
       content.setRelatedSpot(getSpotDatabaseDapter().getSpot(cursor.getLong(
           cursor.getColumnIndex(OfflineEnduserContract.ContentEntry.COLUMN_NAME_RELATED_SPOT))));
-      contents.add(content);
+
+      Date currentDate = new  Date();
+      long difference = currentDate.getTime() - cursor.getLong(
+              cursor.getColumnIndex(OfflineEnduserContract.ContentEntry.COLUMN_NAME_EXPIRATION_DATE));
+      if (difference < 600000) {
+        contents.add(content);
+      }
     }
 
     return contents;
@@ -363,12 +386,6 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
 
   public ArrayList<ContentBlock> relatedBlocks(long id) {
     ArrayList<ContentBlock> blocks = getContentBlockDatabaseAdapter().getRelatedContentBlocks(id);
-    Collections.sort(blocks, new Comparator<ContentBlock>() {
-      @Override
-      public int compare(ContentBlock cb1, ContentBlock cb2) {
-        return cb1.getId().compareTo(cb2.getId());
-      }
-    });
     return blocks;
   }
 

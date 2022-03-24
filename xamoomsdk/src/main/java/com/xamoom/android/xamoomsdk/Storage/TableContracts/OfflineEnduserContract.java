@@ -245,6 +245,7 @@ public class OfflineEnduserContract {
     public static final String COLUMN_NAME_FROM_DATE = "fromDate";
     public static final String COLUMN_NAME_TO_DATE = "toDate";
     public static final String COLUMN_NAME_RELATED_SPOT = "relatedSpot";
+    public static final String COLUMN_NAME_EXPIRATION_DATE = "expirationDate";
 
     public static final String CREATE_TABLE =
         "CREATE TABLE " + ContentEntry.TABLE_NAME + " (" +
@@ -262,6 +263,7 @@ public class OfflineEnduserContract {
             ContentEntry.COLUMN_NAME_SOCIAL_SHARING_URL + TEXT_TYPE + COMMA_SEP +
             ContentEntry.COLUMN_NAME_FROM_DATE + INTEGER_TYPE + COMMA_SEP +
             ContentEntry.COLUMN_NAME_TO_DATE + INTEGER_TYPE + COMMA_SEP +
+            ContentEntry.COLUMN_NAME_EXPIRATION_DATE + INTEGER_TYPE + COMMA_SEP +
             ContentEntry.COLUMN_NAME_RELATED_SPOT + INTEGER_TYPE + " )";
 
     public static final String[] PROJECTION = {
@@ -278,7 +280,8 @@ public class OfflineEnduserContract {
         ContentEntry.COLUMN_NAME_SOCIAL_SHARING_URL,
         ContentEntry.COLUMN_NAME_FROM_DATE,
         ContentEntry.COLUMN_NAME_TO_DATE,
-        ContentEntry.COLUMN_NAME_RELATED_SPOT
+        ContentEntry.COLUMN_NAME_RELATED_SPOT,
+        ContentEntry.COLUMN_NAME_EXPIRATION_DATE
     };
   }
 

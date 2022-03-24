@@ -44,6 +44,8 @@ import com.xamoom.android.xamoomsdk.Utils.UrlUtil;
 import java.text.Normalizer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -52,6 +54,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import at.rags.morpheus.Deserializer;
 import at.rags.morpheus.Error;
@@ -291,7 +294,8 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
      */
     public Call getContent(final String contentID, final EnumSet<ContentFlags> contentFlags, final ContentReason reason, String password,
                            final APIPasswordCallback<Content, List<at.rags.morpheus.Error>> callback) {
-        if (offline) {
+        boolean isNeedToUpdateCache = offlineEnduserApi.isNeedToUpdateContentCache(contentID);
+        if (offline || !isNeedToUpdateCache) {
             offlineEnduserApi.getContent(contentID, callback);
             return null;
         }
@@ -692,10 +696,17 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
                     .toDate(filter.getToDate())
                     .relatedSpotId(filter.getRelatedSpotId())
                     .build();
-        }else {
-            filter = new Filter.FilterBuilder()
-                    .tags((ArrayList<String>) tags)
-                    .build();
+        } else {
+            if (tags instanceof ArrayList) {
+                filter = new Filter.FilterBuilder()
+                        .tags((ArrayList<String>) tags)
+                        .build();
+            } else {
+                ArrayList<String> contentTags = new ArrayList<>(Arrays.asList(tags.get(0)));
+                filter = new Filter.FilterBuilder()
+                        .tags(contentTags)
+                        .build();
+            }
         }
 
         if (offline) {
