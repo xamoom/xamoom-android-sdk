@@ -55,6 +55,15 @@ public class OfflineEnduserApi {
     return content == null;
   }
 
+  public boolean isNeedToUpdateContentsCache(Filter filter) {
+    List<Content> contents = getContentsByTags(filter);
+    if (contents.size() > 0) {
+      return isNeedToUpdateContentCache(contents.get(0).getId());
+    } else {
+      return true;
+    }
+  }
+
   public void getContentByLocationIdentifier(String locationIdentifier, APIPasswordCallback<Content,
         List<Error>> callback) {
     Content content = mOfflineStorageManager.getContentWithLocationIdentifier(locationIdentifier);
@@ -80,6 +89,10 @@ public class OfflineEnduserApi {
                                 EnumSet<ContentSortFlags> sortFlags,
                                 Filter filter, APIListCallback<List<Content>, List<Error>> callback) {
     mOfflineStorageManager.getContents(filter, pageSize, cursor, sortFlags, callback);
+  }
+
+  public List<Content> getContentsByTags(Filter filter) {
+    return mOfflineStorageManager.getContents(filter);
   }
 
   public void searchContentsByName(String name, int pageSize, @Nullable String cursor,

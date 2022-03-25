@@ -694,7 +694,8 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
             }
         }
 
-        if (offline) {
+        boolean isNeedToUpdateCache = offlineEnduserApi.isNeedToUpdateContentsCache(filter);
+        if (offline || !isNeedToUpdateCache) {
             offlineEnduserApi.getContentsByTags(tags, pageSize, cursor, sortFlags, filter, callback);
             return null;
         }

@@ -63,7 +63,7 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
   private Content getContent(String selection, String[] selectionArgs) {
     open();
     Cursor cursor = queryContent(selection, selectionArgs);
-    ArrayList<Content> contents = cursorToContents(cursor);
+    ArrayList<Content> contents = cursorToContent(cursor);
     close();
 
     if (contents.size() > 0) {
@@ -76,7 +76,7 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
     open();
     Cursor cursor = queryContent(null, null);
 
-    ArrayList<Content> contents = cursorToContents(cursor);
+    ArrayList<Content> contents = cursorToContent(cursor);
 
     close();
     return contents;
@@ -87,6 +87,47 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
    * All combined with "AND".
    */
   public ArrayList<Content> getContents(Filter filter) {
+    String selection = "";
+    ArrayList<String> arguments = new ArrayList<>();
+
+    if (filter.getName() != null) {
+      selection += "LOWER(" + OfflineEnduserContract.ContentEntry.COLUMN_NAME_TITLE + ") LIKE LOWER(?)";
+      arguments.add("%"+filter.getName()+"%");
+    }
+
+    if (filter.getFromDate() != null) {
+      selection = addAnd(selection);
+      selection += OfflineEnduserContract.ContentEntry.COLUMN_NAME_FROM_DATE + " > ?";
+      arguments.add(String.valueOf(filter.getFromDate().getTime()));
+    }
+
+    if (filter.getToDate() != null) {
+      selection = addAnd(selection);
+      selection += OfflineEnduserContract.ContentEntry.COLUMN_NAME_TO_DATE + " < ?";
+      arguments.add(String.valueOf(filter.getToDate().getTime()));
+    }
+
+    if (filter.getRelatedSpotId() != null) {
+      selection = addAnd(selection);
+      selection += OfflineEnduserContract.ContentEntry.COLUMN_NAME_RELATED_SPOT + " = ?";
+
+      long spotRow = getSpotDatabaseDapter().getPrimaryKey(filter.getRelatedSpotId());
+      arguments.add(String.valueOf(spotRow));
+    }
+
+    String[] selectionArgs = arguments.toArray(new String[0]);
+
+    open();
+    Cursor cursor = queryContent(selection, selectionArgs);
+
+    ArrayList<Content> contents = cursorToContent(cursor);
+
+    close();
+
+    return contents;
+  }
+
+  public ArrayList<Content> getContentList(Filter filter) {
     String selection = "";
     ArrayList<String> arguments = new ArrayList<>();
 
@@ -141,7 +182,7 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
     open();
     Cursor cursor = queryContent(selection, selectionArgs);
 
-    ArrayList<Content> contents = cursorToContents(cursor);
+    ArrayList<Content> contents = cursorToContent(cursor);
 
     close();
 
@@ -155,7 +196,7 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
     open();
     Cursor cursor = queryContent(selection, selectionArgs);
 
-    ArrayList<Content> contents = cursorToContents(cursor);
+    ArrayList<Content> contents = cursorToContent(cursor);
 
     close();
 
@@ -168,7 +209,7 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
 
     open();
     Cursor cursor = queryContent(selection, selectionArgs);
-    ArrayList<Content> contents = cursorToContents(cursor);
+    ArrayList<Content> contents = cursorToContent(cursor);
 
     close();
     return contents;
@@ -305,6 +346,82 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
     return cursor;
   }
 
+  private ArrayList<Content> cursorToContent(Cursor cursor) {
+    ArrayList<Content> contents = new ArrayList<>();
+    while (cursor.moveToNext()) {
+      Content content = new Content();
+      content.setId(cursor.getString(cursor.getColumnIndex(
+              OfflineEnduserContract.ContentEntry.COLUMN_NAME_JSON_ID)));
+      content.setTitle(cursor.getString(cursor.getColumnIndex(
+              OfflineEnduserContract.ContentEntry.COLUMN_NAME_TITLE)));
+      content.setDescription(cursor.getString(cursor.getColumnIndex(
+              OfflineEnduserContract.ContentEntry.COLUMN_NAME_DESCRIPTION)));
+      content.setLanguage(cursor.getString(cursor.getColumnIndex(
+              OfflineEnduserContract.ContentEntry.COLUMN_NAME_LANGUAGE)));
+      content.setCategory(cursor.getInt(cursor.getColumnIndex(
+              OfflineEnduserContract.ContentEntry.COLUMN_NAME_CATEGORY)));
+      content.setSharingUrl(cursor.getString(cursor.getColumnIndex(
+              OfflineEnduserContract.ContentEntry.COLUMN_NAME_SOCIAL_SHARING_URL)));
+      if (cursor.getLong(
+              cursor.getColumnIndex(OfflineEnduserContract.ContentEntry.COLUMN_NAME_FROM_DATE)) == 0) {
+      } else {
+        content.setFromDate(new Date(cursor.getLong(
+                cursor.getColumnIndex(OfflineEnduserContract.ContentEntry.COLUMN_NAME_FROM_DATE))));
+
+      }
+
+      if (cursor.getLong(
+              cursor.getColumnIndex(OfflineEnduserContract.ContentEntry.COLUMN_NAME_TO_DATE)) == 0) {
+
+      } else {
+        content.setToDate(new Date(cursor.getLong(
+                cursor.getColumnIndex(OfflineEnduserContract.ContentEntry.COLUMN_NAME_TO_DATE))));
+      }
+
+      String tags = cursor.getString(cursor
+              .getColumnIndex(OfflineEnduserContract.ContentEntry.COLUMN_NAME_TAGS));
+
+      if (tags != null) {
+        content.setTags(Arrays.asList(tags.split(",")));
+      }
+
+      String customMetaJson = cursor.getString(cursor.getColumnIndex(
+              OfflineEnduserContract.ContentEntry.COLUMN_NAME_CUSTOM_META));
+      if (customMetaJson != null) {
+        try {
+          JSONObject jsonData = new JSONObject(customMetaJson);
+          HashMap<String, String> outMap = new HashMap<String, String>();
+          Iterator<String> iter = jsonData.keys();
+          while (iter.hasNext()) {
+            String name = iter.next();
+            outMap.put(name, jsonData.getString(name));
+          }
+          content.setCustomMeta(outMap);
+        } catch (JSONException e) {
+          // customMeta will be null
+          Timber.e("Cannot parse customMetaJson from sqlite. Error: %s", e.toString());
+        }
+      }
+      content.setPublicImageUrl(cursor.getString(cursor.getColumnIndex(
+              OfflineEnduserContract.ContentEntry.COLUMN_NAME_PUBLIC_IMAGE_URL)));
+      content.setContentBlocks(relatedBlocks(cursor
+              .getLong(cursor.getColumnIndex(OfflineEnduserContract.ContentEntry._ID))));
+      content.setSystem(getSystemDatabaseAdapter().getSystem(cursor.getLong(
+              cursor.getColumnIndex(OfflineEnduserContract.ContentEntry.COLUMN_NAME_SYSTEM_RELATION))));
+      content.setRelatedSpot(getSpotDatabaseDapter().getSpot(cursor.getLong(
+              cursor.getColumnIndex(OfflineEnduserContract.ContentEntry.COLUMN_NAME_RELATED_SPOT))));
+
+      Date currentDate = new  Date();
+      long difference = currentDate.getTime() - cursor.getLong(
+              cursor.getColumnIndex(OfflineEnduserContract.ContentEntry.COLUMN_NAME_EXPIRATION_DATE));
+      if (difference < 600000) {
+        contents.add(content);
+      }
+    }
+
+    return contents;
+  }
+
   private ArrayList<Content> cursorToContents(Cursor cursor) {
     ArrayList<Content> contents = new ArrayList<>();
     while (cursor.moveToNext()) {
@@ -370,12 +487,7 @@ public class ContentDatabaseAdapter extends DatabaseAdapter {
       content.setRelatedSpot(getSpotDatabaseDapter().getSpot(cursor.getLong(
           cursor.getColumnIndex(OfflineEnduserContract.ContentEntry.COLUMN_NAME_RELATED_SPOT))));
 
-      Date currentDate = new  Date();
-      long difference = currentDate.getTime() - cursor.getLong(
-              cursor.getColumnIndex(OfflineEnduserContract.ContentEntry.COLUMN_NAME_EXPIRATION_DATE));
-      if (difference < 600000) {
-        contents.add(content);
-      }
+      contents.add(content);
     }
 
     return contents;

@@ -10,6 +10,8 @@ package com.xamoom.android.xamoomsdk.Storage;
 
 import android.content.Context;
 import android.location.Location;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -43,6 +45,7 @@ import java.util.EnumSet;
 import java.util.List;
 
 import at.rags.morpheus.Error;
+import timber.log.Timber;
 
 /**
  * OfflineStorageManager is used to communicate with the databaseAdapters to save, query and delete
@@ -131,6 +134,39 @@ public class OfflineStorageManager {
     }
 
     return row != -1;
+  }
+
+  public void saveContents(List<Content> contents, boolean queueDownload, DownloadManager.OnDownloadManagerCompleted completion)
+          throws MalformedURLException {
+    for (Content content : contents) {
+      Log.println(Log.DEBUG, "", "conId " + content.getId() + " TAGS " + content.getTags() + " size " + contents.size());
+      mContentDatabaseAdapter.insertOrUpdateContent(content, false, -1);
+
+      if (content.getPublicImageUrl() != null && !content.getPublicImageUrl().isEmpty()) {
+        mDownloadManager.saveFileFromUrl(new URL(content.getPublicImageUrl()),
+                queueDownload, completion);
+      }
+
+      if (content.getContentBlocks() != null) {
+        for (ContentBlock contentBlock : content.getContentBlocks()) {
+
+          if (contentBlock.getFileId() != null && !contentBlock.getFileId().isEmpty()) {
+            mDownloadManager.saveFileFromUrl(new URL(contentBlock.getFileId()),
+                    queueDownload, completion);
+          }
+
+          if (contentBlock.getVideoUrl() != null && !contentBlock.getVideoUrl().isEmpty()) {
+            if (!contentBlock.getVideoUrl().contains("youtube.com") ||
+                    !contentBlock.getVideoUrl().contains("youtu.be") ||
+                    !contentBlock.getVideoUrl().contains("vimeo.com")) {
+              mDownloadManager.saveFileFromUrl(new URL(contentBlock.getVideoUrl()),
+                      queueDownload, completion);
+            }
+          }
+        }
+
+      }
+    }
   }
 
   /**
@@ -365,7 +401,7 @@ public class OfflineStorageManager {
       contents = OfflineEnduserApiHelper.getContentsWithTags(filter.getTags(), contents);
     }
 
-    sortContents(contents, sortFlags);
+//    sortContents(contents, sortFlags);
 
     OfflineEnduserApiHelper.PagedResult<Content> contentPagedResult =
         OfflineEnduserApiHelper.pageResults(contents, pageSize, cursor);
@@ -374,6 +410,15 @@ public class OfflineStorageManager {
       callback.finished(contentPagedResult.getObjects(), contentPagedResult.getCursor(),
           contentPagedResult.hasMore());
     }
+  }
+
+  public ArrayList<Content> getContents(@NonNull Filter filter) {
+    ArrayList<Content> contents = mContentDatabaseAdapter.getContentList(filter);
+    if (filter.getTags() != null) {
+      contents = OfflineEnduserApiHelper.getContentsWithTags(filter.getTags(), contents);
+    }
+
+    return contents;
   }
 
   /**

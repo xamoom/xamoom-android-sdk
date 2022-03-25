@@ -9,6 +9,9 @@
 package com.xamoom.android.xamoomsdk.Offline;
 
 import android.location.Location;
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
 
 import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.Spot;
@@ -25,12 +28,13 @@ public class OfflineEnduserApiHelper {
     return getSpotsInRadius(location, GEOFENCE_RADIUS, allSpots);
   }
 
+  @RequiresApi(api = Build.VERSION_CODES.N)
   public static ArrayList<Content> getContentsWithTags(List<String> tags, ArrayList<Content> contents) {
     ArrayList<Content> contentsWithTags = new ArrayList<>();
     for (Content content : contents) {
       boolean hasTag = false;
       for (String tag : tags) {
-        if (content.getTags().contains(tag)) {
+        if (content.getTags().stream().anyMatch(tag::equalsIgnoreCase)) {
           hasTag = true;
         }
       }
