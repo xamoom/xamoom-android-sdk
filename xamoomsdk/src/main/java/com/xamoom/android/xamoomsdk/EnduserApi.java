@@ -659,6 +659,12 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
         return getContentsByTags(tags, pageSize, cursor, sortFlags, null, callback);
     }
 
+    public Call downloadContentsByTags(List<String> tags, int pageSize, @Nullable String cursor,
+                                  EnumSet<ContentSortFlags> sortFlags,
+                                  APIListCallback<List<Content>, List<Error>> callback) {
+        return getContentsByTags(tags, pageSize, cursor, sortFlags, null, callback, true);
+    }
+
     /**
      * Get list of contents with a specific tag.
      *
@@ -696,6 +702,46 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
 
         boolean isNeedToUpdateCache = offlineEnduserApi.isNeedToUpdateContentsCache(filter);
         if (offline || !isNeedToUpdateCache) {
+            offlineEnduserApi.getContentsByTags(tags, pageSize, cursor, sortFlags, filter, callback);
+            return null;
+        }
+
+        Map<String, String> params = UrlUtil.addContentSortingParameter(UrlUtil.getUrlParameter(language),
+                sortFlags);
+        params = UrlUtil.addPagingToUrl(params, pageSize, cursor);
+        params = UrlUtil.addFilters(params, filter);
+
+
+        Call<ResponseBody> call = enduserApiInterface.getContents(getHeaders(), params);
+        callHandler.enqueListCall(call, callback);
+        return call;
+    }
+
+    public Call getContentsByTags(List<String> tags, int pageSize, @Nullable String cursor,
+                                  EnumSet<ContentSortFlags> sortFlags, @Nullable Filter filter,
+                                  APIListCallback<List<Content>, List<Error>> callback, boolean isNeedRefresh) {
+        if (filter != null) {
+            filter = new Filter.FilterBuilder()
+                    .name(filter.getName())
+                    .tags((ArrayList<String>) tags)
+                    .fromDate(filter.getFromDate())
+                    .toDate(filter.getToDate())
+                    .relatedSpotId(filter.getRelatedSpotId())
+                    .build();
+        } else {
+            if (tags instanceof ArrayList) {
+                filter = new Filter.FilterBuilder()
+                        .tags((ArrayList<String>) tags)
+                        .build();
+            } else {
+                ArrayList<String> contentTags = new ArrayList<>(Arrays.asList(tags.get(0)));
+                filter = new Filter.FilterBuilder()
+                        .tags(contentTags)
+                        .build();
+            }
+        }
+
+        if (!isNeedRefresh) {
             offlineEnduserApi.getContentsByTags(tags, pageSize, cursor, sortFlags, filter, callback);
             return null;
         }

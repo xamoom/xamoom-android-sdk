@@ -43,7 +43,7 @@ public class ListManager {
       flags.add(ContentSortFlags.NAME_DESC);
     }
 
-    mEnduserApi.getContentsByTags(tags, listItem.getPageSize(), listItem.getCursor(),
+    mEnduserApi.downloadContentsByTags(tags, listItem.getPageSize(), listItem.getCursor(),
             flags, new APIListCallback<List<Content>, List<Error>>() {
           @Override
           public void finished(List<Content> result, String cursor, boolean hasMore) {
