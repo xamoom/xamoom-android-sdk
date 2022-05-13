@@ -401,7 +401,7 @@ public class OfflineStorageManager {
       contents = OfflineEnduserApiHelper.getContentsWithTags(filter.getTags(), contents);
     }
 
-//    sortContents(contents, sortFlags);
+    sortContents(contents, sortFlags);
 
     OfflineEnduserApiHelper.PagedResult<Content> contentPagedResult =
         OfflineEnduserApiHelper.pageResults(contents, pageSize, cursor);
@@ -414,7 +414,9 @@ public class OfflineStorageManager {
 
   public ArrayList<Content> getContents(@NonNull Filter filter) {
     ArrayList<Content> contents = mContentDatabaseAdapter.getContentList(filter);
-    if (filter.getTags() != null) {
+    if (filter.getTags() != null
+            || !filter.getTags().contains("x-app-config")
+            || !filter.getTags().contains("x-quiz")) {
       contents = OfflineEnduserApiHelper.getContentsWithTags(filter.getTags(), contents);
     }
 

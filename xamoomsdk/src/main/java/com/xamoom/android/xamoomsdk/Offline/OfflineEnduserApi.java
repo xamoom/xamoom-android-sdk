@@ -50,7 +50,7 @@ public class OfflineEnduserApi {
     }
   }
 
-  public boolean isNeedToUpdateContentCache(String contentID) {
+  public boolean  isNeedToUpdateContentCache(String contentID) {
     Content content = mOfflineStorageManager.getContent(contentID);
     return content == null;
   }

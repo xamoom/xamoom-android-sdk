@@ -10,6 +10,7 @@ package com.xamoom.android.xamoomsdk.Offline;
 
 import android.location.Location;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
@@ -136,7 +137,11 @@ public class OfflineEnduserApiHelper {
   public static <E> PagedResult pageResults(ArrayList<E> list, int pageSize, String cursor) {
     int intCursor = 0;
     if (cursor != null) {
-      intCursor = Integer.valueOf(cursor);
+      try {
+        intCursor = Integer.parseInt(cursor);
+      } catch (NumberFormatException e) {
+        System.out.println(e.getLocalizedMessage());
+      }
     }
 
     ArrayList<E> pagedList = new ArrayList<>();

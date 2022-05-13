@@ -700,7 +700,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
             }
         }
 
-        boolean isNeedToUpdateCache = offlineEnduserApi.isNeedToUpdateContentsCache(filter);
+        boolean isNeedToUpdateCache = filter.getTags().contains("x-quiz") || offlineEnduserApi.isNeedToUpdateContentsCache(filter);
         if (offline || !isNeedToUpdateCache) {
             offlineEnduserApi.getContentsByTags(tags, pageSize, cursor, sortFlags, filter, callback);
             return null;
