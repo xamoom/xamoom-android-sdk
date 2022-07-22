@@ -35,8 +35,9 @@ public class OfflineEnduserApiHelper {
     for (Content content : contents) {
       boolean hasTag = false;
       for (String tag : tags) {
-        if (content.getTags().stream().anyMatch(tag::equalsIgnoreCase)) {
+        if (containsIgnoreCase(content.getTags(), tag)) {
           hasTag = true;
+          break;
         }
       }
       if (hasTag) {
@@ -45,6 +46,15 @@ public class OfflineEnduserApiHelper {
     }
 
     return contentsWithTags;
+  }
+
+  private static boolean containsIgnoreCase(List<String> list, String soughtFor) {
+    for (String current : list) {
+      if (current.equalsIgnoreCase(soughtFor)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public static ArrayList<Spot> getSpotsWithTags(List<String> tags, ArrayList<Spot> spots) {
