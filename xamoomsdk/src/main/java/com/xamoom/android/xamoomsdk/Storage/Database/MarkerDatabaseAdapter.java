@@ -90,7 +90,7 @@ public class MarkerDatabaseAdapter extends DatabaseAdapter {
     Cursor cursor = queryMarker(selection, selectionArgs);
     long spotRelation = -1L;
 
-    if (cursor.moveToFirst()) {
+    if (cursor != null && cursor.moveToFirst()) {
       spotRelation = cursor.getLong(cursor.getColumnIndex(MarkerEntry.COLUMN_NAME_SPOT_RELATION));
     }
 

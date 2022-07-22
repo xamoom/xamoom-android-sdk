@@ -49,7 +49,7 @@ public class StyleDatabaseAdapter extends DatabaseAdapter {
     open();
     Cursor cursor = queryStyles(selection, selectionArgs);
     Style style = null;
-    if (cursor.moveToFirst()) {
+    if (cursor != null && cursor.moveToFirst()) {
       style = cursorToStyle(cursor);
     }
 
@@ -138,7 +138,7 @@ public class StyleDatabaseAdapter extends DatabaseAdapter {
   }
 
   private Style cursorToStyle(Cursor cursor) {
-    if (cursor.moveToFirst()) {
+    if (cursor != null && cursor.moveToFirst()) {
       Style style = new Style();
       style.setId(cursor.getString(
           cursor.getColumnIndex(StyleEntry.COLUMN_NAME_JSON_ID)));

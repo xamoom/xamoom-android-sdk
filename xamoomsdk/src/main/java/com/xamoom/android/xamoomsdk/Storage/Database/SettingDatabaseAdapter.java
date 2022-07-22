@@ -119,11 +119,12 @@ public class SettingDatabaseAdapter extends DatabaseAdapter {
       close();
       return id;
     }
+    close();
     return -1;
   }
 
   private SystemSetting cursorToSetting(Cursor cursor) {
-    if (cursor.moveToFirst()) {
+    if (cursor != null && cursor.moveToFirst()) {
       SystemSetting setting = new SystemSetting();
       setting.setId(cursor.getString(cursor.getColumnIndex(
           OfflineEnduserContract.StyleEntry.COLUMN_NAME_JSON_ID)));

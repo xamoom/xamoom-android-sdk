@@ -57,6 +57,7 @@ public class MenuDatabaseAdapter extends DatabaseAdapter {
     open();
     Cursor cursor = queryMenu(selection, selectionArgs);
     Menu menu = cursorToMenu(cursor);
+    close();
 
     return menu;
   }
@@ -130,7 +131,7 @@ public class MenuDatabaseAdapter extends DatabaseAdapter {
   }
 
   private Menu cursorToMenu(Cursor cursor) {
-    if (cursor.moveToFirst()) {
+    if (cursor != null && cursor.moveToFirst()) {
       Menu menu = new Menu();
       menu.setId(cursor.getString(cursor
           .getColumnIndex(OfflineEnduserContract.MenuEntry.COLUMN_NAME_JSON_ID)));

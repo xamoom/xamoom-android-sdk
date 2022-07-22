@@ -182,6 +182,7 @@ public class ContentBlockDatabaseAdapter extends DatabaseAdapter {
       close();
       return id;
     }
+    close();
     return -1;
   }
 
