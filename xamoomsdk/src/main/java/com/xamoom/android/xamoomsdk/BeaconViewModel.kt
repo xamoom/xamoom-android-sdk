@@ -6,22 +6,23 @@ import androidx.lifecycle.ViewModel
 import org.altbeacon.beacon.Beacon
 import java.util.*
 import kotlin.collections.HashMap
+import kotlin.collections.LinkedHashMap
 
-class BeaconViewModel: ViewModel() {
- // TODO: Change to minor as key
- val beacons: MutableLiveData<HashMap<Long, Beacon>> by lazy {
-  MutableLiveData(emptyMap<Long, Beacon>() as HashMap)
- }
+class BeaconViewModel : ViewModel() {
+    val beacons: MutableLiveData<HashMap<Int, Beacon>> by lazy {
+        MutableLiveData(hashMapOf<Int, Beacon>())
+    }
+    val isInsideRegion: MutableLiveData<Boolean> by lazy { MutableLiveData(false) }
 
- fun addBeacon(beacon: Beacon) {
-  val newValue = beacons.value?: emptyMap<Long, Beacon>() as HashMap
-  newValue[System.currentTimeMillis()] = beacon
-  beacons.postValue(newValue)
- }
+    fun addBeacon(beacon: Beacon) {
+        val newValue = beacons.value ?: emptyMap<Int, Beacon>() as HashMap
+        newValue[beacon.id3.toInt()] = beacon
+        beacons.postValue(newValue)
+    }
 
- fun clearBeacons() {
-  val empty = beacons.value
-  empty?.clear()
-  beacons.postValue(empty)
- }
+    fun clearBeacons() {
+        val empty = beacons.value
+        empty?.clear()
+        beacons.postValue(empty)
+    }
 }
