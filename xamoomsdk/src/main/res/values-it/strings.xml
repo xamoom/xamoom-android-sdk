@@ -37,5 +37,9 @@
     <string name="save_ebook_alert_share">SAVE TO</string>
 
     <string name="mapbox_two_finger_move">USA DUE DITA PER MUOVERE LA MAPPA</string>
+    <string name="beacon_service_stop_action">Fermare</string>
+    <string name="beacon_service_notification_name">Notifica permanente nelle vicinanze</string>
+    <string name="beacon_service_notification_description">Visualizzazione della notifica durante la scansione dei beacon</string>
+    <string name="beacon_service_notification_title">Scansione nelle vicinanze</string>
 
 </resources>

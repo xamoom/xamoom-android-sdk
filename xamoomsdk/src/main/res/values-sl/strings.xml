@@ -51,5 +51,9 @@
     <string name="save_ebook_alert_share">SAVE TO</string>
 
     <string name="mapbox_two_finger_move">USE TWO FINGERS TO MOVE THE MAP</string>
+    <string name="beacon_service_stop_action">Stop</string>
+    <string name="beacon_service_notification_name">Trajno obvestilo o bližini</string>
+    <string name="beacon_service_notification_description">Prikaz obvestila pri iskanju svetilnikov</string>
+    <string name="beacon_service_notification_title">Skeniranje v bližini</string>
 
 </resources>
