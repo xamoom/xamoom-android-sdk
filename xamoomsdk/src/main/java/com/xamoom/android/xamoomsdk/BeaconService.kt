@@ -27,9 +27,13 @@ class BeaconService(
 
     val beaconViewModel: BeaconViewModel = BeaconViewModel()
 
-    // TODO: Big problem, insert better beacon unique identifier
     private var region: Region =
-        Region("wtf.beacons", XAMOOM_BEACON_IDENTIFIER, Identifier.fromInt(majorId), null);
+        Region(
+            "${context.packageName}.beacons",
+            XAMOOM_BEACON_IDENTIFIER,
+            Identifier.fromInt(majorId),
+            null
+        )
     private var automaticRanging = true
     private var beaconManager: BeaconManager = BeaconManager.getInstanceForApplication(context)
     private var foregroundNotification: Notification? = null
@@ -61,7 +65,8 @@ class BeaconService(
         beaconMajor,
         R.string.beacon_service_notification_title,
         R.drawable.ic_near_me
-    ) {}
+    ) {
+    }
 
     init {
         beaconManager.beaconParsers.add(BeaconParser().setBeaconLayout(BEACON_LAYOUT))
@@ -94,7 +99,7 @@ class BeaconService(
         builder.setContentTitle(context.getString(notificationTitle))
 
         // opening the app when clicking on the notification
-        val intent = context.packageManager.getLaunchIntentForPackage(context.packageName);
+        val intent = context.packageManager.getLaunchIntentForPackage(context.packageName)
         val pendingIntent = PendingIntent.getActivity(
             context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT
         )
@@ -120,7 +125,7 @@ class BeaconService(
             channel.description =
                 context.getString(R.string.beacon_service_notification_description)
 
-            context.startActivity(intent);
+            context.startActivity(intent)
 
             val notificationManager = context.getSystemService(
                 Context.NOTIFICATION_SERVICE
@@ -168,11 +173,11 @@ class BeaconService(
     }
 
     companion object {
-        const val BEACON_LAYOUT: String = "m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24";
-        const val NOTIFICATION_CHANNEL_ID: String = "foreground-beacon-service-channel-id";
-        const val NOTIFICATION_ID: Int = 1001;
+        const val BEACON_LAYOUT: String = "m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"
+        const val NOTIFICATION_CHANNEL_ID: String = "foreground-beacon-service-channel-id"
+        const val NOTIFICATION_ID: Int = 1001
         const val NOTIFICATION_ACTION_STOP_SERVICE: String =
-            "com.xamoom.android.xamoomsdk.NOTIFICATION_ACTION_STOP_SERVICE";
+            "com.xamoom.android.xamoomsdk.NOTIFICATION_ACTION_STOP_SERVICE"
         val XAMOOM_BEACON_IDENTIFIER: Identifier =
             Identifier.parse("de2b94ae-ed98-11e4-3432-78616d6f6f6d")
 
