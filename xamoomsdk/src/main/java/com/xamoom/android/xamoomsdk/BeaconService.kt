@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Build
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import org.altbeacon.beacon.*
 import timber.log.Timber
@@ -26,17 +27,7 @@ class BeaconService(
 ) {
 
     val beaconViewModel: BeaconViewModel = BeaconViewModel()
-
-    private var region: Region =
-        Region(
-            "${context.packageName}.beacons",
-            XAMOOM_BEACON_IDENTIFIER,
-            Identifier.fromInt(majorId),
-            null
-        )
-    private var automaticRanging = true
-    private var beaconManager: BeaconManager = BeaconManager.getInstanceForApplication(context)
-    private var foregroundNotification: Notification? = null
+    val isShowingForegroundService: MutableLiveData<Boolean> = MutableLiveData(false);
 
     private val backgroundObserver = Observer<Int> { state ->
         beaconViewModel.isInsideRegion.value = state == MonitorNotifier.INSIDE
@@ -50,7 +41,6 @@ class BeaconService(
             beaconViewModel.clearBeacons()
         }
     }
-
     private val rangingObserver = Observer<Collection<Beacon>> { beacons ->
         Timber.d("Ranged: ${beacons.count()} beacons")
         for (beacon: Beacon in beacons) {
@@ -58,6 +48,16 @@ class BeaconService(
             Timber.d("$beacon about ${beacon.distance} meters away")
         }
     }
+    private var automaticRanging = true
+    private var beaconManager: BeaconManager = BeaconManager.getInstanceForApplication(context)
+    private var foregroundNotification: Notification? = null
+    private var region: Region =
+        Region(
+            "${context.packageName}.beacons",
+            XAMOOM_BEACON_IDENTIFIER,
+            Identifier.fromInt(majorId),
+            null
+        )
 
     // kotlin does not recognize my default parameters
     constructor(context: Application, beaconMajor: Int) : this(
@@ -85,7 +85,7 @@ class BeaconService(
      * If you start monitoring after enabling this, it will show the user an notification and use
      * it for scanning beacons. Normal background beacon scanning intervals are used.
      */
-    fun enableForegroundService(context: Context, clazz: Class<out Activity>) {
+    fun enableForegroundService(context: Context) {
         if (beaconManager.isAnyConsumerBound) {
             Timber.w("There are already consumers bound. Stopping monitoring & ranging. If you use another beacon service please consider stopping if you run into problems.")
         }
@@ -142,11 +142,15 @@ class BeaconService(
             )
         }
         beaconManager.setEnableScheduledScanJobs(false)
+        isShowingForegroundService.postValue(true);
+        startMonitoring()
     }
 
     fun disableForegroundService() {
+        stopMonitoring()
         beaconManager.disableForegroundServiceScanning()
         beaconManager.setEnableScheduledScanJobs(true)
+        isShowingForegroundService.postValue(false);
     }
 
     fun startMonitoring() {
