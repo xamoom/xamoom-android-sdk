@@ -8,6 +8,7 @@ import java.util.*
 import kotlin.collections.HashMap
 import kotlin.collections.LinkedHashMap
 
+// TODO: Should this class just store beacons, instead of deleting them after region exit?
 class BeaconViewModel : ViewModel() {
     val beacons: MutableLiveData<HashMap<Int, Beacon>> by lazy {
         MutableLiveData(hashMapOf<Int, Beacon>())
