@@ -32,7 +32,13 @@ class BeaconServiceBroadcastReceiver() : BroadcastReceiver() {
  * Use (enable/disable)Foreground Service to start an Android Foreground Service with sticky
  * notification to have better scanning.
  *
- * // TODO: Permissions needed?
+ * Permissions (Manifest)
+ *
+ * * ACCESS_COARSE_LOCATION (< api 29)
+ * * ACCESS_BACKGROUND_LOCATION (> api 29)
+ *
+ * Runtime Permissions (> api 29): Fine Location & Background Location
+ * https://altbeacon.github.io/android-beacon-library/requesting_permission.html
  */
 class BeaconService(
     context: Context, majorId: Int,
