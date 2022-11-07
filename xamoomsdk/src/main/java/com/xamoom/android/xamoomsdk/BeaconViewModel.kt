@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.altbeacon.beacon.Beacon
 import java.time.LocalDateTime
-import kotlin.collections.HashMap
 
 class BeaconViewModel : ViewModel() {
     val beacons: MutableLiveData<HashMap<Int, BeaconData>> by lazy {
