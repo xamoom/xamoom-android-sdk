@@ -15,7 +15,7 @@ android {
 	buildToolsVersion '30.0.2'
 
 	defaultConfig {
-		minSdkVersion 18
+		minSdkVersion 28
 		targetSdkVersion 30
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 		multiDexEnabled true
