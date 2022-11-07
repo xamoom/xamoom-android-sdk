@@ -12,6 +12,9 @@ import androidx.lifecycle.Observer
 import org.altbeacon.beacon.*
 import timber.log.Timber
 
+/**
+ * Handle stop action from foreground notification.
+ */
 class BeaconServiceBroadcastReceiver() : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         if (intent?.action == BeaconService.NOTIFICATION_ACTION_STOP_SERVICE) {
@@ -20,6 +23,17 @@ class BeaconServiceBroadcastReceiver() : BroadcastReceiver() {
     }
 }
 
+/**
+ * BeaconService for background / foreground beacon scanning.
+ *
+ * Use (start/stop)(Monitoring/Ranging) for normal foreground/background scanning with actual
+ * Android limitations. https://altbeacon.github.io/android-beacon-library/detection_times.html
+ *
+ * Use (enable/disable)Foreground Service to start an Android Foreground Service with sticky
+ * notification to have better scanning.
+ *
+ * // TODO: Permissions needed?
+ */
 class BeaconService(
     context: Context, majorId: Int,
     @StringRes private val notificationTitle: Int = R.string.beacon_service_notification_title,
@@ -146,8 +160,13 @@ class BeaconService(
         startMonitoring()
     }
 
+    /**
+     * Removes foreground service with their notification.
+     * Also stops monitoring & ranging of beacons.
+     */
     fun disableForegroundService() {
         stopMonitoring()
+        stopRanging()
         beaconManager.disableForegroundServiceScanning()
         beaconManager.setEnableScheduledScanJobs(true)
         isShowingForegroundService.postValue(false);
