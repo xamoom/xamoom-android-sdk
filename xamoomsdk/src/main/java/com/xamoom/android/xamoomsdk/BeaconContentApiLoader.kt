@@ -28,7 +28,7 @@ class BeaconContentApiLoader(
                 }
             }
 
-            callback(results)
+            GlobalScope.launch(Dispatchers.Main) { callback(results) }
         }
 
     private suspend fun load(minor: Int, reason: ContentReason): Content? =
@@ -64,6 +64,7 @@ class BeaconContentApiLoader(
         }
 
         val content = load(minor, ContentReason.BEACON)
-        callback(content)
+
+        GlobalScope.launch(Dispatchers.Main) { callback(content) }
     }
 }
