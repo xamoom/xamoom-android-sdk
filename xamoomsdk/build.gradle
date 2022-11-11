@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
-def versionString = "3.11.20"
+def versionString = "3.12.0"
 
 def props = new Properties()
 file(project.gradle.gradleUserHomeDir.path + "/gradle.properties").withInputStream { props.load(it) }

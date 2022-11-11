@@ -21,7 +21,3 @@ But before you start, you should read the about the [Core Concepts](https://gith
 * [Push Notification](https://github.com/xamoom/xamoom-android-sdk/wiki/Push-Notification)
 * [Offline usage](https://github.com/xamoom/xamoom-android-sdk/wiki/Offline-usage)
 
-# Requirements
-
-* Minimum Android SDK version: 18
-* Gradle version 3.1.3

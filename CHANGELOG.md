@@ -1,5 +1,8 @@
 # Changelog
 
+## [3.12.0](https://github.com/xamoom/xamoom-ios-sdk/compare/3.11.15...3.12.0) - 11.11.2022
+- Add BeaconService (replacing XamoomBeaconService) with ViewModel & Foreground Service
+
 ## [3.11.15](https://github.com/xamoom/xamoom-ios-sdk/compare/3.11.14...3.11.15) - 21.10.2019
 - XamoomContentWebViewActivity fix with ColorHelper
 
