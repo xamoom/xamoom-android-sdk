@@ -15,7 +15,7 @@ android {
 	buildToolsVersion '30.0.2'
 
 	defaultConfig {
-		minSdkVersion 18
+		minSdkVersion 28
 		targetSdkVersion 30
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 		multiDexEnabled true
@@ -89,6 +89,11 @@ dependencies {
 	implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:9.6.2'
 	implementation 'com.jakewharton.timber:timber:4.7.1'
 	implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
+	// Coroutine Core dependency
+	implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.1'
+	// Android UI Programming
+	implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1'
 }
 
 ext {

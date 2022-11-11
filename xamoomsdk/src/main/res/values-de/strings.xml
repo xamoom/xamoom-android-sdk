@@ -37,5 +37,9 @@
     <string name="save_ebook_alert_share">SPEICHERN UNTER</string>
 
     <string name="mapbox_two_finger_move">NUTZEN SIE ZWEI FINGER, UM DIE KARTE ZU BEWEGEN</string>
+    <string name="beacon_service_stop_action">Stoppen</string>
+    <string name="beacon_service_notification_name">PermanentePermanente Beacon Benachrichtigung</string>
+    <string name="beacon_service_notification_description">Benachrichtigung beim Scannen nach Beacons</string>
+    <string name="beacon_service_notification_title">Umgebung wird gescannt</string>
 
 </resources>

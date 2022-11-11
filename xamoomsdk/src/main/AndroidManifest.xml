@@ -3,12 +3,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.CAMERA2" />
 
@@ -24,12 +27,22 @@
         android:supportsRtl="true">
 
         <service android:enabled="true"
-            android:name="com.xamoom.android.xamoomcontentblocks.AudioPlayerService">
+            android:name="com.xamoom.android.xamoomcontentblocks.AudioPlayerService"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
                 <action android:name="android.media.AUDIO_BECOMING_NOISY" />
             </intent-filter>
         </service>
+
+
+        <receiver
+            android:name="com.xamoom.android.xamoomsdk.BeaconServiceBroadcastReceiver"
+            android:exported="false">
+            <intent-filter>
+               <action android:name="com.xamoom.android.xamoomsdk.NOTIFICATION_ACTION_STOP_SERVICE"/>
+            </intent-filter>
+        </receiver>
 
         <meta-data
             android:name="com.xamoom.android.xamoomsdk.version"

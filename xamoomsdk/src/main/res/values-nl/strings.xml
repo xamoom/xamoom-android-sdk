@@ -37,5 +37,9 @@
     <string name="save_ebook_alert_share">SAVE TO</string>
 
     <string name="mapbox_two_finger_move">GEBRUIK TWEE VINGERS OM DE KAART TE VERPLAATSEN</string>
+    <string name="beacon_service_stop_action">Hou Op</string>
+    <string name="beacon_service_notification_name">Permanente melding in de buurt</string>
+    <string name="beacon_service_notification_description">Visualizzazione della notifica durante la scansione dei beacon</string>
+    <string name="beacon_service_notification_title">Scannen in de buurt</string>
 
 </resources>

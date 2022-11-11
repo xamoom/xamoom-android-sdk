@@ -51,5 +51,9 @@
     <string name="save_ebook_alert_share">SAVE TO</string>
 
     <string name="mapbox_two_finger_move">USE TWO FINGERS TO MOVE THE MAP</string>
+    <string name="beacon_service_stop_action">Stop</string>
+    <string name="beacon_service_notification_name">Permanent Nearby Notification</string>
+    <string name="beacon_service_notification_description">Showing notification when scanning for beacons</string>
+    <string name="beacon_service_notification_title">Scanning nearby</string>
 
 </resources>

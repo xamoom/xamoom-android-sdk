@@ -37,6 +37,7 @@ import java.util.List;
 
 import at.rags.morpheus.Error;
 
+@Deprecated
 public class XamoomBeaconService implements BootstrapNotifier, RangeNotifier, BeaconConsumer {
 
     private static final String TAG = "XamoomBeaconService";
