@@ -185,12 +185,12 @@ class BeaconService(
 
     fun stopMonitoring() = beaconManager.stopMonitoring(region)
 
-    private fun startRanging() {
+    fun startRanging() {
         Timber.d("Start Beacon ranging")
         beaconManager.startRangingBeacons(region)
     }
 
-    private fun stopRanging() = beaconManager.stopRangingBeacons(region)
+    fun stopRanging() = beaconManager.stopRangingBeacons(region)
 
     private fun debugInformation() {
         Timber.d("Beacon Region: $region")
