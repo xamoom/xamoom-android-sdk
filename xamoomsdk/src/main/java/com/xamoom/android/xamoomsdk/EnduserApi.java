@@ -280,7 +280,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
     public Call getContent(final String contentID, final EnumSet<ContentFlags> contentFlags, final ContentReason reason, String password,
                            final APIPasswordCallback<Content, List<at.rags.morpheus.Error>> callback) {
         boolean isNeedToUpdateCache = offlineEnduserApi.isNeedToUpdateContentCache(contentID);
-        if (offline || !isNeedToUpdateCache) {
+        if (offline) {
             offlineEnduserApi.getContent(contentID, callback);
             return null;
         }
@@ -701,7 +701,7 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
         }
 
         boolean isNeedToUpdateCache = filter.getTags().contains("x-quiz") || offlineEnduserApi.isNeedToUpdateContentsCache(filter);
-        if (offline || !isNeedToUpdateCache) {
+        if (offline) {
             offlineEnduserApi.getContentsByTags(tags, pageSize, cursor, sortFlags, filter, callback);
             return null;
         }

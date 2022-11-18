@@ -58,9 +58,11 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name="com.xamoom.android.XamoomContentWebViewActivity"/>
+        <activity android:name="com.xamoom.android.XamoomContentWebViewActivity"
+            android:exported="true"/>
 
-        <receiver android:name="androidx.media.session.MediaButtonReceiver">
+        <receiver android:name="androidx.media.session.MediaButtonReceiver"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
                 <action android:name="android.media.AUDIO_BECOMING_NOISY" />
