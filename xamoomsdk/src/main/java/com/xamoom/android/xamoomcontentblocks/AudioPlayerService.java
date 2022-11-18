@@ -79,13 +79,13 @@ public class AudioPlayerService extends Service {
           String artist = msg.getData().getString("ARTIST");
 
           MediaFile mediaFile = audioPlayer.createMediaFile(Uri.parse(url), position, title,
-              artist, null);
+                  artist, null);
           mediaFileMessengers.put(mediaFile, msg.replyTo);
           mediaFile.setEventListener(mediaFileEventListener);
 
           try {
             Message msgAnswer = Message.obtain(null, MSG_AUDIO_EVENT_UPDATE_PROGRESS,
-                0, 0);
+                    0, 0);
             Bundle bundle = new Bundle();
             bundle.putLong("DURATION", mediaFile.getDuration());
             bundle.putLong("POSITION", mediaFile.getPlaybackPosition());
@@ -98,7 +98,7 @@ public class AudioPlayerService extends Service {
           if (mediaFile.getState() == MediaFile.State.PLAYING) {
             try {
               msg.replyTo.send(Message.obtain(null, MSG_AUDIO_EVENT_STARTED,
-                  0,0));
+                      0,0));
             } catch (RemoteException e) {
               e.printStackTrace();
             }
@@ -144,16 +144,16 @@ public class AudioPlayerService extends Service {
     super.onCreate();
     audioPlayer = new AudioPlayer(getApplicationContext());
     ComponentName componentName = new ComponentName(getApplicationContext(),
-        MediaButtonReceiver.class);
-    mediaSession = new MediaSessionCompat(getApplicationContext(), TAG, componentName,
-        null);
-    mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
-        MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
-
+            MediaButtonReceiver.class);
     Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
-    mediaButtonIntent.setClass(this, MediaButtonReceiver.class);
     PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0,
-        mediaButtonIntent, 0);
+            mediaButtonIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+    mediaSession = new MediaSessionCompat(getApplicationContext(), TAG, componentName,
+            null);
+    mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
+            MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
+
+    mediaButtonIntent.setClass(this, MediaButtonReceiver.class);
     mediaSession.setMediaButtonReceiver(pendingIntent);
 
     mediaSession.setCallback(mediaSessionCallback);
@@ -202,7 +202,7 @@ public class AudioPlayerService extends Service {
       }
       try {
         messenger.send(Message.obtain(null, MSG_AUDIO_EVENT_UPDATE_LOADING,
-            isLoading ? 0 : 1,0));
+                isLoading ? 0 : 1,0));
       } catch (RemoteException e) {
         e.printStackTrace();
       }
@@ -217,22 +217,22 @@ public class AudioPlayerService extends Service {
       mediaSession.setActive(true);
 
       mediaSession.setMetadata(new MediaMetadataCompat.Builder()
-          .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, mediaFile.getUri().toString())
-          .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, mediaFile.getAlbum())
-          .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, mediaFile.getArtist())
-          .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, mediaFile.getDuration())
-          .putString(MediaMetadataCompat.METADATA_KEY_TITLE, mediaFile.getTitle())
-          .build());
+              .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, mediaFile.getUri().toString())
+              .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, mediaFile.getAlbum())
+              .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, mediaFile.getArtist())
+              .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, mediaFile.getDuration())
+              .putString(MediaMetadataCompat.METADATA_KEY_TITLE, mediaFile.getTitle())
+              .build());
 
       mediaSession.setPlaybackState(new PlaybackStateCompat.Builder()
-          .setState(PlaybackStateCompat.STATE_PLAYING,
-              PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 1.0f)
-          .setActions(PlaybackStateCompat.ACTION_PAUSE |
-              PlaybackStateCompat.ACTION_PLAY_PAUSE |
-              PlaybackStateCompat.ACTION_FAST_FORWARD |
-              PlaybackStateCompat.ACTION_REWIND |
-              PlaybackStateCompat.ACTION_STOP)
-          .build());
+              .setState(PlaybackStateCompat.STATE_PLAYING,
+                      PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 1.0f)
+              .setActions(PlaybackStateCompat.ACTION_PAUSE |
+                      PlaybackStateCompat.ACTION_PLAY_PAUSE |
+                      PlaybackStateCompat.ACTION_FAST_FORWARD |
+                      PlaybackStateCompat.ACTION_REWIND |
+                      PlaybackStateCompat.ACTION_STOP)
+              .build());
 
       startForeground(NOTIFICATION_ID, createMediaNotification(true));
 
@@ -242,7 +242,7 @@ public class AudioPlayerService extends Service {
       }
       try {
         messenger.send(Message.obtain(null, MSG_AUDIO_EVENT_STARTED,
-            0,0));
+                0,0));
       } catch (RemoteException e) {
         e.printStackTrace();
       }
@@ -251,19 +251,19 @@ public class AudioPlayerService extends Service {
     @Override
     public void paused() {
       mediaSession.setPlaybackState(new PlaybackStateCompat.Builder()
-          .setState(PlaybackStateCompat.STATE_PAUSED,
-              PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0)
-          .setActions(PlaybackStateCompat.ACTION_PLAY |
-              PlaybackStateCompat.ACTION_PLAY_PAUSE |
-              PlaybackStateCompat.ACTION_FAST_FORWARD |
-              PlaybackStateCompat.ACTION_REWIND |
-              PlaybackStateCompat.ACTION_STOP)
-          .build());
+              .setState(PlaybackStateCompat.STATE_PAUSED,
+                      PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0)
+              .setActions(PlaybackStateCompat.ACTION_PLAY |
+                      PlaybackStateCompat.ACTION_PLAY_PAUSE |
+                      PlaybackStateCompat.ACTION_FAST_FORWARD |
+                      PlaybackStateCompat.ACTION_REWIND |
+                      PlaybackStateCompat.ACTION_STOP)
+              .build());
 
       stopForeground(false);
       Notification notification = createMediaNotification(false);
       NotificationManager notificationManager =
-          (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+              (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
       if (notificationManager != null) {
         notificationManager.notify(NOTIFICATION_ID, notification);
       }
@@ -274,7 +274,7 @@ public class AudioPlayerService extends Service {
       }
       try {
         Message msg = Message.obtain(null, MSG_AUDIO_EVENT_PAUSED,
-            0,0);
+                0,0);
         messenger.send(msg);
       } catch (RemoteException e) {
         e.printStackTrace();
@@ -298,7 +298,7 @@ public class AudioPlayerService extends Service {
       }
       try {
         messenger.send(Message.obtain(null, MSG_AUDIO_EVENT_FINISHED,
-            0,0));
+                0,0));
       } catch (RemoteException e) {
         e.printStackTrace();
       }
@@ -313,22 +313,22 @@ public class AudioPlayerService extends Service {
       }
 
       mediaSession.setMetadata(new MediaMetadataCompat.Builder()
-          .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, mediaFile.getUri().toString())
-          .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, mediaFile.getAlbum())
-          .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, mediaFile.getArtist())
-          .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, mediaFile.getDuration())
-          .putString(MediaMetadataCompat.METADATA_KEY_TITLE, mediaFile.getTitle())
-          .build());
+              .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, mediaFile.getUri().toString())
+              .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, mediaFile.getAlbum())
+              .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, mediaFile.getArtist())
+              .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, mediaFile.getDuration())
+              .putString(MediaMetadataCompat.METADATA_KEY_TITLE, mediaFile.getTitle())
+              .build());
 
       mediaSession.setPlaybackState(new PlaybackStateCompat.Builder()
-          .setState(PlaybackStateCompat.STATE_PLAYING,
-              PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 1.0f)
-          .setActions(PlaybackStateCompat.ACTION_PAUSE |
-              PlaybackStateCompat.ACTION_PLAY_PAUSE |
-              PlaybackStateCompat.ACTION_FAST_FORWARD |
-              PlaybackStateCompat.ACTION_REWIND |
-              PlaybackStateCompat.ACTION_STOP)
-          .build());
+              .setState(PlaybackStateCompat.STATE_PLAYING,
+                      PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 1.0f)
+              .setActions(PlaybackStateCompat.ACTION_PAUSE |
+                      PlaybackStateCompat.ACTION_PLAY_PAUSE |
+                      PlaybackStateCompat.ACTION_FAST_FORWARD |
+                      PlaybackStateCompat.ACTION_REWIND |
+                      PlaybackStateCompat.ACTION_STOP)
+              .build());
 
       Messenger messenger = mediaFileMessengers.get(mediaFile);
       if (messenger == null) {
@@ -337,7 +337,7 @@ public class AudioPlayerService extends Service {
 
       try {
         Message msg = Message.obtain(null, MSG_AUDIO_EVENT_UPDATE_PROGRESS,
-            0,0);
+                0,0);
         Bundle bundle = new Bundle();
         bundle.putLong("DURATION", mediaFile.getDuration());
         bundle.putLong("POSITION", position);
@@ -402,28 +402,28 @@ public class AudioPlayerService extends Service {
   };
 
   AudioManager.OnAudioFocusChangeListener audioFocusChangeListener =
-      new AudioManager.OnAudioFocusChangeListener() {
-    @Override
-    public void onAudioFocusChange(int focusChange) {
-      switch (focusChange) {
-        case AudioManager.AUDIOFOCUS_LOSS:
-          break;
-        case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-          // fall trough
-        case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-          if (audioPlayer.getCurrentMediaFile() != null) {
-            audioPlayer.getCurrentMediaFile().pause();
-          }
-          break;
-        case AudioManager.AUDIOFOCUS_GAIN:
-          break;
-      }
-    }
-  };
+          new AudioManager.OnAudioFocusChangeListener() {
+            @Override
+            public void onAudioFocusChange(int focusChange) {
+              switch (focusChange) {
+                case AudioManager.AUDIOFOCUS_LOSS:
+                  break;
+                case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+                  // fall trough
+                case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                  if (audioPlayer.getCurrentMediaFile() != null) {
+                    audioPlayer.getCurrentMediaFile().pause();
+                  }
+                  break;
+                case AudioManager.AUDIOFOCUS_GAIN:
+                  break;
+              }
+            }
+          };
 
   private boolean requestAudioFocus() {
     int result = audioManager.requestAudioFocus(audioFocusChangeListener, AudioManager.STREAM_MUSIC,
-        AudioManager.AUDIOFOCUS_GAIN);
+            AudioManager.AUDIOFOCUS_GAIN);
     return result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED;
   }
 
@@ -458,37 +458,37 @@ public class AudioPlayerService extends Service {
     if (playing) {
       playPauseButtonIndex = 1;
       builder.addAction(new androidx.core.app.NotificationCompat.Action(
-          R.drawable.ic_notification_rewind, "Backward",
-          MediaButtonReceiver.buildMediaButtonPendingIntent(getApplicationContext(),
-              PlaybackStateCompat.ACTION_REWIND))
+              R.drawable.ic_notification_rewind, "Backward",
+              MediaButtonReceiver.buildMediaButtonPendingIntent(getApplicationContext(),
+                      PlaybackStateCompat.ACTION_REWIND))
       );
       builder.addAction(new androidx.core.app.NotificationCompat.Action(
-          R.drawable.ic_notification_pause, "Pause",
-          MediaButtonReceiver.buildMediaButtonPendingIntent(getApplicationContext(),
-              PlaybackStateCompat.ACTION_PAUSE))
+              R.drawable.ic_notification_pause, "Pause",
+              MediaButtonReceiver.buildMediaButtonPendingIntent(getApplicationContext(),
+                      PlaybackStateCompat.ACTION_PAUSE))
       );
       builder.addAction(new androidx.core.app.NotificationCompat.Action(
-          R.drawable.ic_notification_forward, "Forward",
-          MediaButtonReceiver.buildMediaButtonPendingIntent(getApplicationContext(),
-              PlaybackStateCompat.ACTION_FAST_FORWARD))
+              R.drawable.ic_notification_forward, "Forward",
+              MediaButtonReceiver.buildMediaButtonPendingIntent(getApplicationContext(),
+                      PlaybackStateCompat.ACTION_FAST_FORWARD))
       );
     } else {
       builder.addAction(new androidx.core.app.NotificationCompat.Action(
-          R.drawable.ic_notification_play_arrow, "Play",
-          MediaButtonReceiver.buildMediaButtonPendingIntent(getApplicationContext(),
-              PlaybackStateCompat.ACTION_PLAY))
+              R.drawable.ic_notification_play_arrow, "Play",
+              MediaButtonReceiver.buildMediaButtonPendingIntent(getApplicationContext(),
+                      PlaybackStateCompat.ACTION_PLAY))
       );
     }
 
     builder
-        .setSmallIcon(R.drawable.ic_notification_stat_audio)
-        .setStyle(new MediaStyle()
-            .setShowActionsInCompactView(playPauseButtonIndex)
-            .setMediaSession(mediaSession.getSessionToken())
-            .setShowCancelButton(true)
-            .setCancelButtonIntent(
-                MediaButtonReceiver.buildMediaButtonPendingIntent(getApplicationContext(),
-                    PlaybackStateCompat.ACTION_STOP)));
+            .setSmallIcon(R.drawable.ic_notification_stat_audio)
+            .setStyle(new MediaStyle()
+                    .setShowActionsInCompactView(playPauseButtonIndex)
+                    .setMediaSession(mediaSession.getSessionToken())
+                    .setShowCancelButton(true)
+                    .setCancelButtonIntent(
+                            MediaButtonReceiver.buildMediaButtonPendingIntent(getApplicationContext(),
+                                    PlaybackStateCompat.ACTION_STOP)));
 
     // setting the color only on Nougat (7.0.0 - API Level 24) and above, because 6.0.0 Samsung
     // devices would also use the color without adjusting text colors
@@ -510,7 +510,7 @@ public class AudioPlayerService extends Service {
 
   private void cancelMediaNotification() {
     NotificationManager notificationManager =
-        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     if (notificationManager != null) {
       notificationManager.cancel(NOTIFICATION_ID);
     }
@@ -535,6 +535,6 @@ public class AudioPlayerService extends Service {
     ta.recycle();
 
     return BitmapFactory.decodeResource(getApplicationContext().getResources(),
-        resourceId);
+            resourceId);
   }
 }

@@ -121,7 +121,7 @@ class BeaconService(
         // opening the app when clicking on the notification
         val intent = context.packageManager.getLaunchIntentForPackage(context.packageName)
         val pendingIntent = PendingIntent.getActivity(
-            context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT
+            context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
         builder.setContentIntent(pendingIntent)
 
@@ -129,7 +129,8 @@ class BeaconService(
         val disableService = Intent(NOTIFICATION_ACTION_STOP_SERVICE)
         disableService.setClass(context, BeaconServiceBroadcastReceiver::class.java)
         val disableServicePendingIntent: PendingIntent =
-            PendingIntent.getBroadcast(context, 0, disableService, 0)
+            PendingIntent.getBroadcast(context, 0, disableService,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
         builder.addAction(
             R.drawable.ic_stop_24,
             context.getString(R.string.beacon_service_stop_action),

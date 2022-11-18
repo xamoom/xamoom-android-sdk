@@ -4,8 +4,8 @@ apply plugin: 'kotlin-kapt'
 
 def versionString = "3.12.0"
 
-def props = new Properties()
-file(project.gradle.gradleUserHomeDir.path + "/gradle.properties").withInputStream { props.load(it) }
+//def props = new Properties()
+//file(project.gradle.gradleUserHomeDir.path + "/gradle.properties").withInputStream { props.load(it) }
 
 version = versionString
 group = "com.xamoom.android"
@@ -17,7 +17,7 @@ android {
 	defaultConfig {
 		minSdkVersion 28
 		targetSdkVersion 31
-        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+		testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 		multiDexEnabled true
 		vectorDrawables.useSupportLibrary = true
 	}
@@ -64,6 +64,7 @@ dependencies {
 	implementation files('libs/YouTubeAndroidPlayerApi.jar')
 	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 	implementation 'androidx.core:core:1.6.0'
+	implementation "androidx.media:media:1.6.0"
 	implementation 'androidx.legacy:legacy-support-v13:1.0.0'
 	implementation 'androidx.recyclerview:recyclerview:1.2.1'
 	implementation 'androidx.appcompat:appcompat:1.3.1'
