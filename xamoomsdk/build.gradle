@@ -4,7 +4,7 @@ apply plugin: 'kotlin-kapt'
 
 def versionString = "3.12.0"
 
-//def props = new Properties()
+def props = new Properties()
 //file(project.gradle.gradleUserHomeDir.path + "/gradle.properties").withInputStream { props.load(it) }
 
 version = versionString
