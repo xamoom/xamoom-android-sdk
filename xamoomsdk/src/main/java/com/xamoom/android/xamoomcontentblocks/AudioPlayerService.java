@@ -147,7 +147,7 @@ public class AudioPlayerService extends Service {
             MediaButtonReceiver.class);
     Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
     PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0,
-            mediaButtonIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+            mediaButtonIntent, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
     mediaSession = new MediaSessionCompat(getApplicationContext(), TAG, componentName,
             null);
     mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
