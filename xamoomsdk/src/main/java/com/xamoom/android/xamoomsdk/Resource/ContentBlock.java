@@ -61,6 +61,10 @@ public class ContentBlock extends Resource implements Parcelable {
   private String coverImageCopyRight;
   @SerializedName("show-elevation")
   private boolean showElevation;
+  @SerializedName("iframe-url")
+  private String iframeUrl;
+  @SerializedName("fullScreen")
+  private boolean fullScreen;
 
   public ContentBlock() {
     contentListSortAsc = true;
@@ -89,6 +93,8 @@ public class ContentBlock extends Resource implements Parcelable {
     contentListSortAsc = in.readByte() != 0;
     showElevation = in.readByte() != 0;
     contentListPageSize = in.readInt();
+    iframeUrl = in.readString();
+    fullScreen = in.readByte() != 0;
   }
 
   public static final Creator<ContentBlock> CREATOR = new Creator<ContentBlock>() {
@@ -279,6 +285,20 @@ public class ContentBlock extends Resource implements Parcelable {
     this.coverImageCopyRight = coverImageCopyRight;
   }
 
+  public String getIframeUrl() { return iframeUrl; };
+
+  public void setIframeUrl(String iframeUrl) {
+    this.iframeUrl = iframeUrl;
+  }
+
+  public Boolean getFullScreen() {
+    return fullScreen;
+  }
+
+  public void setFullScreen(Boolean fullScreen) {
+    this.fullScreen = fullScreen;
+  }
+
   @Override
   public int describeContents() {
     return 0;
@@ -308,5 +328,7 @@ public class ContentBlock extends Resource implements Parcelable {
     dest.writeByte((byte) (contentListSortAsc ? 1 : 0));
     dest.writeByte((byte) (showElevation ? 1 : 0));
     dest.writeInt(contentListPageSize);
+    dest.writeString(iframeUrl);
+    dest.writeByte((byte) (fullScreen ? 1 : 0));
   }
 }

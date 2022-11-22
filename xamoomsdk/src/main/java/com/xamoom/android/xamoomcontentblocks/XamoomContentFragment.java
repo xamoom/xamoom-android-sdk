@@ -41,6 +41,7 @@ import android.widget.Toast;
 import com.xamoom.android.xamoomcontentblocks.Adapters.ContentBlockAdapter;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock12ViewHolderInterface;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock15ViewHolder;
+import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock16ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock1ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock2ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
@@ -75,7 +76,7 @@ import static android.app.Activity.RESULT_OK;
  * @author Raphael Seher
  *
  */
-public class XamoomContentFragment extends Fragment implements ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener, ContentBlock12ViewHolderInterface, ContentBlock15ViewHolder.OnContentBlock15ViewHolderInteractionListener {
+public class XamoomContentFragment extends Fragment implements ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener, ContentBlock12ViewHolderInterface, ContentBlock15ViewHolder.OnContentBlock15ViewHolderInteractionListener, ContentBlock16ViewHolder.OnContentBlock16ViewHolderInteractionListener {
   private static final String YOUTUBE_API_KEY = "YoutubeAPIKey";
   private static final String LIST_STATE = "LayoutManagerState";
   private static final String CONTENT_ID = "ContentID";
@@ -129,7 +130,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   private boolean isQuizSubmitted = false;
 
 
-  private Integer[] validBlockTypes = {-2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 14, 15};
+  private Integer[] validBlockTypes = {-2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 14, 15, 16};
 
   public static XamoomContentFragment newInstance(@NonNull String youtubeApiKey) {
     return newInstance(youtubeApiKey, null, null, null, null, null, null, null);
@@ -174,7 +175,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
 
   public XamoomContentFragment() {
     mContentBlockAdapter = new ContentBlockAdapter(this, mContentBlocks,
-            showSpotMapContentLinks, mYoutubeApiKey, this, this, contentBlockUrlScheme, mapboxStyleString, navigationButtonTintColorString, contentButtonTextColorString, navigationMode, this, mContent);
+            showSpotMapContentLinks, mYoutubeApiKey, this, this, this, contentBlockUrlScheme, mapboxStyleString, navigationButtonTintColorString, contentButtonTextColorString, navigationMode, this, mContent);
   }
 
   @Override

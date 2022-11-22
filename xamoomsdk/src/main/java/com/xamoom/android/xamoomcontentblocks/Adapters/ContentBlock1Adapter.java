@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 
 import com.xamoom.android.xamoomcontentblocks.ListManager;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock15ViewHolder;
+import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock16ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock1ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
@@ -48,6 +49,8 @@ public class ContentBlock1Adapter implements AdapterDelegate<List<ContentBlock>>
           ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener onContentBlock3ViewHolderInteractionListener,
           ContentBlock15ViewHolder.OnContentBlock15ViewHolderInteractionListener
                   onContentBlock15ViewHolderInteractionListener,
+          ContentBlock16ViewHolder.OnContentBlock16ViewHolderInteractionListener
+                  onContentBlock16ViewHolderInteractionListener,
           XamoomContentFragment.OnXamoomContentFragmentInteractionListener onXamoomContentFragmentInteractionListener, @Nullable ArrayList<String> urls, @Nullable ArrayList<String> nonUrls, @Nullable String mapboxStyleString,
           @Nullable String navigationButtonTintColorString, @Nullable String contentButtonTextColorString, @Nullable String navigationMode, Content content) {
     View view = LayoutInflater.from(parent.getContext())
