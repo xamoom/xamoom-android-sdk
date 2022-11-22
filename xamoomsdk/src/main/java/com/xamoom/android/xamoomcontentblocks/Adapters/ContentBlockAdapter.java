@@ -20,6 +20,7 @@ import com.xamoom.android.xamoomcontentblocks.ListManager;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock12ViewHolderInterface;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock14ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock15ViewHolder;
+import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock16ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock2ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock9ViewHolder;
@@ -41,6 +42,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   private XamoomContentFragment.OnXamoomContentFragmentInteractionListener mOnXamoomContentFragmentInteractionListener;
   private ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener mOnContentBlock3ViewHolderInteractionListener;
   private ContentBlock15ViewHolder.OnContentBlock15ViewHolderInteractionListener mOnContentBlock15ViewHolderInteractionListener;
+  private ContentBlock16ViewHolder.OnContentBlock16ViewHolderInteractionListener mOnContentBlock16ViewHolderInteractionListener;
   private Fragment mFragment;
   private AdapterDelegatesManager mDelegatesManager = new AdapterDelegatesManager();
   private List<ContentBlock> mContentBlocks;
@@ -83,10 +85,12 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                              boolean showSpotMapContentLinks, String youtubeApiKey,
                              ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener contentBlock3ViewHolderInteractionListener,
                              ContentBlock15ViewHolder.OnContentBlock15ViewHolderInteractionListener contentBlock15ViewHolderInteractionListener,
+                             ContentBlock16ViewHolder.OnContentBlock16ViewHolderInteractionListener contentBlock16ViewHolderInteractionListener,
                              ArrayList<String> contentBlockUrlScheme, String mapboxStyle, String navigationButtonTintColorString, String contentButtonTextColorString,
                              String navigationMode, ContentBlock12ViewHolderInterface inter, Content content) {
     mOnContentBlock3ViewHolderInteractionListener = contentBlock3ViewHolderInteractionListener;
     mOnContentBlock15ViewHolderInteractionListener = contentBlock15ViewHolderInteractionListener;
+    mOnContentBlock16ViewHolderInteractionListener = contentBlock16ViewHolderInteractionListener;
     mFragment = fragment;
     mContentBlocks = contentBlocks;
     showContentLinks = showSpotMapContentLinks;
@@ -121,6 +125,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     mDelegatesManager.addDelegate(12, new ContentBlock12Adapter(inter));
     mDelegatesManager.addDelegate(14, contentBlock14Adapter);
     mDelegatesManager.addDelegate(15, new ContentBlock15Adapter());
+    mDelegatesManager.addDelegate(16, new ContentBlock16Adapter());
   }
 
   @Override
@@ -137,7 +142,7 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     return mDelegatesManager.onCreateViewHolder(parent, viewType, mFragment, mEnduserApi, mYoutubeApiKey,
             mBitmapCache, mContentCache, showContentLinks, mListManager,
-            mOnContentBlock3ViewHolderInteractionListener, mOnContentBlock15ViewHolderInteractionListener, mOnXamoomContentFragmentInteractionListener, urlScheme, nonUrlScheme, mapboxStyleString, navigationButtonTintColorString, contentButtonTextColorString, navigationMode, mContent);
+            mOnContentBlock3ViewHolderInteractionListener, mOnContentBlock15ViewHolderInteractionListener, mOnContentBlock16ViewHolderInteractionListener, mOnXamoomContentFragmentInteractionListener, urlScheme, nonUrlScheme, mapboxStyleString, navigationButtonTintColorString, contentButtonTextColorString, navigationMode, mContent);
   }
 
   @Override

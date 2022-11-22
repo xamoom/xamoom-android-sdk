@@ -97,7 +97,7 @@ public class ContentBlock11ViewHolder extends RecyclerView.ViewHolder implements
     XamoomContentFragment contentFragment = (XamoomContentFragment) fragment;
 
     adapter = new ContentBlockAdapter(fragment, new ArrayList<ContentBlock>(),
-            contentFragment.isShowSpotMapContentLinks(), contentFragment.getYoutubeApiKey(), contentFragment, contentFragment, null, null, null, null, null, this, content);
+            contentFragment.isShowSpotMapContentLinks(), contentFragment.getYoutubeApiKey(), contentFragment, contentFragment,null, null, null, null, null, null, this, content);
     adapter.setEnduserApi(enduserApi);
     adapter.setOnXamoomContentFragmentInteractionListener(onXamoomContentFragmentInteractionListener);
     adapter.getDelegatesManager().setAdapterDelegates(adapterDelegatesManager.getAdapterDelegates());

@@ -34,8 +34,8 @@ import com.xamoom.android.xamoomsdk.Resource.Style;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContentBlock15Adapter implements AdapterDelegate<List<ContentBlock>> {
-    private static final int BLOCK_TYPE = 15;
+public class ContentBlock16Adapter implements AdapterDelegate<List<ContentBlock>> {
+    private static final int BLOCK_TYPE = 16;
 
     @Override
     public boolean isForViewType(@NonNull List<ContentBlock> items, int position) {
@@ -57,8 +57,8 @@ public class ContentBlock15Adapter implements AdapterDelegate<List<ContentBlock>
             XamoomContentFragment.OnXamoomContentFragmentInteractionListener onXamoomContentFragmentInteractionListener, @Nullable ArrayList<String> urls, @Nullable ArrayList<String> nonUrls,
             @Nullable String mapboxStyleString, @Nullable String navigationButtonTintColorString, @Nullable String contentButtonTextColorString, @Nullable String navigationMode, Content content) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.content_block_15_layout, parent, false);
-        return new ContentBlock15ViewHolder(view, enduserApi, fragment.getContext(), onContentBlock15ViewHolderInteractionListener, onXamoomContentFragmentInteractionListener);
+                .inflate(R.layout.content_block_16_layout, parent, false);
+        return new ContentBlock16ViewHolder(view, enduserApi, fragment.getContext(), onContentBlock16ViewHolderInteractionListener, onXamoomContentFragmentInteractionListener);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class ContentBlock15Adapter implements AdapterDelegate<List<ContentBlock>
                                  @NonNull RecyclerView.ViewHolder holder, Style style,
                                  boolean offline) {
         ContentBlock cb = items.get(position);
-        ContentBlock15ViewHolder newHolder = (ContentBlock15ViewHolder) holder;
+        ContentBlock16ViewHolder newHolder = (ContentBlock16ViewHolder) holder;
         newHolder.setupContentBlock(cb);
     }
 

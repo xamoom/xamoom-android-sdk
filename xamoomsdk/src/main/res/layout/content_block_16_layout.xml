@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/iframeTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/contentblock_standard_padding"
+            android:layout_marginEnd="@dimen/contentblock_standard_padding"
+            android:textSize="@dimen/contentblock_title_size"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="left"/>
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/rootLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/contentblock_standard_padding"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="@dimen/contentblock_standard_padding"
+            android:layout_marginBottom="8dp">
+
+            <ProgressBar
+                android:id="@+id/form_progressBar"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center" />
+
+            <WebView
+                android:id="@+id/webView_form"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </LinearLayout>
+
+
+    <FrameLayout
+        android:id="@+id/form_cover_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:background="#D0FFFFFF">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#CD8A8787"
+            android:text="@string/unavailable_quiz_label"
+            android:layout_gravity="center"/>
+
+    </FrameLayout>
+</FrameLayout>

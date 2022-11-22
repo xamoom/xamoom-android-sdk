@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 
 import com.xamoom.android.xamoomcontentblocks.ListManager;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock15ViewHolder;
+import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock16ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.ViewHolders.ContentBlock3ViewHolder;
 import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
 import com.xamoom.android.xamoomsdk.EnduserApi;
@@ -62,6 +63,8 @@ public interface AdapterDelegate<T> {
                   onContentBlock3ViewHolderInteractionListener,
           ContentBlock15ViewHolder.OnContentBlock15ViewHolderInteractionListener
                   onContentBlock15ViewHolderInteractionListener,
+          ContentBlock16ViewHolder.OnContentBlock16ViewHolderInteractionListener
+                  onContentBlock16ViewHolderInteractionListener,
           XamoomContentFragment.OnXamoomContentFragmentInteractionListener
                   onXamoomContentFragmentInteractionListener, ArrayList<String> urls, @Nullable ArrayList<String> nonUrls, String mapboxStyleString,
           @Nullable String navigationButtonTintColorString, @Nullable String contentButtonTextColorString, @Nullable String navigationMode, Content content);
