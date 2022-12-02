@@ -12,7 +12,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -95,20 +94,15 @@ public class ContentBlock16ViewHolder extends RecyclerView.ViewHolder {
 
     @SuppressLint("SetJavaScriptEnabled")
     public void setupContentBlock(ContentBlock contentBlock) {
-
-        if (contentBlock.getIframeUrl() != null) {
-            setWebViewSettings();
-            String html = contentBlock.getIframeUrl();
-            String encodedHtml = Base64.encodeToString(html.getBytes(), Base64.NO_PADDING);
-            formWebView.loadData(encodedHtml, "text/html", "base64");
-            if (contentBlock.getTitle() != null) {
-                iframeTitle.setText(contentBlock.getTitle());
-            } else {
-                iframeTitle.setText("");
-            }
-
+        String iframeHtml = contentBlock.getIframeUrl();
+        String title = contentBlock.getTitle();
+        setWebViewSettings();
+        String encodedHtml = Base64.encodeToString(iframeHtml.getBytes(), Base64.NO_PADDING);
+        formWebView.loadData(encodedHtml, "text/html", "base64");
+        if (title != null) {
+            iframeTitle.setText(title);
         } else {
-            rootLayout.setVisibility(View.GONE);
+            iframeTitle.setVisibility(View.GONE);
         }
     }
 
