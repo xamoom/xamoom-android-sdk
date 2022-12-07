@@ -76,7 +76,7 @@ import static android.app.Activity.RESULT_OK;
  * @author Raphael Seher
  *
  */
-public class XamoomContentFragment extends Fragment implements ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener, ContentBlock12ViewHolderInterface, ContentBlock15ViewHolder.OnContentBlock15ViewHolderInteractionListener, ContentBlock16ViewHolder.OnContentBlock16ViewHolderInteractionListener {
+public class XamoomContentFragment extends Fragment implements ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener, ContentBlock12ViewHolderInterface, ContentBlock15ViewHolder.OnContentBlock15ViewHolderInteractionListener {
   private static final String YOUTUBE_API_KEY = "YoutubeAPIKey";
   private static final String LIST_STATE = "LayoutManagerState";
   private static final String CONTENT_ID = "ContentID";
@@ -175,7 +175,7 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
 
   public XamoomContentFragment() {
     mContentBlockAdapter = new ContentBlockAdapter(this, mContentBlocks,
-            showSpotMapContentLinks, mYoutubeApiKey, this, this, this, contentBlockUrlScheme, mapboxStyleString, navigationButtonTintColorString, contentButtonTextColorString, navigationMode, this, mContent);
+            showSpotMapContentLinks, mYoutubeApiKey, this, this, contentBlockUrlScheme, mapboxStyleString, navigationButtonTintColorString, contentButtonTextColorString, navigationMode, this, mContent);
   }
 
   @Override

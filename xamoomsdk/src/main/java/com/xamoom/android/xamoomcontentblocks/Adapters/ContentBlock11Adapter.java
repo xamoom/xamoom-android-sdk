@@ -41,8 +41,7 @@ public class ContentBlock11Adapter implements AdapterDelegate<List<ContentBlock>
           ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener onContentBlock3ViewHolderInteractionListener,
           ContentBlock15ViewHolder.OnContentBlock15ViewHolderInteractionListener
                   onContentBlock15ViewHolderInteractionListener,
-          ContentBlock16ViewHolder.OnContentBlock16ViewHolderInteractionListener
-                  onContentBlock16ViewHolderInteractionListener, XamoomContentFragment.OnXamoomContentFragmentInteractionListener onXamoomContentFragmentInteractionListener,
+          XamoomContentFragment.OnXamoomContentFragmentInteractionListener onXamoomContentFragmentInteractionListener,
           @Nullable ArrayList<String> urls, @Nullable ArrayList<String> nonUrls, @Nullable String mapboxStyleString, @Nullable String navigationButtonTintColorString, @Nullable String contentButtonTextColorString, @Nullable String navigationMode, Content content) {
     View view = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.content_block_11_layout, parent, false);

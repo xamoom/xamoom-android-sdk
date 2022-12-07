@@ -74,7 +74,6 @@ class ContentBlock12Adapter(val inter: ContentBlock12ViewHolderInterface): Adapt
                                     showContentLinks: Boolean, listManager: ListManager?, adapterDelegatesManager: AdapterDelegatesManager<*>?,
                                     onContentBlock3ViewHolderInteractionListener: ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener?,
                                     onContentBlock15ViewHolderInteractionListener: ContentBlock15ViewHolder.OnContentBlock15ViewHolderInteractionListener?,
-                                    onContentBlock16ViewHolderInteractionListener: ContentBlock16ViewHolder.OnContentBlock16ViewHolderInteractionListener?,
                                     onXamoomContentFragmentInteractionListener: XamoomContentFragment.OnXamoomContentFragmentInteractionListener?, urls: ArrayList<String>?, nonUrls: ArrayList<String>?, mapboxStyleString: String?,
                                     navigationButtonTintColorString: String?, contentButtonTextColorString: String?, navigationMode: String?, content: Content?): androidx.recyclerview.widget.RecyclerView.ViewHolder {
         val context = parent!!.context

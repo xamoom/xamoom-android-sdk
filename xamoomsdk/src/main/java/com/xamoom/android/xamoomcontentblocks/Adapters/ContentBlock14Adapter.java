@@ -54,7 +54,7 @@ public class ContentBlock14Adapter implements AdapterDelegate<List<ContentBlock>
             LruCache bitmapCache, LruCache contentCache, boolean showContentLinks, ListManager listManager, AdapterDelegatesManager adapterDelegatesManager,
             ContentBlock3ViewHolder.OnContentBlock3ViewHolderInteractionListener onContentBlock3ViewHolderInteractionListener,
             ContentBlock15ViewHolder.OnContentBlock15ViewHolderInteractionListener onContentBlock15ViewHolderInteractionListener,
-            ContentBlock16ViewHolder.OnContentBlock16ViewHolderInteractionListener onContentBlock16ViewHolderInteractionListener, XamoomContentFragment.OnXamoomContentFragmentInteractionListener onXamoomContentFragmentInteractionListener,
+           XamoomContentFragment.OnXamoomContentFragmentInteractionListener onXamoomContentFragmentInteractionListener,
             @Nullable ArrayList<String> urls, @Nullable ArrayList<String> nonUrls, @Nullable String mapboxStyleString, @Nullable String navigationButtonTintColorString, @Nullable String contentButtonTextColorString, @Nullable String navigationMode, Content content) {
         View v = LayoutInflater.from(fragment.getContext()).inflate(R.layout.content_block_14_layout, parent, false);
         mapholder14 = new ContentBlock14ViewHolder(((CustomMapViewWithChart) v), bundle, enduserApi, fragment, onXamoomContentFragmentInteractionListener, mapboxStyleString, navigationButtonTintColorString, contentButtonTextColorString, navigationMode);

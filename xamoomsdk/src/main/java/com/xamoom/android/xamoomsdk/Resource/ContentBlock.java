@@ -63,7 +63,7 @@ public class ContentBlock extends Resource implements Parcelable {
   private boolean showElevation;
   @SerializedName("iframe-url")
   private String iframeUrl;
-  @SerializedName("fullScreen")
+  @SerializedName("is-iframe-fullscreen")
   private boolean fullScreen;
 
   public ContentBlock() {
