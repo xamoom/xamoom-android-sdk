@@ -10,24 +10,27 @@ import android.content.Intent
 import android.util.Log
 import com.xamoom.android.xamoomsdk.EnduserApi
 import com.xamoom.android.xamoomsdk.PushDevice.PushDeviceUtil
+import timber.log.Timber
 
 
-class PushService: FirebaseMessagingService() {
+class PushService : FirebaseMessagingService() {
 
     @Inject
     lateinit var sharedPreferences: SharedPreferences
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
-
+        remoteMessage.messageType
         val data = remoteMessage.data ?: return
         val contentId = data["content-id"]
         val title = data["title"]
         val body = data["body"]
         val wakeup = data["wake-up"]
         val enduserApi = EnduserApi.getSharedInstance(applicationContext)
-        sharedPreferences = applicationContext.getSharedPreferences(PushDeviceUtil.PREFES_NAME,
-                Context.MODE_PRIVATE)
+        sharedPreferences = applicationContext.getSharedPreferences(
+            PushDeviceUtil.PREFES_NAME,
+            Context.MODE_PRIVATE
+        )
         if (wakeup == null) {
             val intent = Intent("xamoom-push-notification-received")
             // You can also include some extra data.
@@ -47,5 +50,10 @@ class PushService: FirebaseMessagingService() {
         }
 
 
+    }
+
+    override fun onNewToken(p0: String) {
+        super.onNewToken(p0)
+        println("Firebase CM: new token generated $p0")
     }
 }
