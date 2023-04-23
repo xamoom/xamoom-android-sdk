@@ -12,6 +12,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 import android.util.Base64;
+import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
@@ -29,8 +30,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.xamoom.android.xamoomcontentblocks.WebViewFragment;
-import com.xamoom.android.xamoomcontentblocks.XamoomContentFragment;
-import com.xamoom.android.xamoomsdk.EnduserApi;
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 
@@ -60,7 +59,12 @@ public class ContentBlock16ViewHolder extends RecyclerView.ViewHolder {
 
     @SuppressLint({"SetJavaScriptEnabled"})
     public void setupContentBlock(ContentBlock contentBlock) {
-        String iframeHtml = contentBlock.getIframeUrl();
+        String iframeHtml = "";
+        if (contentBlock.getIframeUrl().contains("iframe")) {
+            iframeHtml = contentBlock.getIframeUrl();
+        } else {
+            iframeHtml = "<iframe width='100%%' height='300' src='" + contentBlock.getIframeUrl() + "'></iframe></body></html>";
+        }
         String title = contentBlock.getTitle();
         Boolean isFullscreen = contentBlock.getFullScreen();
         String encodedHtml = Base64.encodeToString(iframeHtml.getBytes(), Base64.NO_PADDING);
@@ -82,6 +86,10 @@ public class ContentBlock16ViewHolder extends RecyclerView.ViewHolder {
         formWebView.getSettings().setJavaScriptEnabled(true);
         formWebView.getSettings().setStandardFontFamily("Roboto-Light");
         formWebView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+        formWebView.setVerticalScrollBarEnabled(true);
+        formWebView.setHorizontalScrollBarEnabled(true);
+        formWebView.getSettings().setBuiltInZoomControls(true);
+        formWebView.getSettings().setDisplayZoomControls(false);
         formWebView.addJavascriptInterface(new WebAppInterface(context), "Android");
         formWebView.setWebViewClient(new WebViewClient() {
             @Override
@@ -102,6 +110,16 @@ public class ContentBlock16ViewHolder extends RecyclerView.ViewHolder {
             }
         });
         formWebView.setWebChromeClient(new WebChromeClient());
+        // added scroll ability to the webView
+        formWebView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                }
+                return false;
+            }
+        });
     }
 
     private void showFullScreen(String url) {
