@@ -11,12 +11,12 @@ version = versionString
 group = "com.xamoom.android"
 
 android {
-	compileSdkVersion 31
+	compileSdkVersion 33
 	buildToolsVersion '30.0.2'
 
 	defaultConfig {
 		minSdkVersion 28
-		targetSdkVersion 31
+		targetSdkVersion 33
 		testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 		multiDexEnabled true
 		vectorDrawables.useSupportLibrary = true
