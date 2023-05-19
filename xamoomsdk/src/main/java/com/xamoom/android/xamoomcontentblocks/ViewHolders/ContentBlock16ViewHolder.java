@@ -12,6 +12,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 import android.util.Base64;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.JavascriptInterface;
@@ -32,6 +33,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.xamoom.android.xamoomcontentblocks.WebViewFragment;
 import com.xamoom.android.xamoomsdk.R;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -63,7 +67,7 @@ public class ContentBlock16ViewHolder extends RecyclerView.ViewHolder {
         if (contentBlock.getIframeUrl().contains("iframe")) {
             iframeHtml = contentBlock.getIframeUrl();
         } else {
-            iframeHtml = "<iframe width='100%%' height='300' src='" + contentBlock.getIframeUrl() + "'></iframe></body></html>";
+            iframeHtml = "<iframe width='100%%' height='250' src='" + contentBlock.getIframeUrl() + "'></iframe></body></html>";
         }
         String title = contentBlock.getTitle();
         Boolean isFullscreen = contentBlock.getFullScreen();
@@ -128,15 +132,15 @@ public class ContentBlock16ViewHolder extends RecyclerView.ViewHolder {
     }
 
     private String extractUrlFromString(String iframeHtml) {
-        String[] part = iframeHtml.split("\"");
         String url = "";
-        for (String key : part) {
-            if (key.startsWith("https://")) {
-                url = key;
-                break;
-            }
+        Pattern pattern = Pattern.compile("(?i)\\b((?:https?://|www\\d{0,3}[.]|[a-z0-9.\\-]+[.][a-z]{2,4}/)(?:[^\\s()<>]+|\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\))+(?:\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\)|[^\\s`!()\\[\\]{};:'\".,<>?«»“”‘’]))");
+        Matcher matcher = pattern.matcher(iframeHtml);
+
+        if (matcher.find()) {
+            url = matcher.group();
         }
         return url;
+
     }
 
     private void hideLoading() {
