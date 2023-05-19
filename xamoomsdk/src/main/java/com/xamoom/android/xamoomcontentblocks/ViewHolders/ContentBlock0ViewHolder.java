@@ -9,9 +9,10 @@
 package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
 import android.graphics.Color;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -25,23 +26,24 @@ import com.xamoom.android.xamoomsdk.Resource.Style;
  * Displays the text ContentBlock.
  */
 public class ContentBlock0ViewHolder extends RecyclerView.ViewHolder {
-  private TextView mTitleTextView;
-  private HtmlTextView mHtmlTextView;
-  private Style mStyle;
+  private final TextView mTitleTextView;
+  private final HtmlTextView mHtmlTextView;
   private float mTextSize = 22.0f;
   private String mLinkColor = null;
   private String mTextColor = null;
-  private int childrenMargin;
+  private final int childrenMargin;
 
   public ContentBlock0ViewHolder(View itemView) {
     super(itemView);
-    mTitleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
-    mHtmlTextView = (HtmlTextView) itemView.findViewById(R.id.htmlTextView);
+    mTitleTextView = itemView.findViewById(R.id.titleTextView);
+    mHtmlTextView = itemView.findViewById(R.id.htmlTextView);
     mHtmlTextView.setRemoveTrailingNewLines(true);
+    mHtmlTextView.setAutoLinkMask(Linkify.ALL);
+    mHtmlTextView.setMovementMethod(LinkMovementMethod.getInstance());
     childrenMargin = itemView.getContext().getResources().getDimensionPixelSize(R.dimen.contentblock_children_margin);
   }
 
-  public void setupContentBlock(ContentBlock contentBlock, boolean offline, @Nullable int maxLines){
+  public void setupContentBlock(ContentBlock contentBlock, boolean offline, int maxLines){
     mTitleTextView.setVisibility(View.VISIBLE);
     mHtmlTextView.setVisibility(View.VISIBLE);
     LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mHtmlTextView.getLayoutParams();
@@ -74,24 +76,23 @@ public class ContentBlock0ViewHolder extends RecyclerView.ViewHolder {
       mHtmlTextView.setVisibility(View.GONE);
     }
 
-    if (mStyle != null && mStyle.getForegroundFontColor() != null) {
-      mTitleTextView.setTextColor(Color.parseColor(mTextColor));
-      mHtmlTextView.setTextColor(Color.parseColor(mTextColor));
-    }
+    mTitleTextView.setTextColor(Color.parseColor(mTextColor));
+    mHtmlTextView.setTextColor(Color.parseColor(mTextColor));
+    mHtmlTextView.setLinkTextColor(Color.parseColor(mLinkColor));
   }
 
   public void setStyle(Style style) {
-    mStyle = style;
 
-    if (style == null) {
-      return;
-    }
 
-    if (style.getHighlightFontColor() != null) {
+    if (style == null || style.getHighlightFontColor() == null) {
+      mLinkColor = "#0000FF";
+    } else {
       mLinkColor = style.getHighlightFontColor();
     }
 
-    if (style.getForegroundFontColor() != null) {
+    if (style == null || style.getForegroundFontColor() == null) {
+      mTextColor = "#000000";
+    } else {
       mTextColor = style.getForegroundFontColor();
     }
   }
