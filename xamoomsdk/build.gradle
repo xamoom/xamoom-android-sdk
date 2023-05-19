@@ -90,6 +90,7 @@ dependencies {
 	implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:9.6.2'
 	implementation 'com.jakewharton.timber:timber:4.7.1'
 	implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+	implementation 'com.localebro:okhttpprofiler:1.0.8'
 
 	// Coroutine Core dependency
 	implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.1'

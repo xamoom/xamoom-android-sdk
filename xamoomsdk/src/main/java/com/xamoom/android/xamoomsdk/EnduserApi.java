@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.util.Log;
 
+import com.localebro.okhttpprofiler.OkHttpProfilerInterceptor;
 import com.xamoom.android.xamoomsdk.Enums.ContentFlags;
 import com.xamoom.android.xamoomsdk.Enums.ContentReason;
 import com.xamoom.android.xamoomsdk.Enums.ContentSortFlags;
@@ -199,6 +200,9 @@ public class EnduserApi implements CallHandler.CallHandlerListener {
 
     private void initRetrofit(@NonNull final String apiKey) {
         OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
+        if (BuildConfig.DEBUG) {
+            builder.addInterceptor(new OkHttpProfilerInterceptor());
+        }
         builder.addInterceptor(new HTTPHeaderInterceptor(generateUserAgent(), apiKey));
         OkHttpClient httpClient = builder.build();
 
