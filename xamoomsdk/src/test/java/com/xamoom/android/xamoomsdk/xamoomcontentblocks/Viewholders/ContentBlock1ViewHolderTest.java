@@ -59,7 +59,7 @@ public class ContentBlock1ViewHolderTest {
     String fileId = "www.xamoom.com/file.mp4";
     View itemView = View.inflate(mActivity, R.layout.content_block_1_layout, null);
     ContentBlock1ViewHolder viewHolder = new ContentBlock1ViewHolder(itemView,
-        mXamoomContentFragment);
+        mXamoomContentFragment, null);
     FileManager mockedFileManager = Mockito.mock(FileManager.class);
     viewHolder.setFileManager(mockedFileManager);
     Mockito.stub(mockedFileManager.getFilePath(anyString())).toReturn(fileId);

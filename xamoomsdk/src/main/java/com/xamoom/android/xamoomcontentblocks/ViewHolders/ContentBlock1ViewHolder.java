@@ -43,9 +43,11 @@ import android.widget.TextView;
 import com.xamoom.android.xamoomcontentblocks.AudioPlayerService;
 import com.xamoom.android.xamoomcontentblocks.Views.MovingBarsView;
 import com.xamoom.android.xamoomsdk.R;
+import com.xamoom.android.xamoomsdk.Resource.Content;
 import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Storage.FileManager;
 
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -75,6 +77,7 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
   private MovingBarsView mMovingBarsView;
   private FileManager mFileManager;
   private boolean playing = false;
+  private Content mContent;
 
   private ContentBlock contentBlock;
 
@@ -175,6 +178,13 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
       } catch (RemoteException e) {
         e.printStackTrace();
       }
+      if (mContent != null) {
+        HashMap<String, String> customMeta = mContent.getCustomMeta();
+        boolean autoplay = Boolean.parseBoolean(customMeta.get("autoplay"));
+        if (autoplay) {
+          autoPlayAudio();
+        }
+      }
     }
 
     public void onServiceDisconnected(ComponentName className) {
@@ -221,7 +231,7 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
 
   final Messenger messenger = new Messenger(new IncomingHandler());
 
-  public ContentBlock1ViewHolder(View itemView, Fragment fragment) {
+  public ContentBlock1ViewHolder(View itemView, Fragment fragment, Content content) {
     super(itemView);
     mFragment = fragment;
     mContext = fragment.getContext();
@@ -241,6 +251,7 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
     mFileManager = FileManager.getInstance(fragment.getContext());
     mMovingBarsView = (MovingBarsView) itemView.findViewById(R.id.moving_bars_view);
     mLastLineLinearLayout = (LinearLayout) itemView.findViewById(R.id.last_line_layout);
+    mContent = content;
 
     int[] attrs = {R.attr.audio_player_button_tint};
     TypedArray ta = fragment.getContext().obtainStyledAttributes(R.style.ContentBlocksTheme_AudioPlayer, attrs);
@@ -370,6 +381,32 @@ public class ContentBlock1ViewHolder extends RecyclerView.ViewHolder {
         }
       }
     });
+  }
+
+  private void autoPlayAudio() {
+
+    Message msg;
+    if (playing) {
+      msg = Message.obtain(null,
+              AudioPlayerService.MSG_ACTION_PAUSE);
+      msg.replyTo = messenger;
+      Bundle bundle = new Bundle();
+      bundle.putString("POS", contentBlock.getId());
+      msg.setData(bundle);
+    } else {
+      msg = Message.obtain(null,
+              AudioPlayerService.MSG_ACTION_PLAY);
+      msg.replyTo = messenger;
+      Bundle bundle = new Bundle();
+      bundle.putString("POS", contentBlock.getId());
+      msg.setData(bundle);
+    }
+
+    try {
+      mService.send(msg);
+    } catch (RemoteException e) {
+      e.printStackTrace();
+    }
   }
 
   @SuppressLint("DefaultLocale")
