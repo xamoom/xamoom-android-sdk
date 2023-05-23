@@ -42,4 +42,10 @@
     <string name="beacon_service_notification_description">Benachrichtigung beim Scannen nach Beacons</string>
     <string name="beacon_service_notification_title">Umgebung wird gescannt</string>
 
+    <string name="photo_permission_title">Erlaubnis</string>
+    <string name="photo_permission_message">Zum Speichern von Bildern benötigen wir Ihre Zustimmung. Bitte erlauben Sie die Berechtigung in den Einstellungen.</string>
+    <string name="permission_exit_button">Schließen</string>
+    <string name="permission_settings_button">Einstellungen</string>
+    <string name="permission_result_toast">Erlaubnis nicht erteilt</string>
+
 </resources>

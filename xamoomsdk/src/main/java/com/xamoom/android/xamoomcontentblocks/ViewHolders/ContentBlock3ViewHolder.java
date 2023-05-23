@@ -9,6 +9,7 @@
 package com.xamoom.android.xamoomcontentblocks.ViewHolders;
 
 import android.Manifest;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -16,6 +17,8 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.PictureDrawable;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
 import android.provider.MediaStore;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -49,8 +52,14 @@ import com.xamoom.android.xamoomsdk.Resource.ContentBlock;
 import com.xamoom.android.xamoomsdk.Resource.Style;
 import com.xamoom.android.xamoomsdk.Storage.FileManager;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * ImageBlock
@@ -234,14 +243,21 @@ public class ContentBlock3ViewHolder extends RecyclerView.ViewHolder {
           return false;
         }
         try {
-          if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+          if (
+                  ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED ||
+                  ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED ||
+                  ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+          ) {
             Glide.with(mContext)
                     .load(contentBlock.getFileId())
                     .asBitmap()
                     .into(new SimpleTarget<Bitmap>() {
                       @Override
                       public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                        MediaStore.Images.Media.insertImage(mContext.getContentResolver(), resource, contentBlock.getTitle(), "");
+                        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+                        String title = contentBlock.getTitle() + timeStamp;
+                        String description = "";
+                        MediaStore.Images.Media.insertImage(mContext.getContentResolver(), resource, title, description);
                         Toast.makeText(mContext, mContext.getString(R.string.image_saved_text), Toast.LENGTH_SHORT).show();
                       }
                     });

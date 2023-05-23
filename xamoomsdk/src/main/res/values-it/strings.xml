@@ -42,4 +42,10 @@
     <string name="beacon_service_notification_description">Visualizzazione della notifica durante la scansione dei beacon</string>
     <string name="beacon_service_notification_title">Scansione nelle vicinanze</string>
 
+    <string name="photo_permission_title">Permission</string>
+    <string name="photo_permission_message">We need your permission to save images. Please allow permission in settings.</string>
+    <string name="permission_exit_button">Close</string>
+    <string name="permission_settings_button">Settings</string>
+    <string name="permission_result_toast">Permission not granted</string>
+
 </resources>

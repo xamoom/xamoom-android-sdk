@@ -10,13 +10,18 @@ package com.xamoom.android.xamoomcontentblocks;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -28,6 +33,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -93,7 +99,6 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   private static final String CONTENT_BUTTON_TEXT = "content_text_color";
   private static final String NAVIGATION_MODE = "navigation_mode";
 
-  private static final int WRITE_STORAGE_PERMISSION = 0;
 
   private View mRootView;
   private EnduserApi mEnduserApi;
@@ -483,12 +488,63 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
 
   @Override
   public void needExternalStoragePermission() {
-    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_STORAGE_PERMISSION);
+    requestReadMediaImages();
   }
 
-  @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+  private void requestReadMediaImages() {
+    if (
+            ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+    ) {
+      return;
+    }
+    if (
+            shouldShowRequestPermissionRationale(Manifest.permission.READ_MEDIA_IMAGES) ||
+            shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE) ||
+            shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)
+    ) {
+      showPermissionInfoDialog();
+    } else {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        requestPermissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES);
+      } else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+        requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+      } else {
+        requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
+      }
+    }
+  }
+
+  ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), result -> {
+    if (!result) {
+      Toast.makeText(requireContext(),requireContext().getString(R.string.permission_result_toast), Toast.LENGTH_SHORT).show();
+    }
+  });
+
+  private void showPermissionInfoDialog() {
+    AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+    builder.setTitle(requireContext().getString(R.string.photo_permission_title));
+    builder.setMessage(requireContext().getString(R.string.photo_permission_message));
+    builder.setPositiveButton(requireContext().getString(R.string.permission_settings_button), new DialogInterface.OnClickListener() {
+              @Override
+              public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                Uri uri = Uri.fromParts("package",requireContext().getPackageName(), null);
+                intent.setData(uri);
+                startActivity(intent);
+                dialog.dismiss();
+              }
+            });
+    builder.setNegativeButton(requireContext().getString(R.string.permission_exit_button), new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+
+      }
+    })
+            .show();
+
   }
 
   @Override
@@ -523,56 +579,29 @@ public class XamoomContentFragment extends Fragment implements ContentBlock3View
   @Override
   public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      if (requestCode != INPUT_FILE_REQUEST_CODE || mFilePathCallback == null) {
-        super.onActivityResult(requestCode, resultCode, data);
-        return;
-      }
-      Uri[] results = null;
-      // Check that the response is a good one
-      PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("reload_content_from_sdk", false).apply();
-      if (resultCode == RESULT_OK) {
+    if (requestCode != INPUT_FILE_REQUEST_CODE || mFilePathCallback == null) {
+      super.onActivityResult(requestCode, resultCode, data);
+      return;
+    }
+    Uri[] results = null;
+    // Check that the response is a good one
+    PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("reload_content_from_sdk", false).apply();
+    if (resultCode == RESULT_OK) {
 
-        if (data == null || data.getDataString() == null) {
-          // If there is not data, then we may have taken a photo
-          if (mCameraPhotoPath != null) {
-            results = new Uri[]{Uri.parse(mCameraPhotoPath)};
-          }
-        } else {
-          String dataString = data.getDataString();
-          if (dataString != null) {
-            results = new Uri[]{Uri.parse(dataString)};
-          }
+      if (data == null || data.getDataString() == null) {
+        // If there is not data, then we may have taken a photo
+        if (mCameraPhotoPath != null) {
+          results = new Uri[]{Uri.parse(mCameraPhotoPath)};
         }
-      }
-      mFilePathCallback.onReceiveValue(results);
-      mFilePathCallback = null;
-    } else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
-      if (requestCode != FILECHOOSER_RESULTCODE || mUploadMessage == null) {
-        super.onActivityResult(requestCode, resultCode, data);
-        return;
-      }
-      if (requestCode == FILECHOOSER_RESULTCODE) {
-        if (this.mUploadMessage == null) {
-          return;
+      } else {
+        String dataString = data.getDataString();
+        if (dataString != null) {
+          results = new Uri[]{Uri.parse(dataString)};
         }
-        PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("reload_content_from_sdk", false).apply();
-        Uri result = null;
-        try {
-          if (resultCode != RESULT_OK) {
-            result = null;
-          } else {
-
-            result = data == null ? mCapturedImageURI : data.getData();
-          }
-        } catch (Exception e) {
-          Toast.makeText(getContext(), "activity :" + e,
-                  Toast.LENGTH_LONG).show();
-        }
-        mUploadMessage.onReceiveValue(result);
-        mUploadMessage = null;
       }
     }
+    mFilePathCallback.onReceiveValue(results);
+    mFilePathCallback = null;
   }
 
 
