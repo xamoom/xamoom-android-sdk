@@ -323,7 +323,7 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
     }
 
     private fun centerSpotBounds() {
-        if (mapBoxMap != null) {
+        if (mapBoxMap != null && shownCoordinates.size > 1) {
             mapBoxMap!!.animateCamera(zoomToDisplayRouteAndAllSpots(shownCoordinates)!!)
         }
     }
@@ -649,7 +649,9 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
 
 
                     fragment.activity?.runOnUiThread {
-                        mapBoxMap?.animateCamera(zoomToDisplayRouteAndAllSpots(shownCoordinates)!!)
+                        if(shownCoordinates.size > 1) {
+                            mapBoxMap?.animateCamera(zoomToDisplayRouteAndAllSpots(shownCoordinates)!!)
+                        }
                         showInfoButton()
                         elevationRadioGroup.visibility = View.VISIBLE
                         elevationMetricRadioButton.isChecked = true
@@ -775,7 +777,7 @@ class ContentBlock14ViewHolder(val view: CustomMapViewWithChart, bundle: Bundle?
     }
 
     private fun zoomToDisplayRouteAndAllSpots(coordinates: ArrayList<LatLng>): CameraUpdate? {
-        if (coordinates.size == 0) {
+        if (coordinates.size <= 1) {
             return null
         }
 

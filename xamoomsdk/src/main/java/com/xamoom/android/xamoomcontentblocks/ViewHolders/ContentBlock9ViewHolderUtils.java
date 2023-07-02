@@ -42,10 +42,12 @@ public class ContentBlock9ViewHolderUtils {
    * @return Camera update to see all markers on map.
    */
   public static CameraUpdate zoomToDisplayAllSpots(ArrayList<Spot> spots, int padding) {
-    if (spots.size() == 0) {
+    if (spots.size() <= 1) {
       return null;
     }
-    
+
+
+
     LatLngBounds.Builder builder = new LatLngBounds.Builder();
     for (Spot spot : spots) {
       builder.include(new LatLng(spot.getLocation().getLatitude(), spot.getLocation().getLongitude()));

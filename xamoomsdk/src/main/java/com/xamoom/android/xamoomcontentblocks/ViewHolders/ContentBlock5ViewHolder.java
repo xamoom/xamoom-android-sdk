@@ -125,29 +125,31 @@ public class ContentBlock5ViewHolder extends RecyclerView.ViewHolder {
   }
 
   private void openFileInApp(File file) {
-    String providerAuthorities = mFragment.getContext().getPackageName() + ".xamoomsdk.fileprovider";
-    Uri fileUri = FileProvider.getUriForFile(mFragment.getContext(),
-            providerAuthorities, file);
+    if(mFragment.getContext() != null && mFragment.getActivity() != null) {
+      String providerAuthorities = mFragment.getContext().getPackageName() + ".xamoomsdk.fileprovider";
+      Uri fileUri = FileProvider.getUriForFile(mFragment.getContext(),
+              providerAuthorities, file);
 
-    String fileExtension = mFragment.getContext().getContentResolver().getType(fileUri);
+      String fileExtension = mFragment.getContext().getContentResolver().getType(fileUri);
 
-    Intent intent = new Intent(Intent.ACTION_VIEW);
-    intent.setDataAndType(fileUri, fileExtension);
-    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-    intent.putExtra(Intent.EXTRA_STREAM, fileUri);
-    try {
-      mFragment.getActivity().startActivity(intent);
-    } catch (ActivityNotFoundException e) {
-      String play_books_package_name = "com.google.android.apps.books";
+      Intent intent = new Intent(Intent.ACTION_VIEW);
+      intent.setDataAndType(fileUri, fileExtension);
+      intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+      intent.putExtra(Intent.EXTRA_STREAM, fileUri);
+      try {
+        mFragment.getActivity().startActivity(intent);
+      } catch (ActivityNotFoundException e) {
+        String play_books_package_name = "com.google.android.apps.books";
 
-      if (fileExtension.equals("application/epub+zip")) {
-        play_books_package_name = "com.google.android.apps.books";
-      } else if (fileExtension.equals("application/pdf")) {
-        play_books_package_name = "com.adobe.reader";
-      } else if (fileExtension.equals("application/x-mobipocket-ebook") || fileExtension.equals("application/octet-stream")) {
-        play_books_package_name = "com.amazon.kindle";
+        if (fileExtension.equals("application/epub+zip")) {
+          play_books_package_name = "com.google.android.apps.books";
+        } else if (fileExtension.equals("application/pdf")) {
+          play_books_package_name = "com.adobe.reader";
+        } else if (fileExtension.equals("application/x-mobipocket-ebook") || fileExtension.equals("application/octet-stream")) {
+          play_books_package_name = "com.amazon.kindle";
+        }
+        mFragment.getActivity().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + play_books_package_name)));
       }
-      mFragment.getActivity().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + play_books_package_name)));
     }
   }
 
@@ -164,29 +166,30 @@ public class ContentBlock5ViewHolder extends RecyclerView.ViewHolder {
   }
 
   private void chooseDownloadToOrOpenFile(File file) {
-    Handler mainHandler = new Handler(mFragment.getContext().getMainLooper());
-
-    Runnable myRunnable = new Runnable() {
-      @Override
-      public void run() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mFragment.getActivity());
-        builder.setTitle(mFragment.getContext().getResources().getString(R.string.save_ebook_alert_title));
-        builder.setMessage(mFragment.getContext().getResources().getString(R.string.save_ebook_alert_message));
-        builder.setPositiveButton(mFragment.getContext().getResources().getString(R.string.save_ebook_alert_open), new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int id) {
-            openFileInApp(file);
-          }
-        });
-        builder.setNegativeButton(mFragment.getContext().getResources().getString(R.string.save_ebook_alert_share), new DialogInterface.OnClickListener() {
-          @Override
-          public void onClick(DialogInterface dialog, int i) {
-            startShareIntent(file);
-          }
-        });
-        builder.create().show();
-      }
-    };
-    mainHandler.post(myRunnable);
+    if(mFragment.getContext() != null && mFragment.getActivity() != null) {
+      Handler mainHandler = new Handler(mFragment.getContext().getMainLooper());
+      Runnable myRunnable = new Runnable() {
+        @Override
+        public void run() {
+          AlertDialog.Builder builder = new AlertDialog.Builder(mFragment.getActivity());
+          builder.setTitle(mFragment.getContext().getResources().getString(R.string.save_ebook_alert_title));
+          builder.setMessage(mFragment.getContext().getResources().getString(R.string.save_ebook_alert_message));
+          builder.setPositiveButton(mFragment.getContext().getResources().getString(R.string.save_ebook_alert_open), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+              openFileInApp(file);
+            }
+          });
+          builder.setNegativeButton(mFragment.getContext().getResources().getString(R.string.save_ebook_alert_share), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int i) {
+              startShareIntent(file);
+            }
+          });
+          builder.create().show();
+        }
+      };
+      mainHandler.post(myRunnable);
+    }
   }
 
   private void startShareIntent(File file) {
