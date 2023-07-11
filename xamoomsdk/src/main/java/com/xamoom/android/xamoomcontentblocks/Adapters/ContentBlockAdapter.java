@@ -132,7 +132,11 @@ public class ContentBlockAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
   @Override
   public int getItemCount() {
-    return mContentBlocks.size();
+    if (mContentBlocks != null) {
+      return mContentBlocks.size(); 
+    } else {
+      return 0;
+    }
   }
 
   @Override
