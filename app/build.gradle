@@ -40,3 +40,7 @@ dependencies {
     implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:9.6.2'
     implementation 'com.jakewharton.timber:timber:4.7.1'
 }
+
+configurations.all {
+    exclude group: 'com.google.android.gms', module: 'play-services-safetynet'
+}
