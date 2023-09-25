@@ -38,7 +38,7 @@ public class ContentBlock0ViewHolder extends RecyclerView.ViewHolder {
     mTitleTextView = itemView.findViewById(R.id.titleTextView);
     mHtmlTextView = itemView.findViewById(R.id.htmlTextView);
     mHtmlTextView.setRemoveTrailingNewLines(true);
-    mHtmlTextView.setAutoLinkMask(Linkify.ALL);
+//    mHtmlTextView.setAutoLinkMask(Linkify.ALL);
     mHtmlTextView.setMovementMethod(LinkMovementMethod.getInstance());
     childrenMargin = itemView.getContext().getResources().getDimensionPixelSize(R.dimen.contentblock_children_margin);
   }
