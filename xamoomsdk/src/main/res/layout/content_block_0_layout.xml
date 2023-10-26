@@ -22,7 +22,7 @@
         android:id="@+id/htmlTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:autoLink="web|email|phone"
+        android:autoLink="web|email"
         android:layout_marginTop="@dimen/contentblock_children_margin"
         android:textSize="16sp"
         android:textColor="@color/black"/>
