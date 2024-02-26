@@ -130,6 +130,7 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
 
       int seekSeconds = getYoutubeVideoStart(contentBlock.getVideoUrl());
 
+      mVideoWebView.setVisibility(View.VISIBLE);
       setupYoutube(contentBlock, seekSeconds);
     } else if (contentBlock.getVideoUrl().contains("vimeo.com/")) {
       mWebViewOverlay.setVisibility(View.VISIBLE);
@@ -237,129 +238,22 @@ public class ContentBlock2ViewHolder extends RecyclerView.ViewHolder implements 
 
   private void setupYoutube(final ContentBlock contentBlock, final int seekSeconds) {
     final String youtubeVideoId = getYoutubeVideoId(contentBlock.getVideoUrl());
-
-    Bitmap savedBitmap = mBitmapCache.get(youtubeVideoId);
-    if (savedBitmap != null) {
-      mProgressBar.setVisibility(View.GONE);
-      mYouTubeThumbnailView.setImageBitmap(savedBitmap);
-    } else {
-      mYouTubeThumbnailView.initialize(mYoutubeApiKey, new YouTubeThumbnailView.OnInitializedListener() {
-        @Override
-        public void onInitializationSuccess(YouTubeThumbnailView youTubeThumbnailView, final YouTubeThumbnailLoader youTubeThumbnailLoader) {
-          youTubeThumbnailLoader.setVideo(youtubeVideoId);
-          youTubeThumbnailLoader.setOnThumbnailLoadedListener(new YouTubeThumbnailLoader.OnThumbnailLoadedListener() {
-            @Override
-            public void onThumbnailLoaded(YouTubeThumbnailView youTubeThumbnailView, String s) {
-              mProgressBar.setVisibility(View.GONE);
-
-              Drawable drawable = mYouTubeThumbnailView.getDrawable();
-              if (drawable instanceof BitmapDrawable) {
-                BitmapDrawable bitmapDrawable = (BitmapDrawable)drawable;
-                mBitmapCache.put(youtubeVideoId, bitmapDrawable.getBitmap());
-              }
-              youTubeThumbnailLoader.release();
-            }
-
-            @Override
-            public void onThumbnailError(YouTubeThumbnailView youTubeThumbnailView, YouTubeThumbnailLoader.ErrorReason errorReason) {
-              youTubeThumbnailView.setBackgroundColor(Color.BLACK);
-              mProgressBar.setVisibility(View.GONE);
-              youtubeFallback(contentBlock.getVideoUrl());
-              youTubeThumbnailLoader.release();
-            }
-          });
-        }
-
-        @Override
-        public void onInitializationFailure(YouTubeThumbnailView youTubeThumbnailView, YouTubeInitializationResult youTubeInitializationResult) {
-          mProgressBar.setVisibility(View.GONE);
-          mVideoPlayImageView.setVisibility(View.GONE);
-          youtubeFallback(contentBlock.getVideoUrl());
-        }
-      });
+    String urlYoutube = "https://www.youtube.com/embed/" + youtubeVideoId;
+    if(seekSeconds>0){
+      urlYoutube += "?t=" + seekSeconds;
     }
-
-    mYouTubeThumbnailView.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        sendResetYoutubeBroadcast();
-        LocalBroadcastManager.getInstance(mContext).registerReceiver(mResetYoutubeBroadCastReciever,
-            new IntentFilter(RESET_YOUTUBE));
-
-        mVideoPlayImageView.setVisibility(View.GONE);
-
-        final FrameLayout frame = new FrameLayout(mContext);
-        frame.setId(R.id.youtube_fragment_id);
-
-        FrameLayout.LayoutParams layoutParams = layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
-              FrameLayout.LayoutParams.MATCH_PARENT);
-        frame.setLayoutParams(layoutParams);
-
-        mFramelayout.addView(frame);
-
-
-        final YouTubePlayerSupportFragment youTubePlayerSupportFragment = YouTubePlayerSupportFragment.newInstance();
-        mFragment.getChildFragmentManager()
-                .beginTransaction()
-                .replace(frame.getId(), youTubePlayerSupportFragment)
-                .commit();
-
-        youTubePlayerSupportFragment.initialize(mYoutubeApiKey, new YouTubePlayer.OnInitializedListener() {
-          @Override
-          public void onInitializationSuccess(YouTubePlayer.Provider provider, final YouTubePlayer youTubePlayer, boolean b) {
-
-            youTubePlayer.setPlayerStateChangeListener(new YouTubePlayer.PlayerStateChangeListener() {
-              @Override
-              public void onLoading() {
-              }
-
-              @Override
-              public void onLoaded(String s) {
-              }
-
-              @Override
-              public void onAdStarted() {
-              }
-
-              @Override
-              public void onVideoStarted() {
-              }
-
-              @Override
-              public void onVideoEnded() {
-              }
-
-              @Override
-              public void onError(YouTubePlayer.ErrorReason errorReason) {
-              }
-            });
-
-            youTubePlayer.setFullscreenControlFlags(YouTubePlayer.FULLSCREEN_FLAG_CUSTOM_LAYOUT);
-
-            youTubePlayer.loadVideo(youtubeVideoId, seekSeconds * 1000);
-            mProgressBar.setVisibility(View.GONE);
-
-            youTubePlayer.setOnFullscreenListener(new YouTubePlayer.OnFullscreenListener() {
-              @Override
-              public void onFullscreen(boolean enterFullscreen) {
-                if (enterFullscreen) {
-                  Intent intent = YouTubeStandalonePlayer.createVideoIntent(mFragment.getActivity(),
-                      mYoutubeApiKey, youtubeVideoId, youTubePlayer.getCurrentTimeMillis(), true, false);
-                  mFragment.getActivity().startActivity(intent);
-                }
-              }
-            });
-          }
-
-          @Override
-          public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
-            mProgressBar.setVisibility(View.GONE);
-            youtubeFallback(contentBlock.getVideoUrl());
-            Log.e("tag", youTubeInitializationResult.toString());
-          }
-        });
-      }
-    });
+    mVideoPlayImageView.setVisibility(View.GONE);
+    mYouTubeThumbnailView.setVisibility(View.GONE);
+    mProgressBar.setVisibility(View.GONE);
+    String frameVideo = "<html>" +
+            "<body>" +
+            "<style>html,body,iframe{padding:0; margin:0;}</style>"+
+            "<iframe width=\"100%%\" height=\"100%%\" src=\""+urlYoutube+"\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" allowfullscreen></iframe>" +
+            "</body>" +
+            "</html>";
+    WebSettings webSettings = mVideoWebView.getSettings();
+    webSettings.setJavaScriptEnabled(true);
+    mVideoWebView.loadData(frameVideo, "text/html", "utf-8");
   }
 
   public BroadcastReceiver mResetYoutubeBroadCastReciever = new BroadcastReceiver() {
